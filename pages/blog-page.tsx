@@ -4,99 +4,42 @@ import { Button } from "@/components/ui/button"
 import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp } from "lucide-react"
 import { useState, useEffect } from "react"
 import Header from "../components/header"
-
-// Sample blog data - static, no DB required
-const blogCategories = [
-  { name: "Tous", count: 24 },
-  { name: "Odoo ERP", count: 10, color: "#714b67" },
-  { name: "HubSpot CRM", count: 8, color: "#ff5c35" },
-  { name: "Transformation Digitale", count: 6 },
-  { name: "Études de Cas", count: 5 },
-  { name: "Tutoriels", count: 3 },
-]
-
-const blogPosts = [
-  {
-    slug: "odoo-15-to-18-migration",
-    title: "Comment migrer d'Odoo 15 vers Odoo 18 sans perdre vos données",
-    excerpt:
-      "Découvrez notre méthodologie éprouvée pour migrer votre ERP Odoo vers la dernière version tout en préservant l'intégrité de vos données.",
-    category: "Odoo ERP",
-    image: "/placeholder.svg?height=600&width=800",
-    author: "Younes SAFOUAT",
-    authorRole: "Expert Odoo",
-    date: "12 juin 2025",
-    readTime: "8 min",
-    featured: true,
-  },
-  {
-    slug: "hubspot-automation-tips",
-    title: "5 automatisations HubSpot qui vont révolutionner votre marketing",
-    excerpt:
-      "Explorez les workflows d'automatisation les plus puissants de HubSpot pour optimiser vos campagnes marketing et augmenter vos conversions.",
-    category: "HubSpot CRM",
-    image: "/placeholder.svg?height=600&width=800",
-    author: "Younes SAFOUAT",
-    authorRole: "Spécialiste Marketing",
-    date: "5 juin 2025",
-    readTime: "6 min",
-  },
-  {
-    slug: "odoo-hubspot-integration",
-    title: "Intégration Odoo-HubSpot : le guide complet",
-    excerpt:
-      "Comment connecter votre ERP Odoo avec votre CRM HubSpot pour créer un écosystème digital parfaitement synchronisé.",
-    category: "Transformation Digitale",
-    image: "/placeholder.svg?height=600&width=800",
-    author: "Younes SAFOUAT",
-    authorRole: "Architecte Solutions",
-    date: "28 mai 2025",
-    readTime: "12 min",
-  },
-  {
-    slug: "worqbox-case-study",
-    title: "Comment Worqbox a optimisé sa logistique avec Odoo 18",
-    excerpt:
-      "Étude de cas détaillée sur la transformation digitale de Worqbox et les résultats obtenus après la migration vers Odoo 18.",
-    category: "Études de Cas",
-    image: "/placeholder.svg?height=600&width=800",
-    author: "Younes SAFOUAT",
-    authorRole: "Chef de Projet",
-    date: "20 mai 2025",
-    readTime: "10 min",
-  },
-  {
-    slug: "hubspot-dashboard-kpis",
-    title: "Les KPIs essentiels à suivre dans votre dashboard HubSpot",
-    excerpt:
-      "Guide pratique pour configurer un tableau de bord HubSpot efficace avec les indicateurs clés de performance qui comptent vraiment.",
-    category: "HubSpot CRM",
-    image: "/placeholder.svg?height=600&width=800",
-    author: "Younes SAFOUAT",
-    authorRole: "Analyste CRM",
-    date: "15 mai 2025",
-    readTime: "7 min",
-  },
-  {
-    slug: "odoo-analytical-accounting",
-    title: "Comment configurer la comptabilité analytique dans Odoo",
-    excerpt:
-      "Tutoriel pas à pas pour mettre en place une comptabilité analytique performante dans Odoo et optimiser votre reporting financier.",
-    category: "Tutoriels",
-    image: "/placeholder.svg?height=600&width=800",
-    author: "Younes SAFOUAT",
-    authorRole: "Consultante Odoo",
-    date: "8 mai 2025",
-    readTime: "9 min",
-  },
-]
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from "@/components/ui/pagination"
 
 export default function BlogPage() {
-  const [scrollY, setScrollY] = useState(0)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("Tous")
-  const [filteredPosts, setFilteredPosts] = useState(blogPosts)
+  // All hooks at the top!
+  const [blogData, setBlogData] = useState<any>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
+  const [loading, setLoading] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      try {
+        const res = await fetch("/api/content?type=blog-page");
+        const data = await res.json();
+        setBlogData(Array.isArray(data) ? data[0] : data);
+      } catch (err) {
+        console.error("Failed to fetch blog data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogData();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -112,12 +55,14 @@ export default function BlogPage() {
   }, [])
 
   useEffect(() => {
-    let filtered = blogPosts
+    if (!blogData) return;
+
+    let filtered = blogData.content?.blogPosts || [];
 
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
-        (post) =>
+        (post: any) =>
           post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()),
       )
@@ -125,17 +70,29 @@ export default function BlogPage() {
 
     // Filter by category
     if (selectedCategory !== "Tous") {
-      filtered = filtered.filter((post) => post.category === selectedCategory)
+      filtered = filtered.filter((post: any) => post.category === selectedCategory)
     }
 
     setFilteredPosts(filtered)
-  }, [searchTerm, selectedCategory])
+    setCurrentPage(1); // Reset to first page on filter/search change
+  }, [blogData, searchTerm, selectedCategory])
 
   // Function to get category color
   const getCategoryColor = (categoryName:any) => {
-    const category = blogCategories.find((cat) => cat.name === categoryName)
+    const category = blogData.content?.categories?.items?.find((cat: any) => cat.name === categoryName)
     return category?.color || "#000000"
   }
+
+  if (loading) return <div>Chargement...</div>;
+  if (!blogData) return <div>Erreur de chargement du blog.</div>;
+
+  // Extract categories and posts from dynamic data
+  const blogCategories = blogData.content?.categories?.items?.map((cat: any) => ({ name: cat.name, count: undefined })) || [];
+  const blogPosts = blogData.content?.blogPosts || [];
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredPosts.length / pageSize);
+  const paginatedPosts = filteredPosts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="min-h-screen bg-white">
@@ -179,7 +136,7 @@ export default function BlogPage() {
       </section>
 
       {/* Featured Post */}
-      {filteredPosts.find((post) => post.featured) && (
+      {filteredPosts.find((post: any) => post.featured) && (
         <section className="pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
@@ -190,8 +147,8 @@ export default function BlogPage() {
             </div>
 
             {filteredPosts
-              .filter((post) => post.featured)
-              .map((post) => (
+              .filter((post: any) => post.featured)
+              .map((post: any) => (
                 <div
                   key={post.slug}
                   className="group relative grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
@@ -261,7 +218,7 @@ export default function BlogPage() {
                   <h3 className="text-lg font-bold text-black">Catégories</h3>
                 </div>
                 <div className="space-y-2">
-                  {blogCategories.map((category) => (
+                  {blogCategories.map((category: any) => (
                     <button
                       key={category.name}
                       onClick={() => setSelectedCategory(category.name)}
@@ -291,7 +248,7 @@ export default function BlogPage() {
                   <h3 className="text-lg font-bold text-black">Articles Populaires</h3>
                 </div>
                 <div className="space-y-4">
-                  {blogPosts.slice(0, 3).map((post) => (
+                  {blogPosts.slice(0, 3).map((post: any) => (
                     <a
                       key={post.slug}
                       href={`/blog/${post.slug}`}
@@ -363,86 +320,116 @@ export default function BlogPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {filteredPosts
-                    .filter((post) => !post.featured)
-                    .map((post) => (
-                      <div
-                        key={post.slug}
-                        className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
-                      >
-                        <div className="relative h-48 overflow-hidden">
-                          <img
-                            src={post.image || "/placeholder.svg"}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div
-                            className="absolute top-4 left-4 px-3 py-1 rounded-full text-white text-xs font-medium"
-                            style={{ backgroundColor: getCategoryColor(post.category) }}
-                          >
-                            {post.category}
-                          </div>
-                        </div>
-                        <div className="p-6">
-                          <div className="flex items-center gap-4 mb-3">
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                              <Calendar className="w-3 h-3" />
-                              <span>{post.date}</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
-                              <Clock className="w-3 h-3" />
-                              <span>{post.readTime}</span>
-                            </div>
-                          </div>
-                          <h3 className="text-xl font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
-                            {post.title}
-                          </h3>
-                          <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-                          <div className="flex items-center justify-between mt-4">
-                            <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                                <User className="w-4 h-4 text-gray-600" />
-                              </div>
-                              <div className="text-sm">
-                                <span className="font-medium text-black">{post.author}</span>
-                              </div>
-                            </div>
-                            <a
-                              href={`/blog/${post.slug}`}
-                              className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
-                            >
-                              Lire <ArrowRight className="ml-1 w-4 h-4" />
-                            </a>
-                          </div>
+                  {paginatedPosts.map((post: any) => (
+                    <div
+                      key={post.slug}
+                      className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
+                    >
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={post.image || "/placeholder.svg"}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div
+                          className="absolute top-4 left-4 px-3 py-1 rounded-full text-white text-xs font-medium"
+                          style={{ backgroundColor: getCategoryColor(post.category) }}
+                        >
+                          {post.category}
                         </div>
                       </div>
-                    ))}
+                      <div className="p-6">
+                        <div className="flex items-center gap-4 mb-3">
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Calendar className="w-3 h-3" />
+                            <span>{post.date}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Clock className="w-3 h-3" />
+                            <span>{post.readTime}</span>
+                          </div>
+                        </div>
+                        <h3 className="text-xl font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
+                          {post.title}
+                        </h3>
+                        <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+                        <div className="flex items-center justify-between mt-4">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                              <User className="w-4 h-4 text-gray-600" />
+                            </div>
+                            <div className="text-sm">
+                              <span className="font-medium text-black">{post.author}</span>
+                            </div>
+                          </div>
+                          <a
+                            href={`/blog/${post.slug}`}
+                            className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
+                          >
+                            Lire <ArrowRight className="ml-1 w-4 h-4" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* Pagination - Static only, no functionality */}
+              {/* Pagination Controls */}
               <div className="mt-12 flex justify-center">
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="border-gray-200">
-                    Précédent
-                  </Button>
-                  <Button variant="outline" size="sm" className="bg-black text-white border-black">
-                    1
-                  </Button>
-                  <Button variant="outline" size="sm" className="border-gray-200">
-                    2
-                  </Button>
-                  <Button variant="outline" size="sm" className="border-gray-200">
-                    3
-                  </Button>
-                  <span className="px-2">...</span>
-                  <Button variant="outline" size="sm" className="border-gray-200">
-                    8
-                  </Button>
-                  <Button variant="outline" size="sm" className="border-gray-200">
-                    Suivant
-                  </Button>
-                </div>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        asChild
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        aria-disabled={currentPage === 1}
+                        tabIndex={currentPage === 1 ? -1 : 0}
+                        href="#"
+                      />
+                    </PaginationItem>
+                    {/* Render page numbers with ellipsis if needed */}
+                    {Array.from({ length: totalPages }).map((_, i) => {
+                      // Show first, last, current, and neighbors; ellipsis for gaps
+                      if (
+                        i === 0 ||
+                        i === totalPages - 1 ||
+                        Math.abs(i + 1 - currentPage) <= 1
+                      ) {
+                        return (
+                          <PaginationItem key={i}>
+                            <PaginationLink
+                              isActive={currentPage === i + 1}
+                              href="#"
+                              onClick={() => setCurrentPage(i + 1)}
+                            >
+                              {i + 1}
+                            </PaginationLink>
+                          </PaginationItem>
+                        );
+                      } else if (
+                        (i === 1 && currentPage > 3) ||
+                        (i === totalPages - 2 && currentPage < totalPages - 2)
+                      ) {
+                        return (
+                          <PaginationItem key={i}>
+                            <PaginationEllipsis />
+                          </PaginationItem>
+                        );
+                      }
+                      return null;
+                    })}
+                    <PaginationItem>
+                      <PaginationNext
+                        asChild
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        aria-disabled={currentPage === totalPages}
+                        tabIndex={currentPage === totalPages ? -1 : 0}
+                        href="#"
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </div>
             </div>
           </div>

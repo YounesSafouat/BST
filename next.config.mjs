@@ -8,6 +8,11 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ['localhost'],
+  },
+  output: 'standalone',
+  experimental: {
+    serverActions: true,
   },
 }
 

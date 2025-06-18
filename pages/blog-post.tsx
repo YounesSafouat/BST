@@ -27,11 +27,13 @@ type Post = {
   authorRole: string
   date: string
   readTime: string
+  body?: string
 }
 
 export default function BlogPost({ post }: { post: Post }) {
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [relatedPosts, setRelatedPosts] = useState<Post[]>([])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,30 +48,22 @@ export default function BlogPost({ post }: { post: Post }) {
     }
   }, [])
 
-  // Sample related posts - static data, no DB required
-  const relatedPosts = [
-    {
-      slug: "hubspot-automation-tips",
-      title: "5 automatisations HubSpot qui vont révolutionner votre marketing",
-      image: "/placeholder.svg?height=600&width=800",
-      category: "HubSpot CRM",
-      date: "5 juin 2025",
-    },
-    {
-      slug: "odoo-hubspot-integration",
-      title: "Intégration Odoo-HubSpot : le guide complet",
-      image: "/placeholder.svg?height=600&width=800",
-      category: "Transformation Digitale",
-      date: "28 mai 2025",
-    },
-    {
-      slug: "odoo-analytical-accounting",
-      title: "Comment configurer la comptabilité analytique dans Odoo",
-      image: "/placeholder.svg?height=600&width=800",
-      category: "Tutoriels",
-      date: "8 mai 2025",
-    },
-  ]
+  // Fetch related posts from DB (same category, exclude current post)
+  useEffect(() => {
+    const fetchRelated = async () => {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+      const res = await fetch(`${baseUrl}/api/content?type=blog-page`);
+      const data = await res.json();
+      const blogData = Array.isArray(data) ? data[0] : data;
+      const allPosts: Post[] = blogData?.content?.blogPosts || [];
+      // Related: same category, not current post, limit 3
+      const related = allPosts
+        .filter((p) => p.slug !== post.slug && p.category === post.category)
+        .slice(0, 3);
+      setRelatedPosts(related);
+    };
+    fetchRelated();
+  }, [post.slug, post.category]);
 
   // Function to get category color
   const getCategoryColor = (categoryName: string) => {
@@ -160,11 +154,9 @@ export default function BlogPost({ post }: { post: Post }) {
         <div className="max-w-4xl mx-auto">
           <div className="prose prose-lg max-w-none">
             <p className="lead">{post.excerpt}</p>
-
-            <p>
-              Dans cet article, nous allons vous présenter notre méthodologie éprouvée pour réaliser cette migration
-              tout en préservant l'intégrité de vos données et en minimisant les perturbations pour votre activité.
-            </p>
+            {post.body && (
+              <div dangerouslySetInnerHTML={{ __html: post.body }} />
+            )}
 
             <h2>Pourquoi migrer vers Odoo 18 ?</h2>
 
@@ -388,4 +380,16 @@ export default function BlogPost({ post }: { post: Post }) {
       </div>
     </div>
   )
+}
+
+export async function generateStaticParams() {
+  // Fetch blog-page content from the API
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+  const data = await res.json();
+  const blogData = Array.isArray(data) ? data[0] : data;
+  const posts = blogData?.content?.blogPosts || [];
+  return posts.map((post: any) => ({
+    slug: post.slug,
+  }));
 }

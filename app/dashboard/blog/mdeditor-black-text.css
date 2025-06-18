@@ -1,0 +1,14 @@
+/* Force MDEditor input text to black and background to white globally */
+:root {
+     --w-md-editor-text-color: #000 !important;
+     --w-md-editor-bg-color: #fff !important;
+   }
+   
+   textarea#w-md-editor-text-input,
+   textarea#body,
+   .w-md-editor-text-input {
+     color: #000 !important;
+     background: #fff !important;
+     caret-color: #000 !important;
+   }
+   

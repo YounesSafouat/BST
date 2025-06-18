@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+model Content {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  type        String   // hero, about, contact, services, etc.
+  section     String   // which section of the page
+  title       String?
+  subtitle    String?
+  description String?
+  content     Json     // Store any additional content as JSON
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Company {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  industry    String
+  description String
+  results     String
+  logo        String?
+  testimonial String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ContactInfo {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String
+  phone       String
+  address     String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+} 
