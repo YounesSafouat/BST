@@ -55,4 +55,46 @@ export async function POST(req: NextRequest) {
     console.error('API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
+}
+
+// PUT: Update content by type
+export async function PUT(req: NextRequest) {
+  try {
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get('type');
+    if (!type) {
+      return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
+    }
+    const body = await req.json();
+    // Only allow updating the content field for safety
+    const update = {};
+    if (body.content) update['content'] = body.content;
+    if (body.title) update['title'] = body.title;
+    if (body.description) update['description'] = body.description;
+    if (body.metadata) update['metadata'] = body.metadata;
+    if (typeof body.isActive === 'boolean') update['isActive'] = body.isActive;
+    if (Object.keys(update).length === 0) {
+      return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
+    }
+    const updated = await Content.findOneAndUpdate(
+      { type },
+      { $set: update },
+      { new: true }
+    );
+    if (!updated) {
+      return NextResponse.json({ error: 'Content not found' }, { status: 404 });
+    }
+    return NextResponse.json(updated, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
+  } catch (error: any) {
+    console.error('API Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 } 

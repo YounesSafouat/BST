@@ -103,6 +103,7 @@ async function main() {
           migration: "Odoo 15 → 18",
           logo: "WQ",
           featured: true,
+          featuredInHeader: true,
           projectStats: [
             { label: "Temps de migration", value: "3 mois" },
             { label: "Version cible", value: "Odoo 18" },
@@ -149,7 +150,7 @@ async function main() {
             }
           ]
         }
-        // Ajoutez d'autres cas clients ici si besoin
+        // Ajoutez d'autres cas clients ici si besoin, avec featuredInHeader: true pour le 2e, false pour les autres
       ]
     },
     metadata: { order: 1 },

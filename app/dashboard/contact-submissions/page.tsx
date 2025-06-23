@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
+import Loader from "@/components/home/Loader"
 
 interface ContactSubmission {
   id: string
@@ -78,11 +79,7 @@ export default function ContactSubmissionsPage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff5c35]"></div>
-      </div>
-    )
+    return <Loader />
   }
 
   return (

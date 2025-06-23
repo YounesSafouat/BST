@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
+import Loader from "@/components/home/Loader"
 
 export default function DashboardLayout({
   children,
@@ -26,11 +27,18 @@ export default function DashboardLayout({
   );
 }
 
-function DashboardLayoutContent({ children, collapsed, setCollapsed, sidebarWidth }) {
+interface DashboardLayoutContentProps {
+  children: React.ReactNode;
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+  sidebarWidth: string;
+}
+
+function DashboardLayoutContent({ children, collapsed, setCollapsed, sidebarWidth }: DashboardLayoutContentProps) {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (status === "unauthenticated") {
@@ -41,8 +49,7 @@ function DashboardLayoutContent({ children, collapsed, setCollapsed, sidebarWidt
     <div className="min-h-screen bg-white flex">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${sidebarWidth}`}>
-        <Topbar />
-        <main className="flex-1 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-8 py-8">
+        <main className="flex-1 w-full px-4 py-8">
           {children}
         </main>
       </div>

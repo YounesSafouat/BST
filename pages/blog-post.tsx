@@ -14,7 +14,7 @@ import {
   ChevronRight,
 } from "lucide-react"
 import { useState, useEffect } from "react"
-import Header from "../components/header"
+import Link from "next/link"
 
 // Define the post type
 type Post = {
@@ -79,11 +79,8 @@ export default function BlogPost({ post }: { post: Post }) {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <Header scrollY={scrollY} isLoaded={isLoaded} />
-
-      {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4 border-b border-gray-100 mt-24 md:mt-28">
+      <section className="relative pt-48 md:pt-56 pb-20 px-6 lg:px-8">
+        {/* Header */}
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <a href="/" className="hover:text-black transition-colors">
@@ -97,7 +94,7 @@ export default function BlogPost({ post }: { post: Post }) {
             <span className="text-black">{post.title}</span>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Article Header */}
       <section className="pt-12 pb-8 px-6 lg:px-8">
@@ -143,8 +140,20 @@ export default function BlogPost({ post }: { post: Post }) {
       {/* Featured Image */}
       <section className="pb-12 px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-2xl overflow-hidden shadow-xl">
-            <img src={post.image || "/placeholder.svg"} alt={post.title} className="w-full h-auto object-cover" />
+          <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-2xl mb-8">
+            {post.image ? (
+              <img
+                src={post.image.startsWith('http') ? post.image : `/images/${post.image}`}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src="/placeholder.svg"
+                alt="Placeholder"
+                className="w-full h-full object-cover"
+              />
+            )}
           </div>
         </div>
       </section>
@@ -305,11 +314,21 @@ export default function BlogPost({ post }: { post: Post }) {
                 className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500"
               >
                 <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={relatedPost.image || "/placeholder.svg"}
-                    alt={relatedPost.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                  <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-xl">
+                    {relatedPost.image ? (
+                      <img
+                        src={relatedPost.image.startsWith('http') ? relatedPost.image : `/images/${relatedPost.image}`}
+                        alt={relatedPost.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <img
+                        src="/placeholder.svg"
+                        alt="Placeholder"
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
                   <div
                     className="absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-medium"
                     style={{ backgroundColor: getCategoryColor(relatedPost.category) }}

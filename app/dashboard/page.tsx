@@ -2,13 +2,17 @@
 
 import { Card } from "@/components/ui/card";
 import {
+  ArrowRight,
+  Play,
+  Shield,
+  Award,
   Users,
   FileText,
   Building2,
   MessageSquare,
   Settings,
 } from "lucide-react";
-import AcceuilPage from "../../pages/acceuil-page";
+import AcceuilPage from "@/app/components/acceuil-page";
 
 const stats = [
   {

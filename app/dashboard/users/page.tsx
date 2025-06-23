@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Pencil, Trash2, Filter } from "lucide-react";
+import Loader from "@/components/home/Loader"
 
 // Define the User type
 interface User {
@@ -128,7 +129,7 @@ export default function UsersPage() {
         {/* Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="p-4 text-center">Loading users...</div>
+            <Loader />
           ) : error ? (
             <div className="p-4 text-center text-red-500">{error}</div>
           ) : (

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
+import LayoutWrapper from '@/components/layout-wrapper'
 
 export const metadata: Metadata = {
   title: 'Blackswan Technology',
@@ -14,15 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="font-sans" suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className="font-sans min-h-screen flex flex-col" suppressHydrationWarning>
+        <LayoutWrapper>
           {children}
-        </ThemeProvider>
+        </LayoutWrapper>
       </body>
     </html>
   )

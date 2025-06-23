@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import './mdeditor-black-text.css';
+import { FileText, Pencil, Trash2 } from "lucide-react";
 
 // @ts-ignore-next-line: no types for @uiw/react-md-editor
 const MDEditor: any = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -157,17 +158,50 @@ export default function BlogAdminPage() {
           {loading ? (
             <div>Chargement...</div>
           ) : (
-            <div className="space-y-2">
-              {posts.length === 0 && <div>Aucun article.</div>}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.length === 0 && <div className="col-span-full">Aucun article.</div>}
               {posts.map((post, idx) => (
-                <Card key={idx} className="p-4 flex justify-between items-center">
+                <Card key={idx} className="p-6 flex flex-col justify-between hover:shadow-xl transition-all duration-300 min-h-[220px]">
+                  {/* Top section */}
                   <div>
-                    <div className="font-bold">{post.title}</div>
-                    <div className="text-sm text-gray-500">/{post.slug}</div>
+                    <div className="flex items-start space-x-4 mb-4">
+                      <div className="p-3 rounded-lg bg-blue-100 flex-shrink-0">
+                        <FileText className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div className="flex-grow min-w-0">
+                        <h3 className="text-base font-bold text-gray-900 uppercase tracking-wider truncate" title={post.title}>
+                          {post.title}
+                        </h3>
+                        <p className="text-sm text-gray-500 capitalize">{post.category}</p>
+                      </div>
+                    </div>
+                    <p className="text-base text-gray-600 mt-2 truncate" title={post.slug}>
+                      /{post.slug}
+                    </p>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => editPost(idx)} size="sm">Éditer</Button>
-                    <Button variant="destructive" onClick={() => deletePost(idx)} size="sm">Supprimer</Button>
+
+                  {/* Bottom section */}
+                  <div className="flex justify-between items-center mt-6">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium ${
+                      post.published ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-800'
+                    }`}>
+                      {post.published ? 'Publié' : 'Brouillon'}
+                    </span>
+                    <div className="flex space-x-2">
+                      <Button variant="outline" onClick={() => editPost(idx)} size="sm" className="border-gray-300 hover:bg-gray-100 text-gray-800">
+                        <Pencil className="w-4 h-4 mr-1.5" />
+                        Éditer
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        onClick={() => deletePost(idx)} 
+                        size="sm"
+                        className="bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <Trash2 className="w-4 h-4 mr-1.5" />
+                        Supprimer
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               ))}

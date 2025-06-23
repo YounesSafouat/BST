@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp } from "lucide-react"
 import { useState, useEffect } from "react"
-import Header from "../components/header"
+import Link from "next/link"
 import {
   Pagination,
   PaginationContent,
@@ -96,11 +96,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <Header scrollY={scrollY} isLoaded={isLoaded} />
-
-      {/* Hero Section */}
-      <section className="relative pt-40 md:pt-48 pb-16 px-6 lg:px-8">
+      <section className="relative pt-48 md:pt-56 pb-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-6 py-3 rounded-full bg-gray-50 border border-gray-200 mb-8">
@@ -154,11 +150,21 @@ export default function BlogPage() {
                   className="group relative grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="relative h-64 lg:h-auto overflow-hidden">
+                    <div className="aspect-video relative overflow-hidden bg-gray-100">
+                      {post.image ? (
                     <img
-                      src={post.image || "/placeholder.svg"}
+                          src={post.image.startsWith('http') ? post.image : `/images/${post.image}`}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
+                          className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <img
+                          src="/placeholder.svg"
+                          alt="Placeholder"
+                          className="object-cover w-full h-full"
+                        />
+                      )}
+                    </div>
                     <div
                       className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-medium"
                       style={{ backgroundColor: getCategoryColor(post.category) }}
@@ -321,57 +327,67 @@ export default function BlogPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {paginatedPosts.map((post: any) => (
-                    <div
-                      key={post.slug}
-                      className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
-                    >
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={post.image || "/placeholder.svg"}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div
-                          className="absolute top-4 left-4 px-3 py-1 rounded-full text-white text-xs font-medium"
-                          style={{ backgroundColor: getCategoryColor(post.category) }}
-                        >
-                          {post.category}
+                      <div
+                        key={post.slug}
+                        className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
+                      >
+                        <div className="relative h-48 overflow-hidden">
+                        <div className="aspect-video relative overflow-hidden bg-gray-100">
+                          {post.image ? (
+                          <img
+                              src={post.image.startsWith('http') ? post.image : `/images/${post.image}`}
+                            alt={post.title}
+                              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <img
+                              src="/placeholder.svg"
+                              alt="Placeholder"
+                              className="object-cover w-full h-full"
+                            />
+                          )}
                         </div>
-                      </div>
-                      <div className="p-6">
-                        <div className="flex items-center gap-4 mb-3">
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
-                            <Calendar className="w-3 h-3" />
-                            <span>{post.date}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
-                            <Clock className="w-3 h-3" />
-                            <span>{post.readTime}</span>
-                          </div>
-                        </div>
-                        <h3 className="text-xl font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
-                          {post.title}
-                        </h3>
-                        <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
-                        <div className="flex items-center justify-between mt-4">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                              <User className="w-4 h-4 text-gray-600" />
-                            </div>
-                            <div className="text-sm">
-                              <span className="font-medium text-black">{post.author}</span>
-                            </div>
-                          </div>
-                          <a
-                            href={`/blog/${post.slug}`}
-                            className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
+                          <div
+                            className="absolute top-4 left-4 px-3 py-1 rounded-full text-white text-xs font-medium"
+                            style={{ backgroundColor: getCategoryColor(post.category) }}
                           >
-                            Lire <ArrowRight className="ml-1 w-4 h-4" />
-                          </a>
+                            {post.category}
+                          </div>
+                        </div>
+                        <div className="p-6">
+                          <div className="flex items-center gap-4 mb-3">
+                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                              <Calendar className="w-3 h-3" />
+                              <span>{post.date}</span>
+                            </div>
+                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                              <Clock className="w-3 h-3" />
+                              <span>{post.readTime}</span>
+                            </div>
+                          </div>
+                          <h3 className="text-xl font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
+                            {post.title}
+                          </h3>
+                          <p className="text-gray-600 mb-4 line-clamp-3">{post.excerpt}</p>
+                          <div className="flex items-center justify-between mt-4">
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                <User className="w-4 h-4 text-gray-600" />
+                              </div>
+                              <div className="text-sm">
+                                <span className="font-medium text-black">{post.author}</span>
+                              </div>
+                            </div>
+                            <a
+                              href={`/blog/${post.slug}`}
+                              className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
+                            >
+                              Lire <ArrowRight className="ml-1 w-4 h-4" />
+                            </a>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               )}
 

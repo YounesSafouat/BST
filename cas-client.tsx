@@ -15,99 +15,9 @@ import {
   Smartphone,
 } from "lucide-react"
 import { useState, useEffect } from "react"
-import Header from "./components/header"
+import Loader from "@/components/home/Loader"
 
-// Mock client data
-const clientsData = [
-  {
-    id: 1,
-    name: "Worqbox",
-    sector: "deco",
-    solution: "odoo",
-    description: "ERP complet pour optimisation des processus",
-    results: "+300% Leads qualifiés",
-    logo: "WO",
-    color: "#714b67",
-    url: "/client/worqbox",
-  },
-  {
-    id: 2,
-    name: "TEST 2",
-    sector: "Industrie",
-    solution: "odoo",
-    description: "ERP complet pour optimisation production",
-    results: "-40% Coûts opérationnels",
-    logo: "AM",
-    color: "#714b67",
-    url: "/client/worqbox",
-  },
-  {
-    id: 3,
-    name: "TEST 3",
-    sector: "Santé",
-    solution: "hubspot",
-    description: "CRM patient et marketing médical",
-    results: "+250% Rendez-vous",
-    logo: "MP",
-    color: "#ff5c35",
-    url: "/client/worqbox",
-  },
-  {
-    id: 4,
-    name: "TEST 4",
-    sector: "Éducation",
-    solution: "odoo",
-    description: "Gestion complète établissement scolaire",
-    results: "+90% Efficacité admin",
-    logo: "EA",
-    color: "#714b67",
-    url: "/client/worqbox",
-  },
-  {
-    id: 5,
-    name: "TEST 5",
-    sector: "Commerce",
-    solution: "both",
-    description: "Intégration ERP + CRM pour chaîne retail",
-    results: "+180% ROI",
-    logo: "RM",
-    color: "#000000",
-    url: "/client/worqbox",
-  },
-  {
-    id: 6,
-    name: "TEST 6",
-    sector: "Automobile",
-    solution: "odoo",
-    description: "ERP spécialisé pièces automobiles",
-    results: "-50% Temps gestion stock",
-    logo: "AP",
-    color: "#714b67",
-    url: "/client/worqbox",
-  },
-  {
-    id: 7,
-    name: "TEST 7",
-    sector: "Restauration",
-    solution: "hubspot",
-    description: "CRM et marketing pour chaîne restaurants",
-    results: "+400% Commandes en ligne",
-    logo: "FC",
-    color: "#ff5c35",
-    url: "/client/worqbox",
-  },
-  {
-    id: 8,
-    name: "TEST 8",
-    sector: "Immobilier",
-    solution: "both",
-    description: "Solution complète gestion immobilière",
-    results: "+220% Ventes",
-    logo: "PT",
-    color: "#000000",
-    url: "/client/worqbox",
-  },
-]
+// Dynamic client data from API
 
 const sectors = [
   { name: "Tous", icon: Building },
@@ -122,24 +32,32 @@ const sectors = [
 ]
 
 export default function CasClient() {
-  const [scrollY, setScrollY] = useState(0)
-  const [isLoaded, setIsLoaded] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedSolution, setSelectedSolution] = useState("all")
   const [selectedSector, setSelectedSector] = useState("Tous")
-  const [filteredClients, setFilteredClients] = useState(clientsData)
+  const [clientsData, setClientsData] = useState<any[]>([])
+  const [filteredClients, setFilteredClients] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
+  // Fetch client cases from API
   useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
+    const fetchClients = async () => {
+      setLoading(true)
+      try {
+        const res = await fetch("/api/content?type=clients-page")
+        const data = await res.json()
+        const page = Array.isArray(data) ? data[0] : data
+        const cases = page?.content?.clientCases || []
+        setClientsData(cases)
+        setFilteredClients(cases)
+      } catch (err) {
+        setClientsData([])
+        setFilteredClients([])
+      } finally {
+        setLoading(false)
     }
-
-    window.addEventListener("scroll", handleScroll)
-    setIsLoaded(true)
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
     }
+    fetchClients()
   }, [])
 
   useEffect(() => {
@@ -150,7 +68,7 @@ export default function CasClient() {
       filtered = filtered.filter(
         (client) =>
           client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          client.description.toLowerCase().includes(searchTerm.toLowerCase()),
+          (client.summary?.toLowerCase?.() || "").includes(searchTerm.toLowerCase()),
       )
     }
 
@@ -167,15 +85,16 @@ export default function CasClient() {
     }
 
     setFilteredClients(filtered)
-  }, [searchTerm, selectedSolution, selectedSector])
+  }, [searchTerm, selectedSolution, selectedSector, clientsData])
+
+  if (loading) {
+    return <Loader />
+  }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <Header scrollY={scrollY} isLoaded={isLoaded} />
-
       {/* Hero Section */}
-      <section className="relative pt-32 md:pt-40 pb-20 px-6 lg:px-8">
+      <section className="relative pt-48 md:pt-56 pb-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-6 py-3 rounded-full bg-gray-50 border border-gray-200 mb-8">
@@ -281,26 +200,33 @@ export default function CasClient() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredClients.map((client, index) => (
+                {loading ? (
+                  <div className="text-center py-16">Chargement...</div>
+                ) : filteredClients.map((client, index) => (
                   <div
-                    key={client.id}
+                    key={client.slug || client.name}
                     className="group relative bg-white rounded-2xl border border-gray-100 p-6 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     {/* Solution Indicator */}
-                    <div
-                      className="absolute top-0 left-0 w-full h-1 rounded-t-2xl"
-                      style={{ backgroundColor: client.color }}
-                    ></div>
-
+                    {/* Optionally use a color or featured flag */}
                     {/* Client Logo */}
                     <div className="flex items-start justify-between mb-4">
-                      <div
-                        className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300"
-                        style={{ backgroundColor: client.color }}
+                      {client.logo ? (
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center bg-gray-50">
+                          <img
+                            src={client.logo.startsWith('http') ? client.logo : `/logos/${client.logo}`}
+                            alt={client.name}
+                            className="w-12 h-12 object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300 bg-[#714b67]"
                       >
-                        {client.logo}
+                          {client.name[0]}
                       </div>
+                      )}
                       <div className="text-right">
                         <div className="text-xs text-gray-500 mb-1">SECTEUR</div>
                         <div className="text-sm font-medium text-gray-700">{client.sector}</div>
@@ -311,20 +237,20 @@ export default function CasClient() {
                     <h3 className="text-xl font-bold text-black mb-2 group-hover:text-gray-700 transition-colors duration-300">
                       {client.name}
                     </h3>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{client.description}</p>
+                    <p className="text-gray-600 mb-4 leading-relaxed">{client.summary}</p>
 
-                    {/* Results */}
+                    {/* Results/Stats */}
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-xs text-gray-500 mb-1">RÉSULTATS</div>
-                        <div className="font-bold text-black">{client.results}</div>
+                        <div className="font-bold text-black">{client.projectStats?.find?.((s: any) => s.label === "ROI atteint")?.value || ""}</div>
                       </div>
                       <Button
                         size="sm"
                         variant="outline"
                         className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       >
-                        <a href={client.url} className="inline-flex items-center">
+                        <a href={`/cas-client/${client.slug}`} className="inline-flex items-center">
                         Voir le cas <ArrowRight className="ml-2 w-4 h-4" /></a>
                       </Button>
                     </div>
@@ -332,12 +258,9 @@ export default function CasClient() {
                     {/* Solution Badge */}
                     <div className="absolute top-4 right-4">
                       <div
-                        className="px-3 py-1 rounded-full text-xs font-bold text-white"
-                        style={{ backgroundColor: client.color }}
+                        className="px-3 py-1 rounded-full text-xs font-bold text-white bg-[#714b67]"
                       >
-                        {client.solution === "hubspot" && "HubSpot"}
-                        {client.solution === "odoo" && "Odoo"}
-                        {client.solution === "both" && "HubSpot + Odoo"}
+                        {client.migration || client.sector}
                       </div>
                     </div>
                   </div>
