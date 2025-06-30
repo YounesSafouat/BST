@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { ThemeProvider } from '@/components/theme-provider'
-import RouteLoader from "@/components/RouteLoader"
+import { usePageAnalytics } from '@/hooks/use-analytics'
 
 export default function LayoutWrapper({
   children,
@@ -15,6 +15,8 @@ export default function LayoutWrapper({
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const pathname = usePathname()
+
+  usePageAnalytics();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +37,7 @@ export default function LayoutWrapper({
   }, [pathname])
 
   const isDashboard = pathname ? pathname.startsWith('/dashboard') : false
+  const isAuth = pathname ? pathname.startsWith('/auth') : false
 
   return (
     <ThemeProvider
@@ -43,12 +46,11 @@ export default function LayoutWrapper({
       enableSystem
       disableTransitionOnChange
     >
-      <RouteLoader />
-      {!isDashboard && <Header scrollY={scrollY} isLoaded={isLoaded} />}
+      {!isDashboard && !isAuth && <Header scrollY={scrollY} isLoaded={isLoaded} />}
       <main className="flex-grow">
         {children}
       </main>
-      {!isDashboard && <Footer />}
+      {!isDashboard && !isAuth && <Footer />}
     </ThemeProvider>
   )
 } 

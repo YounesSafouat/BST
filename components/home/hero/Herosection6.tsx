@@ -1,5 +1,10 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { ArrowRight, Calendar, Play, CheckCircle, Zap, Shield, FolderSync as Sync, Activity } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { ContentSection } from "@/app/types/content"
+import { useRouter } from "next/navigation"
 
 export default function HeroSection6() {
   const [isVisible, setIsVisible] = useState(false)
@@ -147,17 +152,19 @@ export default function HeroSection6() {
             {/* CTA */}
             <div className="flex gap-4">
               <button 
-                className="inline-flex items-center px-6 py-3 rounded-xl font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                style={{ backgroundColor: '#FF7A59' }}
+                className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
-                <Calendar className="w-4 h-4 mr-2" />
                 Démo gratuite
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               
-              <button className="inline-flex items-center px-6 py-3 rounded-xl font-medium border border-gray-300 bg-white text-gray-700 hover:border-[#FF7A59] hover:text-[#FF7A59] transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                <Play className="w-4 h-4 mr-2" />
+              <button 
+                className="group w-[18em] bg-transparent text-[var(--color-main)] border-2 border-[var(--color-main)] px-4 py-2 rounded-lg hover:bg-[var(--color-main)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
+              >
                 Voir comment ça marche
+                <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
 

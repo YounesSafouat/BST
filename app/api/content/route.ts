@@ -68,7 +68,7 @@ export async function PUT(req: NextRequest) {
     }
     const body = await req.json();
     // Only allow updating the content field for safety
-    const update = {};
+    const update: any = {};
     if (body.content) update['content'] = body.content;
     if (body.title) update['title'] = body.title;
     if (body.description) update['description'] = body.description;

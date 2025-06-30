@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "@/components/ui/use-toast";
-import { Quote, Briefcase, Pencil, Trash2, Eye, X } from "lucide-react";
+import { Quote, Briefcase, Pencil, Trash2, Eye, X, Save, Plus, Users } from "lucide-react";
 import Loader from "@/components/home/Loader"
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 // Client case structure based on seedClientsPage.js
 interface ProjectStat {
@@ -46,6 +48,7 @@ export interface ClientCase {
   solutions: Solution[];
   testimonial: Testimonial | null;
 }
+
 function emptyClient(): ClientCase {
   return {
     slug: "",
@@ -81,6 +84,7 @@ export default function ClientsAdminPage() {
   const [form, setForm] = useState<ClientCase>(emptyClient());
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch client cases from API
   useEffect(() => {
@@ -106,16 +110,19 @@ export default function ClientsAdminPage() {
   function editClient(idx: number) {
     setEditing(idx);
     setForm(clients[idx]);
+    setIsModalOpen(true);
   }
 
   function newClient() {
     setEditing("new");
     setForm(emptyClient());
+    setIsModalOpen(true);
   }
 
   function cancelEdit() {
     setEditing(null);
     setForm(emptyClient());
+    setIsModalOpen(false);
   }
 
   async function saveClient() {
@@ -194,290 +201,378 @@ export default function ClientsAdminPage() {
 
   // UI
   return (
-    <div className="w-full p-6">
-      <h1 className="text-3xl font-bold mb-6">Gestion des Cas Clients</h1>
-      {editing === null ? (
-        <>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Cas Clients</h2>
-            <Button onClick={newClient}>Nouveau cas client</Button>
-          </div>
-          {loading ? (
-            <Loader />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {clients.length === 0 && <div className="col-span-full">Aucun cas client.</div>}
-              {clients.map((client, idx) => (
-                <Card key={idx} className="p-4 flex flex-col hover:shadow-lg transition-shadow duration-300">
-                  {/* Top Section */}
-                  <div className="flex items-start space-x-4">
-                    <div className="p-2 rounded-md bg-purple-100 flex-shrink-0 mt-1">
-                      <Briefcase className="w-5 h-5 text-purple-600" />
-                    </div>
-                    <div className="flex-grow min-w-0">
-                      <h3 className="font-bold text-gray-900 uppercase truncate" title={client.name}>
-                        {client.name}
-                      </h3>
-                      <p className="text-sm text-gray-500 capitalize">{client.sector}</p>
-                    </div>
+    <div className="container mx-auto py-4 sm:py-6 lg:py-8">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gestion des Cas Clients</h1>
+        <Button onClick={newClient} className="bg-[--color-black] hover:bg-primary-dark text-white">
+          <Plus className="h-4 w-4 mr-2" />
+          Nouveau Client
+        </Button>
                   </div>
 
-                  {/* Middle Section (Headline) */}
-                  <div className="flex-grow py-4">
-                    <p className="text-gray-700" title={client.headline}>
-                      {client.headline}
-                    </p>
-                  </div>
-
-                  {/* Footer Section */}
-                  <div className="flex justify-between items-center pt-3 border-t border-gray-200">
-                    <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                      client.featured ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' : 'bg-transparent'
-                    }`}>
-                      {client.featured ? 'En vedette' : ''}
-                    </span>
-                    <div className="flex items-center space-x-1">
-                      <Button variant="outline" size="sm" className="border-gray-300" onClick={() => setPreviewing(client)}>
-                        <Eye className="w-4 h-4 mr-1" /> Aperçu
-                      </Button>
-                      <Button variant="outline" size="sm" className="border-gray-300" onClick={() => editClient(idx)}>
-                        <Pencil className="w-4 h-4 mr-1" /> Éditer
-                      </Button>
-                      <Button 
-                        variant="destructive" 
-                        size="sm" 
-                        onClick={() => deleteClient(idx)}
-                      >
-                        <Trash2 className="w-4 h-4 mr-1" /> Supprimer
-                      </Button>
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-sm sm:text-lg text-gray-600">Chargement des cas clients...</p>
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
-          )}
-        </>
       ) : (
-        <div className="space-y-4">
-          <form
-            className="space-y-4"
-            onSubmit={e => { e.preventDefault(); saveClient(); }}
-          >
-            <h2 className="text-xl font-semibold mb-2">{editing === "new" ? "Nouveau cas client" : "Éditer le cas client"}</h2>
+        <>
+          {/* Modal for editing */}
+          {isModalOpen && (
+            <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-2 sm:p-4">
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-4xl lg:max-w-7xl h-[90vh] sm:h-[95vh] flex flex-col">
+                <div className="flex justify-between items-center p-3 sm:p-4 border-b">
+                  <h2 className="text-lg sm:text-2xl font-semibold text-gray-900">
+                    {editing === "new" ? "Nouveau Cas Client" : `Modifier: ${form.name}`}
+                  </h2>
+                  <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
+                    <X className="h-4 w-4 sm:h-6 sm:w-6" />
+                  </Button>
+                </div>
+                
+                <div className="flex-grow overflow-y-auto p-4">
+                  <div className="space-y-6">
+                    {/* Basic Information */}
+                    <Card>
+                      <CardHeader><CardTitle>Informations de Base</CardTitle></CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="name">Nom</Label>
-              <Input id="name" name="name" value={form.name} onChange={handleChange} required />
+                            <Label>Nom du client</Label>
+                            <Input name="name" value={form.name} onChange={handleChange} />
             </div>
             <div>
-              <Label htmlFor="slug">Slug (URL)</Label>
-              <Input id="slug" name="slug" value={form.slug} onChange={handleChange} required />
+                            <Label>Slug</Label>
+                            <Input name="slug" value={form.slug} onChange={handleChange} placeholder="nom-client" />
             </div>
             <div>
-              <Label htmlFor="headline">Titre principal</Label>
-              <Input id="headline" name="headline" value={form.headline} onChange={handleChange} />
+                            <Label>Titre principal</Label>
+                            <Input name="headline" value={form.headline} onChange={handleChange} />
             </div>
             <div>
-              <Label htmlFor="summary">Résumé</Label>
-              <Input id="summary" name="summary" value={form.summary} onChange={handleChange} />
+                            <Label>Secteur</Label>
+                            <Input name="sector" value={form.sector} onChange={handleChange} />
             </div>
             <div>
-              <Label htmlFor="sector">Secteur</Label>
-              <Input id="sector" name="sector" value={form.sector} onChange={handleChange} />
+                            <Label>Taille</Label>
+                            <Input name="size" value={form.size} onChange={handleChange} />
             </div>
             <div>
-              <Label htmlFor="size">Taille</Label>
-              <Input id="size" name="size" value={form.size} onChange={handleChange} />
+                            <Label>Migration</Label>
+                            <Input name="migration" value={form.migration} onChange={handleChange} />
+                          </div>
+                          <div className="md:col-span-2">
+                            <Label>Logo URL</Label>
+                            <Input name="logo" value={form.logo} onChange={handleChange} placeholder="https://..." />
+                          </div>
+                          <div className="md:col-span-2">
+                            <Label>Résumé</Label>
+                            <Input name="summary" value={form.summary} onChange={handleChange} />
             </div>
-            <div>
-              <Label htmlFor="migration">Migration</Label>
-              <Input id="migration" name="migration" value={form.migration} onChange={handleChange} />
             </div>
-            <div>
-              <Label htmlFor="logo">Logo (texte ou URL)</Label>
-              <Input id="logo" name="logo" value={form.logo} onChange={handleChange} />
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="featured"
+                              checked={form.featured}
+                              onCheckedChange={(checked) => setForm(f => ({ ...f, featured: checked }))}
+                            />
+                            <Label htmlFor="featured">Mis en avant</Label>
             </div>
-            <div>
-              <Label htmlFor="featured">À la une</Label>
-              <input type="checkbox" id="featured" name="featured" checked={form.featured} onChange={handleChange} />
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id="featuredInHeader"
+                              checked={form.featuredInHeader}
+                              onCheckedChange={(checked) => setForm(f => ({ ...f, featuredInHeader: checked }))}
+                            />
+                            <Label htmlFor="featuredInHeader">Mis en avant dans l'en-tête</Label>
             </div>
-            <div>
-              <Label htmlFor="featuredInHeader">Afficher dans l'en-tête (header)</Label>
-              <input type="checkbox" id="featuredInHeader" name="featuredInHeader" checked={form.featuredInHeader || false} onChange={handleChange} />
             </div>
+                      </CardContent>
+                    </Card>
+
             {/* Project Stats */}
-            <div>
-              <Label>Statistiques du projet</Label>
-              {(form.projectStats || []).map((stat, idx) => (
-                <div key={idx} className="flex gap-2 mb-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Statistiques du projet</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {form.projectStats.map((stat, idx) => (
+                          <div key={idx} className="flex gap-2">
                   <Input
                     placeholder="Label"
                     value={stat.label}
-                    onChange={e => handleArrayChange("projectStats", idx, "label", e.target.value)}
-                    className="w-1/2"
+                              onChange={(e) => handleArrayChange("projectStats", idx, "label", e.target.value)}
                   />
                   <Input
                     placeholder="Valeur"
                     value={stat.value}
-                    onChange={e => handleArrayChange("projectStats", idx, "value", e.target.value)}
-                    className="w-1/2"
-                  />
-                  <Button type="button" variant="destructive" size="sm" onClick={() => removeArrayItem("projectStats", idx)}>Suppr</Button>
+                              onChange={(e) => handleArrayChange("projectStats", idx, "value", e.target.value)}
+                            />
+                            <Button
+                              variant="destructive"
+                              size="icon"
+                              onClick={() => removeArrayItem("projectStats", idx)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
                 </div>
               ))}
-              <Button type="button" size="sm" onClick={() => addArrayItem("projectStats", { label: "", value: "" })}>Ajouter</Button>
-            </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => addArrayItem("projectStats", { label: "", value: "" })}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Ajouter une statistique
+                        </Button>
+                      </CardContent>
+                    </Card>
+
             {/* Challenges */}
-            <div>
-              <Label>Défis</Label>
-              {(form.challenges || []).map((ch, idx) => (
-                <div key={idx} className="flex gap-2 mb-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Défis</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {form.challenges.map((challenge, idx) => (
+                          <div key={idx} className="space-y-2 p-4 border rounded-lg">
+                            <div className="flex gap-2">
                   <Input
-                    placeholder="Titre"
-                    value={ch.title}
-                    onChange={e => handleArrayChange("challenges", idx, "title", e.target.value)}
-                    className="w-1/3"
-                  />
+                                placeholder="Titre du défi"
+                                value={challenge.title}
+                                onChange={(e) => handleArrayChange("challenges", idx, "title", e.target.value)}
+                              />
+                              <Button
+                                variant="destructive"
+                                size="icon"
+                                onClick={() => removeArrayItem("challenges", idx)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                   <Input
                     placeholder="Description"
-                    value={ch.description}
-                    onChange={e => handleArrayChange("challenges", idx, "description", e.target.value)}
-                    className="w-1/3"
+                              value={challenge.description}
+                              onChange={(e) => handleArrayChange("challenges", idx, "description", e.target.value)}
                   />
                   <Input
                     placeholder="Impact"
-                    value={ch.impact}
-                    onChange={e => handleArrayChange("challenges", idx, "impact", e.target.value)}
-                    className="w-1/3"
+                              value={challenge.impact}
+                              onChange={(e) => handleArrayChange("challenges", idx, "impact", e.target.value)}
                   />
-                  <Button type="button" variant="destructive" size="sm" onClick={() => removeArrayItem("challenges", idx)}>Suppr</Button>
                 </div>
               ))}
-              <Button type="button" size="sm" onClick={() => addArrayItem("challenges", { title: "", description: "", impact: "" })}>Ajouter</Button>
-            </div>
+                        <Button
+                          variant="outline"
+                          onClick={() => addArrayItem("challenges", { title: "", description: "", impact: "" })}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Ajouter un défi
+                        </Button>
+                      </CardContent>
+                    </Card>
+
             {/* Solutions */}
-            <div>
-              <Label>Solutions</Label>
-              {(form.solutions || []).map((sol, idx) => (
-                <div key={idx} className="flex gap-2 mb-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Solutions</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {form.solutions.map((solution, idx) => (
+                          <div key={idx} className="space-y-2 p-4 border rounded-lg">
+                            <div className="flex gap-2">
                   <Input
                     placeholder="Module"
-                    value={sol.module}
-                    onChange={e => handleArrayChange("solutions", idx, "module", e.target.value)}
-                    className="w-1/3"
-                  />
+                                value={solution.module}
+                                onChange={(e) => handleArrayChange("solutions", idx, "module", e.target.value)}
+                              />
+                              <Button
+                                variant="destructive"
+                                size="icon"
+                                onClick={() => removeArrayItem("solutions", idx)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                   <Input
                     placeholder="Description"
-                    value={sol.description}
-                    onChange={e => handleArrayChange("solutions", idx, "description", e.target.value)}
-                    className="w-1/3"
+                              value={solution.description}
+                              onChange={(e) => handleArrayChange("solutions", idx, "description", e.target.value)}
                   />
                   <Input
                     placeholder="Bénéfice"
-                    value={sol.benefit}
-                    onChange={e => handleArrayChange("solutions", idx, "benefit", e.target.value)}
-                    className="w-1/3"
+                              value={solution.benefit}
+                              onChange={(e) => handleArrayChange("solutions", idx, "benefit", e.target.value)}
                   />
-                  <Button type="button" variant="destructive" size="sm" onClick={() => removeArrayItem("solutions", idx)}>Suppr</Button>
                 </div>
               ))}
-              <Button type="button" size="sm" onClick={() => addArrayItem("solutions", { module: "", description: "", benefit: "" })}>Ajouter</Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => addArrayItem("solutions", { module: "", description: "", benefit: "" })}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Ajouter une solution
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* Testimonial */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Témoignage</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="hasTestimonial"
+                            checked={form.testimonial !== null}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                setForm(f => ({ ...f, testimonial: { quote: "", author: "", role: "", initials: "" } }));
+                              } else {
+                                setForm(f => ({ ...f, testimonial: null }));
+                              }
+                            }}
+                          />
+                          <Label htmlFor="hasTestimonial">Inclure un témoignage</Label>
             </div>
-            {/* Testimonial */}
-            <div>
-              <Label>Témoignage</Label>
-              {form.testimonial ? (
-                <>
+                        {form.testimonial && (
+                          <div className="space-y-4">
                   <Input
                     placeholder="Citation"
-                    name="quote"
-                    value={form.testimonial?.quote || ""}
-                    onChange={e => setForm(f => ({
-                      ...f,
-                      testimonial: {
-                        quote: e.target.value,
-                        author: f.testimonial?.author || '',
-                        role: f.testimonial?.role || '',
-                        initials: f.testimonial?.initials || ''
-                      }
-                    }))}
-                  />
+                              value={form.testimonial.quote}
+                              onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, quote: e.target.value } }))}
+                            />
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Input
                     placeholder="Auteur"
-                    name="author"
-                    value={form.testimonial?.author || ""}
-                    onChange={e => setForm(f => ({
-                      ...f,
-                      testimonial: {
-                        quote: f.testimonial?.quote || '',
-                        author: e.target.value,
-                        role: f.testimonial?.role || '',
-                        initials: f.testimonial?.initials || ''
-                      }
-                    }))}
+                                value={form.testimonial.author}
+                                onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, author: e.target.value } }))}
                   />
                   <Input
                     placeholder="Rôle"
-                    name="role"
-                    value={form.testimonial?.role || ""}
-                    onChange={e => setForm(f => ({
-                      ...f,
-                      testimonial: {
-                        quote: f.testimonial?.quote || '',
-                        author: f.testimonial?.author || '',
-                        role: e.target.value,
-                        initials: f.testimonial?.initials || ''
-                      }
-                    }))}
+                                value={form.testimonial.role}
+                                onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, role: e.target.value } }))}
                   />
                   <Input
                     placeholder="Initiales"
-                    name="initials"
-                    value={form.testimonial?.initials || ""}
-                    onChange={e => setForm(f => ({
-                      ...f,
-                      testimonial: {
-                        quote: f.testimonial?.quote || '',
-                        author: f.testimonial?.author || '',
-                        role: f.testimonial?.role || '',
-                        initials: e.target.value
-                      }
-                    }))}
-                  />
-                  <Button type="button" variant="destructive" size="sm" onClick={() => setForm(f => ({ ...f, testimonial: null }))}>Supprimer</Button>
-                </>
-              ) : (
-                <Button type="button" size="sm" onClick={() => setForm(f => ({ ...f, testimonial: { quote: '', author: '', role: '', initials: '' } }))}>Ajouter Témoignage</Button>
-              )}
+                                value={form.testimonial.initials}
+                                onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, initials: e.target.value } }))}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+
+                {/* Sticky Action Bar */}
+                <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t mt-0 bg-white sticky bottom-0 z-20 px-4 pb-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="lg" 
+                    className="min-w-[120px] text-base font-semibold" 
+                    onClick={cancelEdit}
+                  >
+                    Annuler
+                  </Button>
+                  {editing !== "new" && (
+                    <Button 
+                      type="button" 
+                      variant="destructive" 
+                      size="lg" 
+                      className="min-w-[120px] text-base font-semibold" 
+                      onClick={() => editing !== "new" && deleteClient(editing)}
+                    >
+                      <Trash2 className="h-5 w-5 mr-2" />
+                      Supprimer
+                    </Button>
+                  )}
+                  <Button 
+                    type="button" 
+                    size="lg" 
+                    className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg" 
+                    onClick={saveClient}
+                    disabled={saving}
+                  >
+                    <Save className="h-5 w-5 mr-2" />
+                    {saving ? "Enregistrement..." : "Enregistrer"}
+                  </Button>
+                </div>
             </div>
-            <div className="flex gap-2 mt-4">
-              <Button type="submit" disabled={saving}>{saving ? "Enregistrement..." : "Enregistrer"}</Button>
-              <Button type="button" variant="outline" onClick={cancelEdit}>Annuler</Button>
-            </div>
-          </form>
         </div>
       )}
 
-      {/* Preview Modal */}
-      {previewing && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4"
-          onClick={() => setPreviewing(null)}
-        >
-          <div 
-            className="bg-white rounded-lg shadow-2xl w-full max-w-6xl h-[90vh] overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-3 border-b flex justify-between items-center bg-gray-50">
-              <h3 className="font-semibold text-gray-700">Aperçu du Cas Client: {previewing.name}</h3>
-              <Button variant="ghost" size="icon" onClick={() => setPreviewing(null)}>
-                <X className="w-5 h-5" />
+          {/* Clients Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {clients.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun cas client</h3>
+                <p className="text-gray-500">Commencez par créer votre premier cas client.</p>
+              </div>
+            ) : (
+              clients.map((client, idx) => (
+                <Card key={idx} className="p-4 sm:p-6 flex flex-col justify-between hover:shadow-lg transition-all duration-300 min-h-[200px] sm:min-h-[230px]">
+                  {/* Top Section: Icon, Title, Description */}
+                  <div>
+                    <div className="flex items-center space-x-3 sm:space-x-4 mb-3 sm:mb-4">
+                      <div className="p-2 sm:p-3 rounded-lg bg-green-100">
+                        {client.logo ? (
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 relative">
+                            <Image
+                              src={client.logo}
+                              alt={client.name}
+                              fill
+                              className="object-contain"
+                            />
+                          </div>
+                        ) : (
+                          <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="text-sm sm:text-base font-bold text-gray-800 uppercase tracking-wider truncate">
+                          {client.name || "Sans nom"}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-gray-500 capitalize">{client.sector || "Secteur non défini"}</p>
+                      </div>
+                    </div>
+                    <p className="text-sm sm:text-lg text-gray-600 truncate">
+                      {client.headline || "Aucun titre"}
+                    </p>
+                  </div>
+
+                  {/* Bottom Section: Status & Actions */}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mt-4 sm:mt-6">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
+                        client.featured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {client.featured ? 'Mis en avant' : 'Standard'}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">
+                      <Button
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => editClient(idx)}
+                        className="border-gray-300 hover:bg-gray-100 text-xs sm:text-sm"
+                      >
+                        <Pencil className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        Modifier
               </Button>
             </div>
-            <div className="flex-grow overflow-y-auto">
-              <ClientPagePreview client={previewing} />
             </div>
+                </Card>
+              ))
+            )}
           </div>
-        </div>
+        </>
       )}
     </div>
   );

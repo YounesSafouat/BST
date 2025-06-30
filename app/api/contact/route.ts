@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import connectDB from '@/lib/mongodb'
+import ContactSubmission from '@/models/ContactSubmission'
 
 export async function POST(req: Request) {
   try {
+    await connectDB()
     const body = await req.json()
     const { name, email, phone, company, message } = body
 
-    const submission = await prisma.contactSubmission.create({
-      data: {
-        name,
-        email,
-        phone,
-        company,
-        message,
-      },
+    const submission = new ContactSubmission({
+      name,
+      email,
+      phone,
+      company,
+      message,
     })
+
+    await submission.save()
 
     return NextResponse.json(submission)
   } catch (error) {
@@ -30,11 +30,9 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const submissions = await prisma.contactSubmission.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    })
+    await connectDB()
+    const submissions = await ContactSubmission.find({})
+      .sort({ createdAt: -1 })
 
     return NextResponse.json(submissions)
   } catch (error) {

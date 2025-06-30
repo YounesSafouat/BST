@@ -4,32 +4,7 @@ import { useRef, useEffect } from "react"
 import * as LucideIcons from "lucide-react"
 import { LucideIcon } from "lucide-react"
 import AnimatedScrollArrow from "../AnimatedScrollArrow"
-
-interface ContentSection {
-  _id: string;
-  type: string;
-  title: string;
-  description: string;
-  content: {
-    items?: Array<{
-      icon: string;
-      title: string;
-      description: string;
-    }>;
-    challenges?: Array<{
-      icon: string;
-      title: string;
-      description: string;
-      impact?: string;
-    }>;
-  };
-  metadata?: {
-    color?: string;
-    image?: string;
-    order?: number;
-  };
-  isActive: boolean;
-}
+import { ContentSection, ChallengeContent } from "@/app/types/content";
 
 function getIconComponent(name: string): LucideIcon {
   return (LucideIcons[name as keyof typeof LucideIcons] as LucideIcon) || LucideIcons.Star;
@@ -41,6 +16,7 @@ interface ChallengeSectionProps {
 
 export default function ChallengeSection({ challenge }: ChallengeSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
+  const content = challenge.content as ChallengeContent;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -77,19 +53,19 @@ export default function ChallengeSection({ challenge }: ChallengeSectionProps) {
           <div className="inline-flex items-center px-6 py-3 rounded-full bg-white border border-gray-200 mb-12 shadow-lg">
             <div className="w-2 h-2 bg-gray-400 rounded-full mr-3"></div>
             <span className="text-sm font-medium text-gray-700 tracking-wide">
-              {challenge.title ? `${challenge.title.toUpperCase()}` : 'CHAPITRE 2 : LE DÉFI'}
+              {content.badge || challenge.title ? `${challenge.title.toUpperCase()}` : 'CHAPITRE 2 : LE DÉFI'}
             </span>
           </div>
           <h2 className="text-5xl md:text-6xl font-bold text-black mb-8 tracking-tight">
             {challenge.title || 'Le Chaos'} <span className="text-gray-400">Organisé</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {challenge.description || 'Avant la transformation, il y a toujours le chaos. Voici les défis que nous résolvons quotidiennement.'}
+            {content.intro || challenge.description || 'Avant la transformation, il y a toujours le chaos. Voici les défis que nous résolvons quotidiennement.'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {challenge.content?.challenges?.map((item, index) => {
+          {content.challenges?.map((item, index) => {
             const IconComponent = getIconComponent(item.icon);
             return (
               <div

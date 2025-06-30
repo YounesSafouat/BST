@@ -21,8 +21,24 @@ import {
   Globe,
   Lightbulb,
   Building,
+  CheckCircle,
+  MapPin,
+  Phone,
+  Mail,
+  MessageCircle,
+  BarChart3,
+  Crown,
+  ChevronRight,
+  GraduationCap,
+  HeadphonesIcon,
+  Database,
+  PieChart,
+  Workflow,
+  ShoppingCart,
+  Calendar,
 } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function AboutUs() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -30,6 +46,7 @@ export default function AboutUs() {
   const [scrollY, setScrollY] = useState(0)
   const [currentYear] = useState(new Date().getFullYear())
   const isVisible = true
+  const router = useRouter()
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -49,6 +66,14 @@ export default function AboutUs() {
       window.removeEventListener("scroll", handleScroll)
     }
   }, [])
+
+  const handleMissionClick = () => {
+    router.push('/contact')
+  }
+
+  const handleProjectsClick = () => {
+    router.push('/contact')
+  }
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -301,6 +326,7 @@ export default function AboutUs() {
             <Button
               size="lg"
               className="bg-gradient-to-r from-[#ff5c35] to-[#714b67] text-white hover:from-[#ff5c35]/90 hover:to-[#714b67]/90 shadow-2xl shadow-[#ff5c35]/30 hover:shadow-3xl transition-all duration-500 px-16 py-8 text-xl font-bold hover:scale-105 group rounded-2xl"
+              onClick={handleMissionClick}
             >
               Rejoignez Notre Mission
               <ArrowRight className="ml-4 w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
@@ -309,6 +335,7 @@ export default function AboutUs() {
               size="lg"
               variant="outline"
               className="border-2 border-white/30 text-white hover:bg-white/10 px-16 py-8 text-xl font-bold transition-all duration-300 hover:scale-105 rounded-2xl backdrop-blur-sm"
+              onClick={handleProjectsClick}
             >
               <Globe className="mr-4 w-6 h-6" />
               Découvrir Nos Projets

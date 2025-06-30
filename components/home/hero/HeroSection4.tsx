@@ -1,6 +1,19 @@
-import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
-import { ArrowRight, Calendar, Play, Zap, BarChart3, Settings, Database, Workflow, TrendingUp, Users2, CheckCircle, ArrowUpRight } from "lucide-react"
+import { 
+  Calendar, 
+  Play, 
+  ArrowRight, 
+  Zap, 
+  Workflow, 
+  TrendingUp, 
+  Users2, 
+  Settings, 
+  BarChart3, 
+  CheckCircle, 
+  ArrowUpRight, 
+  Database 
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function HeroSection4() {
   const [isVisible, setIsVisible] = useState(false)
@@ -84,24 +97,21 @@ export default function HeroSection4() {
             {/* CTA Section */}
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="px-8 py-6 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group"
-                  style={{ backgroundColor: '#714B67' }}
+                <button 
+                  className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                  style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 >
-                  <Calendar className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform duration-300" />
                   Planifier une démo
-                  <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
+                  <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
                 
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="px-8 py-6 text-lg font-semibold rounded-2xl border-2 border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 transition-all duration-300 group"
+                <button 
+                  className="group w-[18em] bg-transparent text-[var(--color-main)] border-2 border-[var(--color-main)] px-4 py-2 rounded-lg hover:bg-[var(--color-main)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                  style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 >
-                  <Play className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" />
                   Voir les cas d'usage
-                </Button>
+                  <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
               </div>
 
               {/* Trust Indicators */}

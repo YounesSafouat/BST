@@ -3,13 +3,15 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function Loader() {
   return (
-    <div className="fixed inset-0 flex items-center justify-center w-screen h-screen bg-white z-50">
-      <DotLottieReact
-        src="https://lottie.host/7bcdd207-d088-46d4-8280-994b6cfabacd/qhWx7Wyyn1.lottie"
-        loop
-        autoplay
-        style={{ width: 200, height: 200 }}
-      />
+    <div className="fixed inset-0 flex items-center justify-center w-full h-full  backdrop-blur-sm z-[9999]">
+      <div className="relative flex items-center justify-center">
+        <DotLottieReact
+          src="https://lottie.host/a3992c7b-3e59-45e6-a068-c5a8a24f0d1a/h0AxrlehaZ.lottie"
+          loop
+          autoplay
+          style={{ width: 200, height: 200 }}
+        />
+      </div>
     </div>
   );
 } 

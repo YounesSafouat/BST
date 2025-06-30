@@ -32,6 +32,7 @@ async function main() {
     description: 'Le Chaos Organisé',
     content: {
       intro: "Avant la transformation, il y a toujours le chaos. Voici les défis que nous résolvons quotidiennement.",
+      badge: "LE DÉFI",
       challenges: [
         {
           icon: 'AlertTriangle',
@@ -67,6 +68,7 @@ async function main() {
       solutions: [
         {
           icon: 'Settings',
+          iconUrl: 'https://cdn.hubspot.com/hubfs/HubSpot_Logos/HubSpot-Inversed-Favicon.png',
           title: 'HubSpot',
           subtitle: 'Le Cerveau Commercial',
           description: 'CRM intelligent, automatisation marketing, et analytics prédictifs pour une croissance mesurable.',
@@ -75,6 +77,7 @@ async function main() {
         },
         {
           icon: 'BarChart3',
+          iconUrl: 'https://www.odoo.com/web/image/website/1/logo?unique=1',
           title: 'Odoo',
           subtitle: "L'Épine Dorsale",
           description: 'ERP complet unifiant tous vos processus métier dans une plateforme cohérente et évolutive.',
@@ -83,6 +86,7 @@ async function main() {
         },
         {
           icon: 'Zap',
+          iconUrl: '',
           title: 'Intégration',
           subtitle: 'La Magie Opère',
           description: 'Synchronisation parfaite créant un écosystème digital où chaque donnée trouve sa place.',
@@ -144,6 +148,7 @@ async function main() {
     description: 'Histoires de Réussite',
     content: {
       intro: 'Chaque transformation raconte une histoire unique. Voici quelques-unes de nos plus belles réussites.',
+      badge: 'NOS RÉUSSITES',
       testimonials: [
         {
           name: 'Ahmed Mansouri',

@@ -75,9 +75,11 @@
   "description": "L'Art de l'Intégration",
   "content": {
     "intro": "Nous transformons le chaos en symphonie grâce à une approche méthodique et des outils de classe mondiale.",
+    "badge": "NOS SOLUTIONS",
     "solutions": [
       {
         "icon": "Settings",
+        "iconUrl": "",
         "title": "HubSpot",
         "subtitle": "Le Cerveau Commercial",
         "description": "CRM intelligent, automatisation marketing, et analytics prédictifs pour une croissance mesurable.",
@@ -90,6 +92,7 @@
       },
       {
         "icon": "BarChart3",
+        "iconUrl": "",
         "title": "Odoo",
         "subtitle": "L'Épine Dorsale",
         "description": "ERP complet unifiant tous vos processus métier dans une plateforme cohérente et évolutive.",
@@ -102,6 +105,7 @@
       },
       {
         "icon": "Zap",
+        "iconUrl": "",
         "title": "Intégration",
         "subtitle": "La Magie Opère",
         "description": "Synchronisation parfaite créant un écosystème digital où chaque donnée trouve sa place.",
@@ -137,12 +141,14 @@
   "description": "Notre Méthodologie",
   "content": {
     "intro": "Un processus éprouvé en 4 étapes pour garantir le succès de votre transformation digitale.",
+    "badge": "NOTRE MÉTHODOLOGIE",
     "steps": [
       {
         "step": "01",
         "title": "Audit & Stratégie",
         "description": "Analyse approfondie de votre écosystème actuel et définition d'une roadmap personnalisée.",
         "icon": "Target",
+        "iconUrl": "",
         "side": "left"
       },
       {
@@ -150,6 +156,7 @@
         "title": "Architecture & Design",
         "description": "Conception de l'architecture technique et des workflows optimisés pour vos besoins spécifiques.",
         "icon": "Lightbulb",
+        "iconUrl": "",
         "side": "right"
       },
       {
@@ -157,6 +164,7 @@
         "title": "Implémentation",
         "description": "Déploiement méthodique avec formation continue et accompagnement de vos équipes.",
         "icon": "Settings",
+        "iconUrl": "",
         "side": "left"
       },
       {
@@ -164,6 +172,7 @@
         "title": "Optimisation",
         "description": "Monitoring continu, ajustements et évolutions pour maximiser votre retour sur investissement.",
         "icon": "Rocket",
+        "iconUrl": "",
         "side": "right"
       }
     ]

@@ -99,21 +99,20 @@ export default function CasClient() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-6 py-3 rounded-full bg-gray-50 border border-gray-200 mb-8">
               <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
-              <span className="text-sm font-medium text-gray-700 tracking-wide">NOS RÉUSSITES</span>
+              <span className="text-sm font-medium text-color-gray tracking-wide">NOS RÉUSSITES</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-black mb-6 tracking-tight">
-              Cas{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#714b67] to-[#ff5c35]">Client</span>
+            <h1 className="text-5xl md:text-6xl font-bold text-color-black mb-6 tracking-tight">
+              Études de <span className="text-color-main">Cas Clients</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Découvrez comment nous avons transformé les entreprises marocaines avec nos solutions Odoo et HubSpot.
+            <p className="text-xl text-color-gray max-w-3xl mx-auto leading-relaxed">
+              Découvrez comment nous avons aidé nos clients à transformer leur entreprise avec nos solutions digitales.
             </p>
           </div>
 
           {/* Search Section */}
           <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray" />
               <input
                 type="text"
                 placeholder="Rechercher un client ou un secteur..."
@@ -135,7 +134,7 @@ export default function CasClient() {
               {/* Solution Filter */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-6">
-                  <Filter className="w-5 h-5 text-gray-600" />
+                  <Filter className="w-5 h-5 text-gray" />
                   <h3 className="text-lg font-bold text-black">Solution Implémentée</h3>
                 </div>
                 <div className="space-y-3">
@@ -155,7 +154,7 @@ export default function CasClient() {
                       }`}
                     >
                       <div className="w-4 h-4 rounded-full" style={{ backgroundColor: solution.color }}></div>
-                      <span className="font-medium text-gray-700">{solution.label}</span>
+                      <span className="font-medium text-gray">{solution.label}</span>
                     </button>
                   ))}
                 </div>
@@ -164,7 +163,7 @@ export default function CasClient() {
               {/* Sector Filter */}
               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-6">
-                  <Building className="w-5 h-5 text-gray-600" />
+                  <Building className="w-5 h-5 text-gray" />
                   <h3 className="text-lg font-bold text-black">Secteur d'Activité</h3>
                 </div>
                 <div className="space-y-2">
@@ -178,8 +177,8 @@ export default function CasClient() {
                           : "hover:bg-gray-50 border-2 border-transparent"
                       }`}
                     >
-                      <sector.icon className="w-4 h-4 text-gray-600" />
-                      <span className="font-medium text-gray-700">{sector.name}</span>
+                      <sector.icon className="w-4 h-4 text-gray" />
+                      <span className="font-medium text-gray">{sector.name}</span>
                     </button>
                   ))}
                 </div>
@@ -190,12 +189,10 @@ export default function CasClient() {
             <div className="flex-1">
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-black">
-                  {filteredClients.length} Client{filteredClients.length > 1 ? "s" : ""} Trouvé
-                  {filteredClients.length > 1 ? "s" : ""}
+                  {filteredClients.length} Études de Cas
                 </h2>
-                <div className="text-sm text-gray-500">
-                  {selectedSolution !== "all" && `Filtré par solution • `}
-                  {selectedSector !== "Tous" && `Secteur: ${selectedSector}`}
+                <div className="text-sm text-gray">
+                  Découvrez nos réalisations par secteur et solution
                 </div>
               </div>
 
@@ -228,21 +225,21 @@ export default function CasClient() {
                       </div>
                       )}
                       <div className="text-right">
-                        <div className="text-xs text-gray-500 mb-1">SECTEUR</div>
-                        <div className="text-sm font-medium text-gray-700">{client.sector}</div>
+                        <div className="text-xs text-gray mb-1">SECTEUR</div>
+                        <div className="text-sm font-medium text-gray">{client.sector}</div>
                       </div>
                     </div>
 
                     {/* Client Info */}
-                    <h3 className="text-xl font-bold text-black mb-2 group-hover:text-gray-700 transition-colors duration-300">
+                    <h3 className="text-xl font-bold text-black mb-2 group-hover:text-gray transition-colors duration-300">
                       {client.name}
                     </h3>
-                    <p className="text-gray-600 mb-4 leading-relaxed">{client.summary}</p>
+                    <p className="text-gray mb-4 leading-relaxed">{client.summary}</p>
 
                     {/* Results/Stats */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-xs text-gray-500 mb-1">RÉSULTATS</div>
+                        <div className="text-xs text-gray mb-1">RÉSULTATS</div>
                         <div className="font-bold text-black">{client.projectStats?.find?.((s: any) => s.label === "ROI atteint")?.value || ""}</div>
                       </div>
                       <Button
@@ -270,10 +267,10 @@ export default function CasClient() {
               {filteredClients.length === 0 && (
                 <div className="text-center py-16">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Search className="w-8 h-8 text-gray-400" />
+                    <Search className="w-8 h-8 text-gray" />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-2">Aucun client trouvé</h3>
-                  <p className="text-gray-600">Essayez de modifier vos critères de recherche.</p>
+                  <p className="text-gray">Essayez de modifier vos critères de recherche.</p>
                 </div>
               )}
             </div>

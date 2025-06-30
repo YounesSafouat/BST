@@ -32,6 +32,10 @@ import {
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { FaWhatsapp } from "react-icons/fa"
+import { useGlobalLoader } from "@/components/LoaderProvider"
+import { useRouter } from "next/navigation"
+import { useButtonAnalytics } from '@/hooks/use-analytics'
+
 
 interface HeaderProps {
   scrollY: number
@@ -43,6 +47,9 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [headerClients, setHeaderClients] = useState<any[]>([])
   const [casClientMenuClients, setCasClientMenuClients] = useState<any[]>([])
+  const { showLoader, hideLoader } = useGlobalLoader()
+  const router = useRouter()
+  const { trackButtonClick } = useButtonAnalytics()
 
   useEffect(() => {
     fetch("/api/content?type=clients-page")
@@ -62,6 +69,21 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
         setCasClientMenuClients([])
       })
   }, [])
+
+  const handleAppointmentClick = async () => {
+    showLoader()
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      window.location.href = '/rendez-vous'
+    } finally {
+      hideLoader()
+    }
+  }
+
+  const handleNavClick = (path: string) => {
+    showLoader();
+    router.push(path);
+  };
 
   return (
     <header
@@ -85,7 +107,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             onMouseEnter={() => setActiveDropdown("hubspot")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2">
+            <button
+              onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
+              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
+            >
               HubSpot
               <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
             </button>
@@ -165,7 +190,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button className="bg-[#ff5c35] text-white hover:bg-[#ff5c35]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl">
+                    <Button 
+                      className="bg-[#ff5c35] text-white hover:bg-[#ff5c35]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
+                      onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
+                    >
                       En Savoir Plus <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </div>
@@ -180,7 +208,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             onMouseEnter={() => setActiveDropdown("odoo")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2">
+            <button
+              onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }}
+              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
+            >
               Odoo
               <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
             </button>
@@ -260,7 +291,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button className="bg-[#714b67] text-white hover:bg-[#714b67]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl">
+                    <Button 
+                      className="bg-[#714b67] text-white hover:bg-[#714b67]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
+                      onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }}
+                    >
                       En Savoir Plus <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </div>
@@ -275,7 +309,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             onMouseEnter={() => setActiveDropdown("about")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2 whitespace-nowrap">
+            <button
+              onClick={() => { trackButtonClick('header-about'); handleNavClick('/about'); }}
+              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2 whitespace-nowrap"
+            >
               À Propos
               <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
             </button>
@@ -310,7 +347,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button className="bg-black text-white hover:bg-gray-900 transition-colors duration-200 px-6 py-2 text-sm rounded-xl">
+                    <Button 
+                      className="bg-black text-white hover:bg-gray-900 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
+                      onClick={() => { trackButtonClick('header-about'); handleNavClick('/about'); }}
+                    >
                       Notre Histoire <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </div>
@@ -321,12 +361,12 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
           {/* Contact Link */}
           <div className="relative group">
-            <Link
-              href="/contact"
+            <button
+              onClick={() => { trackButtonClick('header-contact'); handleNavClick('/contact'); }}
               className="text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
             >
               Contact
-            </Link>
+            </button>
           </div>
 
           {/* Cas Client Dropdown */}
@@ -335,7 +375,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             onMouseEnter={() => setActiveDropdown("cas-client")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2 whitespace-nowrap">
+            <button
+              onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
+              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2 whitespace-nowrap"
+            >
               Cas Client
               <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
             </button>
@@ -350,9 +393,9 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   <div className="grid grid-cols-2 gap-6">
                     {casClientMenuClients.length > 0 ? (
                       casClientMenuClients.map((client) => (
-                        <Link
+                        <button
                           key={client.slug}
-                          href={`/cas-client/${client.slug}`}
+                          onClick={() => { trackButtonClick(`header-cas-client-${client.slug}`); handleNavClick(`/cas-client/${client.slug}`); }}
                           className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500 flex flex-col"
                         >
                           <div className="relative h-32 overflow-hidden flex items-center justify-center bg-gray-50">
@@ -371,7 +414,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                               {client.projectStats && client.projectStats.length > 0 ? client.projectStats[0].value : ''}
                             </div>
                           </div>
-                        </Link>
+                        </button>
                       ))
                     ) : (
                       <div className="col-span-2 text-center text-gray-400">Aucun client sélectionné</div>
@@ -379,7 +422,10 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button className="bg-black text-white hover:bg-gray-900 transition-colors duration-200 px-6 py-2 text-sm rounded-xl">
+                    <Button 
+                      className="bg-black text-white hover:bg-gray-900 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
+                      onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
+                    >
                       Voir Tous les Cas <ArrowRight className="ml-2 w-4 h-4" />
                     </Button>
                   </div>
@@ -393,15 +439,15 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
         <div className="flex items-center gap-2 ml-4">
           {/* Rendez-vous Button with Red Dot */}
           <div className="relative">
-            <Link href="/rendez-vous" className="relative">
-              <Button
-                className="rounded-full bg-black text-white px-6 py-2 shadow-none overflow-hidden relative transition group border border-transparent hover:border-black"
+          <button
+                className="group w-[18em] bg-[var(--color-black)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-main)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
+                
               >
-                <span className="relative z-10 transition group-hover:shimmer-text">
-                  PRENDRE UN RENDEZ-VOUS
-                </span>
-              </Button>
-            </Link>
+                Prendre rendez-vous {" "}
+                
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
           </div>
           {/* WhatsApp Button */}
           <Button
@@ -461,23 +507,28 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-6 py-8 space-y-6 rounded-b-3xl">
-          <Link href="/hubspot" className="block text-gray-600 hover:text-black transition-colors font-medium">
+          <button onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
             HubSpot
-          </Link>
-          <Link href="/odoo" className="block text-gray-600 hover:text-black transition-colors font-medium">
+          </button>
+          <button onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
             Odoo
-          </Link>
-          <Link href="/about" className="block text-gray-600 hover:text-black transition-colors font-medium">
+          </button>
+          <button onClick={() => { trackButtonClick('header-about'); handleNavClick('/about'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
             À Propos
-          </Link>
-          <Link href="/contact" className="block text-gray-600 hover:text-black transition-colors font-medium">
+          </button>
+          <button onClick={() => { trackButtonClick('header-contact'); handleNavClick('/contact'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
             Contact
-          </Link>
-          <Link href="/cas-client" className="block text-gray-600 hover:text-black transition-colors font-medium">
+          </button>
+          <button onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
             Cas Client
-          </Link>
+          </button>
           <div className="pt-6">
-            <Button className="w-full bg-black text-white">Commencer</Button>
+            <Button 
+              className="w-full bg-black text-white"
+              onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
+            >
+              Commencer
+            </Button>
           </div>
         </div>
       )}

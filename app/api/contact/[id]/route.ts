@@ -1,20 +1,28 @@
 import { NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
-
-const prisma = new PrismaClient()
+import connectDB from '@/lib/mongodb'
+import ContactSubmission from '@/models/ContactSubmission'
 
 export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
+    await connectDB()
     const { id } = params
     const { status } = await req.json()
 
-    const submission = await prisma.contactSubmission.update({
-      where: { id },
-      data: { status },
-    })
+    const submission = await ContactSubmission.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    )
+
+    if (!submission) {
+      return NextResponse.json(
+        { error: "Contact submission not found" },
+        { status: 404 }
+      )
+    }
 
     return NextResponse.json(submission)
   } catch (error) {

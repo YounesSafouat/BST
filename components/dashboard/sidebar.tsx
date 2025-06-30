@@ -43,6 +43,12 @@ const menuItems = [
     color: "from-yellow-200 to-yellow-100 text-yellow-700",
   },
   {
+    title: "SEO",
+    href: "/dashboard/seo",
+    icon: Settings,
+    color: "from-orange-200 to-orange-100 text-orange-700",
+  },
+  {
     title: "Clients",
     href: "/dashboard/clients",
     icon: Building2,
@@ -68,47 +74,54 @@ const menuItems = [
   },
 ];
 
-export function Sidebar({ collapsed, setCollapsed }) {
+interface SidebarProps {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}
+
+export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [logoError, setLogoError] = useState(false);
-
-  // Responsive width: lg:w-28 md:w-20 w-16 (collapsed), lg:w-64 md:w-40 w-24 (expanded)
-  const widthClass = collapsed
-    ? "w-16 md:w-20 lg:w-24"
-    : "w-24 md:w-32 lg:w-56 xl:w-64";
 
   // Sidebar content
   function SidebarContent({ isDrawer = false }: { isDrawer?: boolean }) {
     return (
       <aside
-        className={`h-screen ${widthClass} bg-white shadow-xl rounded-3xl flex flex-col items-center border border-gray-100 z-30 transition-all duration-300 m-4`}
+        className={`h-screen bg-white shadow-xl border-r border-gray-200 flex flex-col items-center z-30 transition-all duration-300 ${
+          isDrawer 
+            ? "w-64" 
+            : collapsed 
+              ? "w-16 lg:w-20" 
+              : "w-64 lg:w-72"
+        }`}
       >
-        {/* Collapse/Expand button (desktop only, left edge) */}
+        {/* Collapse/Expand button (desktop only) */}
         {!isDrawer && (
           <button
-            className="absolute top-6 left-2 bg-white border border-gray-200 rounded-full p-1 shadow hover:bg-gray-100 transition md:flex hidden"
-            onClick={() => setCollapsed((c) => !c)}
+            className="absolute -right-3 top-6 bg-white border border-gray-200 rounded-full p-1.5 shadow-lg hover:bg-gray-50 transition-all duration-200 hidden lg:flex items-center justify-center"
+            onClick={() => setCollapsed(!collapsed)}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             type="button"
           >
-            {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         )}
+
         {/* Company Logo */}
-        <div className={`mt-8 mb-10 flex items-center justify-center rounded-2xl bg-gray-100 overflow-hidden transition-all duration-300 ${collapsed ? "w-12 h-12" : "w-16 h-16"}`}>
+        <div className={`mt-6 mb-8 flex items-center justify-center rounded-xl  overflow-hidden transition-all duration-300 ${
+          collapsed ? "w-12 h-12" : "w-[15em] h-[10em]"
+        }`}>
           <img
             src="/bst.png"
             alt="Company Logo"
-            className={`object-contain ${collapsed ? "w-10 h-10" : "w-14 h-14"}`}
+            className={`object-contain ${collapsed ? "w-10 h-10" : "w-[15em] h-[15em]"}`}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
             style={{ display: "block" }}
           />
-          {/* Fallback if logo fails */}
-          <span className="absolute text-xl font-bold text-gray-400" style={{ display: "none" }}>BST</span>
         </div>
-        {/* Menu icons - vertically centered */}
-        <nav className="flex-1 flex flex-col items-center justify-center gap-2 w-full">
+
+        {/* Menu items */}
+        <nav className="flex-1 flex flex-col items-center justify-start gap-1 w-full px-2">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -116,21 +129,23 @@ export function Sidebar({ collapsed, setCollapsed }) {
                 key={item.href}
                 href={item.href}
                 aria-label={item.title}
-                className={`group flex items-center ${collapsed ? "justify-center" : "justify-start"} w-full h-14 rounded-2xl transition-all duration-200 relative px-0 md:px-2 ${
-                  isActive ? "bg-[#e6f4ea] text-green-700 font-bold" : "text-gray-400 hover:bg-gray-100"
-                }`}
+                className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative ${
+                  isActive 
+                    ? "bg-green-50 text-green-700 font-semibold border border-green-200" 
+                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                } ${collapsed ? "justify-center px-0" : "justify-start px-3"}`}
                 onClick={() => isDrawer && setDrawerOpen(false)}
               >
-                <span className="flex items-center justify-center w-14 h-14">
-                  <item.icon className="w-7 h-7" />
+                <span className="flex items-center justify-center w-8 h-8">
+                  <item.icon className="w-5 h-5" />
                 </span>
                 {!collapsed && (
-                  <span className="ml-2 text-base font-medium transition-all duration-200 text-gray-700 group-hover:text-black">
+                  <span className="ml-3 text-sm font-medium transition-all duration-200">
                     {item.title}
                   </span>
                 )}
                 {collapsed && (
-                  <span className="absolute left-16 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 whitespace-nowrap shadow-lg">
+                  <span className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 whitespace-nowrap shadow-lg z-50">
                     {item.title}
                   </span>
                 )}
@@ -138,24 +153,29 @@ export function Sidebar({ collapsed, setCollapsed }) {
             );
           })}
         </nav>
-        {/* Sign out icon at the bottom */}
-        <div className="w-full flex flex-col items-center mb-6 mt-4">
+
+        {/* Sign out button */}
+        <div className="w-full flex flex-col items-center mb-6 px-2">
           <button
             onClick={() => signOut()}
             aria-label="Sign Out"
-            className="flex items-center justify-center w-14 h-14 rounded-2xl hover:bg-gray-100 text-gray-300 hover:text-red-500 transition-all duration-200"
+            className={`flex items-center w-full h-12 rounded-xl hover:bg-red-50 hover:text-red-600 text-gray-500 transition-all duration-200 ${
+              collapsed ? "justify-center" : "justify-start px-3"
+            }`}
           >
-            <LogOut className="w-7 h-7" />
+            <LogOut className="w-5 h-5" />
+            {!collapsed && <span className="ml-3 text-sm font-medium">Sign Out</span>}
           </button>
         </div>
-        {/* Close button for drawer */}
+
+        {/* Close button for mobile drawer */}
         {isDrawer && (
           <button
-            className="absolute top-6 right-6 p-2 rounded hover:bg-gray-100 transition md:hidden"
+            className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-all duration-200 lg:hidden"
             onClick={() => setDrawerOpen(false)}
             aria-label="Close sidebar"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         )}
       </aside>
@@ -164,25 +184,27 @@ export function Sidebar({ collapsed, setCollapsed }) {
 
   return (
     <>
-      {/* Burger button for small screens */}
+      {/* Mobile menu button */}
       <button
-        className="fixed top-4 left-4 z-40 p-2 bg-white rounded shadow hover:bg-gray-100 transition cursor-pointer md:hidden"
+        className="fixed top-4 left-4 z-40 p-2 bg-white rounded-lg shadow-lg hover:bg-gray-50 transition-all duration-200 lg:hidden"
         onClick={() => setDrawerOpen(true)}
         aria-label="Open sidebar"
         type="button"
       >
-        <Menu className="w-6 h-6" />
+        <Menu className="w-5 h-5" />
       </button>
-      {/* Sidebar always visible on desktop */}
-      <div className="hidden md:block">
+
+      {/* Desktop sidebar */}
+      <div className="hidden lg:block">
         <SidebarContent />
       </div>
-      {/* Drawer on small screens */}
+
+      {/* Mobile drawer overlay */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
+        <div className="fixed inset-0 z-50 flex lg:hidden">
           <SidebarContent isDrawer />
           <div
-            className="flex-1 bg-black bg-opacity-30 cursor-pointer"
+            className="flex-1 bg-black bg-opacity-50 cursor-pointer"
             onClick={() => setDrawerOpen(false)}
           />
         </div>

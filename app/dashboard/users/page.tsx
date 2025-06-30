@@ -82,11 +82,11 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-6">
+    <div className="w-full max-w-6xl mx-auto py-4 sm:py-6">
       {/* Tabs */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-1 sm:gap-2 mb-4">
         <button
-          className={`px-6 py-2 rounded-t-lg font-semibold text-base border-b-2 transition-all duration-150 ${
+          className={`px-3 sm:px-6 py-2 rounded-t-lg font-semibold text-sm sm:text-base border-b-2 transition-all duration-150 ${
             tab === "editor"
               ? "border-[#ff5c35] bg-white text-[#ff5c35] shadow"
               : "border-transparent bg-gray-50 text-gray-500 hover:text-[#ff5c35]"
@@ -96,7 +96,7 @@ export default function UsersPage() {
           Editor
         </button>
         <button
-          className={`px-6 py-2 rounded-t-lg font-semibold text-base border-b-2 transition-all duration-150 ${
+          className={`px-3 sm:px-6 py-2 rounded-t-lg font-semibold text-sm sm:text-base border-b-2 transition-all duration-150 ${
             tab === "admin"
               ? "border-[#ff5c35] bg-white text-[#ff5c35] shadow"
               : "border-transparent bg-gray-50 text-gray-500 hover:text-[#ff5c35]"
@@ -107,21 +107,23 @@ export default function UsersPage() {
         </button>
       </div>
 
-      <Card className="rounded-2xl shadow-lg border border-gray-200 bg-white overflow-x-auto">
+      <Card className="rounded-xl sm:rounded-2xl shadow-lg border border-gray-200 bg-white overflow-hidden">
         {/* Action bar */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 px-6 pt-6 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
           <div className="flex gap-2">
-            <button onClick={() => openModal()} className="bg-[#ff5c35] text-white px-4 py-2 rounded-lg font-semibold shadow hover:bg-[#ff5c35]/90 transition">Add new</button>
+            <button onClick={() => openModal()} className="bg-[#ff5c35] text-white px-3 sm:px-4 py-2 rounded-lg font-semibold shadow hover:bg-[#ff5c35]/90 transition text-sm">Add new</button>
           </div>
-          <div className="flex items-center gap-2 mt-2 md:mt-0">
-            <span className="text-sm text-gray-500">Total members: <span className="font-bold text-gray-700">{users.length}</span></span>
-            <span className="text-sm text-gray-500">Current used: <span className="font-bold text-gray-700">{users.filter(u => u.status === "active").length}</span></span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
+              <span>Total members: <span className="font-bold text-gray-700">{users.length}</span></span>
+              <span>Current used: <span className="font-bold text-gray-700">{users.filter(u => u.status === "active").length}</span></span>
+            </div>
             <input
               type="text"
               placeholder="Filter by name or email"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-2 border rounded-lg"
+              className="px-3 py-2 border rounded-lg text-sm w-full sm:w-auto"
             />
           </div>
         </div>
@@ -131,31 +133,52 @@ export default function UsersPage() {
           {loading ? (
             <Loader />
           ) : error ? (
-            <div className="p-4 text-center text-red-500">{error}</div>
+            <div className="p-4 text-center text-red-500 text-sm">{error}</div>
           ) : (
             <table className="min-w-full text-sm text-left">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="py-3 px-4 font-semibold text-gray-700">Member name</th>
-                  <th className="py-3 px-4 font-semibold text-gray-700">Email</th>
-                  <th className="py-3 px-4 font-semibold text-gray-700">Role</th>
-                  <th className="py-3 px-4 font-semibold text-gray-700">Operation</th>
+                  <th className="py-2 sm:py-3 px-3 sm:px-4 font-semibold text-gray-700 text-xs sm:text-sm">Member name</th>
+                  <th className="py-2 sm:py-3 px-3 sm:px-4 font-semibold text-gray-700 text-xs sm:text-sm hidden sm:table-cell">Email</th>
+                  <th className="py-2 sm:py-3 px-3 sm:px-4 font-semibold text-gray-700 text-xs sm:text-sm">Role</th>
+                  <th className="py-2 sm:py-3 px-3 sm:px-4 font-semibold text-gray-700 text-xs sm:text-sm">Operation</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
                   <tr key={user._id} className="border-b last:border-b-0 hover:bg-gray-50 transition">
-                    <td className="py-2 px-4 font-medium text-gray-900">{user.name}</td>
-                    <td className="py-2 px-4 text-gray-700">{user.email}</td>
-                    <td className="py-2 px-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${user.role === "admin" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                    <td className="py-2 px-3 sm:px-4 font-medium text-gray-900 text-xs sm:text-sm">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                        <span>{user.name}</span>
+                        <span className="text-gray-500 text-xs sm:hidden">{user.email}</span>
+                      </div>
+                    </td>
+                    <td className="py-2 px-3 sm:px-4 text-gray-700 text-xs sm:text-sm hidden sm:table-cell">
+                      <span className="truncate block max-w-[200px]">{user.email}</span>
+                    </td>
+                    <td className="py-2 px-3 sm:px-4">
+                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${user.role === "admin" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
                         {user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Unknown"}
                       </span>
                     </td>
-                    <td className="py-2 px-4">
-                      <div className="flex gap-2">
-                        <button onClick={() => openModal(user)} className="p-2 rounded hover:bg-[#ff5c35]/10 text-[#ff5c35] transition"><Pencil className="w-4 h-4" /></button>
-                        <button onClick={() => handleDelete(user._id)} className="p-2 rounded hover:bg-[#ff5c35]/10 text-[#ff5c35] transition"><Trash2 className="w-4 h-4" /></button>
+                    <td className="py-2 px-3 sm:px-4">
+                      <div className="flex gap-1 sm:gap-2">
+                        <button 
+                          onClick={() => openModal(user)} 
+                          className="p-1.5 sm:p-2 rounded hover:bg-[#ff5c35]/10 text-[#ff5c35] transition"
+                          aria-label={`Edit user ${user.name}`}
+                          title={`Edit user ${user.name}`}
+                        >
+                          <Pencil className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(user._id)} 
+                          className="p-1.5 sm:p-2 rounded hover:bg-[#ff5c35]/10 text-[#ff5c35] transition"
+                          aria-label={`Delete user ${user.name}`}
+                          title={`Delete user ${user.name}`}
+                        >
+                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -168,46 +191,46 @@ export default function UsersPage() {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">{currentUser ? "Edit User" : "Add User"}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md">
+            <h2 className="text-lg sm:text-xl font-bold mb-4 text-gray-900">{currentUser ? "Edit User" : "Add User"}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">Name</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Password</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">Password</label>
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg"
-                  required
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
+                  required={!currentUser}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">User Role</label>
+                <label className="block text-sm font-medium mb-1 text-gray-700">User Role</label>
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
                   required
                 >
                   <option value="admin">Admin</option>

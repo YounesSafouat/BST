@@ -30,7 +30,7 @@ type Post = {
   body?: string
 }
 
-export default function BlogPost({ post }: { post: Post }) {
+export function BlogPost({ post }: { post: Post }) {
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [relatedPosts, setRelatedPosts] = useState<Post[]>([])
@@ -199,19 +199,12 @@ export default function BlogPost({ post }: { post: Post }) {
 
             <h2>Notre méthodologie de migration en 5 étapes</h2>
 
-            <h3>1. Audit et préparation</h3>
-
             <p>
-              La première étape consiste à réaliser un audit complet de votre installation Odoo 15 actuelle. Nous
-              analysons :
+              Chez Blackswantechnology, nous avons développé une méthodologie éprouvée pour garantir le succès de vos
+              migrations Odoo :
             </p>
 
-            <ul>
-              <li>Les modules standards et personnalisés utilisés</li>
-              <li>Les personnalisations spécifiques (code, rapports, workflows)</li>
-              <li>Le volume et la structure de vos données</li>
-              <li>Les intégrations avec d'autres systèmes</li>
-            </ul>
+            <h3>1. Audit et analyse</h3>
 
             <p>
               Cette phase nous permet d'identifier les potentiels points de friction et d'établir un plan de migration
@@ -399,16 +392,4 @@ export default function BlogPost({ post }: { post: Post }) {
       </div>
     </div>
   )
-}
-
-export async function generateStaticParams() {
-  // Fetch blog-page content from the API
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
-  const data = await res.json();
-  const blogData = Array.isArray(data) ? data[0] : data;
-  const posts = blogData?.content?.blogPosts || [];
-  return posts.map((post: any) => ({
-    slug: post.slug,
-  }));
-}
+} 

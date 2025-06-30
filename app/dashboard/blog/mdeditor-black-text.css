@@ -10,5 +10,22 @@
      color: #000 !important;
      background: #fff !important;
      caret-color: #000 !important;
+     position: static !important;
+   }
+   
+   .w-md-editor-text {
+     color: #000 !important;
+     background: #fff !important;
+   }
+   
+   .w-md-editor-text-input,
+   .w-md-editor-input,
+   .w-md-editor-text,
+   .w-md-editor-content textarea,
+   textarea.w-md-editor-text-input {
+     color: #000 !important;
+     background: #fff !important;
+     caret-color: #000 !important;
+     -webkit-text-fill-color: #000 !important;
    }
    

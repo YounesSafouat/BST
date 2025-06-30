@@ -1,54 +1,91 @@
 import type { Metadata } from "next"
-import BlogPost from "../../../pages/blog-post"
+import { BlogPost } from "@/components/BlogPost"
 
 // This function is required for static site generation with dynamic routes
 export async function generateStaticParams() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
-  const data = await res.json();
-  const blogData = Array.isArray(data) ? data[0] : data;
-  const posts = blogData?.content?.blogPosts || [];
-  return posts.map((post: any) => ({ slug: post.slug }));
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+    
+    if (!res.ok) {
+      console.warn("Failed to fetch blog data for static params, returning empty array");
+      return [];
+    }
+    
+    const data = await res.json();
+    const blogData = Array.isArray(data) ? data[0] : data;
+    const posts = blogData?.content?.blogPosts || [];
+    return posts.map((post: any) => ({ slug: post.slug }));
+  } catch (error) {
+    console.warn("Error fetching blog data for static params:", error);
+    return [];
+  }
 }
 
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
-  const data = await res.json();
-  const blogData = Array.isArray(data) ? data[0] : data;
-  const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug);
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+    
+    if (!res.ok) {
+      return {
+        title: "Blog | Blackswantechnology",
+        description: "Découvrez nos articles sur Odoo ERP, HubSpot CRM et la transformation digitale.",
+      };
+    }
+    
+    const data = await res.json();
+    const blogData = Array.isArray(data) ? data[0] : data;
+    const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug);
 
-  if (!post) {
+    if (!post) {
+      return {
+        title: "Article non trouvé | Blackswantechnology",
+        description: "Cet article n'existe pas ou a été déplacé.",
+      };
+    }
+
     return {
-      title: "Article non trouvé | Blackswantechnology",
-      description: "Cet article n'existe pas ou a été déplacé.",
+      title: `${post.title} | Blackswantechnology`,
+      description: post.excerpt,
+      openGraph: {
+        title: post.title,
+        description: post.excerpt,
+        type: "article",
+        publishedTime: post.date,
+        authors: [post.author],
+      },
+    };
+  } catch (error) {
+    console.warn("Error generating metadata for blog post:", error);
+    return {
+      title: "Blog | Blackswantechnology",
+      description: "Découvrez nos articles sur Odoo ERP, HubSpot CRM et la transformation digitale.",
     };
   }
-
-  return {
-    title: `${post.title} | Blackswantechnology`,
-    description: post.excerpt,
-    openGraph: {
-      title: post.title,
-      description: post.excerpt,
-      type: "article",
-      publishedTime: post.date,
-      authors: [post.author],
-    },
-  };
 }
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
-  const data = await res.json();
-  const blogData = Array.isArray(data) ? data[0] : data;
-  const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug);
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+    
+    if (!res.ok) {
+      return <div className="text-center py-12">Erreur lors du chargement de l'article</div>;
+    }
+    
+    const data = await res.json();
+    const blogData = Array.isArray(data) ? data[0] : data;
+    const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug);
 
-  if (!post) {
-    return <div>Article non trouvé</div>;
+    if (!post) {
+      return <div className="text-center py-12">Article non trouvé</div>;
+    }
+
+    return <BlogPost post={post} />;
+  } catch (error) {
+    console.error("Error loading blog post:", error);
+    return <div className="text-center py-12">Erreur lors du chargement de l'article</div>;
   }
-
-  return <BlogPost post={post} />;
 }

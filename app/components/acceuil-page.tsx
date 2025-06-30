@@ -40,7 +40,7 @@ import TransformationSection from "@/components/home/transformation/Transformati
 import SuccessSection from "@/components/home/success/SuccessSection"
 import CTASection from "@/components/home/cta/CTASection"
 import Loader from "@/components/home/Loader"
-import HeroSection2 from "@/components/home/hero/HeroSection2"
+import HeroSection2 from "@/components/home/hero/HeroSection"
 import HeroSection3 from "@/components/home/hero/HeroSection3"
 import HeroSection4 from "@/components/home/hero/HeroSection4"
 import HeroSection5 from "@/components/home/hero/HeroSection5"
@@ -147,6 +147,8 @@ export default function AcceuilPage({ previewOnly = false }: AcceuilPageProps) {
   const challenge = getSection("challenge")
   const solution = getSection("solution")
   const transformation = getSection("transformation")
+  const success = getSection("success")
+  const cta = getSection("cta")
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -201,8 +203,8 @@ export default function AcceuilPage({ previewOnly = false }: AcceuilPageProps) {
         {challenge && <ChallengeSection challenge={challenge} />}
         {solution && <SolutionSection solution={solution} />}
         {transformation && <TransformationSection transformation={transformation} />}
-        <SuccessSection />
-        <CTASection />
+        {success && <SuccessSection success={success} />}
+        {cta && <CTASection cta={cta} />}
       </main>
     </div>
   );

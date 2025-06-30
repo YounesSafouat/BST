@@ -36,6 +36,10 @@ export default function Footer() {
 
   const { newsletter, companyInfo, quickLinks, services, social, certifications, legal } = footerContent;
 
+  const handleNewsletterSubmit = async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000))
+  }
+
   return (
     <footer className="bg-gray-900 text-white pt-20 pb-10 px-6 lg:px-8 relative z-10">
       <div className="max-w-7xl mx-auto">
@@ -56,11 +60,14 @@ export default function Footer() {
                 placeholder={newsletter.placeholder}
                 className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white h-12"
               />
-              <Button className="bg-white text-[#ff5c35] hover:bg-white/90 h-12 px-6 whitespace-nowrap">
+              <Button 
+                className="bg-white text-[#ff5c35] hover:bg-white/90 h-12 px-6 whitespace-nowrap"
+                onClick={handleNewsletterSubmit}
+              >
                 {newsletter.buttonText}
               </Button>
             </div>
-            <p className="text-xs mt-2 text-white/70">{newsletter.disclaimer}</p>
+           
           </div>
         </div>
 

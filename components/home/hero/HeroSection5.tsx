@@ -53,24 +53,21 @@ export default function HeroSection5() {
 
             {/* CTA */}
             <div className="flex gap-4">
-              <Button 
-                size="lg" 
-                className="px-6 py-3 rounded-xl font-medium"
-                style={{ backgroundColor: '#714B67' }}
+              <button 
+                className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
-                <Calendar className="w-4 h-4 mr-2" />
                 Démo gratuite
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
+                <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
               
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="px-6 py-3 rounded-xl font-medium border-gray-200"
+              <button 
+                className="group w-[18em] bg-transparent text-[var(--color-main)] border-2 border-[var(--color-main)] px-4 py-2 rounded-lg hover:bg-[var(--color-main)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
-                <Play className="w-4 h-4 mr-2" />
                 Voir comment ça marche
-              </Button>
+                <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
 
             {/* Stats */}

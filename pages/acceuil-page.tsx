@@ -144,6 +144,8 @@ export default function AcceuilPage({ previewOnly = false }: AcceuilPageProps) {
   const challenge = getSection("challenge")
   const solution = getSection("solution")
   const transformation = getSection("transformation")
+  const success = getSection("success")
+  const cta = getSection("cta")
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -200,8 +202,8 @@ export default function AcceuilPage({ previewOnly = false }: AcceuilPageProps) {
         {challenge && <ChallengeSection challenge={challenge} />}
         {solution && <SolutionSection solution={solution} />}
         {transformation && <TransformationSection transformation={transformation} />}
-        <SuccessSection />
-        <CTASection />
+        {success && <SuccessSection success={success} />}
+        {cta && <CTASection cta={cta} />}
       </main>
 
       <Footer />

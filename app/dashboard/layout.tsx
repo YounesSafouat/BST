@@ -15,12 +15,9 @@ export default function DashboardLayout({
 }) {
   const [collapsed, setCollapsed] = useState(false);
 
-  // Sidebar width: collapsed = 4rem (w-16), expanded = 6rem (w-24)
-  const sidebarWidth = collapsed ? "ml-16" : "ml-24";
-
   return (
     <SessionProvider>
-      <DashboardLayoutContent collapsed={collapsed} setCollapsed={setCollapsed} sidebarWidth={sidebarWidth}>
+      <DashboardLayoutContent collapsed={collapsed} setCollapsed={setCollapsed}>
         {children}
       </DashboardLayoutContent>
     </SessionProvider>
@@ -31,10 +28,9 @@ interface DashboardLayoutContentProps {
   children: React.ReactNode;
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
-  sidebarWidth: string;
 }
 
-function DashboardLayoutContent({ children, collapsed, setCollapsed, sidebarWidth }: DashboardLayoutContentProps) {
+function DashboardLayoutContent({ children, collapsed, setCollapsed }: DashboardLayoutContentProps) {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -46,10 +42,11 @@ function DashboardLayoutContent({ children, collapsed, setCollapsed, sidebarWidt
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-gray-50 flex">
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${sidebarWidth}`}>
-        <main className="flex-1 w-full px-4 py-8">
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300">
+        <Topbar />
+        <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           {children}
         </main>
       </div>

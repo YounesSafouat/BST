@@ -1,83 +1,60 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, Calendar, ArrowUpRight, ArrowRight } from "lucide-react"
 import { useAnimation } from "framer-motion"
 import { useRef } from "react"
 import Image from "next/image"
+import { ContentSection, HeroContent } from "@/app/types/content"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
-interface ContentSection {
-  _id: string
-  type: string
-  title: string
-  description: string
-  content: {
-    subtitle?: string
-  }
-  metadata?: {
-    color?: string
-    image?: string
-    order?: number
-  }
-  isActive: boolean
-}
-
-interface HeroSectionProps {
+interface HeroSection2Props {
   hero: ContentSection
 }
 
-export default function HeroSection({ hero }: HeroSectionProps) {
+export default function HeroSection({ hero }: HeroSection2Props) {
+  const router = useRouter()
+  const [logoRotationIndex, setLogoRotationIndex] = useState(0)
   const [integrationIndex, setIntegrationIndex] = useState(0)
   const [specificationIndex, setSpecificationIndex] = useState(0)
   const [locationIndex, setLocationIndex] = useState(0)
-  const [logoRotationIndex, setLogoRotationIndex] = useState(0)
 
-  // What we integrate
-  const integrations = [
-    "Intégration Odoo",
-    "Synchronisation HubSpot",
-    "Connexion Salesforce",
-    "API Microsoft",
-    "Intégration Shopify",
-  ]
-
-  // Our specifications
-  const specifications = [
-    "Livraison rapide",
-    "Solutions sur mesure",
-    "Support 24/7",
-    "Formation incluse",
-    "Maintenance garantie",
-  ]
-
-  // Locations
-  const locations = [
-    { text: "Depuis Casablanca", flag: "🇲🇦", code: "MA" },
-    { text: "Depuis Paris", flag: "🇫🇷", code: "FR" },
-    { text: "Depuis Dubai", flag: "🇦🇪", code: "AE" },
-    { text: "Depuis Londres", flag: "🇬🇧", code: "GB" },
-  ]
+  // Get data from hero content
+  const heroContent = hero.content as any
+  const integrations = heroContent?.integrations || []
+  const specifications = heroContent?.specifications || []
+  const locations = heroContent?.locations || []
+  const logos = heroContent?.logos || {}
+  const ctaButtons = heroContent?.ctaButtons || {}
+  const companies = heroContent?.companies || []
+  const animations = heroContent?.animations || {}
 
   const logoControls = useAnimation()
   const logoRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIntegrationIndex((prev) => (prev + 1) % integrations.length)
-      setSpecificationIndex((prev) => (prev + 1) % specifications.length)
-      setLocationIndex((prev) => (prev + 1) % locations.length)
-    }, 5000)
+      if (integrations.length > 0) {
+        setIntegrationIndex((prev) => (prev + 1) % integrations.length)
+      }
+      if (specifications.length > 0) {
+        setSpecificationIndex((prev) => (prev + 1) % specifications.length)
+      }
+      if (locations.length > 0) {
+        setLocationIndex((prev) => (prev + 1) % locations.length)
+      }
+    }, animations.rouletteInterval || 5000)
     return () => clearInterval(interval)
-  }, [integrations.length, specifications.length, locations.length])
+  }, [integrations.length, specifications.length, locations.length, animations.rouletteInterval])
 
-  // Separate interval for logo rotation (2 seconds)
+  // Separate interval for logo rotation
   useEffect(() => {
     const logoInterval = setInterval(() => {
       setLogoRotationIndex((prev) => (prev + 1) % 2)
-    }, 2000)
+    }, animations.logoRotationInterval || 2000)
     return () => clearInterval(logoInterval)
-  }, [])
+  }, [animations.logoRotationInterval])
 
   useEffect(() => {
     const observer = new window.IntersectionObserver(
@@ -94,14 +71,56 @@ export default function HeroSection({ hero }: HeroSectionProps) {
     }
   }, [logoControls])
 
-  if (!hero) return null
+  const handleAppointmentClick = () => {
+    router.push(ctaButtons.primary?.url || '/contact')
+  }
 
-  // Replace this with your GIF URL
-  const rendezVousGif = "/rendez-vous.gif"
+  const handleProjectsClick = () => {
+    router.push(ctaButtons.secondary?.url || '/cas-client')
+  }
+
+  if (!hero) return null
 
   return (
     <>
       <style jsx>{`
+        .logo-container {
+          position: relative;
+          height: 80px;
+          width: 100%;
+          overflow: hidden;
+          margin-top: -10px;
+        }
+
+        .logo-track {
+          position: absolute;
+          width: 100%;
+          height: 200%;
+          transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .logo-item {
+          height: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+        }
+
+        .logo-item-inner {
+          width: 300px;
+          height: 80px;
+          position: relative;
+        }
+
+        .bg-odoo {
+          padding: 8px;
+        }
+
+        .bg-hubspot {
+          padding: 8px;
+        }
+
         .smooth-badge {
           display: inline-flex;
           align-items: center;
@@ -137,9 +156,9 @@ export default function HeroSection({ hero }: HeroSectionProps) {
 
         .roulette-item {
           height: 20px;
-          font-size: 14px;
+          font-size: var(--font-size);
           font-weight: 500;
-          color: #374151;
+          color: var(--color-gray);
           white-space: nowrap;
           display: flex;
           align-items: center;
@@ -150,6 +169,10 @@ export default function HeroSection({ hero }: HeroSectionProps) {
           overflow: hidden;
           white-space: nowrap;
           position: relative;
+          background: #fff;
+          border-radius: 1.5rem;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+          padding: 0.5rem 0;
         }
 
         .companies-track {
@@ -160,270 +183,302 @@ export default function HeroSection({ hero }: HeroSectionProps) {
         .company-item {
           display: inline-block;
           padding: 0 2rem;
-          font-size: 1.3rem;
+          font-size: var(--heading-font-size);
           font-weight: 600;
-          color: #6b7280;
+          color: var(--color-gray);
           white-space: nowrap;
+        }
+        .company-item img, .company-item .object-contain {
+          opacity: 1 !important;
+          filter: none !important;
         }
 
         @keyframes scroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-
-        .text-flip-container {
-          position: relative;
-          height: 90px;
-          overflow: hidden;
-          display: inline-block;
-          min-width: 400px;
-          vertical-align: baseline;
-        }
-
-        .text-flip-track {
-          position: absolute;
-          width: 100%;
-          transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-          top: 10px;
-          left: 0;
-        }
-
-        .text-flip-item {
-          height: 80px;
+        .cta-button-primary {
+          background: linear-gradient(135deg, var(--color-main) 0%, var(--color-secondary) 100%);
+          color: white;
+          border: none;
+          padding: 16px 32px;
+          border-radius: 16px;
+          font-size: 16px;
+          font-weight: 600;
           display: flex;
           align-items: center;
-          justify-content: flex-start;
-          font-size: inherit;
-          font-weight: inherit;
-          color: inherit;
-          line-height: 1;
-        }
-
-        .flip-logo {
-          perspective: 1000px;
-          width: 100%;
-          height: 100%;
+          justify-content: center;
+          gap: 12px;
+          min-width: 280px;
+          box-shadow: 
+            0 8px 32px rgba(102, 126, 234, 0.3),
+            0 4px 16px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+          cursor: pointer;
           position: relative;
+          overflow: hidden;
         }
 
-        .flip-face {
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
+        .cta-button-primary::before {
+          content: '';
           position: absolute;
-          top: 0; left: 0;
-          transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-        }
-
-        .flip-front {
-          z-index: 2;
-          transform: rotateY(0deg);
-        }
-
-        .flip-back {
-          transform: rotateY(180deg);
-        }
-
-        .flip-logo.flipped .flip-front {
-          transform: rotateY(-180deg);
-        }
-
-        .flip-logo.flipped .flip-back {
-          transform: rotateY(0deg);
-          z-index: 2;
-        }
-
-        .logo-roulette-track {
+          top: 0;
+          left: -100%;
           width: 100%;
-          position: relative;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+          transition: left 0.5s;
         }
-        .logo-roulette-item {
-          width: 100%;
+
+        .cta-button-primary:hover::before {
+          left: 100%;
+        }
+
+        .cta-button-primary:hover {
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 
+            0 12px 40px var(--color-white),
+            0 6px 20px var(--color-black);
+        }
+
+        .cta-button-secondary {
+          background: rgba(255, 255, 255, 0.1);
+          color: var(--color-main);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          padding: 14px 32px;
+          border-radius: 16px;
+          font-size: 16px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          min-width: 280px;
+          backdrop-filter: blur(20px);
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+          cursor: pointer;
           position: relative;
+          overflow: hidden;
+        }
+
+        .cta-button-secondary:hover {
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.5);
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 
+            0 12px 40px rgba(0, 0, 0, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
       `}</style>
 
       <section className="relative min-h-screen pt-40 pb-20 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          
-
-          {/* Main Headline */}
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-2 leading-tight">
+          {/* Description in one line */}
+          <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ color: 'var(--color-black)' }}>
             {hero.description}
           </h1>
 
-          {/* Avec Text Section */}
-          <div className="flex items-center justify-center mb-8 gap-2">
-            <span className="text-4xl md:text-6xl font-bold text-gray-900 align-middle">avec</span>
-            <span
-              className="inline-block align-middle relative overflow-hidden"
-              style={{ height: "9em", width: "13em", fontSize: "inherit" }}
-            >
-              <div
-                className="logo-roulette-track ml-1"
-                style={{
-                  transition: "transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)",
-                  transform: `translateY(-${(logoRotationIndex % 2) * 46.5}%)`,
-                  height: "18em", // 2 * 9em
-                  width: logoRotationIndex % 2 === 1 ? "11em" : "9em",
-                  marginTop: logoRotationIndex % 2 === 1 ? "0" : "3px",
-                  marginBottom: logoRotationIndex % 2 === 1 ? "2px" : "0"
-                }}
-              >
-                <div className="logo-roulette-item " style={{ height: "9em" }}>
-                  <Image
-                    src="/odoo.svg"
-                    alt="Odoo"
-                    fill
-                    className="object-contain"
-                    priority
-                  />
-                </div>
-                <div className="logo-roulette-item " style={{ height: "9em" }}>
-                  <Image
-                    src="/hubspot.svg"
-                    alt="HubSpot"
-                    fill
-                    className="object-contain "
-                    priority
-                    
-                  />
-                </div>
-              </div>
-            </span>
+          {/* "avec" in a separate line */}
+          <div className="text-4xl md:text-6xl font-bold mb-8" style={{ color: 'var(--color-black)' }}>
+            de A à Z grâce à
           </div>
 
-          {/* Subtitle */}
+          {/* Logo Section with vertical rotation */}
+          {logos.odoo && logos.hubspot && (
+            <div className="logo-container mb-12">
+              <div 
+                className="logo-track"
+                style={{
+                  transform: `translateY(-${logoRotationIndex * 50}%)`
+                }}
+              >
+                <div className="logo-item bg-odoo">
+                  <div className="logo-item-inner">
+                    <Image
+                      src={logos.odoo.url}
+                      alt={logos.odoo.alt}
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+                <div className="logo-item bg-hubspot">
+                  <div className="logo-item-inner">
+                    <Image
+                      src={logos.hubspot.url}
+                      alt={logos.hubspot.alt}
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        
+        {/* Subtitle */}
           <div
-            className="text-lg text-gray-600 mb-4 max-w-4xl mx-auto leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: hero.content.subtitle || "" }}
+            className="text-lg mb-4 max-w-4xl mx-auto leading-relaxed"
+            style={{
+              color: 'var(--color-gray)',
+              fontFamily: 'var(--font-family)',
+              fontSize: 'var(--font-size)',
+              lineHeight: 'var(--line-height)',
+            }}
+            dangerouslySetInnerHTML={{ __html: heroContent.subtitle || "" }}
           />
 
           {/* Feature Badges - WITH ROULETTE ANIMATIONS */}
           <div className="flex flex-wrap items-center justify-center gap-4 mb-12 relative z-10">
             {/* First Badge - What we integrate */}
-            <div className="smooth-badge">
-              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                <CheckCircle className="w-3 h-3 text-orange-500" />
-              </div>
-              <div className="roulette-container">
-                <div
-                  className="roulette-track"
-                  style={{
-                    transform: `translateY(${-integrationIndex * 20}px)`,
-                  }}
-                >
-                  {integrations.map((text, i) => (
-                    <div key={i} className="roulette-item">
-                      {text}
-                    </div>
-                  ))}
+            {integrations.length > 0 && (
+              <div className="smooth-badge">
+                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-main)' }} />
+                </div>
+                <div className="roulette-container">
+                  <div
+                    className="roulette-track"
+                    style={{
+                      transform: `translateY(${-integrationIndex * 20}px)`,
+                    }}
+                  >
+                    {integrations.map((integration: any, i: number) => (
+                      <div key={i} className="roulette-item">
+                        {integration.text}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Second Badge - Our specifications */}
-            <div className="smooth-badge">
-              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                <CheckCircle className="w-3 h-3 text-orange-500" />
-              </div>
-              <div className="roulette-container">
-                <div
-                  className="roulette-track"
-                  style={{
-                    transform: `translateY(${-specificationIndex * 20}px)`,
-                  }}
-                >
-                  {specifications.map((text, i) => (
-                    <div key={i} className="roulette-item">
-                      {text}
-                    </div>
-                  ))}
+            {specifications.length > 0 && (
+              <div className="smooth-badge">
+                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-main)' }} />
+                </div>
+                <div className="roulette-container">
+                  <div
+                    className="roulette-track"
+                    style={{
+                      transform: `translateY(${-specificationIndex * 20}px)`,
+                    }}
+                  >
+                    {specifications.map((specification: any, i: number) => (
+                      <div key={i} className="roulette-item">
+                        {specification.text}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Third Badge - Locations */}
-            <div className="smooth-badge">
-              <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                <CheckCircle className="w-3 h-3 text-orange-500" />
+            {locations.length > 0 && (
+              <div className="smooth-badge">
+                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-main)' }} />
+                </div>
+                <div className="roulette-container">
+                  <div
+                    className="roulette-track"
+                    style={{
+                      transform: `translateY(${-locationIndex * 20}px)`,
+                    }}
+                  >
+                    {locations.map((location: any, i: number) => (
+                      <div key={i} className="roulette-item">
+                        {location.text}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <span className="ml-1 text-xs bg-white px-1 py-0.5 rounded font-semibold flex-shrink-0 shadow-sm" style={{ color: 'var(--color-secondary)' }}>
+                  {locations[locationIndex]?.code}
+                </span>
               </div>
-              <div className="roulette-container">
-                <div
-                  className="roulette-track"
-                  style={{
-                    transform: `translateY(${-locationIndex * 20}px)`,
-                  }}
+            )}
+          </div>
+        
+        {/* CTA Buttons */}
+         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 relative z-10">
+            {ctaButtons.primary && (
+              <button
+                onClick={handleAppointmentClick}
+                className="cta-button-primary"
+              >
+                {ctaButtons.primary.text}
+                <Calendar className="w-5 h-5" />
+              </button>
+            )}
+
+            {ctaButtons.secondary && (
+              <button
+                onClick={handleProjectsClick}
+                className="cta-button-secondary"
+              >
+                {ctaButtons.secondary.text}
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+        
+        {/* Companies Carousel */}
+          {companies.length > 0 && (
+            <div className="relative overflow-hidden">
+              <div className="absolute left-0 top-0 w-20 h-full z-10" style={{ background: 'linear-gradient(to right, var(--color-background), transparent)' }}></div>
+              <div className="absolute right-0 top-0 w-20 h-full z-10" style={{ background: 'linear-gradient(to left, var(--color-background), transparent)' }}></div>
+
+              <div className="companies-scroll">
+                <div 
+                  className="companies-track"
+                  style={{ animationDuration: `${animations.companyScrollDuration || 30}s` }}
                 >
-                  {locations.map((location, i) => (
-                    <div key={i} className="roulette-item">
-                      {location.text}
+                  {/* First set */}
+                  {companies.map((company: any, index: number) => (
+                    <div key={`first-${index}`} className="company-item">
+                      {company.logo ? (
+                        <Image
+                          src={company.logo}
+                          alt={company.name}
+                          width={120}
+                          height={40}
+                          className="object-contain"
+                        />
+                      ) : (
+                        company.name
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Duplicate for seamless loop */}
+                  {companies.map((company: any, index: number) => (
+                    <div key={`second-${index}`} className="company-item">
+                      {company.logo ? (
+                        <Image
+                          src={company.logo}
+                          alt={company.name}
+                          width={120}
+                          height={40}
+                          className="object-contain"
+                        />
+                      ) : (
+                        company.name
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
-              <span className="ml-1 text-xs bg-white text-orange-500 px-1 py-0.5 rounded font-semibold flex-shrink-0 shadow-sm">
-                {locations[locationIndex].code}
-              </span>
             </div>
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 relative z-10">
-            <Button
-              size="lg"
-              className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-6 text-base font-bold rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-3"
-            >
-              <span className="inline-flex items-center justify-center w-11 h-11 bg-transparent">
-                <Image
-                  src="/calendar.png"
-                  alt="Prendre un rendez-vous"
-                  width={30}
-                  height={30}
-                  className="object-contain"
-                />
-              </span>
-              PRENDRE UN RENDEZ-VOUS
-            </Button>
-
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full px-10 py-6 font-bold border border-gray-300 text-gray-900 bg-white "
-            >
-              TOUS NOS PROJETS
-            </Button>
-          </div>
-
-          {/* Companies Carousel */}
-          <div className="relative overflow-hidden">
-            <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-gray-50 to-transparent z-10"></div>
-            <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-gray-50 to-transparent z-10"></div>
-
-            <div className="companies-scroll">
-              <div className="companies-track">
-                {/* First set */}
-                <div className="company-item">Odoo</div>
-                <div className="company-item">HubSpot</div>
-                <div className="company-item">Salesforce</div>
-                <div className="company-item">Microsoft</div>
-                <div className="company-item">Google</div>
-                <div className="company-item">Zapier</div>
-                <div className="company-item">Shopify</div>
-                <div className="company-item">Stripe</div>
-
-                {/* Duplicate for seamless loop */}
-                <div className="company-item">Odoo</div>
-                <div className="company-item">HubSpot</div>
-                <div className="company-item">Salesforce</div>
-                <div className="company-item">Microsoft</div>
-                <div className="company-item">Google</div>
-                <div className="company-item">Zapier</div>
-                <div className="company-item">Shopify</div>
-                <div className="company-item">Stripe</div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
     </>
