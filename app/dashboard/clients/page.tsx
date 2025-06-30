@@ -480,13 +480,13 @@ export default function ClientsAdminPage() {
                   >
                     Annuler
                   </Button>
-                  {editing !== "new" && (
+                  {editing !== "new" && editing !== null && (
                     <Button 
                       type="button" 
                       variant="destructive" 
                       size="lg" 
                       className="min-w-[120px] text-base font-semibold" 
-                      onClick={() => editing !== "new" && deleteClient(editing)}
+                      onClick={() => typeof editing === 'number' && deleteClient(editing)}
                     >
                       <Trash2 className="h-5 w-5 mr-2" />
                       Supprimer

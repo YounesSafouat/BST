@@ -103,7 +103,7 @@ export default function TransformationSection({ transformation }: Transformation
                       <div className="w-16 h-16 bg-white border-4 border-gray-200 rounded-full flex items-center justify-center relative z-10 shadow-lg scroll-scale-up">
                         {useUrlIcon ? (
                           <Image
-                            src={phase.iconUrl}
+                            src={phase.iconUrl || "/placeholder.svg"}
                             alt={phase.title}
                             width={32}
                             height={32}
@@ -121,7 +121,7 @@ export default function TransformationSection({ transformation }: Transformation
                       <div className="w-16 h-16 bg-white border-4 border-gray-200 rounded-full flex items-center justify-center relative z-10 shadow-lg scroll-scale-up">
                         {useUrlIcon ? (
                           <Image
-                            src={phase.iconUrl}
+                            src={phase.iconUrl || "/placeholder.svg"}
                             alt={phase.title}
                             width={32}
                             height={32}

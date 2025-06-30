@@ -40,12 +40,7 @@ export default function LayoutWrapper({
   const isAuth = pathname ? pathname.startsWith('/auth') : false
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider>
       {!isDashboard && !isAuth && <Header scrollY={scrollY} isLoaded={isLoaded} />}
       <main className="flex-grow">
         {children}

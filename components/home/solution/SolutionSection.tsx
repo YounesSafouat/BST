@@ -98,7 +98,7 @@ export default function SolutionSection({ solution }: SolutionSectionProps) {
                 >
                   {useUrlIcon ? (
                     <Image
-                      src={item.iconUrl}
+                      src={String(item.iconUrl || "/placeholder.svg")}
                       alt={item.title}
                       width={32}
                       height={32}

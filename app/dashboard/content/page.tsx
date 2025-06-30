@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { Pencil, Trash2, Plus, X, Eye, Save } from "lucide-react";
 import * as LucideIcons from "lucide-react";
@@ -295,7 +296,7 @@ const renderSectionPreview = (section: ContentSection) => {
                 return (
                     <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
                         <div className="w-full">
-                            <SuccessSection />
+                            <SuccessSection success={section} />
                         </div>
                     </div>
                 );
@@ -429,7 +430,7 @@ function renderEditPreview(section: ContentSection) {
                 return (
                     <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
                         <div className="w-full">
-                            <SuccessSection />
+                            <SuccessSection success={section} />
                         </div>
                     </div>
                 );

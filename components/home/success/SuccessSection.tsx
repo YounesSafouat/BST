@@ -15,7 +15,25 @@ interface SuccessData {
   testimonials?: Testimonial[];
 }
 
-export default function SuccessSection() {
+interface ContentSection {
+  _id: string;
+  type: string;
+  title: string;
+  description: string;
+  content: any;
+  metadata?: {
+    color?: string;
+    image?: string;
+    order?: number;
+  };
+  isActive: boolean;
+}
+
+interface SuccessSectionProps {
+  success: ContentSection;
+}
+
+export default function SuccessSection({ success }: SuccessSectionProps) {
   const [successData, setSuccessData] = useState<SuccessData>({
     intro: "Découvrez comment nous avons aidé nos clients à atteindre leurs objectifs les plus ambitieux",
     testimonials: [
@@ -44,22 +62,11 @@ export default function SuccessSection() {
   });
 
   useEffect(() => {
-    const fetchSuccessData = async () => {
-      try {
-        const response = await fetch('/api/content?type=success');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.length > 0) {
-            setSuccessData(data[0].content);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching success data:', error);
-      }
-    };
-
-    fetchSuccessData();
-  }, []);
+    // Use the success prop data if available, otherwise fall back to default data
+    if (success && success.content) {
+      setSuccessData(success.content);
+    }
+  }, [success]);
 
   // Triple the testimonials for smooth infinite scroll
   const infiniteTestimonials = [...(successData.testimonials || []), ...(successData.testimonials || []), ...(successData.testimonials || [])];
