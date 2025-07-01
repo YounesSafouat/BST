@@ -56,9 +56,10 @@ export default function ChallengeSection({ challenge }: ChallengeSectionProps) {
               {content.badge || challenge.title ? `${challenge.title.toUpperCase()}` : 'CHAPITRE 2 : LE DÉFI'}
             </span>
           </div>
-          <h2 className="text-5xl md:text-6xl font-bold text-black mb-8 tracking-tight">
-            {challenge.title || 'Le Chaos'} <span className="text-gray-400">Organisé</span>
-          </h2>
+          <h2 
+            className="text-5xl md:text-6xl font-bold text-black mb-8 tracking-tight"
+            dangerouslySetInnerHTML={{ __html: challenge.description || "" }}
+          />
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {content.intro || challenge.description || 'Avant la transformation, il y a toujours le chaos. Voici les défis que nous résolvons quotidiennement.'}
           </p>

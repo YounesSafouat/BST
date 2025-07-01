@@ -133,7 +133,7 @@ export default function ContactPageClient() {
             </p>
             <div className="flex flex-wrap gap-4">
               {Object.keys(projectTypeContent).map((type) => (
-                <button
+              <button
                   key={type}
                   className={`font-semibold px-8 py-3 rounded-xl shadow transition-colors ${
                     formData.projectType === type
@@ -141,9 +141,9 @@ export default function ContactPageClient() {
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   onClick={() => updateFormData('projectType', type)}
-                >
+              >
                   {projectTypeContent[type].header}
-                </button>
+              </button>
               ))}
             </div>
           </div>
@@ -246,8 +246,8 @@ export default function ContactPageClient() {
                   height={60}
                   className="h-12 w-auto object-contain"
                 />
-              </div>
-            ))}
+            </div>
+          ))}
           </div>
         </div>
       </div>

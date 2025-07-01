@@ -109,16 +109,9 @@ const iconOptions = [
   { value: "Shield", label: "Shield", icon: Shield }
 ]
 
-const socialColorOptions = [
-  { value: "bg-blue-600", label: "Facebook Blue" },
-  { value: "bg-sky-500", label: "Twitter Blue" },
-  { value: "bg-blue-700", label: "LinkedIn Blue" },
-  { value: "bg-pink-600", label: "Instagram Pink" },
-  { value: "bg-red-600", label: "Red" },
-  { value: "bg-green-600", label: "Green" },
-  { value: "bg-purple-600", label: "Purple" },
-  { value: "bg-yellow-500", label: "Yellow" }
-]
+function isHexColor(value: string) {
+  return /^#[0-9A-Fa-f]{6}$/.test(value);
+}
 
 export default function FooterDashboard() {
   const [footerData, setFooterData] = useState<FooterContent>({
@@ -176,10 +169,10 @@ export default function FooterDashboard() {
     social: {
       title: "Suivez-nous",
       networks: [
-        { name: "Facebook", icon: "Facebook", url: "#", color: "bg-blue-600" },
-        { name: "Twitter", icon: "Twitter", url: "#", color: "bg-sky-500" },
-        { name: "LinkedIn", icon: "Linkedin", url: "#", color: "bg-blue-700" },
-        { name: "Instagram", icon: "Instagram", url: "#", color: "bg-pink-600" }
+        { name: "Facebook", icon: "Facebook", url: "#", color: "#1877f2" },
+        { name: "Twitter", icon: "Twitter", url: "#", color: "#1877f2" },
+        { name: "LinkedIn", icon: "Linkedin", url: "#", color: "#1877f2" },
+        { name: "Instagram", icon: "Instagram", url: "#", color: "#1877f2" }
       ]
     },
     certifications: {
@@ -221,16 +214,15 @@ export default function FooterDashboard() {
   const saveFooterData = async () => {
     setSaving(true)
     try {
-      const response = await fetch("/api/content", {
-        method: "POST",
+      const response = await fetch("/api/content?type=footer", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          type: "footer",
+          content: footerData,
           title: "Footer",
           description: "Pied de page du site",
-          content: footerData,
           isActive: true,
           metadata: { order: 99 }
         }),
@@ -292,7 +284,7 @@ export default function FooterDashboard() {
       ...prev,
       social: {
         ...prev.social,
-        networks: [...prev.social.networks, { name: "", icon: "Facebook", url: "#", color: "bg-blue-600" }]
+        networks: [...prev.social.networks, { name: "", icon: "Facebook", url: "#", color: "#1877f2" }]
       }
     }))
   }
@@ -682,7 +674,7 @@ export default function FooterDashboard() {
                     </Button>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 items-center">
                     <Select
                       value={network.icon}
                       onValueChange={(value) => {
@@ -703,25 +695,28 @@ export default function FooterDashboard() {
                       </SelectContent>
                     </Select>
                     
-                    <Select
-                      value={network.color}
-                      onValueChange={(value) => {
+                    <input
+                      type="color"
+                      value={isHexColor(network.color) ? network.color : '#1877f2'}
+                      onChange={e => {
                         const newNetworks = [...footerData.social.networks]
-                        newNetworks[index].color = value
+                        newNetworks[index].color = e.target.value
                         updateField('social.networks', newNetworks)
                       }}
-                    >
-                      <SelectTrigger className="w-40">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {socialColorOptions.map((color) => (
-                          <SelectItem key={color.value} value={color.value}>
-                            {color.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      className={`w-10 h-10 p-0 border-none bg-transparent cursor-pointer ${isHexColor(network.color) ? '' : 'opacity-50 cursor-not-allowed'}`}
+                      title={isHexColor(network.color) ? "Choisir une couleur" : "Entrez un code hexadécimal pour activer le sélecteur"}
+                      disabled={!isHexColor(network.color)}
+                    />
+                    <Input
+                      value={network.color}
+                      onChange={e => {
+                        const newNetworks = [...footerData.social.networks]
+                        newNetworks[index].color = e.target.value
+                        updateField('social.networks', newNetworks)
+                      }}
+                      placeholder="#1877f2 ou bg-blue-600"
+                      className="w-40"
+                    />
                   </div>
                   
                   <Input

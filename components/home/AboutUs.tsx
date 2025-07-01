@@ -324,7 +324,7 @@ export default function AboutUs() {
                     <div key={index} className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
                       <Icon className="w-6 h-6 text-[#ff5c35]" />
                       <span className="font-medium">{stat.title}</span>
-                    </div>
+                </div>
                   );
                 })}
               </div>
@@ -386,7 +386,7 @@ export default function AboutUs() {
             <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#714b67]/10 to-[#ff5c35]/10 border border-gray-200 mb-12 shadow-lg">
               <Heart className="w-6 h-6 text-[#714b67] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOS VALEURS</span>
-            </div>
+              </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
               {valuesTitle}
             </h2>
@@ -399,10 +399,10 @@ export default function AboutUs() {
             {valuesItems.map((value: any, index: number) => {
               const Icon = getIconComponent(value.icon);
               return (
-                <div
-                  key={index}
+              <div
+                key={index}
                   className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-                >
+              >
                   <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[#714b67] to-[#ff5c35]"></div>
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[#714b67]/10 to-[#ff5c35]/10">
                     <Icon className="w-8 h-8 text-[#714b67]" />
@@ -425,10 +425,10 @@ export default function AboutUs() {
             <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#ff5c35]/10 to-[#714b67]/10 border border-gray-200 mb-12 shadow-lg">
               <Rocket className="w-6 h-6 text-[#ff5c35] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE MISSION</span>
-            </div>
+        </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
               {missionTitle}
-            </h2>
+          </h2>
             <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
               {missionDescription}
             </p>

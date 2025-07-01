@@ -9,7 +9,8 @@ import {
   CheckCircle, 
   ArrowRight, 
   Quote, 
-  Rocket 
+  Rocket,
+  Check
 } from 'lucide-react';
 import OdooHeroSplit from './OdooHeroSplit';
 
@@ -315,6 +316,199 @@ function OdooPageNew() {
     }, 'projects');
   };
 
+  const plans = [
+    
+    {
+      name: "Standard",
+      description: "Apps avancées - Importation de données - +10 utilisateurs",
+      monthlyPrice: 32390,
+      yearlyPrice: 26724,
+      popular: false,
+      consultantHours: "50 heures",
+      features: [
+        "Gestion de projet",
+        "Support par Email + Téléphone",
+        "Formation & Coaching",
+        "Configuration",
+        "Assistance à l'importation de donnée",
+        "Consultance sur place",
+        "Personnalisations (formulaires, rapports, flux de travail)",
+        "Développements",
+        "Problèmes de performance"
+      ],
+      cta: "Commencer"
+    },
+    {
+      name: "Premium",
+      description: "Apps avancées - Importation de données - Personalisation",
+      monthlyPrice: 59990,
+      yearlyPrice: 49492,
+      popular: true,
+      consultantHours: "100 heures",
+      features: [
+        "Gestion de projet",
+        "Support par Email + Téléphone",
+        "Formation & Coaching",
+        "Configuration",
+        "Assistance à l'importation de donnée",
+        "Consultance sur place",
+        "Personnalisations (formulaires, rapports, flux de travail)",
+        "Développements",
+        "Problèmes de performance"
+      ],
+      cta: "Commencer"
+    },
+    {
+      name: "Enterprise",
+      description: "Apps avancées - Importation de données - Personalisation",
+      monthlyPrice: 150000,
+      yearlyPrice: 124000,
+      popular: false,
+      consultantHours: "+250 heures",
+      features: [
+        "Gestion de projet",
+        "Support par Email + Téléphone",
+        "Formation & Coaching",
+        "Configuration",
+        "Assistance à l'importation de donnée",
+        "Consultance sur place",
+        "Personnalisations (formulaires, rapports, flux de travail)",
+        "Personnalisation des Apps",
+        "Développements",
+        "Problèmes de performance"
+      ],
+      cta: "Nous contacter"
+    }
+  ];
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('fr-MA', {
+      style: 'currency',
+      currency: 'MAD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(price).replace('MAD', 'Dhs');
+  };
+
+  function PricingCardsSection() {
+    const [isYearly, setIsYearly] = useState(false);
+    return (
+      <>
+        {/* Billing Toggle */}
+        <div className="mt-8 flex justify-center">
+          <div className="relative flex items-center bg-gray-100 rounded-lg p-1">
+            <button
+              onClick={() => setIsYearly(false)}
+              className={`relative px-6 py-2 text-sm font-medium rounded-md transition-all ${
+                !isYearly
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              Mensuel
+            </button>
+            <button
+              onClick={() => setIsYearly(true)}
+              className={`relative px-6 py-2 text-sm font-medium rounded-md transition-all ${
+                isYearly
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-900'
+              }`}
+            >
+              Annuel
+              <span className="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-green-800" style={{ background: 'var(--color-secondary)', color: 'white' }}>
+                Économisez 17%
+              </span>
+            </button>
+          </div>
+        </div>
+        {/* Pricing Cards */}
+        <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-6 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-4">
+          {plans.map((plan) => (
+            <div
+              key={plan.name}
+              className={`relative rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200 ${
+                plan.popular
+                  ? 'ring-2'
+                  : 'hover:shadow-xl transition-shadow duration-300'
+              }`}
+              style={plan.popular ? { borderColor: 'var(--color-secondary)', transform: 'scale(1.05)' } : {}}
+            >
+              {plan.popular && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span
+                    className="inline-flex items-center rounded-full px-4 py-1 text-sm font-semibold text-white"
+                    style={{ background: 'var(--color-secondary)' }}
+                  >
+                    Recommandé
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold leading-8 text-gray-900">
+                  {plan.name}
+                </h3>
+              </div>
+              <p className="mt-4 text-sm leading-6 text-gray-600">
+                {plan.description}
+              </p>
+              {/* Consultant Hours */}
+              <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-gray-900">Consultant dédié</p>
+                <p
+                  className="text-lg font-bold"
+                  style={{ color: 'var(--color-secondary)' }}
+                >
+                  {plan.consultantHours}
+                </p>
+              </div>
+              <p className="mt-6 flex items-baseline gap-x-1">
+                <span className="text-3xl font-bold tracking-tight text-gray-900">
+                  {formatPrice(isYearly ? plan.yearlyPrice : plan.monthlyPrice)}
+                </span>
+                <span className="text-sm font-semibold leading-6 text-gray-600">
+                  /mois
+                </span>
+              </p>
+              {isYearly && (
+                <p className="mt-1 text-sm text-gray-500">
+                  {formatPrice(plan.yearlyPrice * 12)} facturé annuellement
+                </p>
+              )}
+              <ul role="list" className="mt-6 space-y-2 text-sm leading-6 text-gray-600">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex gap-x-2">
+                    <Check className="h-5 w-4 flex-none" style={{ color: 'var(--color-secondary)' }} aria-hidden="true" />
+                    <span className="text-xs">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                className={`mt-6 block w-full rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors`}
+                style={
+                  plan.popular
+                    ? {
+                        background: 'var(--color-secondary)',
+                        color: 'white',
+                        borderColor: 'var(--color-secondary)'
+                      }
+                    : {
+                        background: 'white',
+                        color: 'var(--color-secondary)',
+                        border: '1px solid var(--color-secondary)'
+                      }
+                }
+              >
+                {plan.cta}
+                <ArrowRight className="ml-2 inline h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white overflow-hidden mt-10">
       {/* Hero Section */}
@@ -326,7 +520,7 @@ function OdooPageNew() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {trustMetrics.map((metric, index) => (
               <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
-                <div className="text-3xl md:text-4xl font-bold text-[#ff5c35] mb-2">
+                <div className="text-3xl md:text-4xl font-bold text-[var(--color-secondary)] mb-2">
                   <AnimatedCounter target={metric.number} suffix={metric.suffix} />
                 </div>
                 <div className="text-gray-600 font-medium text-sm">{metric.label}</div>
@@ -341,7 +535,7 @@ function OdooPageNew() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Plateforme <span className="text-[#ff5c35]">Tout-en-Un</span>
+              Plateforme <span className="text-[var(--color-secondary)]">Tout-en-Un</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
               Plus de 30 applications intégrées pour couvrir tous vos besoins métier, 
@@ -357,7 +551,7 @@ function OdooPageNew() {
                 {[...timeline1, ...timeline1].map((app, index) => (
                   <div 
                     key={`timeline1-${index}`}
-                    className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[#ff5c35] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                    className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                   >
                     <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                       <img 
@@ -370,8 +564,8 @@ function OdooPageNew() {
                           e.currentTarget.nextElementSibling?.classList.remove('hidden');
                         }}
                       />
-                      <div className="w-12 h-12 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center hidden">
-                        <span className="text-[#ff5c35] font-bold text-lg">{app.title.charAt(0)}</span>
+                      <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center hidden">
+                        <span className="text-[var(--color-secondary)] font-bold text-lg">{app.title.charAt(0)}</span>
                       </div>
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
@@ -380,8 +574,8 @@ function OdooPageNew() {
                     </p>
                     <div className="space-y-2">
                       {app.features.slice(0, 2).map((feature, i) => (
-                        <div key={i} className="flex items-center text-xs text-[#ff5c35]">
-                          <div className="w-1.5 h-1.5 bg-[#ff5c35] rounded-full mr-2"></div>
+                        <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
+                          <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
                           {feature}
                         </div>
                       ))}
@@ -397,7 +591,7 @@ function OdooPageNew() {
                 {[...timeline2, ...timeline2].map((app, index) => (
                   <div 
                     key={`timeline2-${index}`}
-                    className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[#ff5c35] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                    className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                   >
                     <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                       <img 
@@ -410,8 +604,8 @@ function OdooPageNew() {
                           e.currentTarget.nextElementSibling?.classList.remove('hidden');
                         }}
                       />
-                      <div className="w-12 h-12 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center hidden">
-                        <span className="text-[#ff5c35] font-bold text-lg">{app.title.charAt(0)}</span>
+                      <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center hidden">
+                        <span className="text-[var(--color-secondary)] font-bold text-lg">{app.title.charAt(0)}</span>
                       </div>
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
@@ -420,8 +614,8 @@ function OdooPageNew() {
                     </p>
                     <div className="space-y-2">
                       {app.features.slice(0, 2).map((feature, i) => (
-                        <div key={i} className="flex items-center text-xs text-[#ff5c35]">
-                          <div className="w-1.5 h-1.5 bg-[#ff5c35] rounded-full mr-2"></div>
+                        <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
+                          <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
                           {feature}
                         </div>
                       ))}
@@ -437,7 +631,7 @@ function OdooPageNew() {
                 {[...timeline3, ...timeline3].map((app, index) => (
                   <div 
                     key={`timeline3-${index}`}
-                    className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[#ff5c35] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                    className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                   >
                     <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                       <img 
@@ -450,8 +644,8 @@ function OdooPageNew() {
                           e.currentTarget.nextElementSibling?.classList.remove('hidden');
                         }}
                       />
-                      <div className="w-12 h-12 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center hidden">
-                        <span className="text-[#ff5c35] font-bold text-lg">{app.title.charAt(0)}</span>
+                      <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center hidden">
+                        <span className="text-[var(--color-secondary)] font-bold text-lg">{app.title.charAt(0)}</span>
                       </div>
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
@@ -460,8 +654,8 @@ function OdooPageNew() {
                     </p>
                     <div className="space-y-2">
                       {app.features.slice(0, 2).map((feature, i) => (
-                        <div key={i} className="flex items-center text-xs text-[#ff5c35]">
-                          <div className="w-1.5 h-1.5 bg-[#ff5c35] rounded-full mr-2"></div>
+                        <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
+                          <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
                           {feature}
                         </div>
                       ))}
@@ -483,7 +677,7 @@ function OdooPageNew() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Implémentation <span className="text-[#ff5c35]">Odoo Experte</span>
+              Implémentation <span className="text-[var(--color-secondary)]">Odoo Experte</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
               Notre statut de partenaire officiel garantit une expertise approfondie 
@@ -493,10 +687,10 @@ function OdooPageNew() {
 
           <div className="grid md:grid-cols-2 gap-8">
             {odooCapabilities.map((capability, index) => (
-              <div key={index} className="group bg-white rounded-2xl p-8 border border-gray-200 hover:border-[#ff5c35] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
+              <div key={index} className="group bg-white rounded-2xl p-8 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg">
                 <div className="flex items-start space-x-6">
-                  <div className="w-16 h-16 bg-[#ff5c35]/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-[#ff5c35]/20 transition-colors">
-                    <div className="text-[#ff5c35]">{capability.icon}</div>
+                  <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--color-secondary)]/20 transition-colors">
+                    <div className="text-[var(--color-secondary)]">{capability.icon}</div>
                   </div>
                   <div className="flex-1">
                     <h3 className="text-2xl font-semibold text-gray-900 mb-4">{capability.title}</h3>
@@ -506,6 +700,21 @@ function OdooPageNew() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Tarification Odoo */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
+              Tarification <span style={{ color: 'var(--color-secondary)' }}>Odoo</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+              Choisissez le plan adapté à vos besoins. Solutions professionnelles avec consultant dédié et support complet.
+            </p>
+          </div>
+          <PricingCardsSection />
         </div>
       </section>
 
@@ -545,7 +754,7 @@ function OdooPageNew() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-              Approuvé par les <span className="text-[#ff5c35]">Entreprises</span>
+              Approuvé par les <span className="text-[var(--color-secondary)]">Entreprises</span>
             </h2>
             <p className="text-xl text-gray-600 font-light">
               Découvrez comment nous avons aidé des entreprises à transformer leurs opérations avec Odoo
@@ -555,18 +764,18 @@ function OdooPageNew() {
           <div className="grid md:grid-cols-2 gap-8">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="group bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <Quote className="w-12 h-12 text-[#ff5c35] mb-6" />
+                <Quote className="w-12 h-12 text-[var(--color-secondary)] mb-6" />
                 <blockquote className="text-lg text-gray-800 mb-6 leading-relaxed">
                   "{testimonial.quote}"
                 </blockquote>
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-[#ff5c35] rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[var(--color-secondary)] rounded-full flex items-center justify-center">
                     <span className="text-white font-semibold text-sm">{testimonial.author.split(' ').map(n => n[0]).join('')}</span>
                   </div>
                   <div>
                     <div className="font-semibold text-gray-900">{testimonial.author}</div>
                     <div className="text-gray-600">{testimonial.role}</div>
-                    <div className="text-[#ff5c35] font-medium">{testimonial.company}</div>
+                    <div className="text-[var(--color-secondary)] font-medium">{testimonial.company}</div>
                   </div>
                 </div>
               </div>
@@ -579,7 +788,7 @@ function OdooPageNew() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
-            Prêt à Unifier <span className="text-[#ff5c35]">Votre Entreprise ?</span>
+            Prêt à Unifier <span className="text-[var(--color-secondary)]">Votre Entreprise ?</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-12 font-light">
             Laissez nos experts Odoo concevoir et implémenter une solution qui simplifie 
@@ -588,7 +797,7 @@ function OdooPageNew() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              className="group bg-[#ff5c35] text-white px-8 py-4 rounded-lg hover:bg-[#ff5c35]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+              className="group bg-[var(--color-secondary)] text-white px-8 py-4 rounded-lg hover:bg-[var(--color-secondary)]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
               onClick={handleConsultationClick}
               disabled={isLoading}
             >
@@ -597,7 +806,7 @@ function OdooPageNew() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button 
-              className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[#ff5c35] hover:text-[#ff5c35] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+              className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
               onClick={handleCaseStudyClick}
               disabled={isLoading}
             >
@@ -612,7 +821,7 @@ function OdooPageNew() {
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 flex items-center space-x-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff5c35]"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--color-secondary)]"></div>
             <span className="text-lg font-semibold text-gray-700">Chargement...</span>
           </div>
         </div>

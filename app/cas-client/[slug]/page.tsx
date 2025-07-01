@@ -21,13 +21,29 @@ import {
 import { useState, useEffect, useRef } from "react"
 
 export default async function ClientPage({ params }: { params: { slug: string } }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  const res = await fetch(`${baseUrl}/api/content?type=clients-page`, { cache: "no-store" })
-  const data = await res.json()
-  const page = Array.isArray(data) ? data[0] : data
-  const client = page?.content?.clientCases?.find((c: any) => c.slug === params.slug)
+  let client: any = null
+  
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/content?type=clients-page`, { 
+      cache: "no-store",
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    
+    if (!res.ok) {
+      throw new Error(`Failed to fetch: ${res.status}`)
+    }
+    
+    const data = await res.json()
+    const page = Array.isArray(data) ? data[0] : data
+    client = page?.content?.clientCases?.find((c: any) => c.slug === params.slug)
 
-  if (!client) return notFound()
+    if (!client) return notFound()
+  } catch (error) {
+    console.error('Error fetching client data:', error)
+    return notFound()
+  }
 
   // Helper for project stats icons
   const statIcons: Record<string, any> = {
@@ -35,6 +51,11 @@ export default async function ClientPage({ params }: { params: { slug: string } 
     "Version cible": RefreshCw,
     "Utilisateurs migrés": Users,
     "ROI atteint": TrendingUp,
+  }
+
+  // Safety check - if client is still null, return not found
+  if (!client) {
+    return notFound()
   }
 
   // Key metrics for results section (from DB if present)
