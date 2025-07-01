@@ -197,7 +197,7 @@ function HubSpotPage() {
                 <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent pb-5">
                   Intégration
                 </span>
-                <Image src="/hubspot.svg" alt="HubSpot Logo" width={240} height={60} />
+                <Image src="/hubspot.svg" alt="HubSpot Logo" className='mb-5' width={240} height={60} />
               </span>
               <br />
               <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent animate-gradient">
