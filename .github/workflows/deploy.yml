@@ -27,5 +27,5 @@ jobs:
             git pull &&
             npm install &&
             npm run build &&
-            pm2 restart all || npm start -- -H 0.0.0.0
+            pm2 restart bst-app || pm2 start npm --name 'bst-app' -- start -- -H 0.0.0.0
           "
