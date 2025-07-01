@@ -39,12 +39,64 @@ import {
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import * as LucideIcons from "lucide-react"
+
+interface AboutContent {
+  hero: {
+    title: string;
+    subtitle: string;
+    description: string;
+    stats: Array<{
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
+  team: {
+    title: string;
+    subtitle: string;
+    description: string;
+    members: Array<{
+      name: string;
+      role: string;
+      description: string;
+      avatar: string;
+      icon: string;
+    }>;
+  };
+  values: {
+    title: string;
+    subtitle: string;
+    description: string;
+    items: Array<{
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
+  mission: {
+    title: string;
+    subtitle: string;
+    description: string;
+    cta: {
+      text: string;
+      url: string;
+    };
+  };
+}
+
+function getIconComponent(name: string) {
+  const IconComponent = LucideIcons[name as keyof typeof LucideIcons] || LucideIcons.Star;
+  return IconComponent as React.ComponentType<any>;
+}
 
 export default function AboutUs() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isLoaded, setIsLoaded] = useState(false)
   const [scrollY, setScrollY] = useState(0)
   const [currentYear] = useState(new Date().getFullYear())
+  const [aboutContent, setAboutContent] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
   const isVisible = true
   const router = useRouter()
 
@@ -67,13 +119,122 @@ export default function AboutUs() {
     }
   }, [])
 
+  useEffect(() => {
+    const fetchAboutContent = async () => {
+      try {
+        const response = await fetch("/api/content?type=about")
+        if (response.ok) {
+          const data = await response.json()
+          if (data.length > 0) {
+            setAboutContent(data[0].content)
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching about content:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAboutContent()
+  }, [])
+
   const handleMissionClick = () => {
-    router.push('/contact')
+    router.push(aboutContent?.mission?.cta?.url || '/contact')
   }
 
   const handleProjectsClick = () => {
     router.push('/contact')
   }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ff5c35] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Use dynamic content if available, otherwise fall back to static content
+  const heroTitle = aboutContent?.hero?.title || "Nous Sommes"
+  const heroSubtitle = aboutContent?.hero?.subtitle || "Les Visionnaires"
+  const heroDescription = aboutContent?.hero?.description || "qui transforment le Maroc digital"
+  const heroStats = aboutContent?.hero?.stats || [
+    { title: `${currentYear - 2019} années d'excellence`, icon: "Clock" },
+    { title: "100% passion marocaine", icon: "Heart" },
+    { title: "Innovation continue", icon: "Rocket" }
+  ]
+
+  const teamTitle = aboutContent?.team?.title || "L'Humain au Cœur"
+  const teamDescription = aboutContent?.team?.description || "Derrière chaque ligne de code, chaque intégration réussie, il y a des passionnés qui croient en la puissance transformatrice de la technologie."
+  const teamMembers = aboutContent?.team?.members || [
+    {
+      name: "Ahmed Mansouri",
+      role: "CEO & Fondateur",
+      description: "Visionnaire de la transformation digitale au Maroc",
+      icon: "Crown"
+    },
+    {
+      name: "Salma Benali",
+      role: "CTO",
+      description: "Experte en architecture technique et innovation",
+      icon: "Code"
+    },
+    {
+      name: "Youssef Kadiri",
+      role: "Directeur Commercial",
+      description: "Spécialiste en solutions CRM et ERP",
+      icon: "Target"
+    },
+    {
+      name: "Fatima Zahra",
+      role: "Lead Developer",
+      description: "Passionnée de développement et d'intégration",
+      icon: "Zap"
+    }
+  ]
+
+  const valuesTitle = aboutContent?.values?.title || "Nos Valeurs Fondamentales"
+  const valuesDescription = aboutContent?.values?.description || "Des principes qui guident chacune de nos actions et décisions."
+  const valuesItems = aboutContent?.values?.items || [
+    {
+      title: "Excellence",
+      description: "Nous visons l'excellence dans chaque projet, chaque ligne de code, chaque interaction client.",
+      icon: "Star"
+    },
+    {
+      title: "Innovation",
+      description: "Nous repoussons constamment les limites de la technologie pour créer des solutions innovantes.",
+      icon: "Lightbulb"
+    },
+    {
+      title: "Collaboration",
+      description: "Nous croyons en la puissance du travail d'équipe et de la collaboration avec nos clients.",
+      icon: "Users"
+    },
+    {
+      title: "Intégrité",
+      description: "Nous agissons avec honnêteté, transparence et éthique dans toutes nos relations.",
+      icon: "Shield"
+    },
+    {
+      title: "Passion",
+      description: "Notre passion pour la technologie et l'innovation nous pousse à toujours faire mieux.",
+      icon: "Heart"
+    },
+    {
+      title: "Impact",
+      description: "Nous créons un impact positif sur les entreprises et la société marocaine.",
+      icon: "Globe"
+    }
+  ]
+
+  const missionTitle = aboutContent?.mission?.title || "Transformer le Maroc Digital"
+  const missionDescription = aboutContent?.mission?.description || "Notre mission est d'accompagner les entreprises marocaines dans leur transformation digitale en leur offrant des solutions innovantes, sur mesure et performantes."
+  const missionCtaText = aboutContent?.mission?.cta?.text || "Découvrir Notre Mission"
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
@@ -144,12 +305,12 @@ export default function AboutUs() {
           <div className="text-center mb-20">
             
             <h1 className="text-6xl md:text-9xl font-black text-black mb-12 leading-none tracking-tighter">
-              <span className="block">Nous Sommes</span>
+              <span className="block">{heroTitle}</span>
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#ff5c35] via-[#714b67] to-[#ff5c35] animate-pulse">
-                Les Visionnaires
+                {heroSubtitle}
               </span>
               <span className="block text-3xl md:text-4xl font-light text-gray-600 mt-8 tracking-normal">
-                qui transforment le Maroc digital
+                {heroDescription}
               </span>
             </h1>
 
@@ -157,18 +318,15 @@ export default function AboutUs() {
                
 
               <div className="flex flex-wrap items-center justify-center gap-12 text-lg text-gray-600">
-                <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
-                  <Clock className="w-6 h-6 text-[#ff5c35]" />
-                  <span className="font-medium">{currentYear - 2019} années d'excellence</span>
-                </div>
-                <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
-                  <Heart className="w-6 h-6 text-[#714b67]" />
-                  <span className="font-medium">100% passion marocaine</span>
-                </div>
-                <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
-                  <Rocket className="w-6 h-6 text-black" />
-                  <span className="font-medium">Innovation continue</span>
-                </div>
+                {heroStats.map((stat: any, index: number) => {
+                  const Icon = getIconComponent(stat.icon);
+                  return (
+                    <div key={index} className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
+                      <Icon className="w-6 h-6 text-[#ff5c35]" />
+                      <span className="font-medium">{stat.title}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -187,158 +345,99 @@ export default function AboutUs() {
               <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE ÂME</span>
             </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
-              L'Humain au{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff5c35] to-[#714b67]">Cœur</span>
+              {teamTitle}
             </h2>
             <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              Derrière chaque ligne de code, chaque intégration réussie, il y a des passionnés qui croient en la
-              puissance transformatrice de la technologie.
+              {teamDescription}
             </p>
           </div>
 
           {/* Team Composition */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
-            {[
-              {
-                role: "Visionnaires",
-                count: "3",
-                description: "Qui imaginent l'avenir digital du Maroc",
-                icon: Target,
-                color: "#ff5c35",
-                bgGradient: "from-[#ff5c35]/20 to-[#ff5c35]/5",
-              },
-              {
-                role: "Développeurs",
-                count: "12",
-                description: "Qui donnent vie aux idées les plus audacieuses",
-                icon: Code,
-                color: "#714b67",
-                bgGradient: "from-[#714b67]/20 to-[#714b67]/5",
-              },
-              {
-                role: "Consultants",
-                count: "8",
-                description: "Qui accompagnent nos clients vers l'excellence",
-                icon: Briefcase,
-                color: "#000000",
-                bgGradient: "from-black/20 to-black/5",
-              },
-              {
-                role: "Créatifs",
-                count: "5",
-                description: "Qui pensent différemment et innovent",
-                icon: Sparkles,
-                color: "#ff5c35",
-                bgGradient: "from-[#ff5c35]/20 to-[#ff5c35]/5",
-              },
-            ].map((team, index) => (
-              <div key={index} className="group relative">
+            {teamMembers.map((member: any, index: number) => {
+              const Icon = getIconComponent(member.icon);
+              return (
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${team.bgGradient} rounded-3xl transform -rotate-2 group-hover:-rotate-3 transition-transform duration-700`}
-                ></div>
-                <div className="relative p-8 rounded-3xl bg-white border border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-700 hover:scale-105">
-                  <div
-                    className="w-20 h-20 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500"
-                    style={{ backgroundColor: `${team.color}15` }}
-                  >
-                    <team.icon className="w-10 h-10" style={{ color: team.color }} />
-                  </div>
-                  <div className="text-5xl font-black mb-4" style={{ color: team.color }}>
-                    {team.count}
-                  </div>
-                  <h3 className="text-2xl font-bold text-black mb-4">{team.role}</h3>
-                  <p className="text-gray-600 leading-relaxed">{team.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Culture Showcase */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              {
-                title: "Café & Innovation",
-                description:
-                  "Nos meilleures idées naissent autour d'un café marocain, dans une atmosphère détendue où la créativité s'épanouit librement.",
-                icon: Coffee,
-                color: "#ff5c35",
-                bgPattern: "bg-gradient-to-br from-[#ff5c35]/10 via-white to-[#ff5c35]/5",
-              },
-              {
-                title: "Excellence Continue",
-                description:
-                  "Nous investissons 20% de notre temps dans la recherche et l'expérimentation de nouvelles technologies révolutionnaires.",
-                icon: Zap,
-                color: "#714b67",
-                bgPattern: "bg-gradient-to-br from-[#714b67]/10 via-white to-[#714b67]/5",
-              },
-              {
-                title: "Passion Partagée",
-                description:
-                  "Chaque membre de l'équipe partage la même passion pour l'excellence et l'impact positif sur l'écosystème marocain.",
-                icon: Heart,
-                color: "#000000",
-                bgPattern: "bg-gradient-to-br from-black/10 via-white to-black/5",
-              },
-            ].map((culture, index) => (
-              <div
-                key={index}
-                className={`group relative p-10 rounded-3xl ${culture.bgPattern} border border-gray-200/50 hover:shadow-2xl transition-all duration-700 hover:scale-105`}
-              >
-                <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500"
-                  style={{ backgroundColor: `${culture.color}15` }}
+                  key={index}
+                  className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
                 >
-                  <culture.icon className="w-8 h-8" style={{ color: culture.color }} />
+                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[#ff5c35] to-[#714b67]"></div>
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[#ff5c35]/10 to-[#714b67]/10">
+                    <Icon className="w-8 h-8 text-[#ff5c35]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-2">{member.name}</h3>
+                  <h4 className="text-sm font-medium text-gray-600 mb-4 tracking-wide uppercase">
+                    {member.role}
+                  </h4>
+                  <p className="text-gray-600 leading-relaxed">
+                    {member.description}
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-black mb-6">{culture.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-lg">{culture.description}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* The Mission: Our Purpose */}
-      <section className="relative z-10 py-40 px-6 lg:px-8 bg-black overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#ff5c35]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#714b67]/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="relative max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center px-8 py-4 rounded-full bg-white/10 border border-white/20 mb-16 shadow-2xl">
-            <Shield className="w-6 h-6 text-white mr-4" />
-            <span className="text-base font-bold text-white/90 tracking-wider">NOTRE MISSION</span>
+      {/* Our Values */}
+      <section className="relative z-10 py-40 px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-32">
+            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#714b67]/10 to-[#ff5c35]/10 border border-gray-200 mb-12 shadow-lg">
+              <Heart className="w-6 h-6 text-[#714b67] mr-4" />
+              <span className="text-base font-bold text-gray-700 tracking-wider">NOS VALEURS</span>
+            </div>
+            <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
+              {valuesTitle}
+            </h2>
+            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              {valuesDescription}
+            </p>
           </div>
 
-          <h2 className="text-6xl md:text-9xl font-black text-white mb-12 leading-tight">
-            Nous Existons pour
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#ff5c35] via-white to-[#714b67]">
-              Transformer
-            </span>
-          </h2>
-     
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {valuesItems.map((value: any, index: number) => {
+              const Icon = getIconComponent(value.icon);
+              return (
+                <div
+                  key={index}
+                  className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+                >
+                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[#714b67] to-[#ff5c35]"></div>
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[#714b67]/10 to-[#ff5c35]/10">
+                    <Icon className="w-8 h-8 text-[#714b67]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-4">{value.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {value.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-          {/* Call to Action */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mt-20">
+      {/* Mission Section */}
+      <section className="relative z-10 py-40 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#ff5c35]/10 to-[#714b67]/10 border border-gray-200 mb-12 shadow-lg">
+              <Rocket className="w-6 h-6 text-[#ff5c35] mr-4" />
+              <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE MISSION</span>
+            </div>
+            <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
+              {missionTitle}
+            </h2>
+            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
+              {missionDescription}
+            </p>
             <Button
-              size="lg"
-              className="bg-gradient-to-r from-[#ff5c35] to-[#714b67] text-white hover:from-[#ff5c35]/90 hover:to-[#714b67]/90 shadow-2xl shadow-[#ff5c35]/30 hover:shadow-3xl transition-all duration-500 px-16 py-8 text-xl font-bold hover:scale-105 group rounded-2xl"
               onClick={handleMissionClick}
+              className="group bg-black text-white hover:bg-gray-900 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              Rejoignez Notre Mission
-              <ArrowRight className="ml-4 w-6 h-6 group-hover:translate-x-2 transition-transform duration-300" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-white/30 text-white hover:bg-white/10 px-16 py-8 text-xl font-bold transition-all duration-300 hover:scale-105 rounded-2xl backdrop-blur-sm"
-              onClick={handleProjectsClick}
-            >
-              <Globe className="mr-4 w-6 h-6" />
-              Découvrir Nos Projets
+              {missionCtaText}
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
           </div>
         </div>

@@ -1,10 +1,11 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next"
 import { BlogPost } from "@/components/BlogPost"
 
 // This function is required for static site generation with dynamic routes
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
     const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
     
     if (!res.ok) {
@@ -25,7 +26,7 @@ export async function generateStaticParams() {
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
     const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
     
     if (!res.ok) {
@@ -68,7 +69,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function Page({ params }: { params: { slug: string } }) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
     const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
     
     if (!res.ok) {

@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://blackswantechnology.ma'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
-    url: 'https://blackswantechnology.ma',
+    url: process.env.NEXT_PUBLIC_BASE_URL,
     title: 'Blackswan Technology - Expert Odoo ERP & HubSpot CRM au Maroc',
     description: 'Partenaire Officiel Odoo et Platinum HubSpot au Maroc. Implémentation, intégration et formation sur mesure pour votre transformation digitale.',
     siteName: 'Blackswan Technology',

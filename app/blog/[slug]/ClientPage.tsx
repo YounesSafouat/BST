@@ -23,7 +23,7 @@ export default function ClientPage({ slug }: { slug: string }) {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
       const res = await fetch(`${baseUrl}/api/content?type=blog-page`)
       const data = await res.json()
       const blogData = Array.isArray(data) ? data[0] : data

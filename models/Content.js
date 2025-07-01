@@ -1,7 +1,7 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var contentSchema = new mongoose_1.default.Schema({
+const mongoose = require('mongoose');
+
+const contentSchema = new mongoose.Schema({
     type: {
         type: String,
         required: true,
@@ -15,7 +15,7 @@ var contentSchema = new mongoose_1.default.Schema({
         required: true,
     },
     content: {
-        type: mongoose_1.default.Schema.Types.Mixed,
+        type: mongoose.Schema.Types.Mixed,
         required: true,
     },
     metadata: {
@@ -36,13 +36,16 @@ var contentSchema = new mongoose_1.default.Schema({
         default: Date.now,
     },
 });
+
 // Update the updatedAt timestamp before saving
 contentSchema.pre('save', function (next) {
     this.updatedAt = new Date();
     next();
 });
+
 // Remove the model from the cache if it exists
-if (mongoose_1.default.models.Content) {
-    delete mongoose_1.default.models.Content;
+if (mongoose.models.Content) {
+    delete mongoose.models.Content;
 }
-exports.default = mongoose_1.default.model('Content', contentSchema);
+
+module.exports = mongoose.model('Content', contentSchema);

@@ -21,7 +21,7 @@ import {
 import { useState, useEffect, useRef } from "react"
 
 export default async function ClientPage({ params }: { params: { slug: string } }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const res = await fetch(`${baseUrl}/api/content?type=clients-page`, { cache: "no-store" })
   const data = await res.json()
   const page = Array.isArray(data) ? data[0] : data

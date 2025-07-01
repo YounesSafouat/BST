@@ -45,7 +45,7 @@ export async function getSEOData(page: string, language: string = 'fr'): Promise
 }
 
 export function generateMetadata(seoData: SEOData | null, defaultTitle?: string, defaultDescription?: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://blackswantechnology.com';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   
   return {
     title: seoData?.title || defaultTitle || 'Black Swan Technology',

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Phone, Building2, User, MessageSquare } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
@@ -12,29 +12,6 @@ const companies = [
   { name: 'Meta', logo: '/public/placeholder-logo.png' },
   { name: 'Netflix', logo: '/public/placeholder-logo.svg' },
 ];
-
-const projectTypeContent = {
-  integration: {
-    header: 'Intégration Odoo-HubSpot',
-    text: "Optimisez vos processus métier grâce à une intégration complète entre Odoo et HubSpot. Nos experts vous accompagnent pour connecter vos outils et automatiser vos flux de travail."
-  },
-  migration: {
-    header: 'Migration ERP',
-    text: "Migrez vos données et processus vers un nouvel ERP en toute sécurité. Nous assurons une transition fluide et sans perte d'information."
-  },
-  consulting: {
-    header: 'Conseil Digital',
-    text: "Bénéficiez de notre expertise pour accélérer votre transformation digitale et améliorer vos performances."
-  },
-  formation: {
-    header: 'Formation',
-    text: "Formez vos équipes aux outils digitaux pour garantir l'adoption et la réussite de vos projets."
-  },
-  autre: {
-    header: 'Autre projet',
-    text: "Décrivez-nous votre projet, nous vous proposerons une solution sur-mesure adaptée à vos besoins."
-  }
-};
 
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
@@ -49,6 +26,28 @@ export default function ContactPageClient() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [contactContent, setContactContent] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchContactContent = async () => {
+      try {
+        const response = await fetch("/api/content?type=contact");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.length > 0) {
+            setContactContent(data[0].content);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching contact content:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContactContent();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +80,42 @@ export default function ContactPageClient() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  // Use dynamic content if available, otherwise fall back to static content
+  const projectTypeContent = contactContent?.projectTypes || {
+    integration: {
+      header: 'Intégration Odoo-HubSpot',
+      text: "Optimisez vos processus métier grâce à une intégration complète entre Odoo et HubSpot. Nos experts vous accompagnent pour connecter vos outils et automatiser vos flux de travail."
+    },
+    migration: {
+      header: 'Migration ERP',
+      text: "Migrez vos données et processus vers un nouvel ERP en toute sécurité. Nous assurons une transition fluide et sans perte d'information."
+    },
+    consulting: {
+      header: 'Conseil Digital',
+      text: "Bénéficiez de notre expertise pour accélérer votre transformation digitale et améliorer vos performances."
+    },
+    formation: {
+      header: 'Formation',
+      text: "Formez vos équipes aux outils digitaux pour garantir l'adoption et la réussite de vos projets."
+    },
+    autre: {
+      header: 'Autre projet',
+      text: "Décrivez-nous votre projet, nous vous proposerons une solution sur-mesure adaptée à vos besoins."
+    }
+  };
+
   const content = projectTypeContent[formData.projectType as keyof typeof projectTypeContent];
+
+  if (loading) {
+    return (
+      <div className="bg-[var(--color-white)] min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[var(--color-main)] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[var(--color-white)] min-h-screen">
@@ -98,36 +132,19 @@ export default function ContactPageClient() {
               {content.text}
             </p>
             <div className="flex flex-wrap gap-4">
-              <button
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold px-8 py-3 rounded-xl shadow transition-colors"
-                onClick={() => updateFormData('projectType', 'integration')}
-              >
-                Intégration Odoo-HubSpot
-              </button>
-              <button
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold px-8 py-3 rounded-xl shadow transition-colors"
-                onClick={() => updateFormData('projectType', 'migration')}
-              >
-                Migration ERP
-              </button>
-              <button
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold px-8 py-3 rounded-xl shadow transition-colors"
-                onClick={() => updateFormData('projectType', 'consulting')}
-              >
-                Conseil Digital
-              </button>
-              <button
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold px-8 py-3 rounded-xl shadow transition-colors"
-                onClick={() => updateFormData('projectType', 'formation')}
-              >
-                Formation
-              </button>
-              <button
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold px-8 py-3 rounded-xl shadow transition-colors"
-                onClick={() => updateFormData('projectType', 'autre')}
-              >
-                Autre projet
-              </button>
+              {Object.keys(projectTypeContent).map((type) => (
+                <button
+                  key={type}
+                  className={`font-semibold px-8 py-3 rounded-xl shadow transition-colors ${
+                    formData.projectType === type
+                      ? 'bg-[var(--color-main)] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  onClick={() => updateFormData('projectType', type)}
+                >
+                  {projectTypeContent[type].header}
+                </button>
+              ))}
             </div>
           </div>
           {/* Right: Form in a Card */}
@@ -139,7 +156,7 @@ export default function ContactPageClient() {
                   <input
                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
                     type="text"
-                    placeholder="Prénom*"
+                    placeholder={contactContent?.form?.fields?.firstName?.placeholder || "Prénom*"}
                     value={formData.firstName}
                     onChange={e => updateFormData('firstName', e.target.value)}
                     required
@@ -150,7 +167,7 @@ export default function ContactPageClient() {
                   <input
                     className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
                     type="text"
-                    placeholder="Nom*"
+                    placeholder={contactContent?.form?.fields?.lastName?.placeholder || "Nom*"}
                     value={formData.lastName}
                     onChange={e => updateFormData('lastName', e.target.value)}
                     required
@@ -162,7 +179,7 @@ export default function ContactPageClient() {
                 <input
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
                   type="text"
-                  placeholder="Nom de l'entreprise*"
+                  placeholder={contactContent?.form?.fields?.company?.placeholder || "Nom de l'entreprise*"}
                   value={formData.company}
                   onChange={e => updateFormData('company', e.target.value)}
                   required
@@ -173,7 +190,7 @@ export default function ContactPageClient() {
                 <input
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
                   type="tel"
-                  placeholder="Numéro de téléphone*"
+                  placeholder={contactContent?.form?.fields?.phone?.placeholder || "Numéro de téléphone*"}
                   value={formData.phone}
                   onChange={e => updateFormData('phone', e.target.value)}
                   required
@@ -184,7 +201,7 @@ export default function ContactPageClient() {
                 <input
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
                   type="email"
-                  placeholder="E-mail*"
+                  placeholder={contactContent?.form?.fields?.email?.placeholder || "E-mail*"}
                   value={formData.email}
                   onChange={e => updateFormData('email', e.target.value)}
                   required
@@ -194,7 +211,7 @@ export default function ContactPageClient() {
                 <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                 <textarea
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400 min-h-[120px]"
-                  placeholder="Message*"
+                  placeholder={contactContent?.form?.fields?.message?.placeholder || "Message*"}
                   value={formData.message}
                   onChange={e => updateFormData('message', e.target.value)}
                   required
@@ -202,60 +219,38 @@ export default function ContactPageClient() {
               </div>
               <button
                 type="submit"
-                className="w-full py-3 px-6 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-bold rounded-lg shadow transition-colors"
                 disabled={isSubmitting}
+                className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
+                {isSubmitting 
+                  ? (contactContent?.form?.submitButton?.loadingText || 'Envoi en cours...') 
+                  : (contactContent?.form?.submitButton?.text || 'Envoyer le message')
+                }
               </button>
             </form>
           </Card>
         </div>
-      </div>
-      {/* Companies Carousel */}
-      <div className="companies-scroll bg-white py-8">
-        <div className="companies-track">
-          {[...companies, ...companies].map((company, idx) => (
-            <div key={idx} className="company-item flex items-center justify-center">
-              <Image src={company.logo} alt={company.name} width={120} height={40} className="object-contain" />
-            </div>
-          ))}
+
+        {/* Trust Indicators */}
+        <div className="mt-20 text-center">
+          <h3 className="text-2xl font-bold text-gray-900 mb-8">
+            {contactContent?.trust?.title || 'Ils nous font confiance'}
+          </h3>
+          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+            {companies.map((company, index) => (
+              <div key={index} className="flex items-center">
+                <Image
+                  src={company.logo}
+                  alt={company.name}
+                  width={120}
+                  height={60}
+                  className="h-12 w-auto object-contain"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <style jsx>{`
-        .companies-scroll {
-          width: 100%;
-          overflow: hidden;
-          padding: 20px 0;
-        }
-        .companies-track {
-          display: flex;
-          animation: scroll-left 25s linear infinite;
-          width: calc(200% + 40px);
-        }
-        .company-item {
-          flex: 0 0 auto;
-          margin: 0 40px;
-          color: #9ca3af;
-          font-weight: 500;
-          font-size: var(--heading-font-size);
-          white-space: nowrap;
-          transition: color 0.3s ease;
-        }
-        .company-item:hover {
-          color: #6b7280;
-        }
-        @keyframes scroll-left {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        .companies-scroll:hover .companies-track {
-          animation-play-state: paused;
-        }
-      `}</style>
     </div>
   );
 }

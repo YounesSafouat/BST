@@ -2,40 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import {
-  Menu,
-  X,
-  ArrowRight,
-  ChevronDown,
-  Mail,
-  Phone,
-  MapPin,
-  CheckCircle,
-  Star,
-  Briefcase,
-  HeadphonesIcon,
-  Database,
-  PieChart,
-  Workflow,
-  ShoppingCart,
-  Calendar,
-  Building,
-  GraduationCap,
-  TrendingUp,
-  Target,
-  Rocket,
-  BarChart3,
-  Zap,
-  Users,
-  Globe,
-  MessageCircle,
-} from "lucide-react"
+import { Menu, X, ArrowRight, ChevronDown, Phone, Mail, MapPin } from "lucide-react"
 import { useState, useEffect } from "react"
 import { FaWhatsapp } from "react-icons/fa"
 import { useGlobalLoader } from "@/components/LoaderProvider"
 import { useRouter } from "next/navigation"
 import { useButtonAnalytics } from '@/hooks/use-analytics'
-
 
 interface HeaderProps {
   scrollY: number
@@ -44,37 +16,34 @@ interface HeaderProps {
 
 export default function Header({ scrollY, isLoaded }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [headerClients, setHeaderClients] = useState<any[]>([])
-  const [casClientMenuClients, setCasClientMenuClients] = useState<any[]>([])
+  const [headerData, setHeaderData] = useState<any>(null)
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
   const { trackButtonClick } = useButtonAnalytics()
 
   useEffect(() => {
-    fetch("/api/content?type=clients-page")
-      .then(res => res.json())
-      .then(data => {
-        const page = Array.isArray(data) ? data[0] : data
-        const clients = page?.content?.clientCases || []
-        const featured = clients.filter((c: any) => c.featuredInHeader).slice(0, 2)
-        setHeaderClients(featured)
-        // For mega menu: fallback to first two if none are featured
-        setCasClientMenuClients(
-          featured.length > 0 ? featured : clients.slice(0, 2)
-        )
-      })
-      .catch(() => {
-        setHeaderClients([])
-        setCasClientMenuClients([])
-      })
+    fetchHeaderData()
   }, [])
+
+  const fetchHeaderData = async () => {
+    try {
+      const response = await fetch("/api/content?type=header")
+      if (response.ok) {
+        const data = await response.json()
+        if (data.length > 0) {
+          setHeaderData(data[0].content)
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching header data:", error)
+    }
+  }
 
   const handleAppointmentClick = async () => {
     showLoader()
     try {
       await new Promise(resolve => setTimeout(resolve, 2000))
-      window.location.href = '/rendez-vous'
+      window.location.href = headerData?.cta?.url || '/rendez-vous'
     } finally {
       hideLoader()
     }
@@ -96,402 +65,63 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
       <nav className="flex items-center justify-between max-w-6xl mx-auto">
         <div className="flex items-center space-x-3">
           <Link href="/" className="relative">
-            <img src="/bst.png" alt="blackswantechnology" className="w-1/2"/>
+            <img 
+              src={headerData?.logo?.image || "/bst.png"} 
+              alt={headerData?.logo?.alt || "blackswantechnology"} 
+              className="w-1/2"
+            />
           </Link>
         </div>
 
         <div className="hidden md:flex items-center space-x-12">
-          {/* HubSpot Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown("hubspot")}
-            onMouseLeave={() => setActiveDropdown(null)}
+          <button
+            onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
+            className="text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
           >
-            <button
-              onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
-              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
-            >
-              HubSpot
-              <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-            </button>
-            {activeDropdown === "hubspot" && (
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[700px] mt-1 z-50">
-                <div className="bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-xl p-6 transition-all duration-200 ease-out">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="text-xl font-bold text-black mb-1">Solutions HubSpot</h3>
-                      <p className="text-gray-600 text-sm">Plateforme CRM et Marketing Complète</p>
-                    </div>
-                    <div className="px-3 py-1 rounded-full bg-[#ff5c35] text-white text-xs font-bold">
-                      ★ Partenaire Platinum
-                    </div>
-                  </div>
-
-                  {/* Content Grid */}
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#ff5c35]/20 rounded-lg flex items-center justify-center">
-                          <Star className="w-4 h-4 text-[#ff5c35]" />
-                        </div>
-                        <h4 className="font-semibold text-black">Logiciels CRM</h4>
-                      </div>
-                      <div className="space-y-3">
-                        {[
-                          { icon: TrendingUp, title: "Sales Hub", desc: "Automatisation des ventes" },
-                          { icon: Mail, title: "Marketing Hub", desc: "Email marketing avancé" },
-                          { icon: HeadphonesIcon, title: "Service Hub", desc: "Support client professionnel" },
-                        ].map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                          >
-                            <div className="w-8 h-8 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center">
-                              <item.icon className="w-4 h-4 text-[#ff5c35]" />
-                            </div>
-                            <div>
-                              <h5 className="font-medium text-black text-sm">{item.title}</h5>
-                              <p className="text-xs text-gray-600">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#ff5c35]/20 rounded-lg flex items-center justify-center">
-                          <Briefcase className="w-4 h-4 text-[#ff5c35]" />
-                        </div>
-                        <h4 className="font-semibold text-black">Nos Services</h4>
-                      </div>
-                      <div className="space-y-3">
-                        {[
-                          { icon: Target, title: "Audit HubSpot", desc: "Évaluation complète" },
-                          { icon: Rocket, title: "Implémentation", desc: "Configuration sur mesure" },
-                          { icon: GraduationCap, title: "Formation", desc: "Équipes certifiées" },
-                        ].map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                          >
-                            <div className="w-8 h-8 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center">
-                              <item.icon className="w-4 h-4 text-[#ff5c35]" />
-                            </div>
-                            <div>
-                              <h5 className="font-medium text-black text-sm">{item.title}</h5>
-                              <p className="text-xs text-gray-600">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button 
-                      className="bg-[#ff5c35] text-white hover:bg-[#ff5c35]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
-                      onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
-                    >
-                      En Savoir Plus <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Odoo Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown("odoo")}
-            onMouseLeave={() => setActiveDropdown(null)}
+            HubSpot
+          </button>
+          <button
+            onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }}
+            className="text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
           >
-            <button
-              onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }}
-              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
-            >
-              Odoo
-              <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-            </button>
-            {activeDropdown === "odoo" && (
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[700px] mt-1 z-50">
-                <div className="bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-xl p-6 transition-all duration-200 ease-out">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="text-xl font-bold text-black mb-1">Solutions Odoo</h3>
-                      <p className="text-gray-600 text-sm">ERP Intégré et Gestion d'Entreprise</p>
-                    </div>
-                    <div className="px-3 py-1 rounded-full bg-[#714b67] text-white text-xs font-bold">
-                      ★ Partenaire Officiel
-                    </div>
-                  </div>
-
-                  {/* Content Grid */}
-                  <div className="grid grid-cols-2 gap-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#714b67]/20 rounded-lg flex items-center justify-center">
-                          <Database className="w-4 h-4 text-[#714b67]" />
-                        </div>
-                        <h4 className="font-semibold text-black">Modules ERP</h4>
-                      </div>
-                      <div className="space-y-3">
-                        {[
-                          { icon: ShoppingCart, title: "Ventes & CRM", desc: "Gestion commerciale" },
-                          { icon: BarChart3, title: "Comptabilité", desc: "Gestion financière" },
-                          { icon: Building, title: "Inventaire", desc: "Gestion des stocks" },
-                        ].map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                          >
-                            <div className="w-8 h-8 bg-[#714b67]/10 rounded-lg flex items-center justify-center">
-                              <item.icon className="w-4 h-4 text-[#714b67]" />
-                            </div>
-                            <div>
-                              <h5 className="font-medium text-black text-sm">{item.title}</h5>
-                              <p className="text-xs text-gray-600">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#714b67]/20 rounded-lg flex items-center justify-center">
-                          <Zap className="w-4 h-4 text-[#714b67]" />
-                        </div>
-                        <h4 className="font-semibold text-black">Nos Expertises</h4>
-                      </div>
-                      <div className="space-y-3">
-                        {[
-                          { icon: PieChart, title: "Analyse & Audit", desc: "Évaluation des processus" },
-                          { icon: Workflow, title: "Personnalisation", desc: "Modules sur mesure" },
-                          { icon: Database, title: "Migration", desc: "Transfert sécurisé" },
-                        ].map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                          >
-                            <div className="w-8 h-8 bg-[#714b67]/10 rounded-lg flex items-center justify-center">
-                              <item.icon className="w-4 h-4 text-[#714b67]" />
-                            </div>
-                            <div>
-                              <h5 className="font-medium text-black text-sm">{item.title}</h5>
-                              <p className="text-xs text-gray-600">{item.desc}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button 
-                      className="bg-[#714b67] text-white hover:bg-[#714b67]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
-                      onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }}
-                    >
-                      En Savoir Plus <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* À Propos Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown("about")}
-            onMouseLeave={() => setActiveDropdown(null)}
+            Odoo
+          </button>
+          <button
+            onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
+            className="text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
           >
-            <button
-              onClick={() => { trackButtonClick('header-about'); handleNavClick('/about'); }}
-              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2 whitespace-nowrap"
-            >
-              À Propos
-              <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-            </button>
-            {activeDropdown === "about" && (
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[600px] mt-1 z-50">
-                <div className="bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-xl p-6 transition-all duration-200 ease-out">
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-black mb-1">À Propos de Blackswantechnology</h3>
-                    <p className="text-gray-600 text-sm">Votre Partenaire de Transformation Digitale</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    {[
-                      { icon: Star, title: "5+ Années", desc: "D'expérience au Maroc" },
-                      { icon: Users, title: "200+ Clients", desc: "Entreprises accompagnées" },
-                      { icon: CheckCircle, title: "100% Réussite", desc: "Taux de satisfaction" },
-                      { icon: Globe, title: "Casablanca", desc: "Expertise internationale" },
-                    ].map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150"
-                      >
-                        <div className="w-10 h-10 bg-black/10 rounded-lg flex items-center justify-center">
-                          <item.icon className="w-5 h-5 text-black" />
-                        </div>
-                        <div>
-                          <h5 className="font-medium text-black text-sm">{item.title}</h5>
-                          <p className="text-xs text-gray-600">{item.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button 
-                      className="bg-black text-white hover:bg-gray-900 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
-                      onClick={() => { trackButtonClick('header-about'); handleNavClick('/about'); }}
-                    >
-                      Notre Histoire <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Contact Link */}
-          <div className="relative group">
-            <button
-              onClick={() => { trackButtonClick('header-contact'); handleNavClick('/contact'); }}
-              className="text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2"
-            >
-              Contact
-            </button>
-          </div>
-
-          {/* Cas Client Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown("cas-client")}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <button
-              onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
-              className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide uppercase py-2 whitespace-nowrap"
-            >
-              Cas Client
-              <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-            </button>
-            {activeDropdown === "cas-client" && (
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-[700px] mt-1 z-50">
-                <div className="bg-white/95 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-xl p-6 transition-all duration-200 ease-out">
-                  <div className="text-center mb-6">
-                    <h3 className="text-xl font-bold text-black mb-1">Nos Références Clients</h3>
-                    <p className="text-gray-600 text-sm">Découvrez nos succès clients</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-6">
-                    {casClientMenuClients.length > 0 ? (
-                      casClientMenuClients.map((client) => (
-                        <button
-                          key={client.slug}
-                          onClick={() => { trackButtonClick(`header-cas-client-${client.slug}`); handleNavClick(`/cas-client/${client.slug}`); }}
-                          className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500 flex flex-col"
-                        >
-                          <div className="relative h-32 overflow-hidden flex items-center justify-center bg-gray-50">
-                            <img
-                              src={client.logo && client.logo.startsWith('http') ? client.logo : (client.logo ? `/logos/${client.logo}` : "/placeholder-logo.png")}
-                              alt={client.name}
-                              className="w-24 h-24 object-contain group-hover:scale-105 transition-transform duration-500"
-                            />
-                          </div>
-                          <div className="p-4 flex-1 flex flex-col">
-                            <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
-                              {client.name}
-                            </h3>
-                            <p className="text-gray-600 mb-2 line-clamp-2">{client.headline || client.summary}</p>
-                            <div className="text-xs text-[#ff5c35] font-medium mt-auto">
-                              {client.projectStats && client.projectStats.length > 0 ? client.projectStats[0].value : ''}
-                            </div>
-                          </div>
-                        </button>
-                      ))
-                    ) : (
-                      <div className="col-span-2 text-center text-gray-400">Aucun client sélectionné</div>
-                    )}
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                    <Button 
-                      className="bg-black text-white hover:bg-gray-900 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
-                      onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
-                    >
-                      Voir Tous les Cas <ArrowRight className="ml-2 w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+            Cas Client
+          </button>
         </div>
 
-        {/* Custom Button Group - Right Side */}
-        <div className="flex items-center gap-2 ml-4">
-          {/* Rendez-vous Button with Red Dot */}
-          <div className="relative">
-          <button
+        <div className="hidden md:flex items-center gap-2 ml-4">
+          {headerData?.cta?.isActive && (
+            <div className="relative">
+              <button
                 className="group w-[18em] bg-[var(--color-black)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-main)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
-                
+                onClick={handleAppointmentClick}
               >
-                Prendre rendez-vous {" "}
-                
+                {headerData.cta.text || "Prendre Rendez-vous"}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-          </div>
-          {/* WhatsApp Button */}
+            </div>
+          )}
+          
           <Button
             asChild
-            className="
-              rounded-full
-              bg-green-500
-              border-2 border-white
-              p-0 w-12 h-12
-              flex items-center justify-center
-              shadow-none
-              transition-all
-              duration-200
-              hover:bg-white
-              hover:border-green-500
-              hover:scale-110
-              focus:outline-none
-              group
-            "
+            className="rounded-full bg-green-500 border-2 border-white p-0 w-12 h-12 flex items-center justify-center shadow-none transition-all duration-200 hover:bg-white hover:border-green-500 hover:scale-110 focus:outline-none group"
           >
-            <a href="https://wa.me/212XXXXXXXXX" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <a href={`https://wa.me/${headerData?.contact?.phone?.replace(/\D/g, '') || '212XXXXXXXXX'}`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
               <FaWhatsapp className="w-6 h-6 text-white group-hover:text-green-500 transition-colors duration-200" />
             </a>
           </Button>
-          {/* Phone Button */}
+          
           <Button
             asChild
-            className="
-              rounded-full
-              bg-[#ff5c35]
-              border-2 border-white
-              p-0 w-12 h-12
-              flex items-center justify-center
-              shadow-none
-              transition-all
-              duration-200
-              hover:bg-white
-              hover:border-[#ff5c35]
-              hover:scale-110
-              focus:outline-none
-              group
-            "
+            className="rounded-full bg-[#ff5c35] border-2 border-white p-0 w-12 h-12 flex items-center justify-center shadow-none transition-all duration-200 hover:bg-white hover:border-[#ff5c35] hover:scale-110 focus:outline-none group"
           >
-            <a href="tel:+212XXXXXXXXX" aria-label="Téléphone">
+            <a href={`tel:${headerData?.contact?.phone || '+212XXXXXXXXX'}`} aria-label="Telephone">
               <Phone className="w-6 h-6 text-white group-hover:text-[#ff5c35] transition-colors duration-200" />
             </a>
           </Button>
@@ -507,27 +137,80 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-100 px-6 py-8 space-y-6 rounded-b-3xl">
-          <button onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
+          <button 
+            onClick={() => { trackButtonClick('mobile-hubspot'); handleNavClick('/hubspot'); }} 
+            className="block text-gray-600 hover:text-black transition-colors font-medium text-left w-full py-2"
+          >
             HubSpot
           </button>
-          <button onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
+          <button 
+            onClick={() => { trackButtonClick('mobile-odoo'); handleNavClick('/odoo'); }} 
+            className="block text-gray-600 hover:text-black transition-colors font-medium text-left w-full py-2"
+          >
             Odoo
           </button>
-          <button onClick={() => { trackButtonClick('header-about'); handleNavClick('/about'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
-            À Propos
-          </button>
-          <button onClick={() => { trackButtonClick('header-contact'); handleNavClick('/contact'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
-            Contact
-          </button>
-          <button onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }} className="block text-gray-600 hover:text-black transition-colors font-medium">
+          <button 
+            onClick={() => { trackButtonClick('mobile-cas-client'); handleNavClick('/cas-client'); }} 
+            className="block text-gray-600 hover:text-black transition-colors font-medium text-left w-full py-2"
+          >
             Cas Client
           </button>
-          <div className="pt-6">
-            <Button 
-              className="w-full bg-black text-white"
-              onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
+
+          <div className="space-y-3 pt-4 border-t border-gray-100">
+            <h4 className="font-semibold text-black">Contact</h4>
+            {headerData?.contact?.phone && (
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-gray-600" />
+                <a href={`tel:${headerData.contact.phone}`} className="text-gray-600 text-sm">
+                  {headerData.contact.phone}
+                </a>
+              </div>
+            )}
+            {headerData?.contact?.email && (
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-gray-600" />
+                <a href={`mailto:${headerData.contact.email}`} className="text-gray-600 text-sm">
+                  {headerData.contact.email}
+                </a>
+              </div>
+            )}
+            {headerData?.contact?.address && (
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4 text-gray-600" />
+                <span className="text-gray-600 text-sm">{headerData.contact.address}</span>
+              </div>
+            )}
+          </div>
+
+          {headerData?.cta?.isActive && (
+            <div className="pt-4 border-t border-gray-100">
+              <Button 
+                className="w-full bg-black text-white"
+                onClick={handleAppointmentClick}
+              >
+                {headerData.cta.text || "Prendre Rendez-vous"}
+              </Button>
+            </div>
+          )}
+
+          <div className="flex gap-3 pt-4 border-t border-gray-100">
+            <Button
+              asChild
+              className="flex-1 bg-green-500 text-white"
             >
-              Commencer
+              <a href={`https://wa.me/${headerData?.contact?.phone?.replace(/\D/g, '') || '212XXXXXXXXX'}`} target="_blank" rel="noopener noreferrer">
+                <FaWhatsapp className="w-4 h-4 mr-2" />
+                WhatsApp
+              </a>
+            </Button>
+            <Button
+              asChild
+              className="flex-1 bg-[#ff5c35] text-white"
+            >
+              <a href={`tel:${headerData?.contact?.phone || '+212XXXXXXXXX'}`}>
+                <Phone className="w-4 h-4 mr-2" />
+                Appeler
+              </a>
             </Button>
           </div>
         </div>
@@ -535,3 +218,4 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
     </header>
   )
 }
+

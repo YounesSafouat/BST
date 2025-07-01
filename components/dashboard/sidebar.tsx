@@ -21,6 +21,8 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Navigation,
+  ArrowDown,
 } from "lucide-react";
 
 const menuItems = [
@@ -29,6 +31,18 @@ const menuItems = [
     href: "/dashboard",
     icon: LayoutDashboard,
     color: "from-blue-200 to-blue-100 text-blue-700",
+  },
+  {
+    title: "Header",
+    href: "/dashboard/header",
+    icon: Navigation,
+    color: "from-indigo-200 to-indigo-100 text-indigo-700",
+  },
+  {
+    title: "Footer",
+    href: "/dashboard/footer",
+    icon: ArrowDown,
+    color: "from-teal-200 to-teal-100 text-teal-700",
   },
   {
     title: "Content",
