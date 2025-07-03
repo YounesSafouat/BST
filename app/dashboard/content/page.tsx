@@ -1245,6 +1245,7 @@ function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data
             <div className="space-y-2">
                 <select
                     multiple
+                    aria-label="Sélectionner les témoignages à afficher"
                     className="w-full border rounded p-2 min-h-[120px]"
                     value={content.testimonials || []}
                     onChange={e => {

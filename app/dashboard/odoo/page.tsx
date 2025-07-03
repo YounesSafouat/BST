@@ -879,6 +879,7 @@ export default function OdooDashboard() {
                       <input
                         type="checkbox"
                         id={`popular-${index}`}
+                        aria-label="Marquer comme plan populaire"
                         checked={plan.popular}
                         onChange={(e) => updateArrayField('pricing.plans', index, { ...plan, popular: e.target.checked })}
                       />
