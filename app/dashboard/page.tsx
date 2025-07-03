@@ -22,6 +22,10 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useTheme } from "@/components/theme-provider";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import Loader from '@/components/home/Loader';
 
 const stats = [
   {
@@ -102,14 +106,7 @@ export default function DashboardPage() {
   const totalButtonClicks = buttonClicks.reduce((sum, bc) => sum + bc.count, 0);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard data...</p>
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (

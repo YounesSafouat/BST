@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { Loader2, Save, Plus, Trash2, MoveUp, MoveDown } from "lucide-react";
+import Loader from '@/components/home/Loader';
+import { availableIcons } from '@/lib/iconList';
 
 interface HeaderData {
   logo: {
@@ -121,12 +123,6 @@ interface HeaderData {
     isActive: boolean;
   };
 }
-
-const iconOptions = [
-  "Home", "Users", "Briefcase", "FileText", "Mail", "Star", "Target", "TrendingUp", 
-  "HeadphonesIcon", "BarChart3", "Rocket", "GraduationCap", "Zap", "Database", 
-  "ShoppingCart", "Building", "Globe", "CheckCircle", "Phone", "MapPin"
-];
 
 export default function HeaderDashboard() {
   const [headerData, setHeaderData] = useState<HeaderData | null>(null);
@@ -312,11 +308,7 @@ export default function HeaderDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-        </div>
-    );
+    return <Loader />;
   }
 
   if (!headerData) {
@@ -331,7 +323,7 @@ export default function HeaderDashboard() {
             <p>Aucune donnée de header trouvée.</p>
           </CardContent>
         </Card>
-      </div>
+        </div>
     );
   }
 
@@ -497,9 +489,12 @@ export default function HeaderDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
-                          <SelectItem key={icon} value={icon}>
-                            {icon}
+                        {availableIcons.map((icon: any) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -523,9 +518,12 @@ export default function HeaderDashboard() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {iconOptions.map((icon) => (
-                              <SelectItem key={icon} value={icon}>
-                                {icon}
+                            {availableIcons.map((icon: any) => (
+                              <SelectItem key={icon.value} value={icon.value}>
+                                <div className="flex items-center space-x-2">
+                                  <icon.icon className="w-4 h-4" />
+                                  <span>{icon.label}</span>
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -605,9 +603,12 @@ export default function HeaderDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
-                          <SelectItem key={icon} value={icon}>
-                            {icon}
+                        {availableIcons.map((icon: any) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -617,28 +618,31 @@ export default function HeaderDashboard() {
                 {headerData.navigation.hubspot.sections.services.items.map((item, index) => (
                   <div key={index} className="flex items-center gap-4 p-4 border rounded-lg">
                     <div className="flex-1 grid grid-cols-4 gap-4">
-                  <div>
-                    <Label>Icône</Label>
-                    <Select
-                      value={item.icon}
-                      onValueChange={(value) => {
+                      <div>
+                        <Label>Icône</Label>
+                        <Select
+                          value={item.icon}
+                          onValueChange={(value) => {
                             const newData = { ...headerData };
                             newData.navigation.hubspot.sections.services.items[index].icon = value;
                             setHeaderData(newData);
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {iconOptions.map((icon) => (
-                              <SelectItem key={icon} value={icon}>
-                                {icon}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {availableIcons.map((icon: any) => (
+                              <SelectItem key={icon.value} value={icon.value}>
+                                <div className="flex items-center space-x-2">
+                                  <icon.icon className="w-4 h-4" />
+                                  <span>{icon.label}</span>
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                       <div>
                         <Label>Titre</Label>
                     <Input
@@ -756,9 +760,12 @@ export default function HeaderDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
-                          <SelectItem key={icon} value={icon}>
-                            {icon}
+                        {availableIcons.map((icon: any) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -782,9 +789,12 @@ export default function HeaderDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
-                              <SelectItem key={icon} value={icon}>
-                                {icon}
+                        {availableIcons.map((icon: any) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -864,9 +874,12 @@ export default function HeaderDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
-                          <SelectItem key={icon} value={icon}>
-                            {icon}
+                        {availableIcons.map((icon: any) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -890,9 +903,12 @@ export default function HeaderDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
-                              <SelectItem key={icon} value={icon}>
-                                {icon}
+                        {availableIcons.map((icon: any) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -1005,9 +1021,12 @@ export default function HeaderDashboard() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {iconOptions.map((icon) => (
-                              <SelectItem key={icon} value={icon}>
-                                {icon}
+                            {availableIcons.map((icon: any) => (
+                              <SelectItem key={icon.value} value={icon.value}>
+                                <div className="flex items-center space-x-2">
+                                  <icon.icon className="w-4 h-4" />
+                                  <span>{icon.label}</span>
+                                </div>
                               </SelectItem>
                             ))}
                           </SelectContent>

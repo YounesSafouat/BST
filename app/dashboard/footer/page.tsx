@@ -27,6 +27,8 @@ import {
   Shield
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import Loader from '@/components/home/Loader';
+import { availableIcons } from '@/lib/iconList';
 
 interface FooterContent {
   newsletter: {
@@ -91,23 +93,6 @@ interface FooterContent {
     }>;
   };
 }
-
-const iconOptions = [
-  { value: "Mail", label: "Mail", icon: Mail },
-  { value: "Phone", label: "Phone", icon: Phone },
-  { value: "MapPin", label: "Map Pin", icon: MapPin },
-  { value: "Facebook", label: "Facebook", icon: Facebook },
-  { value: "Twitter", label: "Twitter", icon: Twitter },
-  { value: "Linkedin", label: "LinkedIn", icon: Linkedin },
-  { value: "Instagram", label: "Instagram", icon: Instagram },
-  { value: "Globe", label: "Globe", icon: Globe },
-  { value: "Building", label: "Building", icon: Building },
-  { value: "FileText", label: "File Text", icon: FileText },
-  { value: "Users", label: "Users", icon: Users },
-  { value: "Briefcase", label: "Briefcase", icon: Briefcase },
-  { value: "Award", label: "Award", icon: Award },
-  { value: "Shield", label: "Shield", icon: Shield }
-]
 
 function isHexColor(value: string) {
   return /^#[0-9A-Fa-f]{6}$/.test(value);
@@ -320,11 +305,7 @@ export default function FooterDashboard() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ff5c35]"></div>
-      </div>
-    )
+    return <Loader />;
   }
 
   return (
@@ -431,9 +412,12 @@ export default function FooterDashboard() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {iconOptions.map((icon) => (
+                      {availableIcons.map((icon: any) => (
                         <SelectItem key={icon.value} value={icon.value}>
-                          {icon.label}
+                          <div className="flex items-center space-x-2">
+                            <icon.icon className="w-4 h-4" />
+                            <span>{icon.label}</span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -458,9 +442,12 @@ export default function FooterDashboard() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {iconOptions.map((icon) => (
+                      {availableIcons.map((icon: any) => (
                         <SelectItem key={icon.value} value={icon.value}>
-                          {icon.label}
+                          <div className="flex items-center space-x-2">
+                            <icon.icon className="w-4 h-4" />
+                            <span>{icon.label}</span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -485,9 +472,12 @@ export default function FooterDashboard() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {iconOptions.map((icon) => (
+                      {availableIcons.map((icon: any) => (
                         <SelectItem key={icon.value} value={icon.value}>
-                          {icon.label}
+                          <div className="flex items-center space-x-2">
+                            <icon.icon className="w-4 h-4" />
+                            <span>{icon.label}</span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -687,9 +677,12 @@ export default function FooterDashboard() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {iconOptions.map((icon) => (
+                        {availableIcons.map((icon: any) => (
                           <SelectItem key={icon.value} value={icon.value}>
-                            {icon.label}
+                            <div className="flex items-center space-x-2">
+                              <icon.icon className="w-4 h-4" />
+                              <span>{icon.label}</span>
+                            </div>
                           </SelectItem>
                         ))}
                       </SelectContent>

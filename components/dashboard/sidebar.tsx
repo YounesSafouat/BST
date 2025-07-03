@@ -23,6 +23,8 @@ import {
   ChevronRight,
   Navigation,
   ArrowDown,
+  Globe,
+  Info,
 } from "lucide-react";
 
 const menuItems = [
@@ -51,10 +53,28 @@ const menuItems = [
     color: "from-green-200 to-green-100 text-green-700",
   },
   {
+    title: "À Propos",
+    href: "/dashboard/about",
+    icon: Info,
+    color: "from-cyan-200 to-cyan-100 text-cyan-700",
+  },
+  {
     title: "Blog",
     href: "/dashboard/blog",
     icon: BookText,
     color: "from-yellow-200 to-yellow-100 text-yellow-700",
+  },
+  {
+    title: "HubSpot",
+    href: "/dashboard/hubspot",
+    icon: Globe,
+    color: "from-orange-200 to-orange-100 text-orange-700",
+  },
+  {
+    title: "Odoo",
+    href: "/dashboard/odoo",
+    icon: Building2,
+    color: "from-purple-200 to-purple-100 text-purple-700",
   },
   {
     title: "SEO",
@@ -85,6 +105,12 @@ const menuItems = [
     href: "/dashboard/settings",
     icon: SettingsIcon,
     color: "from-gray-200 to-gray-100 text-gray-700",
+  },
+  {
+    title: "Témoignages",
+    href: "/dashboard/testimonials",
+    icon: MessageSquare,
+    color: "from-amber-200 to-amber-100 text-amber-700",
   },
 ];
 

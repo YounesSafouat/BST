@@ -2,17 +2,19 @@ import { Quote, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Testimonial {
+  _id: string;
   quote: string;
   name: string;
   role: string;
   avatar: string;
   result: string;
+  company?: string;
 }
 
 interface SuccessData {
   intro?: string;
   badge?: string;
-  testimonials?: Testimonial[];
+  testimonials?: string[];
 }
 
 interface ContentSection {
@@ -36,40 +38,37 @@ interface SuccessSectionProps {
 export default function SuccessSection({ success }: SuccessSectionProps) {
   const [successData, setSuccessData] = useState<SuccessData>({
     intro: "Découvrez comment nous avons aidé nos clients à atteindre leurs objectifs les plus ambitieux",
-    testimonials: [
-      {
-        quote: "Accompagnement exceptionnel et résultats au-delà de nos espérances. Partenaire de confiance.",
-        name: "Youssef Kadiri",
-        role: "CTO, GlobalTrade",
-        avatar: "YK",
-        result: "+150% ROI"
-      },
-      {
-        quote: "Notre transformation digitale a révolutionné notre approche commerciale. Résultats exceptionnels.",
-        name: "Ahmed Mansouri", 
-        role: "CEO, TechCorp",
-        avatar: "YO",
-        result: "+900% Leads"
-      },
-      {
-        quote: "L'intégration Odoo a unifié tous nos processus. Une efficacité opérationnelle remarquable.",
-        name: "Salma Benali",
-        role: "Directrice, InnovateMA", 
-        avatar: "SB",
-        result: "-70% Temps Gestion"
-      }
-    ]
+    testimonials: []
   });
+  const [availableTestimonials, setAvailableTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
     // Use the success prop data if available, otherwise fall back to default data
     if (success && success.content) {
       setSuccessData(success.content);
     }
+    fetchTestimonials();
   }, [success]);
 
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch('/api/content?type=testimonial');
+      if (response.ok) {
+        const data = await response.json();
+        setAvailableTestimonials(data.map((item: any) => ({ ...item.content, _id: item._id })));
+      }
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+    }
+  };
+
+  // Get the actual testimonial objects from the IDs
+  const testimonialObjects = successData.testimonials?.map(id => 
+    availableTestimonials.find(t => t._id === id)
+  ).filter(Boolean) as Testimonial[] || [];
+
   // Triple the testimonials for smooth infinite scroll
-  const infiniteTestimonials = [...(successData.testimonials || []), ...(successData.testimonials || []), ...(successData.testimonials || [])];
+  const infiniteTestimonials = [...testimonialObjects, ...testimonialObjects, ...testimonialObjects];
 
   return (
     <section className="py-20 px-6 bg-gray-50">

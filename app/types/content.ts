@@ -7,13 +7,18 @@ export interface ChallengeContent { intro?: string; badge?: string; challenges?:
 export interface SolutionContent { intro?: string; badge?: string; solutions?: Solution[]; }
 export interface Step { step: string; title: string; description: string; icon: string; iconUrl?: string; side: 'left' | 'right'; }
 export interface TransformationContent { intro?: string; badge?: string; steps?: Step[]; }
-export interface Testimonial { name: string; role: string; quote: string; result: string; avatar: string; }
-export interface SuccessContent { intro?: string; badge?: string; testimonials?: Testimonial[]; }
+export interface Testimonial { name: string; role: string; quote: string; result: string; avatar: string; company?: string; }
+export interface SuccessContent { intro?: string; badge?: string; testimonials?: string[]; }
+export interface TestimonialsContent { 
+  headline: string; 
+  description: string; 
+  testimonials: Testimonial[]; 
+}
 export interface Action { label: string; icon: string; }
 export interface Location { icon: string; title: string; subtitle: string; }
 export interface CTAContent { intro?: string; actions?: Action[]; locations?: Location[]; }
 
-export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | CTAContent | Record<string, unknown>;
+export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | CTAContent | Record<string, unknown>;
 
 export interface ContentSection {
   _id: string;

@@ -5,7 +5,33 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Users, Play, Volume2, VolumeX } from 'lucide-react';
 
-function OdooHeroSplit() {
+interface HeroData {
+  headline: string;
+  subheadline: string;
+  description: string;
+  logo: string;
+  videoUrl: string;
+  ctaPrimary: {
+    text: string;
+    icon: string;
+  };
+  ctaSecondary: {
+    text: string;
+    icon: string;
+  };
+  stats: Array<{
+    number: number;
+    suffix: string;
+    label: string;
+  }>;
+}
+  
+interface OdooHeroSplitProps {
+  heroData: HeroData;
+  isPreview?: boolean;
+}
+
+function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingType, setLoadingType] = useState<string>('');
@@ -52,9 +78,18 @@ function OdooHeroSplit() {
     }
   };
 
+  const getIconComponent = (iconName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      ArrowRight: <ArrowRight className="w-5 h-5" />,
+      Users: <Users className="w-5 h-5" />,
+      Play: <Play className="w-5 h-5" />
+    };
+    return iconMap[iconName] || <ArrowRight className="w-5 h-5" />;
+  };
+
   return (
     <section
-      className="relative bg-white pt-20 pb-16 overflow-hidden min-h-screen flex items-center"
+      className={`relative bg-white ${isPreview ? 'pt-4' : 'pt-20'} pb-16 overflow-hidden min-h-screen flex items-center`}
       style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
     >
       {/* Subtle Background Elements */}
@@ -72,7 +107,7 @@ function OdooHeroSplit() {
             <div className="flex justify-start">
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                 <Image
-                  src="/Odoo.svg"
+                  src={heroData.logo || "/Odoo.svg"}
                   alt="Odoo"
                   width={120}
                   height={60}
@@ -85,31 +120,23 @@ function OdooHeroSplit() {
             <h1
               className={`text-5xl md:text-7xl font-bold text-gray-900 leading-tight transform transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
               style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
-            >
-              <span className="font-bold text-gray-900">Toute votre entreprise sur</span>
-              <br />
-              <span className="relative inline-block">
-                <span className="font-bold text-gray-900">une plateforme</span>
-                <div className="absolute -bottom-2 left-0 w-full h-4 bg-[#ff5c35]/20 -z-10 transform -rotate-1"></div>
-              </span>
-            </h1>
+              dangerouslySetInnerHTML={{ __html: heroData.headline }}
+            />
 
             {/* Subtitle */}
             <p
               className={`text-xl md:text-2xl text-gray-700 leading-relaxed font-normal transform transition-all duration-1000 delay-500 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
               style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
             >
-              Simple, efficace, et abordable!
+              {heroData.subheadline}
             </p>
 
             {/* Description */}
             <p
               className={`text-lg text-gray-600 leading-relaxed transform transition-all duration-1000 delay-600 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
               style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
-            >
-              En tant que <strong className="text-[#714b67] font-bold">Partenaire Officiel Odoo</strong>, nous concevons des implémentations
-              sur mesure qui unifient tous vos processus métier.
-            </p>
+              dangerouslySetInnerHTML={{ __html: heroData.description }}
+            />
 
             {/* CTA Buttons */}
             <div className={`flex flex-col sm:flex-row gap-4 transform transition-all duration-1000 delay-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
@@ -119,8 +146,8 @@ function OdooHeroSplit() {
                 onClick={handleConsultationClick}
                 disabled={isLoading}
               >
-                <span>{loadingType === 'appointment' ? 'CHARGEMENT...' : 'Démarrer - C\'est gratuit'}</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <span>{loadingType === 'appointment' ? 'CHARGEMENT...' : heroData.ctaPrimary.text}</span>
+                {getIconComponent(heroData.ctaPrimary.icon)}
               </button>
               <button
                 className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[#8b5a7d] hover:text-[#8b5a7d] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
@@ -128,8 +155,8 @@ function OdooHeroSplit() {
                 onClick={handleCaseStudyClick}
                 disabled={isLoading}
               >
-                <Users className="w-5 h-5" />
-                <span>{loadingType === 'projects' ? 'CHARGEMENT...' : 'Rencontrer un Conseiller'}</span>
+                {getIconComponent(heroData.ctaSecondary.icon)}
+                <span>{loadingType === 'projects' ? 'CHARGEMENT...' : heroData.ctaSecondary.text}</span>
               </button>
             </div>
           </div>
@@ -148,7 +175,7 @@ function OdooHeroSplit() {
                     playsInline
                     className="w-full h-full object-cover"
                   >
-                    <source src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/video_homepage.webm" type="video/webm" />
+                    <source src={heroData.videoUrl} type="video/webm" />
                     Your browser does not support the video tag.
                   </video>
                   
@@ -168,19 +195,25 @@ function OdooHeroSplit() {
             </div>
             
             {/* Floating Stats */}
-            <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#ff5c35]">100+</div>
-                <div className="text-sm text-gray-600">Implémentations</div>
-              </div>
-            </div>
-            
-            <div className="absolute -top-20 -right-20 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-[#714b67]">99%</div>
-                <div className="text-sm text-gray-600">Satisfaction</div>
-              </div>
-            </div>
+            {heroData.stats && heroData.stats.length > 0 && (
+              <>
+                <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-[#ff5c35]">{heroData.stats[0]?.number}{heroData.stats[0]?.suffix}</div>
+                    <div className="text-sm text-gray-600">{heroData.stats[0]?.label}</div>
+                  </div>
+                </div>
+                
+                {heroData.stats.length > 1 && (
+                  <div className="absolute -top-20 -right-20 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-[#714b67]">{heroData.stats[1]?.number}{heroData.stats[1]?.suffix}</div>
+                      <div className="text-sm text-gray-600">{heroData.stats[1]?.label}</div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

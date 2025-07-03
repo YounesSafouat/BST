@@ -200,6 +200,10 @@ export default function ClientsAdminPage() {
   }
 
   // UI
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="container mx-auto py-4 sm:py-6 lg:py-8">
       <div className="flex justify-between items-center mb-4 sm:mb-6">

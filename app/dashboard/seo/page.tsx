@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { X, Plus, Search, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import Loader from '@/components/home/Loader';
 
 interface SEOData {
   _id: string;
@@ -188,11 +189,7 @@ export default function SEODashboard() {
   };
 
   if (status === 'loading' || loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-600"></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (

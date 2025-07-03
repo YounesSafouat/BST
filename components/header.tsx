@@ -160,7 +160,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             <img
               key={`${headerData?.logo?.image}-${headerData?.logo?.size}-${logoVersion}`}
               src={`${headerData?.logo?.image || "/bst.png"}?v=${logoVersion}&t=${Date.now()}`}
-              alt={headerData?.logo?.alt || "blackswantechnology"}
+              alt={headerData?.logo?.alt || "blackswantechnology"} 
               style={{
                 width: headerData?.logo?.size || "10em",
                 height: "auto",
@@ -437,8 +437,8 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             onMouseEnter={() => setActiveDropdown("cas-client")}
             onMouseLeave={() => setActiveDropdown(null)}
           >
-            <button
-              onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
+          <button
+            onClick={() => { trackButtonClick('header-cas-client'); handleNavClick('/cas-client'); }}
               className="flex items-center gap-2 text-gray-600 hover:text-black transition-colors duration-200 font-medium text-sm tracking-wide case py-2 whitespace-nowrap"
           >
             Cas Client

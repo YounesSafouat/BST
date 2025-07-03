@@ -15,6 +15,11 @@ import {
     ContentSection, HeroContent, ChallengeContent, SolutionContent, TransformationContent, 
     SuccessContent, CTAContent, HeroStat, HeroStatus, Challenge, Solution, Step, Testimonial, Action, Location 
 } from '@/app/types/content';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from '@/hooks/use-toast';
+import Loader from '@/components/home/Loader';
+import { availableIcons } from '@/lib/iconList';
 
 // Lazy load components for preview to prevent performance issues
 import dynamic from 'next/dynamic';
@@ -114,12 +119,7 @@ export default function ContentDashboard() {
         </div>
         
         {loading ? (
-          <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-sm sm:text-lg text-gray-600">Chargement du contenu...</p>
-        </div>
-        </div>
+          <Loader />
         ) : (
           <>
             {isModalOpen && selectedItem && (
@@ -199,42 +199,33 @@ export default function ContentDashboard() {
                     <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">
                   <Button
                         variant="outline" 
-                    size="sm"
-                        onClick={(e) => { e.stopPropagation(); openModal(item, 'preview');}}
-                        className="border-gray-300 hover:bg-gray-100 text-xs sm:text-sm"
-                  >
-                        <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                        Aperçu
-                  </Button>
-                      <Button 
-                        variant="default" 
                         size="sm" 
-                        onClick={(e) => { e.stopPropagation(); openModal(item, 'edit');}}
-                        className="bg-gray-900 hover:bg-gray-800 text-white text-xs sm:text-sm"
+                        onClick={() => openModal(item, 'preview')}
+                        className="text-xs sm:text-sm"
                       >
-                        <Pencil className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                        <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                        Aperçu
+                      </Button>
+                      <Button
+                        size="sm" 
+                        onClick={() => openModal(item, 'edit')}
+                        className="text-xs sm:text-sm bg-[--color-black] hover:bg-primary-dark text-white"
+                      >
+                        <Pencil className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                         Modifier
                       </Button>
                     </div>
-      </div>
-              </Card>
-            ))}
                   </div>
+                </Card>
+              ))}
+            </div>
           </>
         )}
-        </div>
+    </div>
   );
 }
 
 // --- HELPER FUNCTIONS & COMPONENTS (DEFINED AT TOP-LEVEL) ---
-
-// Common icons list to prevent performance issues
-const commonIcons = [
-  'Home', 'AlertTriangle', 'Lightbulb', 'Rocket', 'Award', 'Phone', 'Mail', 'ArrowUp', 'ArrowDown',
-  'Activity', 'Zap', 'Star', 'Heart', 'Check', 'X', 'Plus', 'Minus', 'Settings', 'User', 'Users',
-  'Calendar', 'Clock', 'MapPin', 'Globe', 'Shield', 'Lock', 'Unlock', 'Eye', 'EyeOff', 'Search',
-  'Filter', 'Download', 'Upload', 'Share', 'Link', 'ExternalLink', 'Copy', 'Edit', 'Trash2', 'Save'
-];
 
 const getSectionIcon = (type: string) => {
     const icons: { [key: string]: React.ReactNode } = {
@@ -361,14 +352,7 @@ function PreviewComponent({ section }: { section: ContentSection }) {
     }, [section]);
     
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                    <p className="text-sm text-gray-600">Chargement de l'aperçu...</p>
-                </div>
-            </div>
-        );
+        return <Loader />;
     }
     
     if (error) {
@@ -666,8 +650,8 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                             <SelectValue placeholder="Lucide Icon" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {commonIcons.map((iconName) => (
-                                                <SelectItem key={iconName} value={iconName}>{iconName}</SelectItem>
+                                            {availableIcons.map((icon: any) => (
+                                                <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -729,8 +713,8 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                             <SelectValue placeholder="Lucide Icon" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {commonIcons.map((iconName) => (
-                                                <SelectItem key={iconName} value={iconName}>{iconName}</SelectItem>
+                                            {availableIcons.map((icon: any) => (
+                                                <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -815,8 +799,8 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                                 <SelectValue placeholder="Lucide Icon" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {commonIcons.map((iconName) => (
-                                                    <SelectItem key={iconName} value={iconName}>{iconName}</SelectItem>
+                                                {availableIcons.map((icon: any) => (
+                                                    <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -894,8 +878,8 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                             <SelectValue placeholder="Lucide Icon" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {commonIcons.map((iconName) => (
-                                                <SelectItem key={iconName} value={iconName}>{iconName}</SelectItem>
+                                            {availableIcons.map((icon: any) => (
+                                                <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -958,8 +942,8 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                             <SelectValue placeholder="Lucide Icon" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {commonIcons.map((iconName) => (
-                                                <SelectItem key={iconName} value={iconName}>{iconName}</SelectItem>
+                                            {availableIcons.map((icon: any) => (
+                                                <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
@@ -1101,7 +1085,7 @@ function ChallengeForm({ data, onChange }: { data: ContentSection; onChange: (da
                 <Label>Titre du défi</Label><Input value={challenge.title} onChange={(e) => handleChallengeChange(index, "title", e.target.value)} />
                 <Label>Description</Label><Textarea value={challenge.description} onChange={(e) => handleChallengeChange(index, "description", e.target.value)} />
                 <Label>Impact</Label><Input value={challenge.impact || ''} onChange={(e) => handleChallengeChange(index, "impact", e.target.value)} />
-                <Label>Icône</Label><Select value={challenge.icon} onValueChange={(value) => handleChallengeChange(index, 'icon', value)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{commonIcons.map(iconName => <SelectItem key={iconName} value={iconName}>{iconName}</SelectItem>)}</SelectContent></Select>
+                <Label>Icône</Label><Select value={challenge.icon} onValueChange={(value) => handleChallengeChange(index, 'icon', value)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select>
         </div>
             ))}<Button type="button" variant="outline" onClick={addChallenge}><Plus className="h-4 w-4 mr-2" />Ajouter</Button>
         </CardContent></Card>
@@ -1148,7 +1132,7 @@ function SolutionForm({ data, onChange }: { data: ContentSection; onChange: (dat
                     <div className="grid grid-cols-2 gap-4">
                         <div><Label>Titre</Label><Input value={solution.title} onChange={e => handleSolutionChange(solIndex, "title", e.target.value)} /></div>
                         <div><Label>Sous-titre</Label><Input value={solution.subtitle} onChange={e => handleSolutionChange(solIndex, "subtitle", e.target.value)} /></div>
-                        <div><Label>Icône</Label><Select value={solution.icon} onValueChange={v => handleSolutionChange(solIndex, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{commonIcons.map(i=><SelectItem key={i} value={i}>{i}</SelectItem>)}</SelectContent></Select></div>
+                        <div><Label>Icône</Label><Select value={solution.icon} onValueChange={v => handleSolutionChange(solIndex, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select></div>
                         <div><Label>URL Icône (optionnel)</Label><Input value={solution.iconUrl || ""} onChange={e => handleSolutionChange(solIndex, "iconUrl", e.target.value)} placeholder="https://example.com/icon.svg" /></div>
                         <div><Label>Couleur</Label><Input type="color" value={solution.color} onChange={e => handleSolutionChange(solIndex, "color", e.target.value)} /></div>
                         </div>
@@ -1209,7 +1193,7 @@ function TransformationForm({ data, onChange }: { data: ContentSection; onChange
                     <div className="grid grid-cols-2 gap-4">
                         <div><Label>Numéro d'étape</Label><Input value={step.step} onChange={e => handleStepChange(index, "step", e.target.value)} /></div>
                         <div><Label>Côté</Label><Select value={step.side} onValueChange={v => handleStepChange(index, 'side', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent><SelectItem value="left">Gauche</SelectItem><SelectItem value="right">Droite</SelectItem></SelectContent></Select></div>
-                        <div><Label>Icône</Label><Select value={step.icon} onValueChange={v => handleStepChange(index, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{commonIcons.map(i=><SelectItem key={i} value={i}>{i}</SelectItem>)}</SelectContent></Select></div>
+                        <div><Label>Icône</Label><Select value={step.icon} onValueChange={v => handleStepChange(index, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select></div>
                         <div><Label>URL Icône (optionnel)</Label><Input value={step.iconUrl || ""} onChange={e => handleStepChange(index, "iconUrl", e.target.value)} placeholder="https://example.com/icon.svg" /></div>
         </div>
                     <div><Label>Titre</Label><Input value={step.title} onChange={e => handleStepChange(index, "title", e.target.value)} /></div>
@@ -1224,16 +1208,31 @@ function TransformationForm({ data, onChange }: { data: ContentSection; onChange
 
 function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data: ContentSection) => void; }) {
     const content = data.content as SuccessContent;
-    const handleContentChange = (field: keyof SuccessContent, value: any) => onChange({ ...data, content: { ...content, [field]: value } });
-    const handleTestimonialChange = (index: number, field: keyof Testimonial, value: string) => {
-        const newTestimonials = [...(content.testimonials || [])];
-        newTestimonials[index] = { ...newTestimonials[index], [field]: value };
-        handleContentChange("testimonials", newTestimonials);
-    };
-    const addTestimonial = () => handleContentChange("testimonials", [...(content.testimonials || []), { name: '', role: '', quote: '', result: '', avatar: '' }]);
-    const removeTestimonial = (index: number) => handleContentChange("testimonials", (content.testimonials || []).filter((_, i) => i !== index));
+    const [allTestimonials, setAllTestimonials] = useState<Testimonial[]>([]);
+    const [loading, setLoading] = useState(true);
 
-        return (
+    useEffect(() => {
+        async function fetchTestimonials() {
+            try {
+                const res = await fetch('/api/content?type=testimonials');
+                const testimonialsData = await res.json();
+                if (testimonialsData.length > 0 && testimonialsData[0].content?.testimonials) {
+                    setAllTestimonials(testimonialsData[0].content.testimonials);
+                }
+            } catch (e) {
+                setAllTestimonials([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchTestimonials();
+    }, []);
+
+    const handleContentChange = (field: keyof SuccessContent, value: any) => onChange({ ...data, content: { ...content, [field]: value } });
+
+    if (loading) return <Loader />;
+
+    return (
       <div className="space-y-8 p-2">
         <Card><CardHeader><CardTitle>Titres</CardTitle></CardHeader><CardContent className="space-y-4">
             <div><Label>Titre</Label><Input value={data.title} onChange={e => onChange({...data, title: e.target.value})} /></div>
@@ -1242,23 +1241,51 @@ function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data
             <div><Label>Badge</Label><Input value={content.badge || ""} onChange={e => handleContentChange("badge", e.target.value)} placeholder="NOS RÉUSSITES" /></div>
         </CardContent></Card>
         <Card><CardHeader><CardTitle>Témoignages</CardTitle></CardHeader><CardContent className="space-y-4">
-            {(content.testimonials || []).map((testimonial, index) => (
-                <div key={index} className="flex flex-col gap-3 p-4 border rounded-lg">
-                    <div className="flex justify-between items-center"><h4 className="font-semibold">Témoignage #{index + 1}</h4><Button type="button" variant="destructive" size="icon" onClick={() => removeTestimonial(index)}><Trash2 className="h-4 w-4" /></Button></div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div><Label>Nom</Label><Input value={testimonial.name} onChange={e => handleTestimonialChange(index, "name", e.target.value)} /></div>
-                        <div><Label>Rôle</Label><Input value={testimonial.role} onChange={e => handleTestimonialChange(index, "role", e.target.value)} /></div>
-                        <div><Label>Avatar (Initiales)</Label><Input value={testimonial.avatar} onChange={e => handleTestimonialChange(index, "avatar", e.target.value)} /></div>
-                        <div><Label>Résultat</Label><Input value={testimonial.result} onChange={e => handleTestimonialChange(index, "result", e.target.value)} /></div>
-                  </div>
-                    <div><Label>Témoignage</Label><Textarea value={testimonial.quote} onChange={e => handleTestimonialChange(index, "quote", e.target.value)} /></div>
-                </div>
-            ))}
-            <Button type="button" variant="outline" onClick={addTestimonial}><Plus className="h-4 w-4 mr-2" />Ajouter un témoignage</Button>
+            <Label>Sélectionner les témoignages à afficher</Label>
+            <div className="space-y-2">
+                <select
+                    multiple
+                    className="w-full border rounded p-2 min-h-[120px]"
+                    value={content.testimonials || []}
+                    onChange={e => {
+                        const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+                        handleContentChange('testimonials', selected);
+                    }}
+                >
+                    {allTestimonials.map((t, idx) => (
+                        <option key={t.name + idx} value={t.name}>
+                            {t.name} - {t.role} {t.company ? `(${t.company})` : ''}
+                        </option>
+                    ))}
+                </select>
+                <div className="text-xs text-gray-500">Astuce : Maintenez Ctrl (Cmd sur Mac) pour sélectionner plusieurs témoignages.</div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                {(content.testimonials || []).map((name, idx) => {
+                    const t = allTestimonials.find(t => t.name === name);
+                    if (!t) return null;
+                    return (
+                        <Card key={t.name + idx} className="p-4">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold text-sm">{t.avatar || t.name.charAt(0)}</span>
+                                </div>
+                                <div>
+                                    <div className="font-semibold">{t.name}</div>
+                                    <div className="text-xs text-gray-600">{t.role}</div>
+                                    {t.company && <div className="text-xs text-gray-400">{t.company}</div>}
+                                </div>
+                            </div>
+                            <blockquote className="italic text-gray-700 mb-2">"{t.quote}"</blockquote>
+                            {t.result && <Badge variant="secondary">{t.result}</Badge>}
+                        </Card>
+                    );
+                })}
+            </div>
         </CardContent></Card>
-          </div>
-        );
-    }
+      </div>
+    );
+}
 
 function CTAForm({ data, onChange }: { data: ContentSection; onChange: (data: ContentSection) => void; }) {
     const content = data.content as CTAContent;
@@ -1289,7 +1316,7 @@ function CTAForm({ data, onChange }: { data: ContentSection; onChange: (data: Co
             {(content.actions || []).map((action, index) => (
                 <div key={index} className="flex items-center gap-2 p-2 border rounded-lg">
                     <Input value={action.label} onChange={e => handleActionChange(index, "label", e.target.value)} placeholder="Texte du bouton" />
-                    <Select value={action.icon} onValueChange={v => handleActionChange(index, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{commonIcons.map(i=><SelectItem key={i} value={i}>{i}</SelectItem>)}</SelectContent></Select>
+                    <Select value={action.icon} onValueChange={v => handleActionChange(index, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select>
                     <Button type="button" variant="destructive" size="icon" onClick={() => removeAction(index)}><Trash2 className="h-4 w-4" /></Button>
             </div>
             ))}
@@ -1303,7 +1330,7 @@ function CTAForm({ data, onChange }: { data: ContentSection; onChange: (data: Co
                         <div><Label>Titre</Label><Input value={location.title} onChange={e => handleLocationChange(index, "title", e.target.value)} /></div>
                         <div><Label>Sous-titre</Label><Input value={location.subtitle} onChange={e => handleLocationChange(index, "subtitle", e.target.value)} /></div>
               </div>
-                    <div><Label>Icône</Label><Select value={location.icon} onValueChange={v => handleLocationChange(index, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{commonIcons.map(i=><SelectItem key={i} value={i}>{i}</SelectItem>)}</SelectContent></Select></div>
+                    <div><Label>Icône</Label><Select value={location.icon} onValueChange={v => handleLocationChange(index, 'icon', v)}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select></div>
             </div>
             ))}
             <Button type="button" variant="outline" onClick={addLocation}><Plus className="h-4 w-4 mr-2" />Ajouter une localisation</Button>

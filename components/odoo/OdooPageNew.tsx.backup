@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
   ShoppingCart, 
@@ -10,22 +10,17 @@ import {
   ArrowRight, 
   Quote, 
   Rocket,
-  Check,
-  X
+  Check
 } from 'lucide-react';
 import OdooHeroSplit from './OdooHeroSplit';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import Loader from '@/components/home/Loader';
 
 interface Testimonial {
-  _id: string;
   name: string;
   role: string;
   quote: string;
   result: string;
   avatar: string;
-  company?: string;
 }
 
 interface OdooData {
@@ -93,13 +88,8 @@ interface OdooData {
     headline: string;
     description: string;
     modules: string[];
-    expertiseText: string;
   };
   testimonials: string[];
-  testimonialsSection: {
-    headline: string;
-    description: string;
-  };
   finalCta: {
     headline: string;
     description: string;
@@ -114,11 +104,7 @@ interface OdooData {
   };
 }
 
-interface OdooPageNewProps {
-  isPreview?: boolean;
-}
-
-function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
+function OdooPageNew() {
   const [activeTab, setActiveTab] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -160,7 +146,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
       const response = await fetch('/api/content?type=testimonial');
       if (response.ok) {
         const data = await response.json();
-        setAvailableTestimonials(data.map((item: any) => ({ ...item.content, _id: item._id })));
+        setAvailableTestimonials(data.map((item: any) => item.content));
       }
     } catch (error) {
       console.error('Error fetching testimonials:', error);
@@ -168,7 +154,14 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
   };
 
   if (!odooData) {
-    return <Loader />;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement de la page Odoo...</p>
+        </div>
+      </div>
+    );
   }
 
   const AnimatedCounter = ({ target, suffix, duration = 2500 }: { target: number, suffix: string, duration?: number }) => {
@@ -211,8 +204,8 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
     return iconMap[iconName] || <Calculator className="w-8 h-8" />;
   };
 
-  const renderAvatar = (testimonialId: string) => {
-    const testimonial = availableTestimonials.find(t => t._id === testimonialId);
+  const renderAvatar = (testimonialName: string) => {
+    const testimonial = availableTestimonials.find(t => t.name === testimonialName);
     if (!testimonial) return null;
 
     // Check if avatar is a URL (starts with http or /)
@@ -237,9 +230,9 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
   };
 
   // Split apps into 3 columns for timelines
-  const timeline1 = odooData?.platformSection?.apps?.slice(0, 6) || [];
-  const timeline2 = odooData?.platformSection?.apps?.slice(6, 12) || [];
-  const timeline3 = odooData?.platformSection?.apps?.slice(12, 18) || [];
+  const timeline1 = odooData.platformSection.apps.slice(0, 6);
+  const timeline2 = odooData.platformSection.apps.slice(6, 12);
+  const timeline3 = odooData.platformSection.apps.slice(12, 18);
 
   const handleAsyncAction = async (action: () => Promise<void>, type: string) => {
     setIsLoading(true);
@@ -277,10 +270,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
   function PricingCardsSection() {
     const [isYearly, setIsYearly] = useState(false);
-
-    // Get all features from the Ultra pack (last plan)
-    const ultraFeatures = odooData.pricing.plans[odooData.pricing.plans.length - 1].features;
-
     return (
       <>
         {/* Billing Toggle */}
@@ -365,19 +354,12 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                 </p>
               )}
               <ul role="list" className="mt-6 space-y-2 text-sm leading-6 text-gray-600">
-                {ultraFeatures.map((feature) => {
-                  const hasFeature = plan.features.includes(feature);
-                  return (
-                    <li key={feature} className="flex gap-x-2 items-center">
-                      {hasFeature ? (
-                        <Check className="h-5 w-4 flex-none text-green-600" aria-hidden="true" />
-                      ) : (
-                        <X className="h-5 w-4 flex-none text-red-500" aria-hidden="true" />
-                      )}
-                      <span className={`text-xs ${hasFeature ? '' : 'text-red-500 line-through'}`}>{feature}</span>
-                    </li>
-                  );
-                })}
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex gap-x-2">
+                    <Check className="h-5 w-4 flex-none" style={{ color: 'var(--color-secondary)' }} aria-hidden="true" />
+                    <span className="text-xs">{feature}</span>
+                  </li>
+                ))}
               </ul>
               <button
                 className={`mt-6 block w-full rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors`}
@@ -406,9 +388,9 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
+    <div className="min-h-screen bg-white overflow-hidden mt-10">
       {/* Hero Section */}
-      <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
+      <OdooHeroSplit />
 
       {/* Trust Metrics */}
       <section className="py-16 bg-gray-50">
@@ -635,7 +617,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
               <div key={index} className="group bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
                 <CheckCircle className="w-12 h-12 text-white mx-auto mb-4 group-hover:animate-pulse" />
                 <div className="text-white font-semibold text-lg">{module}</div>
-                <div className="text-white/80 text-sm font-medium">{odooData.partnership.expertiseText || 'Expertise Certifiée'}</div>
+                <div className="text-white/80 text-sm font-medium">Expertise Certifiée</div>
               </div>
             ))}
           </div>
@@ -643,37 +625,35 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
       </section>
 
       {/* Testimonials */}
-      {odooData && odooData.testimonials && odooData.testimonials.length > 0 && (
-        <section className="py-16 bg-white">
+      {odooData.testimonials.length > 0 && (
+        <section className="py-20 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-                Approuvé par les <span className="text-orange-600">Leaders</span>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
+                Approuvé par les <span className="text-[var(--color-secondary)]">Entreprises</span>
               </h2>
-              <p className="text-lg text-gray-600">
-                Découvrez comment nous avons aidé des entreprises à transformer leur business avec Odoo
+              <p className="text-xl text-gray-600 font-light">
+                Découvrez comment nous avons aidé des entreprises à transformer leurs opérations avec Odoo
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {odooData.testimonials.map((testimonialId: string, index: number) => {
-                const testimonial = availableTestimonials.find(t => t._id === testimonialId);
+            <div className="grid md:grid-cols-2 gap-8">
+              {odooData.testimonials.map((testimonialName, index) => {
+                const testimonial = availableTestimonials.find(t => t.name === testimonialName);
                 if (!testimonial) return null;
                 
                 return (
-                  <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <Quote className="w-10 h-10 text-orange-600 mb-5 group-hover:animate-pulse" />
-                    <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
+                  <div key={index} className="group bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    <Quote className="w-12 h-12 text-[var(--color-secondary)] mb-6" />
+                    <blockquote className="text-lg text-gray-800 mb-6 leading-relaxed">
                       "{testimonial.quote}"
                     </blockquote>
                     <div className="flex items-center space-x-4">
-                      {renderAvatar(testimonialId)}
+                      {renderAvatar(testimonialName)}
                       <div>
-                        <div className="font-bold text-gray-900">{testimonial.name}</div>
+                        <div className="font-semibold text-gray-900">{testimonial.name}</div>
                         <div className="text-gray-600">{testimonial.role}</div>
-                        {testimonial.result && (
-                          <div className="text-orange-600 font-semibold">{testimonial.result}</div>
-                        )}
+                        <div className="text-[var(--color-secondary)] font-medium">{testimonial.company}</div>
                       </div>
                     </div>
                   </div>

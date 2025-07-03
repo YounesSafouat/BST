@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Phone, Building2, User, MessageSquare } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
+import Loader from '@/components/home/Loader';
 
 // Example companies data (replace with your real data)
 const companies = [
@@ -107,14 +113,7 @@ export default function ContactPageClient() {
   const content = projectTypeContent[formData.projectType as keyof typeof projectTypeContent];
 
   if (loading) {
-    return (
-      <div className="bg-[var(--color-white)] min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[var(--color-main)] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
-        </div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
