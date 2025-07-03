@@ -112,12 +112,12 @@ interface HeaderData {
       }>;
     };
   };
-  contact: {
+    contact: {
     phone: string;
     email: string;
     address: string;
   };
-  cta: {
+    cta: {
     text: string;
     url: string;
     isActive: boolean;
@@ -618,31 +618,31 @@ export default function HeaderDashboard() {
                 {headerData.navigation.hubspot.sections.services.items.map((item, index) => (
                   <div key={index} className="flex items-center gap-4 p-4 border rounded-lg">
                     <div className="flex-1 grid grid-cols-4 gap-4">
-                      <div>
-                        <Label>Icône</Label>
-                        <Select
-                          value={item.icon}
-                          onValueChange={(value) => {
+                  <div>
+                    <Label>Icône</Label>
+                    <Select
+                      value={item.icon}
+                      onValueChange={(value) => {
                             const newData = { ...headerData };
                             newData.navigation.hubspot.sections.services.items[index].icon = value;
                             setHeaderData(newData);
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
                             {availableIcons.map((icon: any) => (
-                              <SelectItem key={icon.value} value={icon.value}>
+                          <SelectItem key={icon.value} value={icon.value}>
                                 <div className="flex items-center space-x-2">
-                                  <icon.icon className="w-4 h-4" />
+                              <icon.icon className="w-4 h-4" />
                                   <span>{icon.label}</span>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                       <div>
                         <Label>Titre</Label>
                     <Input

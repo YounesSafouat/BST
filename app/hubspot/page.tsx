@@ -334,7 +334,7 @@ function HubSpotPage() {
           </div>
         </div>
       </section>
-      
+
       {/* Our HubSpot Services */}
       <section className="py-16 bg-gradient-to-br from-orange-50 to-orange-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -365,8 +365,8 @@ function HubSpotPage() {
         </div>
       </section>
 
-      {/* HubSpot Certifications */}
-      <section className="py-16 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600 relative overflow-hidden">
+     {/* HubSpot Certifications */}
+     <section className="py-16 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.1%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -387,51 +387,51 @@ function HubSpotPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section>       
 
       {/* Testimonials */}
       {hubspotData.testimonials.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-                Approuvé par les <span className="text-orange-600">Leaders</span>
-              </h2>
-              <p className="text-lg text-gray-600">
-                Découvrez comment nous avons aidé des entreprises à transformer leur business avec HubSpot
-              </p>
-            </div>
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
+              Approuvé par les <span className="text-orange-600">Leaders</span>
+            </h2>
+            <p className="text-lg text-gray-600">
+              Découvrez comment nous avons aidé des entreprises à transformer leur business avec HubSpot
+            </p>
+          </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
               {hubspotData.testimonials.map((testimonialId, index) => {
                 const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                 if (!testimonial) return null;
                 
                 return (
-                  <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <Quote className="w-10 h-10 text-orange-600 mb-5 group-hover:animate-pulse" />
-                    <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
-                      "{testimonial.quote}"
-                    </blockquote>
-                    <div className="flex items-center space-x-4">
+              <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                <Quote className="w-10 h-10 text-orange-600 mb-5 group-hover:animate-pulse" />
+                <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
+                  "{testimonial.quote}"
+                </blockquote>
+                <div className="flex items-center space-x-4">
                       {renderAvatar(testimonialId)}
-                      <div>
+                  <div>
                         <div className="font-bold text-gray-900">{testimonial.name}</div>
-                        <div className="text-gray-600">{testimonial.role}</div>
+                    <div className="text-gray-600">{testimonial.role}</div>
                         {testimonial.result && (
                           <div className="text-orange-600 font-semibold">{testimonial.result}</div>
                         )}
-                      </div>
-                    </div>
                   </div>
+                </div>
+              </div>
                 );
               })}
-            </div>
           </div>
-        </section>
+        </div>
+      </section>
       )}
 
-      
+     
     </div>
   );
 }
