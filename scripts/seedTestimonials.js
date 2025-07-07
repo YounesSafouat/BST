@@ -1,110 +1,79 @@
 const { MongoClient } = require('mongodb');
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/bst';
+const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/your-database-name';
+
+const sampleTestimonials = [
+  {
+    author: "Marie Dubois",
+    role: "CEO, TechStart",
+    text: "La migration vers Odoo 18 a transformé notre gestion d'entreprise. L'équipe de Black Swan Technology a été exceptionnelle dans l'accompagnement.",
+    photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    author: "Pierre Martin",
+    role: "Directeur Marketing, InnovCorp",
+    text: "L'intégration HubSpot-Odoo nous a permis d'automatiser 80% de nos processus marketing. Résultats exceptionnels !",
+    photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    author: "Sophie Bernard",
+    role: "Responsable Logistique, Worqbox",
+    text: "Grâce à Odoo 18, nous avons optimisé notre chaîne logistique et réduit nos coûts de 30%. Un investissement rentable !",
+    photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    author: "Thomas Leroy",
+    role: "Directeur Commercial, SalesPro",
+    text: "Les automatisations HubSpot ont révolutionné notre processus de vente. Nous avons doublé notre taux de conversion en 6 mois.",
+    photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    author: "Julie Moreau",
+    role: "CTO, DigitalFlow",
+    text: "La transformation digitale avec Black Swan Technology a été un succès total. Notre ROI a été atteint en moins d'un an.",
+    photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+];
 
 async function seedTestimonials() {
   const client = new MongoClient(uri);
-  
+
   try {
     await client.connect();
     console.log('Connected to MongoDB');
-    
+
     const db = client.db();
-    const collection = db.collection('contents');
-    
-    const testimonials = [
-      {
-        type: 'testimonial',
-        title: 'Sophie Martin',
-        description: 'Directrice Marketing - TechCorp',
-        content: {
-          name: 'Sophie Martin',
-          role: 'Directrice Marketing',
-          company: 'TechCorp',
-          quote: 'L\'implémentation HubSpot par BST a transformé notre processus de génération de leads. Nous avons augmenté nos conversions de 150% en seulement 3 mois.',
-          result: '+150% de conversions en 3 mois',
-          avatar: 'SM'
-        },
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        type: 'testimonial',
-        title: 'Marc Dubois',
-        description: 'CEO - InnovateStartup',
-        content: {
-          name: 'Marc Dubois',
-          role: 'CEO',
-          company: 'InnovateStartup',
-          quote: 'Odoo nous a permis de centraliser toutes nos opérations. L\'équipe BST a été exceptionnelle dans l\'implémentation et la formation de nos équipes.',
-          result: 'Centralisation complète des opérations',
-          avatar: 'MD'
-        },
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        type: 'testimonial',
-        title: 'Marie Laurent',
-        description: 'Directrice Commerciale - GrowthCo',
-        content: {
-          name: 'Marie Laurent',
-          role: 'Directrice Commerciale',
-          company: 'GrowthCo',
-          quote: 'La combinaison HubSpot + Odoo nous a donné une visibilité totale sur notre pipeline. Nos ventes ont augmenté de 200% cette année.',
-          result: '+200% de ventes en 1 an',
-          avatar: 'ML'
-        },
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        type: 'testimonial',
-        title: 'Pierre Moreau',
-        description: 'Directeur Technique - DigitalFirst',
-        content: {
-          name: 'Pierre Moreau',
-          role: 'Directeur Technique',
-          company: 'DigitalFirst',
-          quote: 'L\'expertise technique de BST est remarquable. Ils ont su adapter Odoo à nos besoins spécifiques et l\'intégrer parfaitement avec nos outils existants.',
-          result: 'Intégration parfaite avec l\'écosystème existant',
-          avatar: 'PM'
-        },
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
-        type: 'testimonial',
-        title: 'Julie Bernard',
-        description: 'Responsable Marketing - ScaleUp',
-        content: {
-          name: 'Julie Bernard',
-          role: 'Responsable Marketing',
-          company: 'ScaleUp',
-          quote: 'HubSpot a révolutionné notre marketing automation. L\'équipe BST nous a accompagnés à chaque étape avec un support exceptionnel.',
-          result: 'Marketing automation optimisé',
-          avatar: 'JB'
-        },
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ];
-    
+    const testimonialsCollection = db.collection('testimonials');
+
     // Clear existing testimonials
-    await collection.deleteMany({ type: 'testimonial' });
+    await testimonialsCollection.deleteMany({});
     console.log('Cleared existing testimonials');
-    
-    // Insert new testimonials
-    const result = await collection.insertMany(testimonials);
+
+    // Insert sample testimonials
+    const result = await testimonialsCollection.insertMany(sampleTestimonials);
     console.log(`Inserted ${result.insertedCount} testimonials`);
-    
-    console.log('Testimonials seeded successfully!');
-    
+
+    // Display the inserted testimonials with their IDs
+    const insertedTestimonials = await testimonialsCollection.find({}).toArray();
+    console.log('\nInserted testimonials:');
+    insertedTestimonials.forEach((testimonial, index) => {
+      console.log(`${index + 1}. ${testimonial.author} (${testimonial.role})`);
+      console.log(`   ID: ${testimonial._id}`);
+      console.log(`   Text: "${testimonial.text.substring(0, 50)}..."`);
+      console.log('');
+    });
+
+    console.log('Testimonials seeding completed successfully!');
   } catch (error) {
     console.error('Error seeding testimonials:', error);
   } finally {
@@ -112,4 +81,5 @@ async function seedTestimonials() {
   }
 }
 
+// Run the seeding function
 seedTestimonials(); 

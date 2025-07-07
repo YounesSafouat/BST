@@ -1,0 +1,261 @@
+[{
+  "_id": {
+    "$oid": "685ac0269e91fd065abb4e27"
+  },
+  "buttonId": "header-hubspot",
+  "path": "/",
+  "__v": 0,
+  "count": 17
+},
+{
+  "_id": {
+    "$oid": "685ac06e9e91fd065abb4e2a"
+  },
+  "buttonId": "header-odoo",
+  "path": "/contact",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "685ad1ba9e91fd065abb4e67"
+  },
+  "buttonId": "header-odoo",
+  "path": "/hubspot",
+  "__v": 0,
+  "count": 9
+},
+{
+  "_id": {
+    "$oid": "685ad1c99e91fd065abb4e68"
+  },
+  "buttonId": "header-cas-client",
+  "path": "/odoo",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "685bb7209e91fd065abb4ee4"
+  },
+  "buttonId": "header-about",
+  "path": "/odoo",
+  "__v": 0,
+  "count": 4
+},
+{
+  "_id": {
+    "$oid": "685bd2149e91fd065abb4f02"
+  },
+  "buttonId": "header-cas-client-worqbox",
+  "path": "/",
+  "__v": 0,
+  "count": 2
+},
+{
+  "_id": {
+    "$oid": "685bdc3a9e91fd065abb4f04"
+  },
+  "buttonId": "header-odoo",
+  "path": "/",
+  "__v": 0,
+  "count": 6
+},
+{
+  "_id": {
+    "$oid": "685d12f49e91fd065abb4f44"
+  },
+  "buttonId": "header-odoo",
+  "path": "/blog/odoo-15-to-18-migration",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6862768e9e91fd065abb5019"
+  },
+  "buttonId": "header-cas-client",
+  "path": "/about",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "686276ad9e91fd065abb501a"
+  },
+  "path": "/cas-client",
+  "buttonId": "header-cas-client-worqbox",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863b1e99e91fd065abb5023"
+  },
+  "buttonId": "header-cas-client-worqbox",
+  "path": "/blog",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863b1ed9e91fd065abb5024"
+  },
+  "buttonId": "header-cas-client",
+  "path": "/cas-client/worqbox",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863c4ee9e91fd065abb5027"
+  },
+  "buttonId": "header-cas-client",
+  "path": "/hubspot",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863e9e99e91fd065abb5028"
+  },
+  "buttonId": "mobile-odoo",
+  "path": "/",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863ea1e9e91fd065abb5029"
+  },
+  "buttonId": "mobile-hubspot",
+  "path": "/odoo",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863ea289e91fd065abb502a"
+  },
+  "buttonId": "mobile-odoo",
+  "path": "/hubspot",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863ea399e91fd065abb502c"
+  },
+  "buttonId": "header-cas-client",
+  "path": "/rendez-vous",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863ea499e91fd065abb502d"
+  },
+  "buttonId": "mobile-odoo",
+  "path": "/cas-client",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863edb09e91fd065abb502e"
+  },
+  "path": "/odoo",
+  "buttonId": "header-cas-client-worqbox",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863ef4c9e91fd065abb502f"
+  },
+  "buttonId": "header-hubspot",
+  "path": "/cas-client/worqbox",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863ef5a9e91fd065abb5030"
+  },
+  "path": "/hubspot",
+  "buttonId": "header-cas-client-worqbox",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6863f3f89e91fd065abb5033"
+  },
+  "buttonId": "header-contact",
+  "path": "/hubspot",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "68640ed99e91fd065abb5036"
+  },
+  "buttonId": "header-hubspot",
+  "path": "/odoo",
+  "__v": 0,
+  "count": 3
+},
+{
+  "_id": {
+    "$oid": "6864fcb49e91fd065abb503b"
+  },
+  "buttonId": "header-about",
+  "path": "/hubspot",
+  "__v": 0,
+  "count": 3
+},
+{
+  "_id": {
+    "$oid": "6865010f9e91fd065abb503c"
+  },
+  "buttonId": "header-odoo",
+  "path": "/about",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "686555869e91fd065abb503e"
+  },
+  "buttonId": "header-cas-client",
+  "path": "/blog/odoo-15-to-18-migration",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "68655adc9e91fd065abb503f"
+  },
+  "buttonId": "header-about",
+  "path": "/cas-client/worqbox",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "6865645a9e91fd065abb5041"
+  },
+  "buttonId": "header-hubspot",
+  "path": "/about",
+  "__v": 0,
+  "count": 1
+},
+{
+  "_id": {
+    "$oid": "686687769e91fd065abb5045"
+  },
+  "buttonId": "header-cas-client-worqbox",
+  "path": "/about",
+  "__v": 0,
+  "count": 1
+}]

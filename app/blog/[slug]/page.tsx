@@ -2,10 +2,18 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next"
 import { BlogPost } from "@/components/BlogPost"
 
+function getBaseUrl() {
+  return (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+    'http://localhost:3000'
+  );
+}
+
 // This function is required for static site generation with dynamic routes
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
     
     if (!res.ok) {
@@ -26,7 +34,7 @@ export async function generateStaticParams() {
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
     
     if (!res.ok) {
@@ -69,7 +77,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function Page({ params }: { params: { slug: string } }) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
     
     if (!res.ok) {
@@ -78,7 +86,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     
     const data = await res.json();
     const blogData = Array.isArray(data) ? data[0] : data;
-    const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug);
+    const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug && p.published);
 
     if (!post) {
       return <div className="text-center py-12">Article non trouvé</div>;

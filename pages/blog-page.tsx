@@ -29,7 +29,11 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchBlogData = async () => {
       try {
-        const res = await fetch("/api/content?type=blog-page");
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
+        const apiUrl = baseUrl
+          ? `${baseUrl}/api/content?type=blog-page`
+          : "/api/content?type=blog-page";
+        const res = await fetch(apiUrl);
         const data = await res.json();
         setBlogData(Array.isArray(data) ? data[0] : data);
       } catch (err) {
@@ -57,7 +61,7 @@ export default function BlogPage() {
   useEffect(() => {
     if (!blogData) return;
 
-    let filtered = blogData.content?.blogPosts || [];
+    let filtered = (blogData.content?.blogPosts || []).filter((post: any) => post.published === true);
 
     // Filter by search term
     if (searchTerm) {
@@ -82,6 +86,13 @@ export default function BlogPage() {
     const category = blogData.content?.categories?.items?.find((cat: any) => cat.name === categoryName)
     return category?.color || "#000000"
   }
+
+  // Helper to get the correct image URL
+  const getImageUrl = (img: string): string => {
+    if (!img) return '/placeholder.svg';
+    if (img.startsWith('/https://') || img.startsWith('/http://')) return img.slice(1);
+    return img;
+  };
 
   if (loading) return <div>Chargement...</div>;
   if (!blogData) return <div>Erreur de chargement du blog.</div>;
@@ -131,13 +142,8 @@ export default function BlogPage() {
       {filteredPosts.find((post: any) => post.featured) && (
         <section className="pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-black">Article à la Une</h2>
-              <a href="/blog" className="text-color-gray hover:text-color-black transition-colors flex items-center text-sm">
-                Voir tous les articles <ChevronRight className="w-4 h-4 ml-1" />
-              </a>
-            </div>
-
+            
+            
             {filteredPosts
               .filter((post: any) => post.featured)
               .map((post: any) => (
@@ -149,7 +155,7 @@ export default function BlogPage() {
                     <div className="aspect-video relative overflow-hidden bg-gray-100">
                       {post.image ? (
                     <img
-                          src={post.image.startsWith('http') ? post.image : `/images/${post.image}`}
+                          src={getImageUrl(post.image)}
                       alt={post.title}
                           className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
@@ -252,7 +258,7 @@ export default function BlogPage() {
                     >
                       <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
                         <img
-                          src={post.image || "/placeholder.svg"}
+                          src={getImageUrl(post.image)}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
@@ -317,63 +323,60 @@ export default function BlogPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {paginatedPosts.map((post: any) => (
-                      <div
-                        key={post.slug}
-                        className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
-                      >
-                        <div className="relative h-48 overflow-hidden">
+                    <div
+                      key={post.slug}
+                      className="group relative flex flex-col bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
+                    >
+                      {/* Category badge */}
+                      <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-medium z-10"
+                        style={{ backgroundColor: getCategoryColor(post.category) }}>
+                        {post.category}
+                      </div>
+                      {/* Image */}
+                      <div className="relative h-64 overflow-hidden">
                         <div className="aspect-video relative overflow-hidden bg-gray-100">
-                          {post.image ? (
                           <img
-                              src={post.image.startsWith('http') ? post.image : `/images/${post.image}`}
+                            src={getImageUrl(post.image)}
                             alt={post.title}
-                              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                            />
-                          ) : (
-                            <img
-                              src="/placeholder.svg"
-                              alt="Placeholder"
-                              className="object-cover w-full h-full"
-                            />
-                          )}
-                        </div>
-                          <div
-                            className="absolute top-4 left-4 px-3 py-1 rounded-full text-white text-xs font-medium"
-                            style={{ backgroundColor: getCategoryColor(post.category) }}
-                          >
-                            {post.category}
-                          </div>
-                        </div>
-                        <div className="p-6">
-                          <div className="flex items-center gap-2 text-sm text-color-gray">
-                            <User className="w-4 h-4" />
-                            {post.author}
-                            </div>
-                          <div className="flex items-center gap-2 text-sm text-color-gray">
-                            <Calendar className="w-4 h-4" />
-                            {new Date(post.date).toLocaleDateString('fr-FR')}
-                          </div>
-                        </div>
-                        <h3 className="text-xl font-bold text-color-black mb-3 group-hover:text-color-secondary transition-colors duration-300 line-clamp-2">
-                            {post.title}
-                          </h3>
-                        <p className="text-color-gray mb-4 line-clamp-3">{post.excerpt}</p>
-                            <div className="flex items-center gap-2">
-                          <User className="w-5 h-5 text-color-gray" />
-                          <div>
-                            <span className="font-medium text-color-black">{post.author}</span>
-                              </div>
-                            </div>
-                        <div className="flex items-center justify-between mt-4">
-                            <a
-                              href={`/blog/${post.slug}`}
-                              className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
-                            >
-                              Lire <ArrowRight className="ml-1 w-4 h-4" />
-                            </a>
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          />
                         </div>
                       </div>
-                    ))}
+                      {/* Card Content */}
+                      <div className="flex flex-col flex-1 p-6">
+                        {/* Author and Date Row */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                              {/* If you have author image, use it here. Otherwise, fallback to icon/initials */}
+                              <User className="w-6 h-6 text-gray-500" />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-black leading-tight">{post.author}</div>
+                              {post.authorRole && (
+                                <div className="text-xs text-gray-400">{post.authorRole}</div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-400">
+                            <Calendar className="w-4 h-4" />
+                            {post.date ? post.date : "Date inconnue"}
+                          </div>
+                        </div>
+                        {/* Title and Excerpt */}
+                        <h3 className="text-xl font-bold text-black mb-2 group-hover:text-color-main transition-colors duration-300">
+                          {post.title}
+                        </h3>
+                        <p className="text-gray-500 mb-4 flex-1">{post.excerpt}</p>
+                        {/* Bottom Row: Lire link right-aligned */}
+                        <div className="flex items-center justify-end mt-auto">
+                          <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1 text-color-main font-medium hover:underline text-sm">
+                            Lire <ArrowRight className="w-4 h-4 ml-1" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
 

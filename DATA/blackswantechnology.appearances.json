@@ -1,0 +1,31 @@
+[{
+  "_id": {
+    "$oid": "685d53a3245c97bdbba531af"
+  },
+  "colorMain": "#ff5c35",
+  "colorSecondary": "#714b67",
+  "colorBackground": "#ffffff",
+  "colorBlack": "#000000",
+  "colorWhite": "#ffffff",
+  "colorGray": "#6b7280",
+  "colorGreen": "#10b981",
+  "fontFamily": "Inter",
+  "headingFontFamily": "Inter",
+  "fontSize": "16px",
+  "headingFontSize": "30px",
+  "lineHeight": "1.5",
+  "borderRadius": "8px",
+  "spacing": "16px",
+  "shadowColor": "rgba(0, 0, 0, 0.1)",
+  "shadowSize": "4px",
+  "isActive": true,
+  "name": "Default Theme",
+  "description": "Default appearance settings",
+  "createdAt": {
+    "$date": "2025-06-26T14:05:23.609Z"
+  },
+  "updatedAt": {
+    "$date": "2025-06-26T14:26:15.197Z"
+  },
+  "__v": 0
+}]

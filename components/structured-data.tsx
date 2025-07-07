@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect, useState } from 'react';
+
 export default function StructuredData() {
-  const structuredData = {
+  const [structuredData, setStructuredData] = useState({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Blackswan Technology",
@@ -75,7 +79,25 @@ export default function StructuredData() {
       "@type": "Place",
       "name": "Casablanca, Maroc"
     }
-  };
+  });
+
+  useEffect(() => {
+    const fetchStructuredData = async () => {
+      try {
+        const response = await fetch('/api/content?type=structured-data');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.length > 0 && data[0].content) {
+            setStructuredData(data[0].content);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching structured data:', error);
+      }
+    };
+
+    fetchStructuredData();
+  }, []);
 
   return (
     <script

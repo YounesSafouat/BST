@@ -34,7 +34,15 @@ export default function Footer() {
 
   if (!footerContent) return null;
 
-  const { newsletter, companyInfo, quickLinks, services, social, certifications, legal } = footerContent;
+  const { 
+    newsletter = {}, 
+    companyInfo = {}, 
+    quickLinks = { links: [] }, 
+    services = { links: [] }, 
+    social = {},
+    certifications = { badges: [] }, 
+    legal = { links: [] } 
+  } = footerContent;
 
   const handleNewsletterSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 2000))
@@ -86,7 +94,7 @@ export default function Footer() {
             </div>
             <p className="text-gray-400 mb-6 text-sm">{companyInfo.description}</p>
             <div className="space-y-3">
-              {Object.entries(companyInfo.contact).map(([key, value]: [string, any]) => {
+              {companyInfo.contact && Object.entries(companyInfo.contact).map(([key, value]: [string, any]) => {
                 const Icon = IconMap[value.icon as keyof typeof IconMap];
                 return (
                   <div key={key} className="flex items-center gap-3 text-sm text-gray-300">
@@ -102,7 +110,7 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-6">{quickLinks.title}</h4>
             <ul className="space-y-3">
-              {quickLinks.links.map((link: any, index: number) => (
+              {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
                   <a
                     href={link.url}
@@ -120,7 +128,7 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-bold mb-6">{services.title}</h4>
             <ul className="space-y-3">
-              {services.links.map((service: any, index: number) => (
+              {services.links && Array.isArray(services.links) && services.links.map((service: any, index: number) => (
                 <li key={index}>
                   <a
                     href={service.url}
@@ -136,15 +144,29 @@ export default function Footer() {
 
           {/* Social Media */}
           <div>
-            <h4 className="text-lg font-bold mb-6">{social.title}</h4>
+            <h4 className="text-lg font-bold mb-6">{"Suivez-nous"}</h4>
             <div className="flex gap-4 mb-8">
-              {social.networks.map((network: any, index: number) => {
-                const Icon = IconMap[network.icon as keyof typeof IconMap];
+              {Object.entries(social).map(([key, value]) => {
+                if (!value || typeof value !== 'object' || !('url' in value && 'icon' in value && 'color' in value)) return null;
+                const network = value as { icon: string; color: string; url: string };
+                const iconKey = network.icon || key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+                const Icon = IconMap[iconKey as keyof typeof IconMap];
+                const colorMap: any = {
+                  Facebook: '#1877f2',
+                  Twitter: '#1da1f2',
+                  Linkedin: '#0077b5',
+                  Instagram: '#e1306c',
+                  Youtube: '#ff0000',
+                };
+                const bgColor = network.color || colorMap[iconKey] || '#333';
                 return (
                   <a
-                    key={index}
+                    key={key}
                     href={network.url}
-                    className={`${network.color} w-10 h-10 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity duration-200`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity duration-200"
+                    style={{ backgroundColor: bgColor }}
                   >
                     {Icon && <Icon className="w-5 h-5 text-white" />}
                   </a>
@@ -152,9 +174,9 @@ export default function Footer() {
               })}
             </div>
 
-            <h4 className="text-lg font-bold mb-4">{certifications.title}</h4>
+            <h4 className="text-lg font-bold mb-4">{certifications.title || 'Certifications'}</h4>
             <div className="flex flex-wrap gap-3">
-              {certifications.badges.map((cert: string, index: number) => (
+              {certifications.badges && Array.isArray(certifications.badges) && certifications.badges.map((cert: string, index: number) => (
                 <span key={index} className="bg-gray-800 text-xs text-gray-300 px-3 py-1.5 rounded-full">
                   {cert}
                 </span>
@@ -167,7 +189,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">{legal.copyright}</p>
           <div className="flex gap-6">
-            {legal.links.map((link: any, index: number) => (
+            {legal.links && Array.isArray(legal.links) && legal.links.map((link: any, index: number) => (
               <a key={index} href={link.url} className="text-gray-500 hover:text-white text-sm transition-colors duration-200">
                 {link.text}
               </a>

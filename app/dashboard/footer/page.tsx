@@ -24,7 +24,8 @@ import {
   Users,
   Briefcase,
   Award,
-  Shield
+  Shield,
+  Youtube
 } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 import Loader from '@/components/home/Loader';
@@ -72,15 +73,7 @@ interface FooterContent {
       url: string;
     }>;
   };
-  social: {
-    title: string;
-    networks: Array<{
-      name: string;
-      icon: string;
-      url: string;
-      color: string;
-    }>;
-  };
+  social: Record<string, { icon: string; color: string; url: string } | undefined>;
   certifications: {
     title: string;
     badges: string[];
@@ -92,11 +85,30 @@ interface FooterContent {
       url: string;
     }>;
   };
+  _newSocialIcon?: string;
+  _newSocialColor?: string;
+  _newSocialUrl?: string;
+  socialTitle?: string;
 }
 
 function isHexColor(value: string) {
   return /^#[0-9A-Fa-f]{6}$/.test(value);
 }
+
+const IconMap = {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Youtube
+};
+const colorMap: any = {
+  facebook: '#1877f2',
+  twitter: '#1da1f2',
+  linkedin: '#0077b5',
+  instagram: '#e1306c',
+  youtube: '#ff0000',
+};
 
 export default function FooterDashboard() {
   const [footerData, setFooterData] = useState<FooterContent>({
@@ -152,13 +164,11 @@ export default function FooterDashboard() {
       ]
     },
     social: {
-      title: "Suivez-nous",
-      networks: [
-        { name: "Facebook", icon: "Facebook", url: "#", color: "#1877f2" },
-        { name: "Twitter", icon: "Twitter", url: "#", color: "#1877f2" },
-        { name: "LinkedIn", icon: "Linkedin", url: "#", color: "#1877f2" },
-        { name: "Instagram", icon: "Instagram", url: "#", color: "#1877f2" }
-      ]
+      facebook: { icon: "Facebook", color: "#1877f2", url: "#" },
+      twitter: { icon: "Twitter", color: "#1da1f2", url: "#" },
+      linkedin: { icon: "Linkedin", color: "#0077b5", url: "#" },
+      instagram: { icon: "Instagram", color: "#e1306c", url: "#" },
+      youtube: { icon: "Youtube", color: "#ff0000", url: "#" }
     },
     certifications: {
       title: "Certifications",
@@ -251,7 +261,7 @@ export default function FooterDashboard() {
   const addLink = (section: 'quickLinks' | 'services' | 'legal') => {
     setFooterData(prev => {
       const newData = { ...prev } as any
-      newData[section].links = [...newData[section].links, { text: "", url: "" }]
+      newData[section].links = [...(newData[section]?.links || []), { text: "", url: "" }]
       return newData as FooterContent
     })
   }
@@ -259,29 +269,9 @@ export default function FooterDashboard() {
   const removeLink = (section: 'quickLinks' | 'services' | 'legal', index: number) => {
     setFooterData(prev => {
       const newData = { ...prev } as any
-      newData[section].links = newData[section].links.filter((_: any, i: number) => i !== index)
+      newData[section].links = (newData[section]?.links || []).filter((_: any, i: number) => i !== index)
       return newData as FooterContent
     })
-  }
-
-  const addSocialNetwork = () => {
-    setFooterData(prev => ({
-      ...prev,
-      social: {
-        ...prev.social,
-        networks: [...prev.social.networks, { name: "", icon: "Facebook", url: "#", color: "#1877f2" }]
-      }
-    }))
-  }
-
-  const removeSocialNetwork = (index: number) => {
-    setFooterData(prev => ({
-      ...prev,
-      social: {
-        ...prev.social,
-        networks: prev.social.networks.filter((_, i) => i !== index)
-      }
-    }))
   }
 
   const addCertification = () => {
@@ -289,7 +279,7 @@ export default function FooterDashboard() {
       ...prev,
       certifications: {
         ...prev.certifications,
-        badges: [...prev.certifications.badges, ""]
+        badges: [...(prev.certifications?.badges || []), ""]
       }
     }))
   }
@@ -299,7 +289,7 @@ export default function FooterDashboard() {
       ...prev,
       certifications: {
         ...prev.certifications,
-        badges: prev.certifications.badges.filter((_, i) => i !== index)
+        badges: (prev.certifications?.badges || []).filter((_, i) => i !== index)
       }
     }))
   }
@@ -520,12 +510,12 @@ export default function FooterDashboard() {
                 </Button>
               </div>
               
-              {footerData.quickLinks.links.map((link, index) => (
+              {footerData.quickLinks?.links?.map((link, index) => (
                 <div key={index} className="flex gap-2 items-center">
                   <Input
                     value={link.text}
                     onChange={(e) => {
-                      const newLinks = [...footerData.quickLinks.links]
+                      const newLinks = [...(footerData.quickLinks?.links || [])]
                       newLinks[index].text = e.target.value
                       updateField('quickLinks.links', newLinks)
                     }}
@@ -535,7 +525,7 @@ export default function FooterDashboard() {
                   <Input
                     value={link.url}
                     onChange={(e) => {
-                      const newLinks = [...footerData.quickLinks.links]
+                      const newLinks = [...(footerData.quickLinks?.links || [])]
                       newLinks[index].url = e.target.value
                       updateField('quickLinks.links', newLinks)
                     }}
@@ -581,12 +571,12 @@ export default function FooterDashboard() {
                 </Button>
               </div>
               
-              {footerData.services.links.map((service, index) => (
+              {footerData.services?.links?.map((service, index) => (
                 <div key={index} className="flex gap-2 items-center">
                   <Input
                     value={service.text}
                     onChange={(e) => {
-                      const newServices = [...footerData.services.links]
+                      const newServices = [...(footerData.services?.links || [])]
                       newServices[index].text = e.target.value
                       updateField('services.links', newServices)
                     }}
@@ -596,7 +586,7 @@ export default function FooterDashboard() {
                   <Input
                     value={service.url}
                     onChange={(e) => {
-                      const newServices = [...footerData.services.links]
+                      const newServices = [...(footerData.services?.links || [])]
                       newServices[index].url = e.target.value
                       updateField('services.links', newServices)
                     }}
@@ -628,101 +618,104 @@ export default function FooterDashboard() {
             <div>
               <Label>Titre</Label>
               <Input
-                value={footerData.social.title}
-                onChange={(e) => updateField('social.title', e.target.value)}
+                value={footerData.socialTitle || ''}
                 placeholder="Titre de la section"
               />
             </div>
-            
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <Label>Réseaux</Label>
-                <Button onClick={addSocialNetwork} size="sm">
+              <Label>Réseaux</Label>
+              {/* Display each social network as a row with icon, color, name, and URL */}
+              {Object.entries(footerData.social || {})
+                .filter(([key, value]) => key !== 'title' && value && typeof value === 'object' && 'icon' in value && 'color' in value && 'url' in value)
+                .map(([key, value], index) => {
+                  const network = value as { icon: string; color: string; url: string };
+                  const Icon = IconMap[network.icon as keyof typeof IconMap];
+                  return (
+                    <div key={key} className="flex gap-2 items-center">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: network.color || '#333' }}>
+                        {Icon && <Icon className="w-4 h-4 text-white" />}
+                      </div>
+                      <Input
+                        value={network.icon}
+                        disabled
+                        className="w-32 bg-gray-100 text-gray-500"
+                      />
+                      <Input
+                        value={network.url}
+                        onChange={e => {
+                          const newSocial = { ...footerData.social };
+                          newSocial[key] = { ...network, url: e.target.value };
+                          updateField('social', newSocial);
+                        }}
+                        placeholder={`URL de ${key}`}
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={() => {
+                          const newSocial = { ...footerData.social };
+                          delete newSocial[key];
+                          updateField('social', newSocial);
+                        }}
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  );
+                })}
+              {/* Add new social network */}
+              <div className="flex gap-2 items-center mt-2">
+                <Select
+                  value={footerData._newSocialIcon || ''}
+                  onValueChange={value => updateField('_newSocialIcon', value)}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue placeholder="Icone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(IconMap).map(([key, Icon]) => (
+                      <SelectItem key={key} value={key}>
+                        <div className="flex items-center space-x-2">
+                          <Icon className="w-4 h-4" />
+                          <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  placeholder="Couleur (#hex)"
+                  value={footerData._newSocialColor || ''}
+                  onChange={e => updateField('_newSocialColor', e.target.value)}
+                  className="w-32"
+                />
+                <Input
+                  placeholder="URL du réseau"
+                  value={footerData._newSocialUrl || ''}
+                  onChange={e => updateField('_newSocialUrl', e.target.value)}
+                  className="flex-1"
+                />
+                <Button
+                  onClick={() => {
+                    if (footerData._newSocialIcon && footerData._newSocialColor && footerData._newSocialUrl) {
+                      const newSocial = { ...footerData.social };
+                      newSocial[footerData._newSocialIcon.toLowerCase()] = {
+                        icon: footerData._newSocialIcon,
+                        color: footerData._newSocialColor,
+                        url: footerData._newSocialUrl
+                      };
+                      updateField('social', newSocial);
+                      updateField('_newSocialIcon', '');
+                      updateField('_newSocialColor', '');
+                      updateField('_newSocialUrl', '');
+                    }
+                  }}
+                  size="sm"
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              
-              {footerData.social.networks.map((network, index) => (
-                <div key={index} className="space-y-2 p-3 border rounded-lg">
-                  <div className="flex gap-2 items-center">
-                    <Input
-                      value={network.name}
-                      onChange={(e) => {
-                        const newNetworks = [...footerData.social.networks]
-                        newNetworks[index].name = e.target.value
-                        updateField('social.networks', newNetworks)
-                      }}
-                      placeholder="Nom du réseau"
-                      className="flex-1"
-                    />
-                    <Button
-                      onClick={() => removeSocialNetwork(index)}
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  
-                  <div className="flex gap-2 items-center">
-                    <Select
-                      value={network.icon}
-                      onValueChange={(value) => {
-                        const newNetworks = [...footerData.social.networks]
-                        newNetworks[index].icon = value
-                        updateField('social.networks', newNetworks)
-                      }}
-                    >
-                      <SelectTrigger className="w-32">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {availableIcons.map((icon: any) => (
-                          <SelectItem key={icon.value} value={icon.value}>
-                            <div className="flex items-center space-x-2">
-                              <icon.icon className="w-4 h-4" />
-                              <span>{icon.label}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    
-                    <input
-                      type="color"
-                      value={isHexColor(network.color) ? network.color : '#1877f2'}
-                      onChange={e => {
-                        const newNetworks = [...footerData.social.networks]
-                        newNetworks[index].color = e.target.value
-                        updateField('social.networks', newNetworks)
-                      }}
-                      className={`w-10 h-10 p-0 border-none bg-transparent cursor-pointer ${isHexColor(network.color) ? '' : 'opacity-50 cursor-not-allowed'}`}
-                      title={isHexColor(network.color) ? "Choisir une couleur" : "Entrez un code hexadécimal pour activer le sélecteur"}
-                      disabled={!isHexColor(network.color)}
-                    />
-                    <Input
-                      value={network.color}
-                      onChange={e => {
-                        const newNetworks = [...footerData.social.networks]
-                        newNetworks[index].color = e.target.value
-                        updateField('social.networks', newNetworks)
-                      }}
-                      placeholder="#1877f2 ou bg-blue-600"
-                      className="w-40"
-                    />
-                  </div>
-                  
-                  <Input
-                    value={network.url}
-                    onChange={(e) => {
-                      const newNetworks = [...footerData.social.networks]
-                      newNetworks[index].url = e.target.value
-                      updateField('social.networks', newNetworks)
-                    }}
-                    placeholder="URL du réseau social"
-                  />
-                </div>
-              ))}
             </div>
           </CardContent>
         </Card>
@@ -753,12 +746,12 @@ export default function FooterDashboard() {
                 </Button>
               </div>
               
-              {footerData.certifications.badges.map((badge, index) => (
+              {footerData.certifications?.badges?.map((badge, index) => (
                 <div key={index} className="flex gap-2 items-center">
                   <Input
                     value={badge}
                     onChange={(e) => {
-                      const newBadges = [...footerData.certifications.badges]
+                      const newBadges = [...(footerData.certifications?.badges || [])]
                       newBadges[index] = e.target.value
                       updateField('certifications.badges', newBadges)
                     }}
@@ -804,12 +797,12 @@ export default function FooterDashboard() {
                 </Button>
               </div>
               
-              {footerData.legal.links.map((link, index) => (
+              {footerData.legal?.links?.map((link, index) => (
                 <div key={index} className="flex gap-2 items-center">
                   <Input
                     value={link.text}
                     onChange={(e) => {
-                      const newLinks = [...footerData.legal.links]
+                      const newLinks = [...(footerData.legal?.links || [])]
                       newLinks[index].text = e.target.value
                       updateField('legal.links', newLinks)
                     }}
@@ -819,7 +812,7 @@ export default function FooterDashboard() {
                   <Input
                     value={link.url}
                     onChange={(e) => {
-                      const newLinks = [...footerData.legal.links]
+                      const newLinks = [...(footerData.legal?.links || [])]
                       newLinks[index].url = e.target.value
                       updateField('legal.links', newLinks)
                     }}

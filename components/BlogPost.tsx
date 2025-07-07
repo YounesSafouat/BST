@@ -12,11 +12,13 @@ import {
   ArrowLeft,
   ArrowRight,
   ChevronRight,
+  Quote,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import ReactMarkdown from 'react-markdown'
 
-// Define the post type
+// Define the post type with all new fields
 type Post = {
   slug: string
   title: string
@@ -27,13 +29,35 @@ type Post = {
   authorRole: string
   date: string
   readTime: string
+  featured?: boolean
+  published?: boolean
   body?: string
+  cover?: string
+  testimonials?: string[] // Array of testimonial IDs
+  similarPosts?: string[] // Array of post slugs
 }
+
+// Testimonial type (you'll need to fetch this from your testimonials collection)
+type Testimonial = {
+  _id: string
+  author: string
+  role: string
+  text: string
+  photo?: string
+}
+
+// Helper to get the correct image URL
+const getImageUrl = (img: string) => {
+  if (!img) return '/placeholder.svg';
+  if (img.startsWith('/https://') || img.startsWith('/http://')) return img.slice(1);
+  return img;
+};
 
 export function BlogPost({ post }: { post: Post }) {
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [relatedPosts, setRelatedPosts] = useState<Post[]>([])
+  const [similarPosts, setSimilarPosts] = useState<Post[]>([])
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,22 +72,59 @@ export function BlogPost({ post }: { post: Post }) {
     }
   }, [])
 
-  // Fetch related posts from DB (same category, exclude current post)
+  // Fetch similar posts and testimonials from DB
   useEffect(() => {
-    const fetchRelated = async () => {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-      const res = await fetch(`${baseUrl}/api/content?type=blog-page`);
-      const data = await res.json();
-      const blogData = Array.isArray(data) ? data[0] : data;
-      const allPosts: Post[] = blogData?.content?.blogPosts || [];
-      // Related: same category, not current post, limit 3
-      const related = allPosts
-        .filter((p) => p.slug !== post.slug && p.category === post.category)
-        .slice(0, 3);
-      setRelatedPosts(related);
+    const fetchData = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+        const apiUrl = baseUrl ? `${baseUrl}/api/content?type=blog-page` : "/api/content?type=blog-page";
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        const blogData = Array.isArray(data) ? data[0] : data;
+        const allPosts: Post[] = blogData?.content?.blogPosts || [];
+        
+        // Get similar posts using the similarPosts array from the post
+        if (post.similarPosts && post.similarPosts.length > 0) {
+          const similar = allPosts.filter((p) => 
+            post.similarPosts!.includes(p.slug) && p.slug !== post.slug
+          );
+          setSimilarPosts(similar);
+        } else {
+          // Fallback: same category, exclude current post, limit 3
+          const related = allPosts
+            .filter((p) => p.slug !== post.slug && p.category === post.category && p.published !== false)
+            .slice(0, 3);
+          setSimilarPosts(related);
+        }
+
+        // Fetch testimonials from testimonials collection
+        if (post.testimonials && post.testimonials.length > 0) {
+          try {
+            const testimonialsRes = await fetch(`${baseUrl}/api/content?type=testimonial`);
+            const testimonialsData = await testimonialsRes.json();
+            // Map to flat structure for display
+            const mapped = testimonialsData
+              .filter((t: any) => post.testimonials!.includes(
+                typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString()
+              ))
+              .map((t: any) => ({
+                _id: typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString(),
+                author: t.content?.name || t.title || '',
+                role: t.content?.role || t.description || '',
+                text: t.content?.quote || t.content?.text || '',
+                photo: t.content?.avatar || t.content?.photo || '',
+              }));
+            setTestimonials(mapped);
+          } catch (error) {
+            console.error('Error fetching testimonials:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching related data:', error);
+      }
     };
-    fetchRelated();
-  }, [post.slug, post.category]);
+    fetchData();
+  }, [post.slug, post.category, post.similarPosts, post.testimonials]);
 
   // Function to get category color
   const getCategoryColor = (categoryName: string) => {
@@ -72,7 +133,7 @@ export function BlogPost({ post }: { post: Post }) {
       "HubSpot CRM": "#ff5c35",
       "Transformation Digitale": "#000000",
       "Études de Cas": "#0070f3",
-      Tutoriels: "#10b981",
+      "Tutoriels": "#10b981",
     }
     return categories[categoryName] || "#000000"
   }
@@ -141,19 +202,11 @@ export function BlogPost({ post }: { post: Post }) {
       <section className="pb-12 px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-2xl mb-8">
-            {post.image ? (
-              <img
-                src={post.image.startsWith('http') ? post.image : `/images/${post.image}`}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <img
-                src="/placeholder.svg"
-                alt="Placeholder"
-                className="w-full h-full object-cover"
-              />
-            )}
+            <img
+              src={getImageUrl(post.cover || post.image)}
+              alt={post.title}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
@@ -164,232 +217,103 @@ export function BlogPost({ post }: { post: Post }) {
           <div className="prose prose-lg max-w-none">
             <p className="lead">{post.excerpt}</p>
             {post.body && (
-              <div dangerouslySetInnerHTML={{ __html: post.body }} />
+              <ReactMarkdown>{post.body}</ReactMarkdown>
             )}
-
-            <h2>Pourquoi migrer vers Odoo 18 ?</h2>
-
-            <p>
-              Avant de plonger dans les aspects techniques de la migration, il est important de comprendre les avantages
-              qu'offre Odoo 18 par rapport à la version 15 :
-            </p>
-
-            <ul>
-              <li>
-                <strong>Performance améliorée</strong> : Odoo 18 offre des temps de chargement jusqu'à 85% plus rapides
-                et une meilleure gestion des ressources serveur.
-              </li>
-              <li>
-                <strong>Interface utilisateur modernisée</strong> : Une expérience utilisateur repensée, plus intuitive
-                et responsive.
-              </li>
-              <li>
-                <strong>Nouvelles fonctionnalités</strong> : De nombreux modules ont été enrichis avec des
-                fonctionnalités attendues par les utilisateurs.
-              </li>
-              <li>
-                <strong>Sécurité renforcée</strong> : Mise à jour des protocoles de sécurité pour une protection
-                optimale de vos données.
-              </li>
-              <li>
-                <strong>Support à long terme</strong> : Les anciennes versions comme Odoo 15 ne bénéficieront plus de
-                mises à jour de sécurité à l'avenir.
-              </li>
-            </ul>
-
-            <h2>Notre méthodologie de migration en 5 étapes</h2>
-
-            <p>
-              Chez Blackswantechnology, nous avons développé une méthodologie éprouvée pour garantir le succès de vos
-              migrations Odoo :
-            </p>
-
-            <h3>1. Audit et analyse</h3>
-
-            <p>
-              Cette phase nous permet d'identifier les potentiels points de friction et d'établir un plan de migration
-              sur mesure.
-            </p>
-
-            <h3>2. Environnement de test</h3>
-
-            <p>
-              Nous créons un environnement de test complet qui reproduit fidèlement votre système de production. Cette
-              étape est cruciale car elle nous permet de :
-            </p>
-
-            <ul>
-              <li>Tester la migration sans risque pour vos données de production</li>
-              <li>Identifier et résoudre les problèmes de compatibilité</li>
-              <li>Adapter les modules personnalisés à la nouvelle version</li>
-              <li>Mesurer les performances et optimiser la configuration</li>
-            </ul>
-
-            <blockquote>
-              <p>
-                "La migration d'Odoo 15 vers Odoo 18 réalisée par Blackswantechnology a donné une nouvelle vie à notre
-                système. Les performances et les nouvelles fonctionnalités ont transformé notre productivité."
-              </p>
-              <cite>— Younes SAFOUAT, Fondateur & CEO, Worqbox</cite>
-            </blockquote>
-
-            <h2>Conclusion</h2>
-
-            <p>
-              La migration vers Odoo 18 représente un investissement stratégique pour votre entreprise. Bien planifiée
-              et exécutée, elle vous permettra de bénéficier d'un système plus performant, plus sécurisé et doté des
-              dernières fonctionnalités.
-            </p>
-
-            <p>
-              Notre équipe d'experts certifiés Odoo est à votre disposition pour vous accompagner dans cette transition
-              importante. N'hésitez pas à nous contacter pour discuter de votre projet de migration.
-            </p>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mt-12">
-            <div className="text-sm font-medium text-gray-700 mr-2">Tags:</div>
-            {["Odoo", "Migration", "ERP", "Odoo 18", "Données"].map((tag) => (
-              <a
-                key={tag}
-                href={`/blog/tag/${tag.toLowerCase()}`}
-                className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
-              >
-                {tag}
-              </a>
-            ))}
-          </div>
-
-          {/* Author Bio */}
-          <div className="mt-12 p-6 bg-gray-50 rounded-2xl border border-gray-100">
-            <div className="flex items-start gap-4">
-              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-gray-600" />
-              </div>
-              <div>
-                <h3 className="font-bold text-black text-lg">{post.author}</h3>
-                <div className="text-sm text-gray-500 mb-3">{post.authorRole}</div>
-                <p className="text-gray-600">
-                  Expert avec plus de 10 ans d'expérience dans l'implémentation et la migration d'ERP. A dirigé plus de
-                  50 projets de migration réussis pour des entreprises de toutes tailles.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Sharing - Static only, no functionality */}
-          <div className="mt-8 flex items-center justify-between border-t border-b border-gray-200 py-6">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500 mr-2">Partager:</span>
-              <Button variant="outline" size="icon" className="rounded-full w-8 h-8 p-0">
-                <Facebook className="w-4 h-4 text-[#1877F2]" />
-              </Button>
-              <Button variant="outline" size="icon" className="rounded-full w-8 h-8 p-0">
-                <Twitter className="w-4 h-4 text-[#1DA1F2]" />
-              </Button>
-              <Button variant="outline" size="icon" className="rounded-full w-8 h-8 p-0">
-                <Linkedin className="w-4 h-4 text-[#0A66C2]" />
-              </Button>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Related Articles */}
-      <section className="py-16 px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-black mb-8">Articles Similaires</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedPosts.map((relatedPost) => (
-              <div
-                key={relatedPost.slug}
-                className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-xl">
-                    {relatedPost.image ? (
-                      <img
-                        src={relatedPost.image.startsWith('http') ? relatedPost.image : `/images/${relatedPost.image}`}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <img
-                        src="/placeholder.svg"
-                        alt="Placeholder"
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <div
-                    className="absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-medium"
-                    style={{ backgroundColor: getCategoryColor(relatedPost.category) }}
-                  >
-                    {relatedPost.category}
+      {/* Testimonials Section */}
+      {testimonials.length > 0 && (
+        <section className="py-16 px-6 lg:px-8 bg-gray-50">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-black mb-8">Témoignages</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {testimonials.map((testimonial, index) => (
+                <div key={testimonial._id} className="bg-white p-6 rounded-xl shadow-sm">
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <Quote className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
+                      <div className="flex items-center gap-3">
+                        {testimonial.photo && (
+                          <img 
+                            src={testimonial.photo} 
+                            alt={testimonial.author}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                        )}
+                        <div>
+                          <div className="font-medium text-black">{testimonial.author}</div>
+                          <div className="text-sm text-gray-500">{testimonial.role}</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-3 h-3 text-gray-400" />
-                    <span className="text-xs text-gray-500">{relatedPost.date}</span>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Similar Articles */}
+      {similarPosts.length > 0 && (
+        <section className="py-16 px-6 lg:px-8 bg-gray-50">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-black mb-8">Articles Similaires</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {similarPosts.map((relatedPost) => (
+                <div
+                  key={relatedPost.slug}
+                  className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-xl">
+                      {relatedPost.cover || relatedPost.image ? (
+                        <img
+                          src={getImageUrl(relatedPost.cover || relatedPost.image)}
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <img
+                          src="/placeholder.svg"
+                          alt="Placeholder"
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className="absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-medium"
+                      style={{ backgroundColor: getCategoryColor(relatedPost.category) }}
+                    >
+                      {relatedPost.category}
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
-                    {relatedPost.title}
-                  </h3>
-                  <a
-                    href={`/blog/${relatedPost.slug}`}
-                    className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
-                  >
-                    Lire l'article <ArrowRight className="ml-1 w-4 h-4" />
-                  </a>
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="w-3 h-3 text-gray-400" />
+                      <span className="text-xs text-gray-500">{relatedPost.date}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
+                      {relatedPost.title}
+                    </h3>
+                    <a
+                      href={`/blog/${relatedPost.slug}`}
+                      className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
+                    >
+                      Lire l'article <ArrowRight className="ml-1 w-4 h-4" />
+                    </a>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
-            Prêt à migrer vers <span className="text-[#714b67]">Odoo 18</span> ?
-          </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Notre équipe d'experts est prête à vous accompagner dans votre projet de migration. Contactez-nous pour une
-            évaluation gratuite.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-[#714b67] text-white hover:bg-[#714b67]/90 px-8 py-6 text-lg font-medium rounded-xl"
-            >
-              Demander un Devis
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-2 border-gray-300 hover:bg-gray-50 px-8 py-6 text-lg font-medium rounded-xl"
-            >
-              En Savoir Plus
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Navigation */}
-      <div className="fixed bottom-8 left-8 z-50">
-        <Button
-          variant="outline"
-          size="lg"
-          className="bg-white/90 backdrop-blur-sm border border-gray-200 hover:bg-white shadow-lg"
-          onClick={() => window.history.back()}
-        >
-          <ArrowLeft className="mr-2 w-5 h-5" />
-          Retour au Blog
-        </Button>
-      </div>
+        </section>
+      )}
     </div>
   )
 } 

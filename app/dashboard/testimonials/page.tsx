@@ -1,132 +1,166 @@
 "use client";
-
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { toast } from '@/hooks/use-toast';
-import { Save, Plus, Trash2, Eye, Edit, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
+import { FileText, Pencil, Trash2, Plus, X, Save, User, Quote } from "lucide-react";
 import Loader from '@/components/home/Loader';
 
 interface Testimonial {
   _id?: string;
-  name: string;
+  author: string;
   role: string;
-  company?: string;
-  quote: string;
-  result: string;
-  avatar: string;
+  text: string;
+  photo?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export default function TestimonialsDashboard() {
+function emptyTestimonial(): Testimonial {
+  return {
+    author: "",
+    role: "",
+    text: "",
+    photo: "",
+  };
+}
+
+export default function TestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState<number | "new" | null>(null);
+  const [form, setForm] = useState<Testimonial>(emptyTestimonial());
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
-  const [previewing, setPreviewing] = useState<Testimonial | null>(null);
 
+  // Fetch testimonials from API
   useEffect(() => {
-    fetchTestimonialsData();
+    setLoading(true);
+    fetch("/api/content?type=testimonial")
+      .then((res) => res.json())
+      .then((data) => {
+        // Map nested content fields to flat structure
+        const mapped = (data || []).map((t: any) => ({
+          _id: typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString(),
+          author: t.content?.name || t.title || '',
+          role: t.content?.role || t.description || '',
+          text: t.content?.quote || t.content?.text || '',
+          photo: t.content?.avatar || t.content?.photo || '',
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+        }));
+        setTestimonials(mapped);
+        setLoading(false);
+      })
+      .catch(() => {
+        toast({ title: "Erreur", description: "Impossible de charger les témoignages." });
+        setLoading(false);
+      });
   }, []);
 
-  const fetchTestimonialsData = async () => {
-    try {
-      const response = await fetch('/api/content?type=testimonial');
-      if (response.ok) {
-        const data = await response.json();
-        // Each testimonial is in data[i].content
-        setTestimonials(data.map((doc: any) => ({ _id: doc._id, ...doc.content })));
-      }
-    } catch (error) {
-      console.error('Error fetching testimonials data:', error);
-      toast({
-        title: "Erreur",
-        description: "Erreur lors du chargement des témoignages",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Handle form field changes
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  }
 
-  const saveTestimonial = async () => {
-    if (!editingTestimonial) return;
-    if (!editingTestimonial.name || !editingTestimonial.role || !editingTestimonial.quote) {
-      toast({ title: 'Champs requis', description: 'Veuillez remplir tous les champs obligatoires', variant: 'destructive' });
-      return;
-    }
-    setSaving(true);
-    try {
-      let method = editingTestimonial._id ? 'PUT' : 'POST';
-      let url = '/api/content?type=testimonial';
-      if (editingTestimonial._id) url += `&_id=${editingTestimonial._id}`;
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'testimonial',
-          title: editingTestimonial.name,
-          description: editingTestimonial.role + (editingTestimonial.company ? ' - ' + editingTestimonial.company : ''),
-          content: editingTestimonial,
-        }),
-      });
-      if (response.ok) {
-        toast({ title: 'Succès', description: 'Témoignage sauvegardé' });
-        fetchTestimonialsData();
-        setIsModalOpen(false);
-        setEditingTestimonial(null);
-      } else {
-        throw new Error('Erreur lors de la sauvegarde');
-      }
-    } catch (error) {
-      console.error('Error saving testimonial:', error);
-      toast({ title: 'Erreur', description: 'Erreur lors de la sauvegarde', variant: 'destructive' });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const deleteTestimonial = async (testimonial: Testimonial) => {
-    if (!testimonial._id) return;
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce témoignage ?')) return;
-    setSaving(true);
-    try {
-      const response = await fetch(`/api/content?type=testimonial&_id=${testimonial._id}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        toast({ title: 'Supprimé', description: 'Témoignage supprimé' });
-        fetchTestimonialsData();
-      } else {
-        throw new Error('Erreur lors de la suppression');
-      }
-    } catch (error) {
-      console.error('Error deleting testimonial:', error);
-      toast({ title: 'Erreur', description: 'Erreur lors de la suppression', variant: 'destructive' });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const addTestimonial = () => {
-    setEditingTestimonial({ name: '', role: '', company: '', quote: '', result: '', avatar: '' });
+  // Start editing a testimonial
+  function editTestimonial(idx: number) {
+    setEditing(idx);
+    setForm(testimonials[idx]);
     setIsModalOpen(true);
-  };
+  }
 
-  const editTestimonial = (testimonial: Testimonial) => {
-    setEditingTestimonial({ ...testimonial });
+  // Start new testimonial
+  function newTestimonial() {
+    setEditing("new");
+    setForm(emptyTestimonial());
     setIsModalOpen(true);
-  };
+  }
 
-  const cancelEdit = () => {
+  // Cancel editing
+  function cancelEdit() {
+    setEditing(null);
+    setForm(emptyTestimonial());
     setIsModalOpen(false);
-    setEditingTestimonial(null);
-  };
+  }
 
+  // Save (create or update) testimonial
+  async function saveTestimonial() {
+    setSaving(true);
+    
+    try {
+      if (editing === "new") {
+        // Create new testimonial
+        const res = await fetch("/api/testimonials", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        
+        if (res.ok) {
+          const result = await res.json();
+          setTestimonials([...testimonials, result.testimonial]);
+          toast({ title: "Succès", description: "Témoignage créé." });
+          cancelEdit();
+        } else {
+          toast({ title: "Erreur", description: "Échec de la création." });
+        }
+      } else {
+        // Update existing testimonial
+        if (typeof editing === "number") {
+          const res = await fetch(`/api/testimonials/${testimonials[editing]._id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form),
+          });
+          if (res.ok) {
+            const updatedTestimonials = testimonials.map((t, i) => 
+              i === editing ? { ...form, _id: testimonials[editing]._id } : t
+            );
+            setTestimonials(updatedTestimonials);
+            toast({ title: "Succès", description: "Témoignage mis à jour." });
+            cancelEdit();
+          } else {
+            toast({ title: "Erreur", description: "Échec de la mise à jour." });
+          }
+        }
+      }
+    } catch (error) {
+      toast({ title: "Erreur", description: "Une erreur est survenue." });
+    }
+    
+    setSaving(false);
+  }
+
+  // Delete testimonial
+  async function deleteTestimonial(idx: number) {
+    if (!window.confirm("Supprimer ce témoignage ?")) return;
+    setSaving(true);
+    try {
+      if (typeof idx === "number") {
+        const res = await fetch(`/api/testimonials/${testimonials[idx]._id}`, {
+          method: "DELETE",
+        });
+        if (res.ok) {
+          const updatedTestimonials = testimonials.filter((_, i) => i !== idx);
+          setTestimonials(updatedTestimonials);
+          toast({ title: "Supprimé", description: "Témoignage supprimé." });
+          cancelEdit();
+        } else {
+          toast({ title: "Erreur", description: "Échec de la suppression." });
+        }
+      }
+    } catch (error) {
+      toast({ title: "Erreur", description: "Une erreur est survenue." });
+    }
+    setSaving(false);
+  }
+
+  // UI
   if (loading) {
     return <Loader />;
   }
@@ -135,192 +169,140 @@ export default function TestimonialsDashboard() {
     <div className="container mx-auto py-4 sm:py-6 lg:py-8">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gestion des Témoignages</h1>
-        <Button onClick={addTestimonial}>
-          <Plus className="w-4 h-4 mr-2" />
-          Ajouter un témoignage
+        <Button onClick={newTestimonial} className="bg-[--color-black] hover:bg-primary-dark text-white">
+          <Plus className="h-4 w-4 mr-2" />
+          Nouveau Témoignage
         </Button>
       </div>
 
-      {/* Testimonials List */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Témoignages ({testimonials.length})</h2>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {testimonials.map((testimonial, index) => (
-          <Card key={testimonial._id || index} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">
-                      {testimonial.avatar || testimonial.name.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">{testimonial.name}</h3>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
-                    {testimonial.company && (
-                      <p className="text-xs text-gray-500">{testimonial.company}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="flex space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setPreviewing(testimonial)}
-                  >
-                    <Eye className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editTestimonial(testimonial)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => deleteTestimonial(testimonial)}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-700 mb-3 line-clamp-3">
-                "{testimonial.quote}"
-              </p>
-              {testimonial.result && (
-                <Badge variant="secondary" className="text-xs">
-                  {testimonial.result}
-                </Badge>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Edit Modal */}
-      {isModalOpen && editingTestimonial && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">
-                {editingTestimonial._id ? 'Modifier le témoignage' : 'Nouveau témoignage'}
+      {/* Modal for editing */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col">
+            <div className="flex justify-between items-center p-3 sm:p-4 border-b">
+              <h2 className="text-lg sm:text-2xl font-semibold text-gray-900">
+                {editing === "new" ? "Nouveau Témoignage" : `Modifier: ${form.author}`}
               </h2>
-              <Button variant="ghost" size="sm" onClick={cancelEdit}>
-                <X className="w-4 h-4" />
+              <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
+                <X className="h-4 w-4 sm:h-6 sm:w-6" />
               </Button>
             </div>
-
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label>Nom *</Label>
-                  <Input
-                    value={editingTestimonial.name}
-                    onChange={(e) => setEditingTestimonial(prev => prev ? { ...prev, name: e.target.value } : null)}
-                    placeholder="Nom du client"
-                  />
-                </div>
-                <div>
-                  <Label>Poste *</Label>
-                  <Input
-                    value={editingTestimonial.role}
-                    onChange={(e) => setEditingTestimonial(prev => prev ? { ...prev, role: e.target.value } : null)}
-                    placeholder="Directeur, CEO, etc."
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label>Entreprise</Label>
-                <Input
-                  value={editingTestimonial.company || ''}
-                  onChange={(e) => setEditingTestimonial(prev => prev ? { ...prev, company: e.target.value } : null)}
-                  placeholder="Nom de l'entreprise"
-                />
-              </div>
-
-              <div>
-                <Label>Témoignage *</Label>
-                <Textarea
-                  value={editingTestimonial.quote}
-                  onChange={(e) => setEditingTestimonial(prev => prev ? { ...prev, quote: e.target.value } : null)}
-                  placeholder="Le témoignage du client..."
-                  rows={4}
-                />
-              </div>
-
-              <div>
-                <Label>Résultat</Label>
-                <Input
-                  value={editingTestimonial.result}
-                  onChange={(e) => setEditingTestimonial(prev => prev ? { ...prev, result: e.target.value } : null)}
-                  placeholder="+150% de croissance, etc."
-                />
-              </div>
-
-              <div>
-                <Label>Avatar (URL ou initiales)</Label>
-                <Input
-                  value={editingTestimonial.avatar}
-                  onChange={(e) => setEditingTestimonial(prev => prev ? { ...prev, avatar: e.target.value } : null)}
-                  placeholder="URL de l'image ou initiales (ex: JD)"
-                />
+            
+            <div className="flex-grow overflow-y-auto p-4">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader><CardTitle>Informations</CardTitle></CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Nom de l'auteur</Label>
+                        <Input name="author" value={form.author} onChange={handleChange} />
+                      </div>
+                      <div>
+                        <Label>Rôle/Fonction</Label>
+                        <Input name="role" value={form.role} onChange={handleChange} placeholder="CEO, Consultant..." />
+                      </div>
+                    </div>
+                    <div>
+                      <Label>Photo (URL)</Label>
+                      <Input name="photo" value={form.photo} onChange={handleChange} placeholder="https://..." />
+                    </div>
+                    <div>
+                      <Label>Témoignage</Label>
+                      <Textarea 
+                        name="text" 
+                        value={form.text} 
+                        onChange={handleChange} 
+                        placeholder="Le témoignage..."
+                        rows={4}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
-            <div className="flex justify-end space-x-2 mt-6">
-              <Button variant="outline" onClick={cancelEdit}>
+            {/* Sticky Action Bar */}
+            <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t mt-0 bg-white sticky bottom-0 z-20 px-4 pb-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="lg" 
+                className="min-w-[120px] text-base font-semibold" 
+                onClick={cancelEdit}
+              >
                 Annuler
               </Button>
-              <Button onClick={saveTestimonial} disabled={saving}>
-                Sauvegarder
+              
+              <Button 
+                type="button" 
+                size="lg" 
+                className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg" 
+                onClick={saveTestimonial}
+                disabled={saving}
+              >
+                <Save className="h-5 w-5 mr-2" />
+                {saving ? "Enregistrement..." : "Enregistrer"}
               </Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Preview Modal */}
-      {previewing && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Aperçu du témoignage</h2>
-              <Button variant="ghost" size="sm" onClick={() => setPreviewing(null)}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white font-bold text-lg">
-                  {previewing.avatar || previewing.name.charAt(0)}
-                </span>
+      {/* Testimonials Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {testimonials.length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <Quote className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun témoignage</h3>
+            <p className="text-gray-500">Commencez par créer votre premier témoignage.</p>
+          </div>
+        ) : (
+          testimonials.map((testimonial, idx) => (
+            <Card key={idx} className="p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-300 min-h-[200px] max-w-full">
+              {/* Top Section: Icon, Author, Role */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 rounded-lg bg-blue-100">
+                    <Quote className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <h3 className="text-base font-bold text-gray-800 truncate max-w-[220px]">
+                      {testimonial.author || "Auteur inconnu"}
+                    </h3>
+                    <p className="text-xs text-gray-500 truncate max-w-[220px]">{testimonial.role || "Rôle inconnu"}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 line-clamp-3 max-w-[220px]">
+                  "{testimonial.text || "Aucun témoignage"}"
+                </p>
               </div>
-              <h3 className="font-semibold text-lg mb-1">{previewing.name}</h3>
-              <p className="text-gray-600 mb-1">{previewing.role}</p>
-              {previewing.company && (
-                <p className="text-sm text-gray-500 mb-4">{previewing.company}</p>
-              )}
-              <blockquote className="text-gray-700 italic mb-4">
-                "{previewing.quote}"
-              </blockquote>
-              {previewing.result && (
-                <Badge variant="secondary">
-                  {previewing.result}
-                </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+
+              {/* Bottom Section: Actions */}
+              <div className="flex flex-row justify-end gap-2 mt-4">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => editTestimonial(idx)}
+                  className="border-gray-300 hover:bg-gray-100 text-xs"
+                >
+                  <Pencil className="w-3 h-3 mr-1" />
+                  Modifier
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => deleteTestimonial(idx)}
+                  className="border-red-300 hover:bg-red-100 text-red-600 text-xs"
+                >
+                  <Trash2 className="w-3 h-3 mr-1" />
+                  Supprimer
+                </Button>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
     </div>
   );
 } 

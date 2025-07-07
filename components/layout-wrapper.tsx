@@ -38,15 +38,16 @@ export default function LayoutWrapper({
 
   const isDashboard = pathname ? pathname.startsWith('/dashboard') : false
   const isAuth = pathname ? pathname.startsWith('/auth') : false
+  const isMaintenance = pathname ? pathname === '/maintenance' : false
   const isPreview = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('preview') === 'true' : false
 
   return (
     <ThemeProvider>
-      {!isDashboard && !isAuth && !isPreview && <Header scrollY={scrollY} isLoaded={isLoaded} />}
+      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <Header scrollY={scrollY} isLoaded={isLoaded} />}
       <main className="flex-grow">
         {children}
       </main>
-      {!isDashboard && !isAuth && !isPreview && <Footer />}
+      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <Footer />}
     </ThemeProvider>
   )
 } 

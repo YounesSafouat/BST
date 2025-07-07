@@ -44,7 +44,7 @@ contentSchema.pre('save', function (next) {
 });
 
 // Remove the model from the cache if it exists
-if (mongoose.models.Content) {
+if (mongoose.models && mongoose.models.Content) {
     delete mongoose.models.Content;
 }
 

@@ -17,7 +17,7 @@ import {
      Gift, Package, ShoppingCart, ShoppingBag, Wallet, Smile, Frown, Meh,
      Laugh, Angry, ThumbsUp, ThumbsDown, CheckCircle, XCircle, MinusCircle,
      PlusCircle, Circle, Square, Triangle, Hexagon, Diamond, Cross, Hash,
-     Percent, AtSign
+     Percent, AtSign, Facebook, Twitter, Linkedin, Instagram, Youtube
    } from 'lucide-react';
    
    export const availableIcons = [
@@ -66,6 +66,13 @@ import {
      { value: 'MapPin', label: 'Map Pin', icon: MapPin },
      { value: 'Link', label: 'Link', icon: Link },
      { value: 'ExternalLink', label: 'External Link', icon: ExternalLink },
+     
+     // Social Media
+     { value: 'Facebook', label: 'Facebook', icon: Facebook },
+     { value: 'Twitter', label: 'Twitter', icon: Twitter },
+     { value: 'Linkedin', label: 'LinkedIn', icon: Linkedin },
+     { value: 'Instagram', label: 'Instagram', icon: Instagram },
+     { value: 'Youtube', label: 'YouTube', icon: Youtube },
      
      // Files & Data
      { value: 'Download', label: 'Download', icon: Download },
