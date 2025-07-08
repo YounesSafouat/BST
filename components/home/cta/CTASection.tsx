@@ -77,7 +77,7 @@ export default function CTASection({ cta }: { cta: ContentSection }) {
           </div>
         </div>
       </section>
-      <AnimatedScrollArrow />
+     
     </>
   )
 } 
