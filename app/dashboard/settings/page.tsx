@@ -172,8 +172,8 @@ export default function SettingsPage() {
                 youtube: contactInfo.social?.youtube || "",
               },
             });
-          }
         }
+      }
       } catch (contactError) {
         console.error('Error loading contact info:', contactError);
       }
@@ -217,15 +217,15 @@ export default function SettingsPage() {
       if (settingsId) {
         // Update existing settings
         response = await fetch(`/api/content/${settingsId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            type: 'settings',
-            title: 'Paramètres du site',
-            description: 'Configuration générale du site',
-            content: settings
-          }),
-        });
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'settings',
+          title: 'Paramètres du site',
+          description: 'Configuration générale du site',
+          content: settings
+        }),
+      });
       } else {
         // Create new settings
         response = await fetch('/api/content', {
@@ -677,17 +677,17 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <Switch
-                    id="maintenance-mode"
-                    checked={settings.general.maintenanceMode}
-                    onCheckedChange={(checked) => updateSetting('general', 'maintenanceMode', checked)}
-                  />
-                  <div>
+                <Switch
+                  id="maintenance-mode"
+                  checked={settings.general.maintenanceMode}
+                  onCheckedChange={(checked) => updateSetting('general', 'maintenanceMode', checked)}
+                />
+                <div>
                     <Label htmlFor="maintenance-mode" className="text-base font-medium">Mode maintenance</Label>
                     <p className="text-sm text-gray-600">
                       Activez cette option pour rediriger tous les visiteurs vers une page de maintenance
                     </p>
-                  </div>
+                </div>
                 </div>
                 {settings.general.maintenanceMode && (
                   <div className="flex flex-col gap-2">
@@ -702,7 +702,7 @@ export default function SettingsPage() {
                     >
                       Voir la page de maintenance
                     </Button>
-                  </div>
+              </div>
                 )}
               </div>
             </CardContent>
@@ -1007,7 +1007,7 @@ export default function SettingsPage() {
                    onChange={(e) => updateContactInfoField('social.youtube', e.target.value)}
                    placeholder="https://youtube.com/@blackswantechnology"
                  />
-               </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

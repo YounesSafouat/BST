@@ -107,27 +107,9 @@
   "content": {
     "intro": "Chaque transformation raconte une histoire unique. Voici quelques-unes de nos plus belles réussites.",
     "testimonials": [
-      {
-        "name": "Ahmed",
-        "role": "CEO, TechCorp",
-        "quote": "Notre transformation digitale a révolutionné notre approche commerciale. Résultats exceptionnels.",
-        "result": "+900% Leads",
-        "avatar": "YO"
-      },
-      {
-        "name": "Salma Benali",
-        "role": "Directrice, InnovateMA",
-        "quote": "L'intégration Odoo a unifié tous nos processus. Une efficacité opérationnelle remarquable.",
-        "result": "-70% Temps Gestion",
-        "avatar": "SB"
-      },
-      {
-        "name": "Youssef Kadiri",
-        "role": "CTO, GlobalTrade",
-        "quote": "Accompagnement exceptionnel et résultats au-delà de nos espérances. Partenaire de confiance.",
-        "result": "+150% ROI",
-        "avatar": "YK"
-      }
+      "6865473ca43ac414cd377c04",
+      "6865473ca43ac414cd377c05",
+      "6865473ca43ac414cd377c06"
     ]
   },
   "metadata": {

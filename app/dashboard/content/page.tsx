@@ -1214,12 +1214,21 @@ function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data
     useEffect(() => {
         async function fetchTestimonials() {
             try {
-                const res = await fetch('/api/content?type=testimonials');
+                const res = await fetch('/api/content?type=testimonial');
                 const testimonialsData = await res.json();
-                if (testimonialsData.length > 0 && testimonialsData[0].content?.testimonials) {
-                    setAllTestimonials(testimonialsData[0].content.testimonials);
-                }
+                // Map the testimonials from the content structure
+                const mapped = testimonialsData.map((item: any) => ({
+                    _id: typeof item._id === 'object' && item._id.$oid ? item._id.$oid : item._id.toString(),
+                    name: item.content?.name || item.title || '',
+                    role: item.content?.role || item.description || '',
+                    quote: item.content?.quote || item.content?.text || '',
+                    avatar: item.content?.avatar || item.content?.photo || '',
+                    result: item.content?.result || '',
+                    company: item.content?.company || '',
+                }));
+                setAllTestimonials(mapped);
             } catch (e) {
+                console.error('Error fetching testimonials:', e);
                 setAllTestimonials([]);
             } finally {
                 setLoading(false);
@@ -1254,7 +1263,7 @@ function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data
                     }}
                 >
                     {allTestimonials.map((t, idx) => (
-                        <option key={t.name + idx} value={t.name}>
+                        <option key={t._id + idx} value={t._id}>
                             {t.name} - {t.role} {t.company ? `(${t.company})` : ''}
                         </option>
                     ))}
@@ -1262,11 +1271,11 @@ function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data
                 <div className="text-xs text-gray-500">Astuce : Maintenez Ctrl (Cmd sur Mac) pour sélectionner plusieurs témoignages.</div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                {(content.testimonials || []).map((name, idx) => {
-                    const t = allTestimonials.find(t => t.name === name);
+                {(content.testimonials || []).map((testimonialId, idx) => {
+                    const t = allTestimonials.find(t => t._id === testimonialId);
                     if (!t) return null;
                     return (
-                        <Card key={t.name + idx} className="p-4">
+                        <Card key={t._id + idx} className="p-4">
                             <div className="flex items-center gap-3 mb-2">
                                 <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
                                     <span className="text-white font-bold text-sm">{t.avatar || t.name.charAt(0)}</span>
