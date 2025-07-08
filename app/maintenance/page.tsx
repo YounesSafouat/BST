@@ -4,7 +4,7 @@ import MaintenanceRefreshButton from '@/components/maintenance-refresh-button';
 
 export default function MaintenancePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-grey-900 to-slate-900 flex items-center justify-center p-4">
       <div className="max-w-4xl mx-auto text-center">
         {/* Static Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -19,13 +19,13 @@ export default function MaintenancePage() {
           <div className="mb-12">
             <div className="mb-6">
               <img 
-                src="/bst.png" 
+                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst%20white.png" 
                 alt="BST - Business Solutions & Technology" 
                 className="h-32 w-auto object-contain mx-auto"
               />
             </div>
             <h1 className="text-4xl font-bold text-white mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-              BST - Business Solutions & Technology
+              Nous digitalisons votre entreprise de A à Z
             </h1>
           </div>
 
@@ -82,7 +82,7 @@ export default function MaintenancePage() {
                   <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
                     📧
                   </div>
-                  <span className="font-medium">contact@bst.ma</span>
+                  <span className="font-medium">contact-ma@blackswantechnology.fr</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">

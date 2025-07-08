@@ -28,7 +28,12 @@ export async function middleware(request: NextRequest) {
     // Cache expired, fetch fresh data
     try {
       const baseUrl = request.nextUrl.origin;
-      const response = await fetch(`${baseUrl}/api/maintenance`);
+      const response = await fetch(`${baseUrl}/api/maintenance`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
+      
       if (response.ok) {
         const data = await response.json();
         maintenanceMode = data.maintenanceMode || false;
@@ -39,10 +44,17 @@ export async function middleware(request: NextRequest) {
           lastCheck: now,
           cacheDuration: 30000
         };
+        
+        // Log maintenance status changes for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`Maintenance mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'}`);
+        }
+      } else {
+        console.warn('Maintenance API returned non-OK status:', response.status);
       }
     } catch (error) {
       // Fallback to environment variable if API call fails
-      console.log('Maintenance API call failed, using environment variable');
+      console.log('Maintenance API call failed, using environment variable fallback');
       maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
       
       // Update cache with fallback value
