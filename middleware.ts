@@ -27,11 +27,20 @@ export async function middleware(request: NextRequest) {
   if (now - maintenanceModeCache.lastCheck > maintenanceModeCache.cacheDuration) {
     // Cache expired, fetch fresh data
     try {
+      // Use absolute URL to ensure it works on server
       const baseUrl = request.nextUrl.origin;
-      const response = await fetch(`${baseUrl}/api/maintenance`, {
+      const maintenanceUrl = `${baseUrl}/api/maintenance`;
+      
+      console.log(`[Maintenance Middleware] Fetching from: ${maintenanceUrl}`);
+      
+      const response = await fetch(maintenanceUrl, {
+        method: 'GET',
         headers: {
           'Cache-Control': 'no-cache',
+          'User-Agent': 'Maintenance-Middleware/1.0',
         },
+        // Add timeout for server environments
+        signal: AbortSignal.timeout(5000), // 5 second timeout
       });
       
       if (response.ok) {
@@ -45,16 +54,16 @@ export async function middleware(request: NextRequest) {
           cacheDuration: 30000
         };
         
-        // Log maintenance status changes for debugging
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`Maintenance mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'}`);
-        }
+        // Log maintenance status changes for debugging (both dev and prod)
+        console.log(`[Maintenance Middleware] Mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'} | Path: ${request.nextUrl.pathname} | Source: ${data.source}`);
       } else {
-        console.warn('Maintenance API returned non-OK status:', response.status);
+        console.warn(`[Maintenance Middleware] API returned status: ${response.status}`);
+        // Don't update cache on error, keep previous value
       }
     } catch (error) {
       // Fallback to environment variable if API call fails
-      console.log('Maintenance API call failed, using environment variable fallback');
+      console.log(`[Maintenance Middleware] API call failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.log('[Maintenance Middleware] Using environment variable fallback');
       maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
       
       // Update cache with fallback value
@@ -66,12 +75,48 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // Force cache refresh for maintenance page access (for immediate response)
+  if (request.nextUrl.pathname === '/maintenance' && maintenanceMode === false) {
+    try {
+      const baseUrl = request.nextUrl.origin;
+      const maintenanceUrl = `${baseUrl}/api/maintenance`;
+      
+      const response = await fetch(maintenanceUrl, {
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'User-Agent': 'Maintenance-Middleware/1.0',
+        },
+        signal: AbortSignal.timeout(3000), // 3 second timeout for refresh
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const freshMaintenanceMode = data.maintenanceMode || false;
+        
+        if (freshMaintenanceMode !== maintenanceMode) {
+          maintenanceMode = freshMaintenanceMode;
+          maintenanceModeCache = {
+            value: maintenanceMode,
+            lastCheck: now,
+            cacheDuration: 30000
+          };
+          console.log(`[Maintenance Middleware] Cache refreshed - Mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'}`);
+        }
+      }
+    } catch (error) {
+      console.log('[Maintenance Middleware] Cache refresh failed, using cached value');
+    }
+  }
+
   if (maintenanceMode) {
     if (request.nextUrl.pathname !== '/maintenance') {
+      console.log(`[Maintenance Middleware] Redirecting ${request.nextUrl.pathname} to /maintenance`);
       return NextResponse.redirect(new URL('/maintenance', request.url));
     }
   } else {
     if (request.nextUrl.pathname === '/maintenance') {
+      console.log(`[Maintenance Middleware] Redirecting /maintenance to /`);
       return NextResponse.redirect(new URL('/', request.url));
     }
   }

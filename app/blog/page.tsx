@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
-import BlogPage from "../../pages/blog-page"
+import BlogPage from "@/components/BlogPage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seoData = await getSEOData('blog');
