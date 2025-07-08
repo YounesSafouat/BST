@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Cache for maintenance mode status
+let maintenanceModeCache = {
+  value: false,
+  lastCheck: 0,
+  cacheDuration: 30000 // 30 seconds cache
+};
+
 export async function middleware(request: NextRequest) {
   // Skip middleware for API routes, dashboard, and auth
   if (
@@ -13,8 +20,40 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Use environment variable for maintenance mode
-  const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+  // Check if cache is still valid
+  const now = Date.now();
+  let maintenanceMode = maintenanceModeCache.value;
+  
+  if (now - maintenanceModeCache.lastCheck > maintenanceModeCache.cacheDuration) {
+    // Cache expired, fetch fresh data
+    try {
+      const baseUrl = request.nextUrl.origin;
+      const response = await fetch(`${baseUrl}/api/maintenance`);
+      if (response.ok) {
+        const data = await response.json();
+        maintenanceMode = data.maintenanceMode || false;
+        
+        // Update cache
+        maintenanceModeCache = {
+          value: maintenanceMode,
+          lastCheck: now,
+          cacheDuration: 30000
+        };
+      }
+    } catch (error) {
+      // Fallback to environment variable if API call fails
+      console.log('Maintenance API call failed, using environment variable');
+      maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+      
+      // Update cache with fallback value
+      maintenanceModeCache = {
+        value: maintenanceMode,
+        lastCheck: now,
+        cacheDuration: 30000
+      };
+    }
+  }
+
   if (maintenanceMode) {
     if (request.nextUrl.pathname !== '/maintenance') {
       return NextResponse.redirect(new URL('/maintenance', request.url));

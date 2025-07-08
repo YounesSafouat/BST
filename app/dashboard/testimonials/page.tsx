@@ -65,7 +65,7 @@ export default function TestimonialsPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
-  }
+      }
 
   // Start editing a testimonial
   function editTestimonial(idx: number) {
@@ -133,8 +133,8 @@ export default function TestimonialsPage() {
       toast({ title: "Erreur", description: "Une erreur est survenue." });
     }
     
-    setSaving(false);
-  }
+      setSaving(false);
+    }
 
   // Delete testimonial
   async function deleteTestimonial(idx: number) {
@@ -144,21 +144,21 @@ export default function TestimonialsPage() {
       if (typeof idx === "number") {
         const res = await fetch(`/api/testimonials/${testimonials[idx]._id}`, {
           method: "DELETE",
-        });
+      });
         if (res.ok) {
           const updatedTestimonials = testimonials.filter((_, i) => i !== idx);
           setTestimonials(updatedTestimonials);
           toast({ title: "Supprimé", description: "Témoignage supprimé." });
           cancelEdit();
-        } else {
+      } else {
           toast({ title: "Erreur", description: "Échec de la suppression." });
         }
       }
     } catch (error) {
       toast({ title: "Erreur", description: "Une erreur est survenue." });
     }
-    setSaving(false);
-  }
+      setSaving(false);
+    }
 
   // UI
   if (loading) {
@@ -187,36 +187,36 @@ export default function TestimonialsPage() {
                 <X className="h-4 w-4 sm:h-6 sm:w-6" />
               </Button>
             </div>
-            
+
             <div className="flex-grow overflow-y-auto p-4">
               <div className="space-y-6">
                 <Card>
                   <CardHeader><CardTitle>Informations</CardTitle></CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
                         <Label>Nom de l'auteur</Label>
                         <Input name="author" value={form.author} onChange={handleChange} />
-                      </div>
-                      <div>
+                </div>
+                <div>
                         <Label>Rôle/Fonction</Label>
                         <Input name="role" value={form.role} onChange={handleChange} placeholder="CEO, Consultant..." />
-                      </div>
-                    </div>
-                    <div>
+                </div>
+              </div>
+              <div>
                       <Label>Photo (URL)</Label>
                       <Input name="photo" value={form.photo} onChange={handleChange} placeholder="https://..." />
-                    </div>
-                    <div>
+              </div>
+              <div>
                       <Label>Témoignage</Label>
-                      <Textarea 
+                <Textarea
                         name="text" 
                         value={form.text} 
                         onChange={handleChange} 
                         placeholder="Le témoignage..."
-                        rows={4}
-                      />
-                    </div>
+                  rows={4}
+                />
+              </div>
                   </CardContent>
                 </Card>
               </div>
@@ -276,7 +276,7 @@ export default function TestimonialsPage() {
                 <p className="text-sm text-gray-600 line-clamp-3 max-w-[220px]">
                   "{testimonial.text || "Aucun témoignage"}"
                 </p>
-              </div>
+            </div>
 
               {/* Bottom Section: Actions */}
               <div className="flex flex-row justify-end gap-2 mt-4">
@@ -301,8 +301,8 @@ export default function TestimonialsPage() {
               </div>
             </Card>
           ))
-        )}
-      </div>
+              )}
+            </div>
     </div>
   );
 } 

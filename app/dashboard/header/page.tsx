@@ -142,6 +142,21 @@ export default function HeaderDashboard() {
         if (data.length > 0) {
         setHeaderData(data[0].content);
       }
+      
+      // Fetch contact info from centralized object
+      const contactResponse = await fetch("/api/content?type=contact-info");
+      const contactData = await contactResponse.json();
+      if (contactData.length > 0 && headerData) {
+        const contactInfo = contactData[0].content;
+        setHeaderData(prev => prev ? {
+          ...prev,
+          contact: {
+            phone: contactInfo.phone || '',
+            email: contactInfo.email || '',
+            address: contactInfo.address || ''
+          }
+        } : null);
+      }
     } catch (error) {
       console.error("Error fetching header data:", error);
       toast({

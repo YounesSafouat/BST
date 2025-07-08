@@ -240,9 +240,9 @@ export default function BlogAdminPage() {
                   <Eye className="w-3 h-3 mr-1" />
                   Prévisualiser
                 </Button>
-                <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
-                  <X className="h-4 w-4 sm:h-6 sm:w-6" />
-                </Button>
+              <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
+                <X className="h-4 w-4 sm:h-6 sm:w-6" />
+              </Button>
               </div>
             </div>
             
@@ -463,7 +463,7 @@ export default function BlogAdminPage() {
                 <div className="flex items-center space-x-2">
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
                     post.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
+                }`}>
                     {post.published ? 'Publié' : 'Brouillon'}
                   </span>
                   {post.featured && (

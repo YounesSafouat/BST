@@ -128,14 +128,29 @@ export function BlogPost({ post }: { post: Post }) {
 
   // Function to get category color
   const getCategoryColor = (categoryName: string) => {
-    const categories: { [key: string]: string } = {
-      "Odoo ERP": "#714b67",
-      "HubSpot CRM": "#ff5c35",
-      "Transformation Digitale": "#000000",
-      "Études de Cas": "#0070f3",
-      "Tutoriels": "#10b981",
+    // Generate a consistent color based on the category name
+    const colors = [
+      "#714b67", // Purple
+      "#ff5c35", // Orange
+      "#000000", // Black
+      "#0070f3", // Blue
+      "#10b981", // Green
+      "#f59e0b", // Yellow
+      "#ef4444", // Red
+      "#8b5cf6", // Violet
+      "#06b6d4", // Cyan
+      "#84cc16", // Lime
+    ];
+    
+    // Simple hash function to get consistent color for category
+    let hash = 0;
+    for (let i = 0; i < categoryName.length; i++) {
+      const char = categoryName.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
     }
-    return categories[categoryName] || "#000000"
+    
+    return colors[Math.abs(hash) % colors.length];
   }
 
   return (

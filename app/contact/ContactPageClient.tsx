@@ -10,15 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
 import Loader from '@/components/home/Loader';
 
-// Example companies data (replace with your real data)
-const companies = [
-  { name: 'Microsoft', logo: '/public/logos/Hubspot-fav.svg' },
-  { name: 'Google', logo: '/public/logos/WQ.svg' },
-  { name: 'Odoo', logo: '/public/odoo.png' },
-  { name: 'Meta', logo: '/public/placeholder-logo.png' },
-  { name: 'Netflix', logo: '/public/placeholder-logo.svg' },
-];
-
 export default function ContactPageClient() {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -236,17 +227,7 @@ export default function ContactPageClient() {
             {contactContent?.trust?.title || 'Ils nous font confiance'}
           </h3>
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            {companies.map((company, index) => (
-              <div key={index} className="flex items-center">
-                <Image
-                  src={company.logo}
-                  alt={company.name}
-                  width={120}
-                  height={60}
-                  className="h-12 w-auto object-contain"
-                />
-            </div>
-          ))}
+            {/* Companies will be dynamically populated here */}
           </div>
         </div>
       </div>

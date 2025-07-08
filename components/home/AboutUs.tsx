@@ -158,83 +158,34 @@ export default function AboutUs() {
     )
   }
 
-  // Use dynamic content if available, otherwise fall back to static content
-  const heroTitle = aboutContent?.hero?.title || "Nous Sommes"
-  const heroSubtitle = aboutContent?.hero?.subtitle || "Les Visionnaires"
-  const heroDescription = aboutContent?.hero?.description || "qui transforment le Maroc digital"
-  const heroStats = aboutContent?.hero?.stats || [
-    { title: `${currentYear - 2019} années d'excellence`, icon: "Clock" },
-    { title: "100% passion marocaine", icon: "Heart" },
-    { title: "Innovation continue", icon: "Rocket" }
-  ]
+  // If no content is available, show empty state
+  if (!aboutContent) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Aucun contenu disponible</p>
+        </div>
+      </div>
+    )
+  }
 
-  const teamTitle = aboutContent?.team?.title || "L'Humain au Cœur"
-  const teamDescription = aboutContent?.team?.description || "Derrière chaque ligne de code, chaque intégration réussie, il y a des passionnés qui croient en la puissance transformatrice de la technologie."
-  const teamMembers = aboutContent?.team?.members || [
-    {
-      name: "Ahmed Mansouri",
-      role: "CEO & Fondateur",
-      description: "Visionnaire de la transformation digitale au Maroc",
-      icon: "Crown"
-    },
-    {
-      name: "Salma Benali",
-      role: "CTO",
-      description: "Experte en architecture technique et innovation",
-      icon: "Code"
-    },
-    {
-      name: "Youssef Kadiri",
-      role: "Directeur Commercial",
-      description: "Spécialiste en solutions CRM et ERP",
-      icon: "Target"
-    },
-    {
-      name: "Fatima Zahra",
-      role: "Lead Developer",
-      description: "Passionnée de développement et d'intégration",
-      icon: "Zap"
-    }
-  ]
+  // Use only database content
+  const heroTitle = aboutContent?.hero?.title || ""
+  const heroSubtitle = aboutContent?.hero?.subtitle || ""
+  const heroDescription = aboutContent?.hero?.description || ""
+  const heroStats = aboutContent?.hero?.stats || []
 
-  const valuesTitle = aboutContent?.values?.title || "Nos Valeurs Fondamentales"
-  const valuesDescription = aboutContent?.values?.description || "Des principes qui guident chacune de nos actions et décisions."
-  const valuesItems = aboutContent?.values?.items || [
-    {
-      title: "Excellence",
-      description: "Nous visons l'excellence dans chaque projet, chaque ligne de code, chaque interaction client.",
-      icon: "Star"
-    },
-    {
-      title: "Innovation",
-      description: "Nous repoussons constamment les limites de la technologie pour créer des solutions innovantes.",
-      icon: "Lightbulb"
-    },
-    {
-      title: "Collaboration",
-      description: "Nous croyons en la puissance du travail d'équipe et de la collaboration avec nos clients.",
-      icon: "Users"
-    },
-    {
-      title: "Intégrité",
-      description: "Nous agissons avec honnêteté, transparence et éthique dans toutes nos relations.",
-      icon: "Shield"
-    },
-    {
-      title: "Passion",
-      description: "Notre passion pour la technologie et l'innovation nous pousse à toujours faire mieux.",
-      icon: "Heart"
-    },
-    {
-      title: "Impact",
-      description: "Nous créons un impact positif sur les entreprises et la société marocaine.",
-      icon: "Globe"
-    }
-  ]
+  const teamTitle = aboutContent?.team?.title || ""
+  const teamDescription = aboutContent?.team?.description || ""
+  const teamMembers = aboutContent?.team?.members || []
 
-  const missionTitle = aboutContent?.mission?.title || "Transformer le Maroc Digital"
-  const missionDescription = aboutContent?.mission?.description || "Notre mission est d'accompagner les entreprises marocaines dans leur transformation digitale en leur offrant des solutions innovantes, sur mesure et performantes."
-  const missionCtaText = aboutContent?.mission?.cta?.text || "Découvrir Notre Mission"
+  const valuesTitle = aboutContent?.values?.title || ""
+  const valuesDescription = aboutContent?.values?.description || ""
+  const valuesItems = aboutContent?.values?.items || []
+
+  const missionTitle = aboutContent?.mission?.title || ""
+  const missionDescription = aboutContent?.mission?.description || ""
+  const missionCtaText = aboutContent?.mission?.cta?.text || ""
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">

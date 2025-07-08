@@ -113,74 +113,48 @@ const colorMap: any = {
 export default function FooterDashboard() {
   const [footerData, setFooterData] = useState<FooterContent>({
     newsletter: {
-      title: "Restez à la pointe de l'innovation",
-      description: "Recevez nos dernières actualités, études de cas et conseils d'experts directement dans votre boîte mail.",
-      placeholder: "Votre email professionnel",
-      buttonText: "S'inscrire"
+      title: "",
+      description: "",
+      placeholder: "",
+      buttonText: ""
     },
     companyInfo: {
       logo: {
-        image: "/bst.png",
-        alt: "Blackswantechnology"
+        image: "",
+        alt: ""
       },
-      description: "Nous transformons les entreprises marocaines grâce à des solutions digitales innovantes et sur mesure.",
+      description: "",
       contact: {
         address: {
           icon: "MapPin",
-          text: "Twin Center, Casablanca, Maroc"
+          text: ""
         },
         phone: {
           icon: "Phone",
-          text: "+212 6 XX XX XX XX"
+          text: ""
         },
         email: {
           icon: "Mail",
-          text: "contact@blackswantechnology.ma"
+          text: ""
         }
       }
     },
     quickLinks: {
-      title: "Liens Rapides",
-      links: [
-        { text: "Accueil", url: "/" },
-        { text: "Services", url: "/services" },
-        { text: "À Propos", url: "/about" },
-        { text: "Témoignages", url: "/testimonials" },
-        { text: "Blog", url: "/blog" },
-        { text: "Carrières", url: "/careers" },
-        { text: "Contact", url: "/contact" }
-      ]
+      title: "",
+      links: []
     },
     services: {
-      title: "Nos Services",
-      links: [
-        { text: "HubSpot CRM", url: "/hubspot" },
-        { text: "Odoo ERP", url: "/odoo" },
-        { text: "Intégration API", url: "/api-integration" },
-        { text: "Développement Web", url: "/web-development" },
-        { text: "Marketing Digital", url: "/digital-marketing" },
-        { text: "Formation & Support", url: "/training" },
-        { text: "Audit Digital", url: "/audit" }
-      ]
+      title: "",
+      links: []
     },
-    social: {
-      facebook: { icon: "Facebook", color: "#1877f2", url: "#" },
-      twitter: { icon: "Twitter", color: "#1da1f2", url: "#" },
-      linkedin: { icon: "Linkedin", color: "#0077b5", url: "#" },
-      instagram: { icon: "Instagram", color: "#e1306c", url: "#" },
-      youtube: { icon: "Youtube", color: "#ff0000", url: "#" }
-    },
+    social: {},
     certifications: {
-      title: "Certifications",
-      badges: ["HubSpot Platinum", "Odoo Partner", "ISO 27001", "GDPR Compliant"]
+      title: "",
+      badges: []
     },
     legal: {
-      copyright: "© 2025 Blackswantechnology. Tous droits réservés.",
-      links: [
-        { text: "Politique de confidentialité", url: "/privacy" },
-        { text: "Conditions d'utilisation", url: "/terms" },
-        { text: "Mentions légales", url: "/legal" }
-      ]
+      copyright: "",
+      links: []
     }
   })
   const [loading, setLoading] = useState(true)
@@ -199,8 +173,49 @@ export default function FooterDashboard() {
           setFooterData(data[0].content)
         }
       }
+      
+      // Fetch contact info from centralized object
+      const contactResponse = await fetch("/api/content?type=contact-info")
+      if (contactResponse.ok) {
+        const contactData = await contactResponse.json()
+        if (contactData.length > 0) {
+          const contactInfo = contactData[0].content
+          setFooterData(prev => ({
+            ...prev,
+            companyInfo: {
+              ...prev.companyInfo,
+              contact: {
+                address: {
+                  icon: "MapPin",
+                  text: contactInfo.address || ""
+                },
+                phone: {
+                  icon: "Phone",
+                  text: contactInfo.phone || ""
+                },
+                email: {
+                  icon: "Mail",
+                  text: contactInfo.email || ""
+                }
+              }
+            },
+            social: {
+              facebook: { icon: "Facebook", color: "#1877f2", url: contactInfo.social?.facebook || "" },
+              twitter: { icon: "Twitter", color: "#1da1f2", url: contactInfo.social?.twitter || "" },
+              linkedin: { icon: "Linkedin", color: "#0077b5", url: contactInfo.social?.linkedin || "" },
+              instagram: { icon: "Instagram", color: "#e1306c", url: contactInfo.social?.instagram || "" },
+              youtube: { icon: "Youtube", color: "#ff0000", url: contactInfo.social?.youtube || "" }
+            }
+          }))
+        }
+      }
     } catch (error) {
       console.error("Error fetching footer data:", error)
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les données du footer",
+        variant: "destructive"
+      })
     } finally {
       setLoading(false)
     }
@@ -623,7 +638,7 @@ export default function FooterDashboard() {
               />
             </div>
             <div className="space-y-3">
-              <Label>Réseaux</Label>
+                <Label>Réseaux</Label>
               {/* Display each social network as a row with icon, color, name, and URL */}
               {Object.entries(footerData.social || {})
                 .filter(([key, value]) => key !== 'title' && value && typeof value === 'object' && 'icon' in value && 'color' in value && 'url' in value)
@@ -634,68 +649,68 @@ export default function FooterDashboard() {
                     <div key={key} className="flex gap-2 items-center">
                       <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: network.color || '#333' }}>
                         {Icon && <Icon className="w-4 h-4 text-white" />}
-                      </div>
+              </div>
                       <Input
                         value={network.icon}
                         disabled
                         className="w-32 bg-gray-100 text-gray-500"
                       />
-                      <Input
+                    <Input
                         value={network.url}
                         onChange={e => {
                           const newSocial = { ...footerData.social };
                           newSocial[key] = { ...network, url: e.target.value };
                           updateField('social', newSocial);
-                        }}
+                      }}
                         placeholder={`URL de ${key}`}
-                        className="flex-1"
-                      />
-                      <Button
+                      className="flex-1"
+                    />
+                    <Button
                         onClick={() => {
                           const newSocial = { ...footerData.social };
                           delete newSocial[key];
                           updateField('social', newSocial);
                         }}
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                      variant="outline"
+                      size="sm"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                   );
                 })}
               {/* Add new social network */}
               <div className="flex gap-2 items-center mt-2">
-                <Select
+                    <Select
                   value={footerData._newSocialIcon || ''}
                   onValueChange={value => updateField('_newSocialIcon', value)}
-                >
-                  <SelectTrigger className="w-32">
+                    >
+                      <SelectTrigger className="w-32">
                     <SelectValue placeholder="Icone" />
-                  </SelectTrigger>
-                  <SelectContent>
+                      </SelectTrigger>
+                      <SelectContent>
                     {Object.entries(IconMap).map(([key, Icon]) => (
                       <SelectItem key={key} value={key}>
-                        <div className="flex items-center space-x-2">
+                            <div className="flex items-center space-x-2">
                           <Icon className="w-4 h-4" />
                           <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                 <Input
                   placeholder="Couleur (#hex)"
                   value={footerData._newSocialColor || ''}
                   onChange={e => updateField('_newSocialColor', e.target.value)}
                   className="w-32"
-                />
-                <Input
+                    />
+                    <Input
                   placeholder="URL du réseau"
                   value={footerData._newSocialUrl || ''}
                   onChange={e => updateField('_newSocialUrl', e.target.value)}
                   className="flex-1"
-                />
+                    />
                 <Button
                   onClick={() => {
                     if (footerData._newSocialIcon && footerData._newSocialColor && footerData._newSocialUrl) {
@@ -715,7 +730,7 @@ export default function FooterDashboard() {
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
-              </div>
+                </div>
             </div>
           </CardContent>
         </Card>
