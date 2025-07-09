@@ -49,8 +49,8 @@ export default function ContactPage() {
       const response = await fetch(`${baseUrl}/api/content?type=contact-page`);
       if (response.ok) {
         const data = await response.json();
-        if (data.length > 0 && data[0]?.content) {
-          const contactPageData = data[0].content;
+        if (data.length > 0) {
+          const contactPageData = data[0];
           setContactData(contactPageData);
           // Initialize form data based on the dynamic fields
           const initialFormData: any = {};
