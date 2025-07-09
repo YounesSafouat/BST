@@ -45,7 +45,8 @@ export default function ContactPage() {
 
   const fetchContactData = async () => {
     try {
-      const response = await fetch('/api/content?type=contact-page');
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      const response = await fetch(`${baseUrl}/api/content?type=contact-page`);
       if (response.ok) {
         const data = await response.json();
         if (data.length > 0 && data[0]?.content) {
@@ -199,7 +200,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white mt-10 md:mt-20">
-      {/* Hero Section */}
+        {/* Hero Section */}
       <section className="relative py-20 px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-black mb-6 tracking-tight">
@@ -213,7 +214,7 @@ export default function ContactPage() {
                 )}
               </React.Fragment>
             ))}
-          </h1>
+            </h1>
 
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             {contactData.hero.description}
@@ -234,7 +235,7 @@ export default function ContactPage() {
               ></div>
             </div>
           </div>
-        </div>
+                </div>
       </section>
 
       {/* Contact Form */}
@@ -256,9 +257,9 @@ export default function ContactPage() {
                             {field.label} {field.required && '*'}
                           </Label>
                           {renderField(field, stepIndex, fieldIndex)}
-                        </div>
+                </div>
                       ))}
-                    </div>
+              </div>
                   </CardContent>
                 </Card>
               )
@@ -293,7 +294,7 @@ export default function ContactPage() {
                 </Button>
               )}
             </div>
-          </form>
+            </form>
         </div>
       </section>
 
@@ -312,7 +313,7 @@ export default function ContactPage() {
                 <Card key={index} className="text-center p-8 hover:shadow-lg transition-all duration-300">
                   <div className="w-16 h-16 bg-[var(--color-main)] rounded-full flex items-center justify-center mx-auto mb-6">
                     <IconComponent className="w-8 h-8 text-white" />
-                  </div>
+      </div>
                   <h3 className="text-xl font-bold text-black mb-4">{card.title}</h3>
                   <p className="text-gray-600 mb-4">{card.description}</p>
                   <div className="text-lg font-semibold text-[var(--color-main)] mb-2">{card.contact}</div>
@@ -320,7 +321,7 @@ export default function ContactPage() {
                 </Card>
               );
             })}
-          </div>
+            </div>
         </div>
       </section>
     </div>

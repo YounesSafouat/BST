@@ -142,7 +142,8 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
   const fetchOdooData = async () => {
     try {
-      const response = await fetch('/api/content?type=odoo-page');
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      const response = await fetch(`${baseUrl}/api/content?type=odoo-page`);
       if (response.ok) {
         const data = await response.json();
         if (data.length > 0 && data[0].content) {
@@ -156,7 +157,8 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch('/api/content?type=testimonial');
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      const response = await fetch(`${baseUrl}/api/content?type=testimonial`);
       if (response.ok) {
         const data = await response.json();
         setAvailableTestimonials(data.map((item: any) => ({ ...item.content, _id: item._id })));

@@ -52,7 +52,8 @@ export default function SuccessSection({ success }: SuccessSectionProps) {
 
   const fetchTestimonials = async () => {
     try {
-      const response = await fetch('/api/content?type=testimonial');
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      const response = await fetch(`${baseUrl}/api/content?type=testimonial`);
       if (response.ok) {
         const data = await response.json();
         const mapped = data.map((item: any) => ({ 

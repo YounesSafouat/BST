@@ -476,7 +476,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                               {client.projectStats && client.projectStats.length > 0 ? client.projectStats[0].value : ''}
                             </div>
                           </div>
-                        </button>
+          </button>
                       ))
                     ) : (
                       <div className="col-span-2 text-center text-gray-400">Aucun client sélectionné</div>
