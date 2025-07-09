@@ -52,9 +52,9 @@ export default function Footer() {
     <footer className="bg-gray-900 text-white pt-20 pb-10 px-6 lg:px-8 relative z-10">
       <div className="max-w-7xl mx-auto">
         {/* Newsletter Section */}
-        <div className="bg-[#ff5c35] rounded-3xl p-8 md:p-12 mb-16 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff7c55] rounded-full -translate-y-1/2 translate-x-1/2 opacity-50"></div>
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#ff7c55] rounded-full translate-y-1/2 -translate-x-1/2 opacity-50"></div>
+        <div className="bg-[var(--color-main)] rounded-3xl p-8 md:p-12 mb-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-main)] rounded-full -translate-y-1/2 translate-x-1/2 opacity-50"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-[var(--color-main)] rounded-full translate-y-1/2 -translate-x-1/2 opacity-50"></div>
 
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="md:max-w-md">
@@ -69,7 +69,7 @@ export default function Footer() {
                 className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white h-12"
               />
               <Button 
-                className="bg-white text-[#ff5c35] hover:bg-white/90 h-12 px-6 whitespace-nowrap"
+                className="bg-white text-[var(--color-main)] hover:bg-white/90 h-12 px-6 whitespace-nowrap"
                 onClick={handleNewsletterSubmit}
               >
                 {newsletter.buttonText}
@@ -88,7 +88,7 @@ export default function Footer() {
                 <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
                   <img src={companyInfo.logo.image} alt={companyInfo.logo.alt} className="w-5 h-5" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#ff5c35] rounded-full"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--color-main)] rounded-full"></div>
               </div>
               <span className="text-lg font-bold tracking-tight">{companyInfo.logo.alt}</span>
             </div>
@@ -98,7 +98,7 @@ export default function Footer() {
                 const Icon = IconMap[value.icon as keyof typeof IconMap];
                 return (
                   <div key={key} className="flex items-center gap-3 text-sm text-gray-300">
-                    {Icon && <Icon className="w-5 h-5 text-[#ff5c35]" />}
+                    {Icon && <Icon className="w-5 h-5 text-[var(--color-main)]" />}
                     <span>{value.text}</span>
                   </div>
                 );
@@ -116,7 +116,7 @@ export default function Footer() {
                     href={link.url}
                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm"
                   >
-                    <div className="w-1.5 h-1.5 bg-[#ff5c35] rounded-full"></div>
+                    <div className="w-1.5 h-1.5 bg-[var(--color-main)] rounded-full"></div>
                     {link.text}
                   </a>
                 </li>
@@ -134,7 +134,7 @@ export default function Footer() {
                     href={service.url}
                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm"
                   >
-                    <div className="w-1.5 h-1.5 bg-[#714b67] rounded-full"></div>
+                    <div className="w-1.5 h-1.5 bg-[var(--color-main)] rounded-full"></div>
                     {service.text}
                   </a>
                 </li>

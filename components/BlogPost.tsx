@@ -313,12 +313,12 @@ export function BlogPost({ post }: { post: Post }) {
                     <Calendar className="w-3 h-3 text-gray-400" />
                     <span className="text-xs text-gray-500">{relatedPost.date}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-black mb-3 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
+                  <h3 className="text-lg font-bold text-black mb-3 group-hover:text-[var(--color-secondary)] transition-colors duration-300 line-clamp-2">
                     {relatedPost.title}
                   </h3>
                   <a
                     href={`/blog/${relatedPost.slug}`}
-                    className="text-[#714b67] font-medium text-sm flex items-center group-hover:underline"
+                    className="text-[var(--color-secondary)] font-medium text-sm flex items-center group-hover:underline"
                   >
                     Lire l'article <ArrowRight className="ml-1 w-4 h-4" />
                   </a>

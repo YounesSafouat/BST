@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import OdooHeroSplit from './OdooHeroSplit';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import Loader from '@/components/home/Loader';
 
 interface Testimonial {
@@ -486,7 +485,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
             </div>
 
             {/* Timeline 2 - Scrolling Down */}
-            <div className="relative overflow-hidden rounded-2xl timeline-container">
+            <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
               <div className="flex flex-col space-y-6 animate-scroll-down">
                 {[...timeline2, ...timeline2].map((app, index) => (
                   <div 
@@ -526,7 +525,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
             </div>
 
             {/* Timeline 3 - Scrolling Up (Slower) */}
-            <div className="relative overflow-hidden rounded-2xl timeline-container">
+            <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
               <div className="flex flex-col space-y-6 animate-scroll-up-slow">
                 {[...timeline3, ...timeline3].map((app, index) => (
                   <div 
@@ -618,13 +617,13 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
       </section>
 
       {/* Odoo Partnership */}
-      <section className="py-20 bg-gradient-to-r from-[#714b67] to-[#8b5a7d] relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.1%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="flex justify-center mb-8">
             <div className="rounded-2xl p-4 bg-white">
-              <div className="text-2xl font-bold text-[#714b67]">ODOO</div>
+              <div className="text-2xl font-bold text-[var(--color-secondary)]">ODOO</div>
             </div>
           </div>
 
@@ -710,7 +709,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button 
-              className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[#8b5a7d] hover:text-[#8b5a7d] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+              className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
               onClick={handleCaseStudyClick}
               disabled={isLoading}
             >

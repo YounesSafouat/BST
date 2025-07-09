@@ -151,7 +151,7 @@ export default function AboutUs() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#ff5c35] mx-auto"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[var(--color-main)] mx-auto"></div>
           <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
@@ -209,7 +209,7 @@ export default function AboutUs() {
       >
         {/* Floating Geometric Shapes */}
         <div
-          className="absolute w-32 h-32 border border-[#ff5c35]/20 rounded-full animate-pulse"
+          className="absolute w-32 h-32 border border-[var(--color-main)]/20 rounded-full animate-pulse"
           style={{
             left: mousePosition.x * 0.05 + 100,
             top: mousePosition.y * 0.08 + 200,
@@ -217,7 +217,7 @@ export default function AboutUs() {
           }}
         />
         <div
-          className="absolute w-24 h-24 bg-gradient-to-br from-[#714b67]/10 to-[#ff5c35]/10 rounded-2xl rotate-45 animate-pulse"
+          className="absolute w-24 h-24 bg-gradient-to-br from-[var(--color-secondary)]/10 to-[var(--color-main)]/10 rounded-2xl rotate-45 animate-pulse"
           style={{
             right: mousePosition.x * 0.03 + 150,
             top: mousePosition.y * 0.06 + 300,
@@ -226,7 +226,7 @@ export default function AboutUs() {
           }}
         />
         <div
-          className="absolute w-16 h-16 border-2 border-[#714b67]/30 rotate-12 animate-spin"
+          className="absolute w-16 h-16 border-2 border-[var(--color-secondary)]/30 rotate-12 animate-spin"
           style={{
             left: mousePosition.x * 0.02 + 300,
             bottom: mousePosition.y * 0.04 + 200,
@@ -243,10 +243,10 @@ export default function AboutUs() {
             transform: `translateY(${scrollY * 0.2}px)`,
           }}
         >
-          <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#ff5c35]/30 to-transparent opacity-60 animate-pulse"></div>
-          <div className="absolute top-2/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#714b67]/40 to-transparent opacity-50 animate-pulse delay-1000"></div>
-          <div className="absolute top-0 left-1/3 w-px h-full bg-gradient-to-b from-transparent via-[#ff5c35]/20 to-transparent opacity-40 animate-pulse delay-500"></div>
-          <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-[#714b67]/30 to-transparent opacity-50 animate-pulse delay-1500"></div>
+          <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-[var(--color-main)]/30 to-transparent opacity-60 animate-pulse"></div>
+          <div className="absolute top-2/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-[var(--color-secondary)]/40 to-transparent opacity-50 animate-pulse delay-1000"></div>
+          <div className="absolute top-0 left-1/3 w-px h-full bg-gradient-to-b from-transparent via-[var(--color-main)]/20 to-transparent opacity-40 animate-pulse delay-500"></div>
+          <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-[var(--color-secondary)]/30 to-transparent opacity-50 animate-pulse delay-1500"></div>
         </div>
       </div>
 
@@ -257,7 +257,7 @@ export default function AboutUs() {
             
             <h1 className="text-6xl md:text-9xl font-black text-black mb-12 leading-none tracking-tighter">
               <span className="block">{heroTitle}</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#ff5c35] via-[#714b67] to-[#ff5c35] animate-pulse">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] via-[var(--color-secondary)] to-[var(--color-main)] animate-pulse">
                 {heroSubtitle}
               </span>
               <span className="block text-3xl md:text-4xl font-light text-gray-600 mt-8 tracking-normal">
@@ -273,7 +273,7 @@ export default function AboutUs() {
                   const Icon = getIconComponent(stat.icon);
                   return (
                     <div key={index} className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
-                      <Icon className="w-6 h-6 text-[#ff5c35]" />
+                      <Icon className="w-6 h-6 text-[var(--color-main)]" />
                       <span className="font-medium">{stat.title}</span>
                 </div>
                   );
@@ -291,8 +291,8 @@ export default function AboutUs() {
       <section className="relative z-10 py-40 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-32">
-            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#ff5c35]/10 to-[#714b67]/10 border border-gray-200 mb-12 shadow-lg">
-              <Users className="w-6 h-6 text-[#ff5c35] mr-4" />
+            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-main)]/10 to-[var(--color-secondary)]/10 border border-gray-200 mb-12 shadow-lg">
+              <Users className="w-6 h-6 text-[var(--color-main)] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE ÂME</span>
             </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
@@ -312,9 +312,9 @@ export default function AboutUs() {
                   key={index}
                   className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
                 >
-                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[#ff5c35] to-[#714b67]"></div>
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[#ff5c35]/10 to-[#714b67]/10">
-                    <Icon className="w-8 h-8 text-[#ff5c35]" />
+                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)]"></div>
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[var(--color-main)]/10 to-[var(--color-secondary)]/10">
+                    <Icon className="w-8 h-8 text-[var(--color-main)]" />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-2">{member.name}</h3>
                   <h4 className="text-sm font-medium text-gray-600 mb-4 tracking-wide uppercase">
@@ -334,8 +334,8 @@ export default function AboutUs() {
       <section className="relative z-10 py-40 px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-32">
-            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#714b67]/10 to-[#ff5c35]/10 border border-gray-200 mb-12 shadow-lg">
-              <Heart className="w-6 h-6 text-[#714b67] mr-4" />
+            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-main)]/10 border border-gray-200 mb-12 shadow-lg">
+              <Heart className="w-6 h-6 text-[var(--color-secondary)] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOS VALEURS</span>
               </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
@@ -354,9 +354,9 @@ export default function AboutUs() {
                 key={index}
                   className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
               >
-                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[#714b67] to-[#ff5c35]"></div>
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[#714b67]/10 to-[#ff5c35]/10">
-                    <Icon className="w-8 h-8 text-[#714b67]" />
+                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)]"></div>
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[var(--color-secondary)]/10 to-[var(--color-main)]/10">
+                    <Icon className="w-8 h-8 text-[var(--color-secondary)]" />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-4">{value.title}</h3>
                   <p className="text-gray-600 leading-relaxed">
@@ -373,8 +373,8 @@ export default function AboutUs() {
       <section className="relative z-10 py-40 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[#ff5c35]/10 to-[#714b67]/10 border border-gray-200 mb-12 shadow-lg">
-              <Rocket className="w-6 h-6 text-[#ff5c35] mr-4" />
+            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-main)]/10 to-[var(--color-secondary)]/10 border border-gray-200 mb-12 shadow-lg">
+              <Rocket className="w-6 h-6 text-[var(--color-main)] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE MISSION</span>
         </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">

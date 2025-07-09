@@ -1,0 +1,80 @@
+{
+  "type": "contact-page",
+  "title": "Contact",
+  "hero": {
+    "headline": "Parlons de Votre Projet",
+    "highlight": "Projet",
+    "description": "Chaque transformation commence par une conversation. Partagez-nous vos défis et objectifs pour que nous puissions vous proposer la solution parfaite."
+  },
+  "steps": [
+    {
+      "label": "Informations de Contact",
+      "description": "Commençons par faire connaissance. Veuillez renseigner vos informations de base pour que nous puissions vous contacter.",
+      "fields": [
+        { "type": "text", "name": "firstName", "label": "Prénom", "required": true },
+        { "type": "text", "name": "lastName", "label": "Nom", "required": true },
+        { "type": "email", "name": "email", "label": "Email professionnel", "required": true },
+        { "type": "tel", "name": "phone", "label": "Téléphone", "required": true },
+        { "type": "text", "name": "company", "label": "Entreprise", "required": true },
+        { "type": "text", "name": "position", "label": "Poste", "required": true },
+        { "type": "url", "name": "website", "label": "Site web de l'entreprise", "required": false }
+      ]
+    },
+    {
+      "label": "Votre Entreprise",
+      "description": "Aidez-nous à mieux comprendre votre contexte d'entreprise.",
+      "fields": [
+        { "type": "select", "name": "companySize", "label": "Taille de l'entreprise", "options": ["1-10", "11-50", "51-200", "201-500", "500+"], "required": true },
+        { "type": "select", "name": "industry", "label": "Secteur d'activité", "options": ["Technologie", "Industrie/Manufacturing", "Commerce/Retail", "Services", "Autre"], "required": true },
+        { "type": "checkbox-group", "name": "currentChallenges", "label": "Défis actuels", "options": ["Comptabilité et finance", "Gestion des ressources humaines", "Service client", "Reporting et analytics", "Intégration des systèmes", "Formation des équipes"] }
+      ]
+    },
+    {
+      "label": "Vos Besoins",
+      "description": "Précisez vos intérêts pour nos solutions et modules.",
+      "fields": [
+        { "type": "radio", "name": "primaryInterest", "label": "Quel est votre intérêt principal ?", "options": ["hubspot", "odoo", "both"], "required": true },
+        { "type": "checkbox-group", "name": "hubspotServices", "label": "Services HubSpot qui vous intéressent", "options": ["Sales Hub", "Marketing Hub", "Service Hub", "CMS Hub", "Operations Hub", "Formation HubSpot"] },
+        { "type": "checkbox-group", "name": "odooServices", "label": "Modules Odoo qui vous intéressent", "options": ["Ventes & CRM", "Comptabilité", "Inventaire", "Manufacturing", "RH", "Projet", "E-commerce", "Formation Odoo"] },
+        { "type": "select", "name": "budget", "label": "Budget approximatif", "options": ["under-10k", "10k-50k", "50k-100k", "100k-500k", "over-500k", "to-discuss"] },
+        { "type": "select", "name": "timeline", "label": "Timeline souhaité", "options": ["asap", "1-month", "1-3-months", "3-6-months", "6-months-plus", "exploring"] }
+      ]
+    },
+    {
+      "label": "Détails du Projet",
+      "description": "Donnez-nous plus de détails pour personnaliser notre approche.",
+      "fields": [
+        { "type": "select", "name": "currentCRM", "label": "CRM/Système actuel", "options": ["HubSpot", "Salesforce", "Zoho", "Autre", "Aucun"] },
+        { "type": "select", "name": "currentERP", "label": "ERP/Système de gestion actuel", "options": ["Odoo", "SAP", "Sage", "Autre", "Aucun"] },
+        { "type": "textarea", "name": "projectDescription", "label": "Décrivez votre projet et vos objectifs" },
+        { "type": "checkbox-group", "name": "specificGoals", "label": "Objectifs prioritaires", "options": ["Augmenter les ventes", "Automatiser les processus", "Centraliser les données", "Améliorer le reporting", "Améliorer l'efficacité opérationnelle", "Améliorer le service client", "Réduire les coûts", "Former les équipes"] },
+        { "type": "radio", "name": "meetingType", "label": "Préférence pour le premier contact", "options": ["Appel vidéo (Teams/Zoom)", "Appel téléphonique"] }
+      ]
+    }
+  ],
+  "cards": [
+     {
+          "icon": "Phone",
+          "title": "Appelez-nous",
+          "description": "Parlons directement de votre projet",
+          "contact": "+212 6 00 00 00 00",
+          "subDescription": "Lun-Ven: 9h-18h"
+     },
+    {
+      "icon": "Mail",
+      "title": "Écrivez-nous",
+      "description": "Réponse sous 2h en moyenne",
+      "contact": "contact@blackswantechnology.ma",
+      "subDescription": "Support 24/7"
+    },
+     {
+      "icon": "MapPin",
+      "title": "Visitez-nous",
+      "description": "Rencontrons-nous en personne",
+      "contact": "Casablanca, Maroc",
+      "subDescription": "Twin Center"
+    }
+  ],
+  "isActive": true,
+  "description": "Page de contact dynamique avec étapes et cartes de contact."
+} 

@@ -18,7 +18,42 @@ export interface Action { label: string; icon: string; }
 export interface Location { icon: string; title: string; subtitle: string; }
 export interface CTAContent { intro?: string; actions?: Action[]; locations?: Location[]; }
 
-export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | CTAContent | Record<string, unknown>;
+// Contact Page Types
+export interface ContactField {
+  type: 'text' | 'email' | 'tel' | 'url' | 'textarea' | 'select' | 'radio' | 'checkbox-group';
+  name: string;
+  label: string;
+  required: boolean;
+  options?: string[];
+}
+
+export interface ContactStep {
+  label: string;
+  description: string;
+  fields: ContactField[];
+}
+
+export interface ContactCard {
+  icon: string;
+  title: string;
+  description: string;
+  contact: string;
+  subDescription: string;
+}
+
+export interface ContactHero {
+  headline: string;
+  highlight: string;
+  description: string;
+}
+
+export interface ContactContent {
+  hero: ContactHero;
+  steps: ContactStep[];
+  cards: ContactCard[];
+}
+
+export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | CTAContent | ContactContent | Record<string, unknown>;
 
 export interface ContentSection {
   _id: string;

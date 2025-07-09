@@ -137,12 +137,7 @@ function HubSpotPage() {
 
   if (!hubspotData) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement de la page HubSpot...</p>
-        </div>
-      </div>
+      <Loader/>
     );
   }
 
@@ -207,7 +202,7 @@ function HubSpotPage() {
     } else {
       // Use initials
       return (
-        <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
+        <div className="w-10 h-10 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-sm">{testimonial.avatar || testimonial.name.split(' ').map(n => n[0]).join('')}</span>
         </div>
       );
@@ -221,7 +216,7 @@ function HubSpotPage() {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-50 via-white to-orange-100 pt-12 pb-16 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[var(--color-main)]/10 via-white to-[var(--color-main)]/10 pb-16 overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-4 -right-4 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
@@ -229,19 +224,26 @@ function HubSpotPage() {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-[15em]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-10 md:mt-[15em]">
           <div className="text-center">
             
             {/* Main Headline */}
             <h1 className={`text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight transform transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <span className="inline-flex items-center justify-center flex-wrap gap-x-4">
-                <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent pb-5">
+              <span className="inline-flex items-center justify-center flex-wrap gap-x-4 gap-y-2">
+                <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text ">
                   {hubspotData.hero.headline.split(' ')[0]}
                 </span>
-                <Image src={hubspotData.hero.logo} alt="HubSpot Logo" className='mb-5' width={240} height={60} />
+                <Image
+                  src={hubspotData.hero.logo}
+                  alt="HubSpot Logo"
+                  className="w-32 md:w-60 h-auto align-text-bottom"
+                  width={240}
+                  height={60}
+                  priority
+                />
               </span>
               <br />
-              <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent animate-gradient">
+              <span className="bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] bg-clip-text text-transparent animate-gradient">
                 {hubspotData.hero.headline.split(' ').slice(1).join(' ')}
               </span>
             </h1>
@@ -252,24 +254,24 @@ function HubSpotPage() {
 
             {/* CTA Buttons */}
             <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-12 transform transition-all duration-1000 delay-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <button className="group bg-gradient-to-r from-orange-600 to-orange-500 text-white px-6 py-3 rounded-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center space-x-2 font-bold transform hover:scale-105 hover:-translate-y-1">
+              <button className="group bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] text-white px-6 py-3 rounded-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center space-x-2 font-bold transform hover:scale-105 hover:-translate-y-1">
                 {getIconComponent(hubspotData.hero.ctaPrimary.icon)}
                 <span>{hubspotData.hero.ctaPrimary.text}</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="group border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:border-orange-600 hover:text-orange-600 transition-all duration-300 flex items-center justify-center space-x-2 font-bold transform hover:scale-105 bg-white/80 backdrop-blur-sm">
+              <button className="group border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:border-[var(--color-main)] hover:text-[var(--color-main)] transition-all duration-300 flex items-center justify-center space-x-2 font-bold transform hover:scale-105 bg-white/80 backdrop-blur-sm">
                 {getIconComponent(hubspotData.hero.ctaSecondary.icon)}
                 <span>{hubspotData.hero.ctaSecondary.text}</span>
               </button>
             </div>
 
             {/* Floating icons animation */}
-            <div className="absolute top-20 left-10 animate-float">
+            <div className="absolute top-20 left-10 animate-float hidden md:block">
               <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center">
-                <Settings className="w-8 h-8 text-orange-600 animate-spin-slow" />
+                <Settings className="w-8 h-8 text-[var(--color-main)] animate-spin-slow" />
               </div>
             </div>
-            <div className="absolute top-32 right-10 animate-float-delayed">
+            <div className="absolute top-32 right-10 animate-float-delayed hidden md:block">
               <div className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center">
                 <Briefcase className="w-6 h-6 text-blue-600" />
               </div>
@@ -283,7 +285,7 @@ function HubSpotPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {hubspotData.trustMetrics.map((metric, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-black text-orange-600 mb-2">
+                <div className="text-4xl md:text-5xl font-black text-[var(--color-main)] mb-2">
                   <AnimatedCounter target={metric.number} suffix={metric.suffix} />
                 </div>
                 <div className="text-gray-600 font-medium">{metric.label}</div>
@@ -293,7 +295,7 @@ function HubSpotPage() {
         </div>
       </section>
       {/* Final CTA */}
-      <section className="py-16 bg-gradient-to-br from-orange-50 via-white to-orange-100">
+      <section className="py-16 bg-gradient-to-br from-[var(--color-main)]/10 via-white to-[var(--color-main)]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
@@ -318,7 +320,7 @@ function HubSpotPage() {
                   <ul className="space-y-3">
                     {card.features.map((feature, fIndex) => (
                       <li key={fIndex} className="flex items-center text-gray-700">
-                        <div className="w-5 h-5 bg-[#FF7A59] rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                        <div className="w-5 h-5 bg-[var(--color-main)] rounded-full flex items-center justify-center mr-3 flex-shrink-0">
                           <Check className="w-3 h-3 text-white" strokeWidth={3} />
                         </div>
                         <span>{feature}</span>
@@ -326,7 +328,7 @@ function HubSpotPage() {
                     ))}
                   </ul>
                 </div>
-                <button className="w-full mt-auto bg-[#FF7A59] text-white font-semibold py-3 px-4 rounded-md hover:bg-orange-600 transition-colors">
+                <button className="w-full mt-auto bg-[var(--color-main)] text-white font-semibold py-3 px-4 rounded-md hover:bg-[var(--color-main)]/90 transition-colors">
                   Learn more
                 </button>
               </div>
@@ -336,11 +338,11 @@ function HubSpotPage() {
       </section>
 
       {/* Our HubSpot Services */}
-      <section className="py-16 bg-gradient-to-br from-orange-50 to-orange-100">
+      <section className="py-16 bg-gradient-to-br from-[var(--color-main)]/10 to-[var(--color-main)]/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-              Implémentation <span className="text-orange-600">HubSpot Complète</span>
+              Implémentation <span className="text-[var(--color-main)]">HubSpot Complète</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               Notre certification platinum signifie que nous avons une expertise approfondie dans tous les hubs HubSpot et les fonctionnalités avancées.
@@ -349,13 +351,13 @@ function HubSpotPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {hubspotData.hubspotCapabilities.map((capability, index) => (
-              <div key={index} className="group bg-white rounded-2xl p-6 border-2 border-orange-200 hover:border-orange-400 transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl">
+              <div key={index} className="group bg-white rounded-2xl p-6 border-2 border-[var(--color-main)]/20 hover:border-[var(--color-main)]/40 transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl">
                 <div className="flex items-start space-x-5">
-                  <div className="w-14 h-14 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:animate-bounce">
+                  <div className="w-14 h-14 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:animate-bounce">
                     <div className="text-white">{getIconComponent(capability.icon)}</div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">{capability.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[var(--color-main)] transition-colors">{capability.title}</h3>
                     <p className="text-gray-600 leading-relaxed text-sm">{capability.description}</p>
                   </div>
                 </div>
@@ -366,14 +368,14 @@ function HubSpotPage() {
       </section>
 
      {/* HubSpot Certifications */}
-     <section className="py-16 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-600 relative overflow-hidden">
+     <section className="py-16 bg-gradient-to-r from-[var(--color-main)] via-[var(--color-main)] to-[var(--color-main)] relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.1%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
             {hubspotData.partnership.headline}
           </h2>
-          <p className="text-lg text-orange-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-[var(--color-main)]/90 mb-10 max-w-3xl mx-auto leading-relaxed">
             {hubspotData.partnership.description}
           </p>
 
@@ -382,7 +384,7 @@ function HubSpotPage() {
               <div key={index} className={`group bg-white/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/30 hover:bg-white/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 delay-${index * 100}`}>
                 <CheckCircle className="w-10 h-10 text-white mx-auto mb-3 group-hover:animate-bounce" />
                 <div className="text-white font-bold text-base">{hub}</div>
-                <div className="text-orange-100 text-xs font-semibold">Certifié</div>
+                <div className="text-[var(--color-main)]/90 text-xs font-semibold">Certifié</div>
               </div>
             ))}
           </div>
@@ -395,7 +397,7 @@ function HubSpotPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-              Approuvé par les <span className="text-orange-600">Leaders</span>
+              Approuvé par les <span className="text-[var(--color-main)]">Leaders</span>
             </h2>
             <p className="text-lg text-gray-600">
               Découvrez comment nous avons aidé des entreprises à transformer leur business avec HubSpot
@@ -409,7 +411,7 @@ function HubSpotPage() {
                 
                 return (
               <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <Quote className="w-10 h-10 text-orange-600 mb-5 group-hover:animate-pulse" />
+                <Quote className="w-10 h-10 text-[var(--color-main)] mb-5 group-hover:animate-pulse" />
                 <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
                   "{testimonial.quote}"
                 </blockquote>
@@ -419,7 +421,7 @@ function HubSpotPage() {
                         <div className="font-bold text-gray-900">{testimonial.name}</div>
                     <div className="text-gray-600">{testimonial.role}</div>
                         {testimonial.result && (
-                          <div className="text-orange-600 font-semibold">{testimonial.result}</div>
+                          <div className="text-[var(--color-main)] font-semibold">{testimonial.result}</div>
                         )}
                   </div>
                 </div>

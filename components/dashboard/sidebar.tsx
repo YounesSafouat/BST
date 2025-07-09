@@ -78,6 +78,12 @@ const menuGroups = [
         color: "from-cyan-200 to-cyan-100 text-cyan-700",
       },
       {
+        title: "Contact Page",
+        href: "/dashboard/contact",
+        icon: MessageSquare,
+        color: "from-blue-200 to-blue-100 text-blue-700",
+      },
+      {
         title: "Blog Page",
         href: "/dashboard/blog",
         icon: BookText,

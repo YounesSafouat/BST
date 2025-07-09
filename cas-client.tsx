@@ -139,10 +139,10 @@ export default function CasClient() {
                 </div>
                 <div className="space-y-3">
                   {[
-                    { value: "all", label: "Toutes les solutions", color: "#000000" },
-                    { value: "hubspot", label: "HubSpot CRM", color: "#ff5c35" },
-                    { value: "odoo", label: "Odoo ERP", color: "#714b67" },
-                    { value: "both", label: "HubSpot + Odoo", color: "#000000" },
+                    { value: "all", label: "Toutes les solutions", color: "var(--color-black)" },
+                    { value: "hubspot", label: "HubSpot CRM", color: "var(--color-main)" },
+                    { value: "odoo", label: "Odoo ERP", color: "var(--color-secondary)" },
+                    { value: "both", label: "HubSpot + Odoo", color: "var(--color-black)" },
                   ].map((solution) => (
                     <button
                       key={solution.value}
@@ -198,11 +198,11 @@ export default function CasClient() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {loading ? (
-                  <div className="text-center py-16">Chargement...</div>
+                  <Loader />
                 ) : filteredClients.map((client, index) => (
                   <div
                     key={client.slug || client.name}
-                    className="group relative bg-white rounded-2xl border border-gray-100 p-6 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl cursor-pointer"
+                    className="group relative p-6 rounded-2xl border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 bg-white hover:shadow-lg transform hover:-translate-y-1"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     {/* Solution Indicator */}
@@ -219,7 +219,7 @@ export default function CasClient() {
                         </div>
                       ) : (
                         <div
-                          className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300 bg-[#714b67]"
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300 bg-[var(--color-secondary)]"
                       >
                           {client.name[0]}
                       </div>
@@ -255,7 +255,7 @@ export default function CasClient() {
                     {/* Solution Badge */}
                     <div className="absolute top-4 right-4">
                       <div
-                        className="px-3 py-1 rounded-full text-xs font-bold text-white bg-[#714b67]"
+                        className="px-3 py-1 rounded-full text-xs font-bold text-white bg-[var(--color-secondary)]"
                       >
                         {client.migration || client.sector}
                       </div>

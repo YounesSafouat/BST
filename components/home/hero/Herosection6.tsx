@@ -140,8 +140,8 @@ export default function HeroSection6() {
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 L'automatisation au cœur
                 <br />
-                <span style={{ color: '#714B67' }}>de votre </span>
-                <span style={{ color: '#FF7A59' }}>métier.</span>
+                <span style={{ color: 'var(--color-secondary)' }}>de votre </span>
+                <span style={{ color: 'var(--color-main)' }}>métier.</span>
               </h1>
               
               <p className="text-xl text-gray-600 max-w-lg">
@@ -193,7 +193,7 @@ export default function HeroSection6() {
                   <div className="font-mono text-5xl font-bold mb-3">
                     <span 
                       style={{ 
-                        color: currentPlatform === 0 ? '#714B67' : '#FF7A59',
+                        color: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-main)',
                         transition: 'color 0.3s ease'
                       }}
                     >
@@ -202,7 +202,7 @@ export default function HeroSection6() {
                     <span 
                       className={`inline-block w-1 h-12 ml-2 ${showCursor ? 'opacity-100' : 'opacity-0'}`}
                       style={{ 
-                        backgroundColor: currentPlatform === 0 ? '#714B67' : '#FF7A59',
+                        backgroundColor: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-main)',
                         transition: 'all 0.1s ease'
                       }}
                     ></span>
@@ -218,13 +218,13 @@ export default function HeroSection6() {
                       className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-xl border-2 transition-all duration-500"
                       style={{ 
                         backgroundColor: 'white',
-                        borderColor: currentPlatform === 0 ? '#714B67' : '#e5e7eb',
+                        borderColor: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-gray)',
                         transform: currentPlatform === 0 ? 'translateY(-4px)' : 'translateY(0)'
                       }}
                     >
                       <img src="/Odoo.svg" alt="Odoo Logo" className="w-16 h-16" />
                     </div>
-                    <div className="text-center mt-3 text-sm font-semibold" style={{ color: currentPlatform === 0 ? '#714B67' : '#6b7280' }}>
+                    <div className="text-center mt-3 text-sm font-semibold" style={{ color: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-gray)' }}>
                       Solution Odoo
                     </div>
                   </div>
@@ -235,13 +235,13 @@ export default function HeroSection6() {
                       className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-xl border-2 transition-all duration-500"
                       style={{ 
                         backgroundColor: 'white',
-                        borderColor: currentPlatform === 1 ? '#FF7A59' : '#e5e7eb',
+                        borderColor: currentPlatform === 1 ? 'var(--color-main)' : 'var(--color-gray)',
                         transform: currentPlatform === 1 ? 'translateY(-4px)' : 'translateY(0)'
                       }}
                     >
                       <img src="/hubspot.svg" alt="HubSpot Logo" className="w-16 h-16" />
                     </div>
-                    <div className="text-center mt-3 text-sm font-semibold" style={{ color: currentPlatform === 1 ? '#FF7A59' : '#6b7280' }}>
+                    <div className="text-center mt-3 text-sm font-semibold" style={{ color: currentPlatform === 1 ? 'var(--color-main)' : 'var(--color-gray)' }}>
                       Solution HubSpot
                     </div>
                   </div>

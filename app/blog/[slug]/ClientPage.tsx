@@ -1,6 +1,7 @@
 "use client"
 
 import { BlogPost } from "@/components/BlogPost"
+import Loader from "@/components/home/Loader"
 import { useEffect, useState } from "react"
 
 // Define the post type (should match BlogPost)
@@ -34,7 +35,7 @@ export default function ClientPage({ slug }: { slug: string }) {
     fetchPost()
   }, [slug])
 
-  if (loading) return <div>Chargement...</div>
+  if (loading) return <Loader />
   if (!post) return <div>Article non trouvé</div>
   return <BlogPost post={post} />
 }

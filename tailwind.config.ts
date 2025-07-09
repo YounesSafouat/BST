@@ -60,7 +60,19 @@ const config: Config = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+  			// Custom theme colors
+  			main: 'var(--color-main)',
+  			themeSecondary: 'var(--color-secondary)',
+  			black: 'var(--color-black)',
+  			white: 'var(--color-white)',
+  			gray: 'var(--color-gray)',
+  			themeBackground: 'var(--color-background)',
+  		},
+  		fontFamily: {
+  			// Custom theme fonts
+  			theme: 'var(--font-family)',
+  			heading: 'var(--heading-font-family)',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -177,7 +177,7 @@ export default function HeroSection3({ hero }: HeroSection3Props) {
                 {/* First Badge - What we integrate */}
                 <div className="smooth-badge">
                   <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <CheckCircle className="w-3 h-3 text-orange-500" />
+                    <CheckCircle className="w-3 h-3 text-[var(--color-main)]" />
                   </div>
                   <div className="roulette-container">
                     <div
@@ -198,7 +198,7 @@ export default function HeroSection3({ hero }: HeroSection3Props) {
                 {/* Second Badge - Our specifications */}
                 <div className="smooth-badge">
                   <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <CheckCircle className="w-3 h-3 text-orange-500" />
+                    <CheckCircle className="w-3 h-3 text-[var(--color-main)]" />
                   </div>
                   <div className="roulette-container">
                     <div
@@ -219,7 +219,7 @@ export default function HeroSection3({ hero }: HeroSection3Props) {
                 {/* Third Badge - Locations */}
                 <div className="smooth-badge">
                   <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <CheckCircle className="w-3 h-3 text-orange-500" />
+                    <CheckCircle className="w-3 h-3 text-[var(--color-main)]" />
                   </div>
                   <div className="roulette-container">
                     <div
@@ -235,7 +235,7 @@ export default function HeroSection3({ hero }: HeroSection3Props) {
                       ))}
                     </div>
                   </div>
-                  <span className="ml-1 text-xs bg-white text-orange-500 px-1 py-0.5 rounded font-semibold flex-shrink-0 shadow-sm">
+                  <span className="ml-1 text-xs bg-white text-[var(--color-main)] px-1 py-0.5 rounded font-semibold flex-shrink-0 shadow-sm">
                     {locations[locationIndex].code}
                   </span>
                 </div>

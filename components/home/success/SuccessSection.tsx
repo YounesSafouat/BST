@@ -145,7 +145,7 @@ export default function SuccessSection({ success }: SuccessSectionProps) {
         {/* Header */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center px-6 py-3 rounded-full bg-white border border-gray-200 mb-8 shadow-lg">
-            <div className="w-2 h-2 bg-orange-500 rounded-full mr-3 animate-pulse"></div>
+            <div className="w-2 h-2 bg-[var(--color-main)] rounded-full mr-3 animate-pulse"></div>
             <span className="text-sm font-bold text-gray-700 tracking-wide uppercase">
               {successData.badge || "NOS RÉUSSITES"}
             </span>

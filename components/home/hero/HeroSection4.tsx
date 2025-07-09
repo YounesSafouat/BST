@@ -61,9 +61,9 @@ export default function HeroSection4() {
               <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-[0.95] tracking-tight">
                 Connectez
                 <span className="block mt-2">
-                  <span style={{ color: '#714B67' }}>Odoo</span>
+                  <span style={{ color: 'var(--color-secondary)' }}>Odoo</span>
                   <span className="text-gray-400 mx-4">×</span>
-                  <span style={{ color: '#FF7A59' }}>HubSpot</span>
+                  <span style={{ color: 'var(--color-main)' }}>HubSpot</span>
                 </span>
                 <span className="block text-gray-600 text-4xl lg:text-5xl xl:text-6xl mt-4">
                   sans effort
@@ -163,7 +163,7 @@ export default function HeroSection4() {
                   {/* Odoo Section */}
                   <div className="relative">
                     <div className="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 bg-gradient-to-r from-purple-50/50 to-white hover:shadow-md transition-all duration-300">
-                      <div className="w-14 h-14 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#714B67' }}>
+                      <div className="w-14 h-14 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: 'var(--color-secondary)' }}>
                         <Settings className="w-7 h-7 text-white" />
                       </div>
                       <div className="flex-1">
@@ -199,7 +199,7 @@ export default function HeroSection4() {
                   {/* HubSpot Section */}
                   <div className="relative">
                     <div className="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 bg-gradient-to-r from-orange-50/50 to-white hover:shadow-md transition-all duration-300">
-                      <div className="w-14 h-14 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#FF7A59' }}>
+                      <div className="w-14 h-14 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: 'var(--color-main)' }}>
                         <BarChart3 className="w-7 h-7 text-white" />
                       </div>
                       <div className="flex-1">

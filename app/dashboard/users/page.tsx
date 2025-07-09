@@ -88,8 +88,8 @@ export default function UsersPage() {
         <button
           className={`px-3 sm:px-6 py-2 rounded-t-lg font-semibold text-sm sm:text-base border-b-2 transition-all duration-150 ${
             tab === "editor"
-              ? "border-[#ff5c35] bg-white text-[#ff5c35] shadow"
-              : "border-transparent bg-gray-50 text-gray-500 hover:text-[#ff5c35]"
+              ? "border-[var(--color-main)] bg-white text-[var(--color-main)] shadow"
+              : "border-transparent bg-gray-50 text-gray-500 hover:text-[var(--color-main)]"
           }`}
           onClick={() => setTab("editor")}
         >
@@ -98,8 +98,8 @@ export default function UsersPage() {
         <button
           className={`px-3 sm:px-6 py-2 rounded-t-lg font-semibold text-sm sm:text-base border-b-2 transition-all duration-150 ${
             tab === "admin"
-              ? "border-[#ff5c35] bg-white text-[#ff5c35] shadow"
-              : "border-transparent bg-gray-50 text-gray-500 hover:text-[#ff5c35]"
+              ? "border-[var(--color-main)] bg-white text-[var(--color-main)] shadow"
+              : "border-transparent bg-gray-50 text-gray-500 hover:text-[var(--color-main)]"
           }`}
           onClick={() => setTab("admin")}
         >
@@ -111,7 +111,7 @@ export default function UsersPage() {
         {/* Action bar */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
           <div className="flex gap-2">
-            <button onClick={() => openModal()} className="bg-[#ff5c35] text-white px-3 sm:px-4 py-2 rounded-lg font-semibold shadow hover:bg-[#ff5c35]/90 transition text-sm">Add new</button>
+            <button onClick={() => openModal()} className="bg-[var(--color-main)] text-white px-3 sm:px-4 py-2 rounded-lg font-semibold shadow hover:bg-[var(--color-main)]/90 transition text-sm">Add new</button>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500">
@@ -165,7 +165,7 @@ export default function UsersPage() {
                       <div className="flex gap-1 sm:gap-2">
                         <button 
                           onClick={() => openModal(user)} 
-                          className="p-1.5 sm:p-2 rounded hover:bg-[#ff5c35]/10 text-[#ff5c35] transition"
+                          className="p-1.5 sm:p-2 rounded hover:bg-[var(--color-main)]/10 text-[var(--color-main)] transition"
                           aria-label={`Edit user ${user.name}`}
                           title={`Edit user ${user.name}`}
                         >
@@ -173,7 +173,7 @@ export default function UsersPage() {
                         </button>
                         <button 
                           onClick={() => handleDelete(user._id)} 
-                          className="p-1.5 sm:p-2 rounded hover:bg-[#ff5c35]/10 text-[#ff5c35] transition"
+                          className="p-1.5 sm:p-2 rounded hover:bg-[var(--color-main)]/10 text-[var(--color-main)] transition"
                           aria-label={`Delete user ${user.name}`}
                           title={`Delete user ${user.name}`}
                         >
@@ -201,7 +201,7 @@ export default function UsersPage() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent"
                   required
                 />
               </div>
@@ -211,7 +211,7 @@ export default function UsersPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent"
                   required
                 />
               </div>
@@ -221,7 +221,7 @@ export default function UsersPage() {
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent"
                   required={!currentUser}
                 />
               </div>
@@ -230,7 +230,7 @@ export default function UsersPage() {
                 <select
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#ff5c35] focus:border-transparent"
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent"
                   required
                 >
                   <option value="admin">Admin</option>
@@ -239,7 +239,7 @@ export default function UsersPage() {
               </div>
               <div className="flex justify-end gap-2">
                 <button type="button" onClick={closeModal} className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-[#ff5c35] text-white rounded-lg hover:bg-[#ff5c35]/90">{currentUser ? "Update" : "Add"}</button>
+                <button type="submit" className="px-4 py-2 bg-[var(--color-main)] text-white rounded-lg hover:bg-[var(--color-main)]/90">{currentUser ? "Update" : "Add"}</button>
               </div>
             </form>
           </div>

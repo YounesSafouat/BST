@@ -94,8 +94,8 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
     >
       {/* Subtle Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-[#ff5c35]/10 rounded-full opacity-30"></div>
-        <div className="absolute bottom-20 left-20 w-48 h-48 bg-[#ff5c35]/10 rounded-full opacity-40"></div>
+        <div className="absolute top-20 right-20 w-64 h-64 bg-[var(--color-main)]/10 rounded-full opacity-30"></div>
+        <div className="absolute bottom-20 left-20 w-48 h-48 bg-[var(--color-main)]/10 rounded-full opacity-40"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -141,7 +141,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
             {/* CTA Buttons */}
             <div className={`flex flex-col sm:flex-row gap-4 transform transition-all duration-1000 delay-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <button
-                className="group bg-[#714b67] text-white px-8 py-4 rounded-lg hover:bg-[#8b5a7d]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                className="group bg-[var(--color-secondary)] text-white px-8 py-4 rounded-lg hover:bg-[var(--color-secondary)]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 onClick={handleConsultationClick}
                 disabled={isLoading}
@@ -150,7 +150,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 {getIconComponent(heroData.ctaPrimary.icon)}
               </button>
               <button
-                className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[#8b5a7d] hover:text-[#8b5a7d] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 onClick={handleCaseStudyClick}
                 disabled={isLoading}
@@ -199,7 +199,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
               <>
                 <div className="absolute -bottom-8 -left-8 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-[#ff5c35]">{heroData.stats[0]?.number}{heroData.stats[0]?.suffix}</div>
+                    <div className="text-3xl font-bold text-[var(--color-main)]">{heroData.stats[0]?.number}{heroData.stats[0]?.suffix}</div>
                     <div className="text-sm text-gray-600">{heroData.stats[0]?.label}</div>
                   </div>
                 </div>
@@ -207,7 +207,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 {heroData.stats.length > 1 && (
                   <div className="absolute -top-20 -right-20 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-[#714b67]">{heroData.stats[1]?.number}{heroData.stats[1]?.suffix}</div>
+                      <div className="text-3xl font-bold text-[var(--color-secondary)]">{heroData.stats[1]?.number}{heroData.stats[1]?.suffix}</div>
                       <div className="text-sm text-gray-600">{heroData.stats[1]?.label}</div>
                     </div>
                   </div>

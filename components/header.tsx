@@ -148,7 +148,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-8 lg:px-8 min-h-[120px] transition-all duration-500 rounded-full w-[95%] max-w-7xl mx-auto ${
+      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-8 lg:px-8 min-h-[120px] transition-all duration-500 rounded-full w-[95%] max-w-7xl mx-auto hidden md:block ${
         scrollY > 50
           ? "backdrop-blur-xl bg-white/80 border border-gray-200/50 shadow-2xl shadow-black/10"
           : "backdrop-blur-md bg-white/60 border border-gray-100/30 shadow-lg"
@@ -196,7 +196,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                       <p className="text-gray-600 text-sm">{headerData.navigation.hubspot.subtitle}</p>
                     </div>
                     {headerData.navigation.hubspot.badge && (
-                      <div className="px-3 py-1 rounded-full bg-[#ff5c35] text-white text-xs font-bold">
+                      <div className="px-3 py-1 rounded-full bg-[var(--color-main)] text-white text-xs font-bold">
                         ★ {headerData.navigation.hubspot.badge}
                       </div>
                     )}
@@ -206,8 +206,8 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   <div className="grid grid-cols-2 gap-6">
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#ff5c35]/20 rounded-lg flex items-center justify-center">
-                          <Star className="w-4 h-4 text-[#ff5c35]" />
+                        <div className="w-6 h-6 bg-[var(--color-main)]/20 rounded-lg flex items-center justify-center">
+                          <Star className="w-4 h-4 text-[var(--color-main)]" />
                         </div>
                         <h4 className="font-semibold text-black">Logiciels CRM</h4>
                       </div>
@@ -218,7 +218,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                             href={item.url}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <div className="w-8 h-8 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center">
+                            <div className="w-8 h-8 bg-[var(--color-main)]/10 rounded-lg flex items-center justify-center">
                               {getIcon(item.icon)}
                             </div>
                             <div>
@@ -232,8 +232,8 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#ff5c35]/20 rounded-lg flex items-center justify-center">
-                          <Briefcase className="w-4 h-4 text-[#ff5c35]" />
+                        <div className="w-6 h-6 bg-[var(--color-main)]/20 rounded-lg flex items-center justify-center">
+                          <Briefcase className="w-4 h-4 text-[var(--color-main)]" />
                         </div>
                         <h4 className="font-semibold text-black">Nos Services</h4>
                       </div>
@@ -244,7 +244,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                             href={item.url}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <div className="w-8 h-8 bg-[#ff5c35]/10 rounded-lg flex items-center justify-center">
+                            <div className="w-8 h-8 bg-[var(--color-main)]/10 rounded-lg flex items-center justify-center">
                               {getIcon(item.icon)}
                             </div>
                             <div>
@@ -259,7 +259,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
                   <div className="mt-6 pt-4 border-t border-gray-100 text-center">
                     <Button 
-                      className="bg-[#ff5c35] text-white hover:bg-[#ff5c35]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
+                      className="bg-[var(--color-main)] text-white hover:bg-[var(--color-main)]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
                       onClick={() => { trackButtonClick('header-hubspot'); handleNavClick('/hubspot'); }}
                     >
                       En Savoir Plus <ArrowRight className="ml-2 w-4 h-4" />
@@ -293,7 +293,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                       <p className="text-gray-600 text-sm">{headerData.navigation.odoo.subtitle}</p>
                     </div>
                     {headerData.navigation.odoo.badge && (
-                      <div className="px-3 py-1 rounded-full bg-[#714b67] text-white text-xs font-bold">
+                      <div className="px-3 py-1 rounded-full bg-[var(--color-secondary)] text-white text-xs font-bold">
                         ★ {headerData.navigation.odoo.badge}
                       </div>
                     )}
@@ -303,8 +303,8 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                   <div className="grid grid-cols-2 gap-6">
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#714b67]/20 rounded-lg flex items-center justify-center">
-                          <Database className="w-4 h-4 text-[#714b67]" />
+                        <div className="w-6 h-6 bg-[var(--color-secondary)]/20 rounded-lg flex items-center justify-center">
+                          <Database className="w-4 h-4 text-[var(--color-secondary)]" />
                         </div>
                         <h4 className="font-semibold text-black">Modules ERP</h4>
                       </div>
@@ -315,7 +315,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                             href={item.url}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <div className="w-8 h-8 bg-[#714b67]/10 rounded-lg flex items-center justify-center">
+                            <div className="w-8 h-8 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center">
                               {getIcon(item.icon)}
                             </div>
                             <div>
@@ -329,8 +329,8 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
                     <div>
                       <div className="flex items-center gap-2 mb-4">
-                        <div className="w-6 h-6 bg-[#714b67]/20 rounded-lg flex items-center justify-center">
-                          <Zap className="w-4 h-4 text-[#714b67]" />
+                        <div className="w-6 h-6 bg-[var(--color-secondary)]/20 rounded-lg flex items-center justify-center">
+                          <Zap className="w-4 h-4 text-[var(--color-secondary)]" />
                         </div>
                         <h4 className="font-semibold text-black">Nos Expertises</h4>
                       </div>
@@ -341,7 +341,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                             href={item.url}
                             className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors duration-150"
                           >
-                            <div className="w-8 h-8 bg-[#714b67]/10 rounded-lg flex items-center justify-center">
+                            <div className="w-8 h-8 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center">
                               {getIcon(item.icon)}
                             </div>
                             <div>
@@ -356,7 +356,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
                   <div className="mt-6 pt-4 border-t border-gray-100 text-center">
                     <Button 
-                      className="bg-[#714b67] text-white hover:bg-[#714b67]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
+                      className="bg-[var(--color-secondary)] text-white hover:bg-[var(--color-secondary)]/90 transition-colors duration-200 px-6 py-2 text-sm rounded-xl"
                       onClick={() => { trackButtonClick('header-odoo'); handleNavClick('/odoo'); }}
                     >
                       En Savoir Plus <ArrowRight className="ml-2 w-4 h-4" />
@@ -468,15 +468,15 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
                             />
                           </div>
                           <div className="p-4 flex-1 flex flex-col">
-                            <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[#714b67] transition-colors duration-300 line-clamp-2">
+                            <h3 className="text-lg font-bold text-black mb-2 group-hover:text-[var(--color-secondary)] transition-colors duration-300 line-clamp-2">
                               {client.name}
                             </h3>
                             <p className="text-gray-600 mb-2 line-clamp-2">{client.headline}</p>
-                            <div className="text-xs text-[#ff5c35] font-medium mt-auto">
+                            <div className="text-xs text-[var(--color-main)] font-medium mt-auto">
                               {client.projectStats && client.projectStats.length > 0 ? client.projectStats[0].value : ''}
                             </div>
                           </div>
-          </button>
+                        </button>
                       ))
                     ) : (
                       <div className="col-span-2 text-center text-gray-400">Aucun client sélectionné</div>
@@ -542,7 +542,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
             asChild
             className="
               rounded-full
-              bg-[#ff5c35]
+              bg-[var(--color-main)]
               border-2 border-white
               p-0 w-12 h-12
               flex items-center justify-center
@@ -550,14 +550,14 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
               transition-all
               duration-200
               hover:bg-white
-              hover:border-[#ff5c35]
+              hover:border-[var(--color-main)]
               hover:scale-110
               focus:outline-none
               group
             "
           >
             <a href={`tel:${headerData?.contact?.phone || '+212XXXXXXXXX'}`} aria-label="Téléphone">
-              <Phone className="w-6 h-6 text-white group-hover:text-[#ff5c35] transition-colors duration-200" />
+              <Phone className="w-6 h-6 text-white group-hover:text-[var(--color-main)] transition-colors duration-200" />
             </a>
           </Button>
         </div>

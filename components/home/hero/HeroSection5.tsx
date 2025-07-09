@@ -40,9 +40,9 @@ export default function HeroSection5() {
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
                 Connectez
                 <br />
-                <span style={{ color: '#714B67' }}>Odoo</span>
+                <span style={{ color: 'var(--color-secondary)' }}>Odoo</span>
                 <span className="text-gray-300 mx-3">+</span>
-                <span style={{ color: '#FF7A59' }}>HubSpot</span>
+                <span style={{ color: 'var(--color-main)' }}>HubSpot</span>
               </h1>
               
               <p className="text-xl text-gray-600 max-w-lg">
@@ -106,7 +106,7 @@ export default function HeroSection5() {
                 
                 {/* Odoo Connection */}
                 <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#714B67' }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-secondary)' }}>
                     <Settings className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1">
@@ -126,7 +126,7 @@ export default function HeroSection5() {
 
                 {/* HubSpot Connection */}
                 <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#FF7A59' }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-main)' }}>
                     <BarChart3 className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1">

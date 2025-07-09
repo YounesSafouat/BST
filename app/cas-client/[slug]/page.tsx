@@ -76,13 +76,13 @@ export default async function ClientPage({ params }: { params: { slug: string } 
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#ff5c35]/10 border border-[#ff5c35]/20">
-                  <div className="w-2 h-2 bg-[#ff5c35] rounded-full mr-3"></div>
-                  <span className="text-sm font-medium text-[#ff5c35] tracking-wide">{client.migration}</span>
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-main)]/10 border border-[var(--color-main)]/20">
+                  <div className="w-2 h-2 bg-[var(--color-main)] rounded-full mr-3"></div>
+                  <span className="text-sm font-medium text-[var(--color-main)] tracking-wide">{client.migration}</span>
                 </div>
                 <div>
                   <h1 className="text-5xl md:text-6xl font-bold text-black mb-6 tracking-tight">
-                    <span className="text-[#ff5c35]">{client.name}</span>
+                    <span className="text-[var(--color-main)]">{client.name}</span>
                     <span className="block text-3xl md:text-4xl text-gray-600 font-normal mt-2">
                       {client.headline}
                     </span>
@@ -90,7 +90,7 @@ export default async function ClientPage({ params }: { params: { slug: string } 
                   <p className="text-xl text-gray-600 leading-relaxed">{client.summary}</p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="bg-[#ff5c35] text-white hover:bg-[#ff5c35]/90 px-8 py-4 rounded-xl group">
+                  <Button size="lg" className="bg-[var(--color-main)] text-white hover:bg-[var(--color-main)]/90 px-8 py-4 rounded-xl group">
                     Voir les Résultats
                     <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -104,7 +104,7 @@ export default async function ClientPage({ params }: { params: { slug: string } 
               </div>
               <div className="relative">
                 <div className="bg-white rounded-3xl border border-gray-100 p-8 shadow-2xl hover:shadow-3xl transition-all duration-500">
-                  <div className="absolute top-0 left-0 w-full h-2 bg-[#ff5c35] rounded-t-3xl"></div>
+                  <div className="absolute top-0 left-0 w-full h-2 bg-[var(--color-main)] rounded-t-3xl"></div>
                   <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-gray-50">
                     {client.logo ? (
                       <img
@@ -113,7 +113,7 @@ export default async function ClientPage({ params }: { params: { slug: string } 
                         className="w-16 h-16 object-contain"
                       />
                     ) : (
-                      <div className="w-20 h-20 bg-[#ff5c35] rounded-2xl flex items-center justify-center">
+                      <div className="w-20 h-20 bg-[var(--color-main)] rounded-2xl flex items-center justify-center">
                         <span className="text-white font-bold text-2xl">{client.name[0]}</span>
                       </div>
                     )}
@@ -134,7 +134,7 @@ export default async function ClientPage({ params }: { params: { slug: string } 
                       </div>
                       <div>
                         <div className="text-sm text-gray-500">Migration</div>
-                        <div className="font-semibold text-[#ff5c35]">{client.migration}</div>
+                        <div className="font-semibold text-[var(--color-main)]">{client.migration}</div>
                       </div>
                       <div>
                         <div className="text-sm text-gray-500">Localisation</div>
@@ -147,7 +147,7 @@ export default async function ClientPage({ params }: { params: { slug: string } 
                 {client.floatingStats && (
                   <div className="absolute -bottom-6 -right-6 bg-black text-white p-6 rounded-2xl shadow-xl">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-[#ff5c35]">{client.floatingStats.value}</div>
+                      <div className="text-3xl font-bold text-[var(--color-main)]">{client.floatingStats.value}</div>
                       <div className="text-sm text-gray-300">{client.floatingStats.label}</div>
                     </div>
                   </div>
@@ -165,8 +165,8 @@ export default async function ClientPage({ params }: { params: { slug: string } 
                       className="text-center p-6 rounded-2xl bg-gray-50 hover:bg-white hover:shadow-lg transition-all duration-300"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
-                      <div className="w-12 h-12 bg-[#ff5c35]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
-                        <Icon className="w-6 h-6 text-[#ff5c35]" />
+                      <div className="w-12 h-12 bg-[var(--color-main)]/10 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <Icon className="w-6 h-6 text-[var(--color-main)]" />
                       </div>
                       <div className="text-2xl font-bold text-black mb-1">{stat.value}</div>
                       <div className="text-sm text-gray-600">{stat.label}</div>
@@ -219,12 +219,12 @@ export default async function ClientPage({ params }: { params: { slug: string } 
           <section className="py-20 px-6 lg:px-8">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
-                <div className="inline-flex items-center px-6 py-3 rounded-full bg-[#ff5c35]/10 border border-[#ff5c35]/20 mb-8">
-                  <div className="w-2 h-2 bg-[#ff5c35] rounded-full mr-3 animate-pulse"></div>
-                  <span className="text-sm font-medium text-[#ff5c35] tracking-wide">LA SOLUTION</span>
+                <div className="inline-flex items-center px-6 py-3 rounded-full bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 mb-8">
+                  <div className="w-2 h-2 bg-[var(--color-main)] rounded-full mr-3 animate-pulse"></div>
+                  <span className="text-sm font-medium text-[var(--color-main)] tracking-wide">LA SOLUTION</span>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
-                  Migration vers <span className="text-[#ff5c35]">Odoo 18</span>
+                  Migration vers <span className="text-[var(--color-main)]">Odoo 18</span>
                 </h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                   Migration complète vers Odoo 18 avec nouvelles fonctionnalités et performances optimisées.
@@ -234,12 +234,12 @@ export default async function ClientPage({ params }: { params: { slug: string } 
                 {client.solutions.map((solution: any, index: number) => (
                   <div
                     key={index}
-                    className="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-[#ff5c35]/30 transition-all duration-500 hover:scale-105 hover:shadow-xl"
+                    className="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-[var(--color-main)]/30 transition-all duration-500 hover:scale-105 hover:shadow-xl"
                     style={{ animationDelay: `${index * 150}ms` }}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-[#ff5c35]/10 rounded-xl flex items-center justify-center group-hover:bg-[#ff5c35] group-hover:scale-110 transition-all duration-300">
-                        <RefreshCw className="w-6 h-6 text-[#ff5c35] group-hover:text-white transition-colors duration-300" />
+                      <div className="w-12 h-12 bg-[var(--color-main)]/10 rounded-xl flex items-center justify-center group-hover:bg-[var(--color-main)] group-hover:scale-110 transition-all duration-300">
+                        <RefreshCw className="w-6 h-6 text-[var(--color-main)] group-hover:text-white transition-colors duration-300" />
                       </div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-black mb-2">{solution.module}</h3>
@@ -294,7 +294,7 @@ export default async function ClientPage({ params }: { params: { slug: string } 
               </div>
               {/* Testimonial */}
               {client.testimonial && (
-                <div className="bg-[#ff5c35] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+                <div className="bg-[var(--color-main)] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
                   <div className="relative z-10">

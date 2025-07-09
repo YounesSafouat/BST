@@ -278,7 +278,7 @@ export default function BlogPage() {
               </div>
 
               {/* Newsletter - Static only, no functionality */}
-              <div className="bg-gradient-to-br from-[#714b67] to-[#ff5c35] rounded-2xl p-6 text-white">
+              <div className="bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-2xl p-6 text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <BookOpen className="w-5 h-5 text-white" />
                   <h3 className="text-lg font-bold">Newsletter</h3>
@@ -291,7 +291,7 @@ export default function BlogPage() {
                   placeholder="Votre email"
                   className="w-full p-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder:text-white/70 mb-3"
                 />
-                <Button className="w-full bg-white text-[#714b67] hover:bg-white/90">S'abonner</Button>
+                <Button className="w-full bg-white text-[var(--color-secondary)] hover:bg-white/90">S'abonner</Button>
               </div>
             </div>
 

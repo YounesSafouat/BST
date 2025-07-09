@@ -1,236 +1,328 @@
 "use client"
-import React, { useState, useEffect } from 'react';
-import { Mail, Phone, Building2, User, MessageSquare } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/hooks/use-toast';
-import Loader from '@/components/home/Loader';
 
-export default function ContactPageClient() {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    company: '',
-    phone: '',
-    subject: '',
-    message: '',
-    projectType: 'integration'
-  });
+import React from "react"
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [contactContent, setContactContent] = useState<any>(null);
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Zap,
+  TrendingUp,
+  Database,
+  CheckCircle,
+  ArrowRight,
+  Clock,
+  Globe,
+  Award,
+  Shield,
+} from "lucide-react"
+import { useState, useEffect } from "react"
+import * as LucideIcons from "lucide-react"
+import { ContactContent } from "@/app/types/content"
+import Loader from "@/components/home/Loader"
+
+function getIconComponent(name: string) {
+  return (LucideIcons[name as keyof typeof LucideIcons] as any) || LucideIcons.Phone;
+}
+
+export default function ContactPage() {
+  const [contactData, setContactData] = useState<ContactContent | null>(null);
   const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState<any>({});
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
-    const fetchContactContent = async () => {
-      try {
-        const response = await fetch("/api/content?type=contact");
-        if (response.ok) {
-          const data = await response.json();
-          if (data.length > 0) {
-            setContactContent(data[0].content);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching contact content:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContactContent();
+    fetchContactData();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
-      alert('Veuillez remplir tous les champs obligatoires');
-      return;
-    }
-
-    setIsSubmitting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert('Message envoyé ! Nous vous recontacterons dans les plus brefs délais.');
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        company: '',
-        phone: '',
-        subject: '',
-        message: '',
-        projectType: 'integration'
-      });
-    }, 2000);
-  };
-
-  const updateFormData = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  // Use dynamic content if available, otherwise fall back to static content
-  const projectTypeContent = contactContent?.projectTypes || {
-    integration: {
-      header: 'Intégration Odoo-HubSpot',
-      text: "Optimisez vos processus métier grâce à une intégration complète entre Odoo et HubSpot. Nos experts vous accompagnent pour connecter vos outils et automatiser vos flux de travail."
-    },
-    migration: {
-      header: 'Migration ERP',
-      text: "Migrez vos données et processus vers un nouvel ERP en toute sécurité. Nous assurons une transition fluide et sans perte d'information."
-    },
-    consulting: {
-      header: 'Conseil Digital',
-      text: "Bénéficiez de notre expertise pour accélérer votre transformation digitale et améliorer vos performances."
-    },
-    formation: {
-      header: 'Formation',
-      text: "Formez vos équipes aux outils digitaux pour garantir l'adoption et la réussite de vos projets."
-    },
-    autre: {
-      header: 'Autre projet',
-      text: "Décrivez-nous votre projet, nous vous proposerons une solution sur-mesure adaptée à vos besoins."
+  const fetchContactData = async () => {
+    try {
+      const response = await fetch('/api/content?type=contact-page');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0 && data[0]?.content) {
+          const contactPageData = data[0].content;
+          setContactData(contactPageData);
+          // Initialize form data based on the dynamic fields
+          const initialFormData: any = {};
+          contactPageData.steps.forEach((step: any) => {
+            step.fields.forEach((field: any) => {
+              if (field.type === 'checkbox-group') {
+                initialFormData[field.name] = [];
+              } else {
+                initialFormData[field.name] = '';
+              }
+            });
+          });
+          setFormData(initialFormData);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching contact data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const content = projectTypeContent[formData.projectType as keyof typeof projectTypeContent];
+  const handleInputChange = (field: string, value: any) => {
+    setFormData((prev: any) => ({ ...prev, [field]: value }))
+  }
+
+  const handleArrayChange = (field: string, value: string, checked: boolean) => {
+    setFormData((prev: any) => ({
+      ...prev,
+      [field]: checked
+        ? [...(prev[field] || []), value]
+        : (prev[field] || []).filter((item: string) => item !== value),
+    }))
+  }
+
+  const nextStep = () => {
+    if (contactData && currentStep < contactData.steps.length) {
+      setCurrentStep(currentStep + 1);
+    }
+  }
+
+  const prevStep = () => {
+    if (currentStep > 1) setCurrentStep(currentStep - 1)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log("Form submitted:", formData)
+    // Handle form submission
+  }
+
+  const renderField = (field: any, stepIndex: number, fieldIndex: number) => {
+    const fieldId = `${field.name}-${stepIndex}-${fieldIndex}`;
+    
+    switch (field.type) {
+      case 'text':
+      case 'email':
+      case 'tel':
+      case 'url':
+        return (
+          <Input
+            id={fieldId}
+            type={field.type}
+            value={formData[field.name] || ''}
+            onChange={(e) => handleInputChange(field.name, e.target.value)}
+            className="h-12 border-gray-200 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+            required={field.required}
+            placeholder={field.label}
+          />
+        );
+      
+      case 'textarea':
+        return (
+          <Textarea
+            id={fieldId}
+            value={formData[field.name] || ''}
+            onChange={(e) => handleInputChange(field.name, e.target.value)}
+            className="min-h-[100px] border-gray-200 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+            required={field.required}
+            placeholder={field.label}
+          />
+        );
+      
+      case 'select':
+        return (
+          <Select value={formData[field.name] || ''} onValueChange={(value) => handleInputChange(field.name, value)}>
+            <SelectTrigger className="h-12 border-gray-200 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]">
+              <SelectValue placeholder={field.label} />
+            </SelectTrigger>
+            <SelectContent>
+              {field.options?.map((option: string) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      
+      case 'radio':
+        return (
+          <RadioGroup value={formData[field.name] || ''} onValueChange={(value) => handleInputChange(field.name, value)}>
+            {field.options?.map((option: string) => (
+              <div key={option} className="flex items-center space-x-2">
+                <RadioGroupItem value={option} id={`${fieldId}-${option}`} />
+                <Label htmlFor={`${fieldId}-${option}`}>{option}</Label>
+              </div>
+            ))}
+          </RadioGroup>
+        );
+      
+      case 'checkbox-group':
+        return (
+          <div className="space-y-2">
+            {field.options?.map((option: string) => (
+              <div key={option} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`${fieldId}-${option}`}
+                  checked={(formData[field.name] || []).includes(option)}
+                  onCheckedChange={(checked) => handleArrayChange(field.name, option, checked as boolean)}
+                />
+                <Label htmlFor={`${fieldId}-${option}`}>{option}</Label>
+              </div>
+            ))}
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
 
   if (loading) {
     return <Loader />;
   }
 
-  return (
-    <div className="bg-[var(--color-white)] min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-        {/* Hero Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Left: Dynamic header/text */}
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-              <Building2 className="w-8 h-8 text-[var(--color-main)]" />
-              {content.header}
-            </h1>
-            <p className="text-lg text-gray-600 mb-8">
-              {content.text}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              {Object.keys(projectTypeContent).map((type) => (
-              <button
-                  key={type}
-                  className={`font-semibold px-8 py-3 rounded-xl shadow transition-colors ${
-                    formData.projectType === type
-                      ? 'bg-[var(--color-main)] text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                  onClick={() => updateFormData('projectType', type)}
-              >
-                  {projectTypeContent[type].header}
-              </button>
-              ))}
-            </div>
-          </div>
-          {/* Right: Form in a Card */}
-          <Card className="p-8 rounded-2xl shadow-xl border border-gray-100 bg-white">
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative">
-                  <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                  <input
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
-                    type="text"
-                    placeholder={contactContent?.form?.fields?.firstName?.placeholder || "Prénom*"}
-                    value={formData.firstName}
-                    onChange={e => updateFormData('firstName', e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                  <input
-                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
-                    type="text"
-                    placeholder={contactContent?.form?.fields?.lastName?.placeholder || "Nom*"}
-                    value={formData.lastName}
-                    onChange={e => updateFormData('lastName', e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="relative">
-                <Building2 className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <input
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
-                  type="text"
-                  placeholder={contactContent?.form?.fields?.company?.placeholder || "Nom de l'entreprise*"}
-                  value={formData.company}
-                  onChange={e => updateFormData('company', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="relative">
-                <Phone className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <input
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
-                  type="tel"
-                  placeholder={contactContent?.form?.fields?.phone?.placeholder || "Numéro de téléphone*"}
-                  value={formData.phone}
-                  onChange={e => updateFormData('phone', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <input
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400"
-                  type="email"
-                  placeholder={contactContent?.form?.fields?.email?.placeholder || "E-mail*"}
-                  value={formData.email}
-                  onChange={e => updateFormData('email', e.target.value)}
-                  required
-                />
-              </div>
-              <div className="relative">
-                <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
-                <textarea
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)] text-gray-900 bg-white placeholder-gray-400 min-h-[120px]"
-                  placeholder={contactContent?.form?.fields?.message?.placeholder || "Message*"}
-                  value={formData.message}
-                  onChange={e => updateFormData('message', e.target.value)}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold py-3 px-6 rounded-lg shadow transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting 
-                  ? (contactContent?.form?.submitButton?.loadingText || 'Envoi en cours...') 
-                  : (contactContent?.form?.submitButton?.text || 'Envoyer le message')
-                }
-              </button>
-            </form>
-          </Card>
-        </div>
-
-        {/* Trust Indicators */}
-        <div className="mt-20 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-8">
-            {contactContent?.trust?.title || 'Ils nous font confiance'}
-          </h3>
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            {/* Companies will be dynamically populated here */}
-          </div>
+  if (!contactData) {
+    return (
+      <div className="min-h-screen bg-white mt-10 md:mt-20 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Erreur de chargement</h1>
+          <p className="text-gray-600">Impossible de charger les données de la page contact</p>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white mt-10 md:mt-20">
+      {/* Hero Section */}
+      <section className="relative py-20 px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl md:text-6xl font-bold text-black mb-6 tracking-tight">
+            {contactData.hero.headline.split(contactData.hero.highlight).map((part, index, array) => (
+              <React.Fragment key={index}>
+                {part}
+                {index < array.length - 1 && (
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)]">
+                    {contactData.hero.highlight}
+                  </span>
+                )}
+              </React.Fragment>
+            ))}
+          </h1>
+
+          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+            {contactData.hero.description}
+          </p>
+
+          {/* Progress Bar */}
+          <div className="max-w-md mx-auto mb-12">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-600">
+                Étape {currentStep} sur {contactData.steps.length}
+              </span>
+              <span className="text-sm text-gray-500">{Math.round((currentStep / contactData.steps.length) * 100)}%</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] h-2 rounded-full transition-all duration-500"
+                style={{ width: `${(currentStep / contactData.steps.length) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form */}
+      <section className="py-16 px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {contactData.steps.map((step, stepIndex) => (
+              currentStep === stepIndex + 1 && (
+                <Card key={stepIndex} className="border-0 shadow-xl bg-white/95 backdrop-blur-sm">
+                  <CardHeader className="text-center pb-6">
+                    <h2 className="text-2xl font-bold text-black mb-2">{step.label}</h2>
+                    <p className="text-gray-600">{step.description}</p>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {step.fields.map((field, fieldIndex) => (
+                        <div key={fieldIndex} className={field.type === 'textarea' || field.type === 'checkbox-group' ? 'md:col-span-2' : ''}>
+                          <Label htmlFor={`${field.name}-${stepIndex}-${fieldIndex}`} className="text-sm font-medium text-gray-700 mb-2 block">
+                            {field.label} {field.required && '*'}
+                          </Label>
+                          {renderField(field, stepIndex, fieldIndex)}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            ))}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between items-center pt-8">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={prevStep}
+                disabled={currentStep === 1}
+                className="px-8 py-3"
+              >
+                Précédent
+              </Button>
+              
+              {currentStep < contactData.steps.length ? (
+                <Button
+                  type="button"
+                  onClick={nextStep}
+                  className="px-8 py-3 bg-[var(--color-main)] hover:bg-[var(--color-main)]/90"
+                >
+                  Suivant
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="px-8 py-3 bg-[var(--color-main)] hover:bg-[var(--color-main)]/90"
+                >
+                  Envoyer
+                </Button>
+              )}
+            </div>
+          </form>
+        </div>
+      </section>
+
+      {/* Contact Cards */}
+      <section className="py-20 px-6 lg:px-8 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-black mb-4">Autres façons de nous contacter</h2>
+            <p className="text-gray-600">Choisissez le moyen qui vous convient le mieux</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {contactData.cards.map((card, index) => {
+              const IconComponent = getIconComponent(card.icon);
+              return (
+                <Card key={index} className="text-center p-8 hover:shadow-lg transition-all duration-300">
+                  <div className="w-16 h-16 bg-[var(--color-main)] rounded-full flex items-center justify-center mx-auto mb-6">
+                    <IconComponent className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-black mb-4">{card.title}</h3>
+                  <p className="text-gray-600 mb-4">{card.description}</p>
+                  <div className="text-lg font-semibold text-[var(--color-main)] mb-2">{card.contact}</div>
+                  <p className="text-sm text-gray-500">{card.subDescription}</p>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

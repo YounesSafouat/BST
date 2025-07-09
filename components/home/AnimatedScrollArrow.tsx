@@ -34,7 +34,7 @@ export default function AnimatedScrollArrow() {
       }`}
     >
       <div className="cursor-pointer flex items-center justify-center" onClick={handleScrollToNextSection}>
-        <ChevronDown className="w-8 h-8 text-[#714b67]" />
+        <ChevronDown className="w-8 h-8 text-[var(--color-secondary)]" />
       </div>
     </div>
   )
