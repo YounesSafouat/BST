@@ -289,7 +289,7 @@ export default function HeroSection({ hero }: HeroSection2Props) {
           {/* Logo Section with vertical rotation */}
           {logos.odoo && logos.hubspot && (
             <div className="logo-container mb-12">
-              <div 
+              <div
                 className="logo-track"
                 style={{
                   transform: `translateY(-${logoRotationIndex * 50}%)`
@@ -320,8 +320,8 @@ export default function HeroSection({ hero }: HeroSection2Props) {
               </div>
             </div>
           )}
-        
-        {/* Subtitle */}
+
+          {/* Subtitle */}
           <div
             className="text-lg mb-4 max-w-4xl mx-auto leading-relaxed"
             style={{
@@ -407,9 +407,9 @@ export default function HeroSection({ hero }: HeroSection2Props) {
               </div>
             )}
           </div>
-        
-        {/* CTA Buttons */}
-         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 relative z-10">
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 relative z-10">
             {ctaButtons.primary && (
               <button
                 onClick={handleAppointmentClick}
@@ -430,15 +430,15 @@ export default function HeroSection({ hero }: HeroSection2Props) {
               </button>
             )}
           </div>
-        
-        {/* Companies Carousel */}
+
+          {/* Companies Carousel */}
           {companies.length > 0 && (
             <div className="relative overflow-hidden">
               <div className="absolute left-0 top-0 w-20 h-full z-10" style={{ background: 'linear-gradient(to right, var(--color-background), transparent)' }}></div>
               <div className="absolute right-0 top-0 w-20 h-full z-10" style={{ background: 'linear-gradient(to left, var(--color-background), transparent)' }}></div>
 
               <div className="companies-scroll">
-                <div 
+                <div
                   className="companies-track"
                   style={{ animationDuration: `${animations.companyScrollDuration || 30}s` }}
                 >
