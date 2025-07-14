@@ -263,15 +263,15 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
 
                {/* Trust Metrics */}
-               <section className="py-16 bg-gray-50">
+               <section className="py-20 bg-[#f7f2f6]">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
                               {odooData.trustMetrics.map((metric, index) => (
-                                   <div key={index} className="text-center group hover:scale-105 transition-transform duration-300">
-                                        <div className="text-3xl md:text-4xl font-bold text-[var(--color-secondary)] mb-2">
+                                   <div key={index} className="bg-white rounded-xl px-12 py-8 text-center flex flex-col items-center min-w-[220px]">
+                                        <div className="text-4xl font-black text-[var(--color-secondary)] mb-1">
                                              <AnimatedCounter target={metric.number} suffix={metric.suffix} />
                                         </div>
-                                        <div className="text-gray-600 font-medium text-sm">{metric.label}</div>
+                                        <div className="text-base font-semibold text-gray-900 mb-1">{metric.label}</div>
                                    </div>
                               ))}
                          </div>
@@ -432,34 +432,65 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                    </p>
                               </div>
                               {/* Carousel Cards */}
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                                   {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, idx) => (
-                                        <Link key={client.slug} href={`/cas-client/${client.slug}`} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-8 flex flex-col items-center text-center hover:ring-2 hover:ring-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
-                                             {/* Logo or Initial */}
-                                             {client.logo ? (
-                                                  <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center mb-6">
-                                                       <Image src={client.logo} alt={client.name} width={60} height={60} className="object-contain w-12 h-12" />
-                                                  </div>
-                                             ) : (
-                                                  <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center mb-6">
-                                                       <span className="text-3xl font-bold text-gray-500">{client.name.charAt(0)}</span>
-                                                  </div>
-                                             )}
-                                             <div className="mb-2 text-xl font-bold text-gray-900">{client.name}</div>
-                                             <div className="text-sm text-gray-500 mb-4">{client.sector}</div>
-                                             <div className="w-full border-t border-gray-200 my-4"></div>
-                                             <div className="text-xs font-semibold text-gray-500 mb-2">Modules déployés</div>
-                                             <div className="flex flex-wrap justify-center gap-2 mb-2">
-                                                  {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => (
-                                                       <div key={i} className="inline-flex items-center px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 text-[var(--color-secondary)] text-sm font-medium">
-                                                            {/* You can add an icon here if you have one per module */}
-                                                            {sol.module}
+                              {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).length === 1 ? (
+                                   <div className="flex justify-center mb-8">
+                                        {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, idx) => (
+                                             <Link key={client.slug} href={`/cas-client/${client.slug}`} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-8 flex flex-col items-center text-center hover:ring-2 hover:ring-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
+                                                  {/* Logo or Initial */}
+                                                  {client.logo ? (
+                                                       <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center mb-6">
+                                                            <Image src={client.logo} alt={client.name} width={60} height={60} className="object-contain w-12 h-12" />
                                                        </div>
-                                                  ))}
-                                             </div>
-                                        </Link>
-                                   ))}
-                              </div>
+                                                  ) : (
+                                                       <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center mb-6">
+                                                            <span className="text-3xl font-bold text-gray-500">{client.name.charAt(0)}</span>
+                                                       </div>
+                                                  )}
+                                                  <div className="mb-2 text-xl font-bold text-gray-900">{client.name}</div>
+                                                  <div className="text-sm text-gray-500 mb-4">{client.sector}</div>
+                                                  <div className="w-full border-t border-gray-200 my-4"></div>
+                                                  <div className="text-xs font-semibold text-gray-500 mb-2">Modules déployés</div>
+                                                  <div className="flex flex-wrap justify-center gap-2 mb-2">
+                                                       {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => (
+                                                            <div key={i} className="inline-flex items-center px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 text-[var(--color-secondary)] text-sm font-medium">
+                                                                 {/* You can add an icon here if you have one per module */}
+                                                                 {sol.module}
+                                                            </div>
+                                                       ))}
+                                                  </div>
+                                             </Link>
+                                        ))}
+                                   </div>
+                              ) : (
+                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                                        {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, idx) => (
+                                             <Link key={client.slug} href={`/cas-client/${client.slug}`} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-8 flex flex-col items-center text-center hover:ring-2 hover:ring-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
+                                                  {/* Logo or Initial */}
+                                                  {client.logo ? (
+                                                       <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center mb-6">
+                                                            <Image src={client.logo} alt={client.name} width={60} height={60} className="object-contain w-12 h-12" />
+                                                       </div>
+                                                  ) : (
+                                                       <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center mb-6">
+                                                            <span className="text-3xl font-bold text-gray-500">{client.name.charAt(0)}</span>
+                                                       </div>
+                                                  )}
+                                                  <div className="mb-2 text-xl font-bold text-gray-900">{client.name}</div>
+                                                  <div className="text-sm text-gray-500 mb-4">{client.sector}</div>
+                                                  <div className="w-full border-t border-gray-200 my-4"></div>
+                                                  <div className="text-xs font-semibold text-gray-500 mb-2">Modules déployés</div>
+                                                  <div className="flex flex-wrap justify-center gap-2 mb-2">
+                                                       {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => (
+                                                            <div key={i} className="inline-flex items-center px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 text-[var(--color-secondary)] text-sm font-medium">
+                                                                 {/* You can add an icon here if you have one per module */}
+                                                                 {sol.module}
+                                                            </div>
+                                                       ))}
+                                                  </div>
+                                             </Link>
+                                        ))}
+                                   </div>
+                              )}
                               {/* Carousel Navigation */}
                               <div className="flex items-center justify-center gap-4 mb-4">
                                    <button
@@ -668,35 +699,36 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
                {/* Testimonials */}
                {odooData && odooData.testimonials && odooData.testimonials.length > 0 && (
-                    <section className="py-16 bg-white">
+                    <section className="py-20 bg-[#f7f2f6]">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
-                                   <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-                                        Approuvé par les <span className="text-[var(--color-secondary)]">Leaders</span>
-                                   </h2>
-                                   <p className="text-lg text-gray-600">
-                                        Découvrez comment nous avons aidé des entreprises à transformer leur business avec Odoo
-                                   </p>
+                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
+                                   <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">Nos clients témoignent</h2>
+                                   <div className="text-lg text-gray-600">Découvrez pourquoi nos clients nous recommandent</div>
                               </div>
-
-                              <div className="grid md:grid-cols-2 gap-6">
+                              <div className="flex flex-col md:flex-row justify-center items-stretch gap-8">
                                    {odooData.testimonials.map((testimonialId: string, index: number) => {
                                         const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                                         if (!testimonial) return null;
-
                                         return (
-                                             <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                                                  <Quote className="w-10 h-10 text-[var(--color-secondary)] mb-5 group-hover:animate-pulse" />
-                                                  <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
-                                                       "{testimonial.quote}"
-                                                  </blockquote>
-                                                  <div className="flex items-center space-x-4">
+                                             <div key={index} className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-none w-full max-w-md mx-auto">
+                                                  {/* Stars */}
+                                                  <div className="flex items-center mb-4">
+                                                       {[...Array(5)].map((_, i) => (
+                                                            <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
+                                                       ))}
+                                                  </div>
+                                                  {/* Quote */}
+                                                  <blockquote className="italic text-gray-900 mb-6">"{testimonial.quote}"</blockquote>
+                                                  <div className="border-t border-gray-100 my-4"></div>
+                                                  {/* Author */}
+                                                  <div className="flex items-center gap-4 mt-2">
                                                        {renderAvatar(testimonialId)}
                                                        <div>
                                                             <div className="font-bold text-gray-900">{testimonial.name}</div>
-                                                            <div className="text-gray-600">{testimonial.role}</div>
-                                                            {testimonial.result && (
-                                                                 <div className="text-[var(--color-secondary)] font-semibold">{testimonial.result}</div>
+                                                            <div className="text-sm text-gray-500">{testimonial.role}</div>
+                                                            {testimonial.company && (
+                                                                 <div className="text-sm text-[var(--color-secondary)] font-semibold">{testimonial.company}</div>
                                                             )}
                                                        </div>
                                                   </div>
@@ -759,36 +791,36 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                    <div>
                                         <h4 className="text-lg font-bold mb-6 text-white">Ce qui vous attend :</h4>
                                         <ul className="space-y-4 mb-6">
-                                             <li className="flex items-start gap-3">
-                                                  <BadgeCheck className="w-6 h-6 text-green-300 mt-1" />
+                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
+                                                  <BadgeCheck className="w-7 h-7 text-green-300 mt-1" />
                                                   <div>
                                                        <span className="font-semibold text-white">Partenaire Silver Officiel</span><br />
                                                        <span className="text-sm text-white/90">Certification garantissant notre expertise technique reconnue par Odoo</span>
                                                   </div>
                                              </li>
-                                             <li className="flex items-start gap-3">
-                                                  <Rocket className="w-6 h-6 text-green-300 mt-1" />
+                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
+                                                  <Rocket className="w-7 h-7 text-green-300 mt-1" />
                                                   <div>
                                                        <span className="font-semibold text-white">Transformation Express</span><br />
                                                        <span className="text-sm text-white/90">Digitalisez vos processus en quelques semaines, pas en mois</span>
                                                   </div>
                                              </li>
-                                             <li className="flex items-start gap-3">
-                                                  <Shield className="w-6 h-6 text-green-300 mt-1" />
+                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
+                                                  <Shield className="w-7 h-7 text-green-300 mt-1" />
                                                   <div>
                                                        <span className="font-semibold text-white">Accompagnement Sécurisé</span><br />
                                                        <span className="text-sm text-white/90">De l'audit stratégique à la mise en production, nous restons à vos côtés</span>
                                                   </div>
                                              </li>
+                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
+                                                  <CircleCheckBig className="w-7 h-7 text-green-300 mt-1" />
+                                                  <div>
+                                                       <span className="font-semibold text-white">Consultation Stratégique Offerte</span><br />
+                                                       <span className="text-sm text-white/90">Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement.</span>
+                                                  </div>
+                                             </li>
                                         </ul>
-                                        {/* Highlighted Offer */}
-                                        <div className="rounded-xl bg-white/20 p-4 flex items-start gap-3 mb-6">
-                                             <CircleCheckBig className="w-6 h-6 text-green-300 mt-1" />
-                                             <div>
-                                                  <span className="font-semibold text-white">Consultation Stratégique Offerte</span><br />
-                                                  <span className="text-sm text-white/90">Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement.</span>
-                                             </div>
-                                        </div>
+
                                    </div>
                                    <div className="border-t border-white/20 pt-4 mt-4">
                                         <div className="text-sm font-semibold mb-2 text-white">Contact direct</div>

@@ -92,51 +92,41 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
 
   return (
     <section
-      className={`relative bg-white ${isPreview ? 'pt-4' : 'pt-20'} pb-16 overflow-hidden min-h-screen flex items-center`}
+      className={`relative ${isPreview ? 'pt-4' : 'pt-24'} pb-16 overflow-hidden min-h-[600px] flex items-center`}
       style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
     >
       {/* Subtle Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-[var(--color-main)]/10 rounded-full opacity-30"></div>
-        <div className="absolute bottom-20 left-20 w-48 h-48 bg-[var(--color-main)]/10 rounded-full opacity-40"></div>
-      </div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
 
           {/* Left Side - Text Content */}
-          <div className="space-y-8">
+          <div className="flex flex-col justify-center h-full">
             {/* Avatar + Badge */}
-            <div className="flex items-center gap-4 mb-2">
-              {/* Odoo Silver Partner Logo as avatar */}
-              <div className="w-20 h-20 rounded-full bg-white border flex items-center justify-center overflow-hidden">
-                <img
-                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/oodo-silver-partner-logo.svg"
-                  alt="Odoo Silver Partner Logo"
-                  className="w-12 h-12 object-contain"
-                />
-              </div>
+            <div className="flex items-center mb-4">
+
               {/* Dynamic Badge */}
-              <span className="bg-white text-[var(--color-secondary)] border border-[var(--color-secondary)] rounded-full px-4 py-1 text-xs font-semibold shadow-sm">
+              <span className="inline-flex items-center bg-white text-[var(--color-secondary)] border border-[var(--color-secondary)] rounded-full px-3 py-1 text-xs font-semibold ml-1">
                 {heroData?.badge || 'Partenaire Silver Odoo'}
               </span>
             </div>
 
             {/* Main Headline */}
             <h1
-              className={`text-5xl md:text-7xl font-bold text-gray-900 leading-tight transform transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+              className="text-3xl md:text-5xl font-black text-gray-900 leading-[1.05] mb-4"
               style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               dangerouslySetInnerHTML={{ __html: heroData.headline }}
             />
 
-            {/* Experience Badge */}
-            <div className="inline-block bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] font-semibold px-4 py-1 rounded-full text-xs mb-2">
-              3 ans d'expérience Odoo
+            {/* Static Description under headline */}
+            <div className="text-sm md:text-base text-gray-500 mb-2">
+              En tant que Partenaire Officiel Odoo, notre agence conçoit des implémentations sur mesure qui unifient vos processus métier.
             </div>
 
             {/* Subtitle */}
             <p
-              className={`text-xl md:text-2xl text-gray-700 leading-relaxed font-normal transform transition-all duration-1000 delay-500 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+              className="text-base md:text-lg text-gray-700 font-normal mb-8"
               style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
             >
               {heroData.subheadline}
@@ -144,13 +134,13 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
 
             {/* Emphasis Line (bold/colored) */}
             {heroData.emphasis && (
-              <div className="text-lg font-bold text-[var(--color-secondary)] mb-2">{heroData.emphasis}</div>
+              <div className="text-base md:text-lg font-bold text-[var(--color-secondary)] mb-8">{heroData.emphasis}</div>
             )}
 
             {/* CTA Buttons */}
-            <div className={`flex flex-col sm:flex-row gap-4 transform transition-all duration-1000 delay-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="flex flex-col sm:flex-row gap-4 mb-0">
               <button
-                className="group bg-[var(--color-secondary)] text-white px-8 py-4 rounded-full hover:bg-[var(--color-secondary)]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                className="group bg-[var(--color-secondary)] text-white px-6 py-2 rounded-full font-bold text-base hover:bg-[var(--color-secondary)]/90 transition-all flex items-center justify-center gap-2"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 onClick={handleConsultationClick}
                 disabled={isLoading}
@@ -159,12 +149,13 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 {getIconComponent(heroData.ctaPrimary.icon)}
               </button>
               <button
-                className="group border-2 border-[var(--color-secondary)] text-[var(--color-secondary)] px-8 py-4 rounded-full hover:bg-[var(--color-secondary)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                className="group border-2 border-[var(--color-secondary)] text-[var(--color-secondary)] px-6 py-2 rounded-full font-bold text-base hover:bg-[var(--color-secondary)] hover:text-white transition-all flex items-center justify-center gap-2"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 onClick={handleCaseStudyClick}
                 disabled={isLoading}
               >
                 <span>{loadingType === 'projects' ? 'CHARGEMENT...' : heroData.ctaSecondary.text}</span>
+                {getIconComponent(heroData.ctaSecondary.icon)}
               </button>
             </div>
           </div>

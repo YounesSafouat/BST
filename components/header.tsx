@@ -148,39 +148,41 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 px-20  min-h-[80px] bg-white shadow transition-all duration-500 border-b border-gray-100 ${isLoaded ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}
+      className={`fixed top-0 left-0 w-full z-50 min-h-[64px] bg-[#f7f2f6]/80 backdrop-blur-md border-b border-[var(--color-secondary)]/10`}
     >
-      <nav className="flex items-center justify-between w-full px-12 h-20">
-        {/* Left: Logo only, vertically centered, larger size */}
-        <div className="flex items-center flex-shrink-0 w-auto h-full">
-          <Link href="/" className="flex items-center h-full">
-            <img
-              key={`${headerData?.logo?.image}-${headerData?.logo?.size}-${logoVersion}`}
-              src={`${headerData?.logo?.image || "/bst.png"}?v=${logoVersion}&t=${Date.now()}`}
-              alt={headerData?.logo?.alt || "blackswantechnology"}
-              className="object-contain w-25 h-25"
-            />
-          </Link>
-        </div>
-        {/* Center: Navigation Links */}
-        <div className="hidden md:flex flex-1 justify-center items-center gap-8 h-full">
-          <Link href="#solutions" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Solutions</Link>
-          <Link href="#tarifs" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Tarifs</Link>
-          <Link href="#temoignages" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Témoignages</Link>
-          <Link href="#agence" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Notre Agence</Link>
-        </div>
-        {/* Right: Icons + Action Button, vertically centered */}
-        <div className="flex items-center gap-4 ml-auto h-full">
-          <Phone className="w-5 h-5 text-gray-700 hover:text-[var(--color-secondary)] cursor-pointer" />
-          <MessageCircle className="w-5 h-5 text-gray-700 hover:text-[var(--color-secondary)] cursor-pointer" />
-          <button
-            onClick={handleAppointmentClick}
-            className="ml-2 bg-[var(--color-secondary)] text-white font-semibold px-6 py-3 rounded-full flex items-center gap-2 hover:bg-[var(--color-secondary)]/90 transition-all"
-          >
-            Prendre RDV <Calendar className="w-5 h-5 ml-2" />
-          </button>
-        </div>
-      </nav>
+      <div className="max-w-7xl mx-auto w-full">
+        <nav className="flex items-center justify-between w-full px-8 h-16">
+          {/* Left: Logo only, original image, smaller size */}
+          <div className="flex items-center flex-shrink-0 w-auto h-full">
+            <Link href="/" className="flex items-center h-full">
+              <img
+                key={`${headerData?.logo?.image}-${headerData?.logo?.size}-${logoVersion}`}
+                src={`${headerData?.logo?.image || "/bst.png"}?v=${logoVersion}&t=${Date.now()}`}
+                alt={headerData?.logo?.alt || "blackswantechnology"}
+                className="object-contain w-20 h-20"
+              />
+            </Link>
+          </div>
+          {/* Center: Navigation Links */}
+          <div className="hidden md:flex flex-1 justify-center items-center gap-8 h-full">
+            <Link href="#solutions" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Solutions</Link>
+            <Link href="#tarifs" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Tarifs</Link>
+            <Link href="#temoignages" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Témoignages</Link>
+            <Link href="#agence" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Notre Agence</Link>
+          </div>
+          {/* Right: Icons + Action Button, smaller */}
+          <div className="flex items-center gap-4 ml-auto h-full">
+            <Phone className="w-5 h-5 text-gray-700 hover:text-[var(--color-secondary)] cursor-pointer" />
+            <MessageCircle className="w-5 h-5 text-gray-700 hover:text-[var(--color-secondary)] cursor-pointer" />
+            <button
+              onClick={handleAppointmentClick}
+              className="ml-2 bg-[var(--color-secondary)] text-white font-semibold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-[var(--color-secondary)]/90 transition-all"
+            >
+              Prendre RDV <Calendar className="w-5 h-5 ml-2" />
+            </button>
+          </div>
+        </nav>
+      </div>
     </header>
   );
 }
