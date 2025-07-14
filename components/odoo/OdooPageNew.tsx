@@ -227,21 +227,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
           return <span>{count}{suffix}</span>;
      };
 
-     const getIconComponent = (iconName: string) => {
-          const iconMap: { [key: string]: React.ReactNode } = {
-               Calculator: <Calculator className="w-8 h-8" />,
-               ShoppingCart: <ShoppingCart className="w-8 h-8" />,
-               Package: <Package className="w-8 h-8" />,
-               Users: <Users className="w-8 h-8" />,
-               Rocket: <Rocket className="w-5 h-5" />,
-               ArrowRight: <ArrowRight className="w-5 h-5" />,
-               Check: <Check className="w-3 h-3" />,
-               CheckCircle: <CheckCircle className="w-10 h-10" />,
-               Quote: <Quote className="w-10 h-10" />
-          };
-          return iconMap[iconName] || <Calculator className="w-8 h-8" />;
-     };
-
      const renderAvatar = (testimonialId: string) => {
           const testimonial = availableTestimonials.find(t => t._id === testimonialId);
           if (!testimonial) return null;
@@ -272,178 +257,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
      const timeline2 = odooData?.platformSection?.apps?.slice(6, 12) || [];
      const timeline3 = odooData?.platformSection?.apps?.slice(12, 18) || [];
 
-     const handleAsyncAction = async (action: () => Promise<void>, type: string) => {
-          setIsLoading(true);
-          setLoadingType(type);
-          try {
-               await action();
-          } finally {
-               setIsLoading(false);
-               setLoadingType('');
-          }
-     };
-
-     const handleConsultationClick = async () => {
-          await handleAsyncAction(async () => {
-               await new Promise(resolve => setTimeout(resolve, 1000));
-               // router.push('/contact');
-          }, 'appointment');
-     };
-
-     const handleCaseStudyClick = async () => {
-          await handleAsyncAction(async () => {
-               await new Promise(resolve => setTimeout(resolve, 1000));
-               // router.push('/contact');
-          }, 'projects');
-     };
-
-     const formatPrice = (price: number) => {
-          return new Intl.NumberFormat('fr-MA', {
-               style: 'currency',
-               currency: 'MAD',
-               minimumFractionDigits: 0,
-               maximumFractionDigits: 0
-          }).format(price).replace('MAD', 'Dhs');
-     };
-
-     function PricingCardsSection() {
-          const [isYearly, setIsYearly] = useState(false);
-
-          // Add null check for odooData
-          if (!odooData) {
-               return <Loader />;
-          }
-
-          // Get all features from the Ultra pack (last plan)
-          const ultraFeatures = odooData.pricing.plans[odooData.pricing.plans.length - 1].features;
-
-          return (
-               <>
-                    {/* Billing Toggle */}
-                    <div className="mt-8 flex justify-center">
-                         <div className="relative flex items-center bg-gray-100 rounded-lg p-1">
-                              <button
-                                   onClick={() => setIsYearly(false)}
-                                   className={`relative px-6 py-2 text-sm font-medium rounded-md transition-all ${!isYearly
-                                        ? 'bg-white text-gray-900 shadow-sm'
-                                        : 'text-gray-500 hover:text-gray-900'
-                                        }`}
-                              >
-                                   Mensuel
-                              </button>
-                              <button
-                                   onClick={() => setIsYearly(true)}
-                                   className={`relative px-6 py-2 text-sm font-medium rounded-md transition-all ${isYearly
-                                        ? 'bg-white text-gray-900 shadow-sm'
-                                        : 'text-gray-500 hover:text-gray-900'
-                                        }`}
-                              >
-                                   Annuel
-                                   <span className="ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium text-green-800" style={{ background: 'var(--color-secondary)', color: 'white' }}>
-                                        Économisez 17%
-                                   </span>
-                              </button>
-                         </div>
-                    </div>
-                    {/* Pricing Cards */}
-                    <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-6 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-4">
-                         {odooData.pricing.plans.map((plan) => (
-                              <div
-                                   key={plan.name}
-                                   className={`relative rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-200 ${plan.popular
-                                        ? 'ring-2'
-                                        : 'hover:shadow-xl transition-shadow duration-300'
-                                        }`}
-                                   style={plan.popular ? { borderColor: 'var(--color-secondary)', transform: 'scale(1.05)' } : {}}
-                              >
-                                   {plan.popular && (
-                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                                             <span
-                                                  className="inline-flex items-center rounded-full px-4 py-1 text-sm font-semibold text-white"
-                                                  style={{ background: 'var(--color-secondary)' }}
-                                             >
-                                                  Recommandé
-                                             </span>
-                                        </div>
-                                   )}
-                                   <div className="flex items-center justify-between">
-                                        <h3 className="text-lg font-semibold leading-8 text-gray-900">
-                                             {plan.name}
-                                        </h3>
-                                   </div>
-                                   <p className="mt-4 text-sm leading-6 text-gray-600">
-                                        {plan.description}
-                                   </p>
-                                   {/* Consultant Hours */}
-                                   <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                                        <p className="text-sm font-medium text-gray-900">Consultant dédié</p>
-                                        <p
-                                             className="text-lg font-bold"
-                                             style={{ color: 'var(--color-secondary)' }}
-                                        >
-                                             {plan.consultantHours}
-                                        </p>
-                                   </div>
-                                   <p className="mt-6 flex items-baseline gap-x-1">
-                                        <span className="text-3xl font-bold tracking-tight text-gray-900">
-                                             {formatPrice(isYearly ? plan.yearlyPrice : plan.monthlyPrice)}
-                                        </span>
-                                        <span className="text-sm font-semibold leading-6 text-gray-600">
-                                             /mois
-                                        </span>
-                                   </p>
-                                   {isYearly && (
-                                        <p className="mt-1 text-sm text-gray-500">
-                                             {formatPrice(plan.yearlyPrice * 12)} facturé annuellement
-                                        </p>
-                                   )}
-                                   <ul role="list" className="mt-6 space-y-2 text-sm leading-6 text-gray-600">
-                                        {ultraFeatures.map((feature) => {
-                                             const hasFeature = plan.features.includes(feature);
-                                             return (
-                                                  <li key={feature} className="flex gap-x-2 items-center">
-                                                       {hasFeature ? (
-                                                            <Check className="h-5 w-4 flex-none text-green-600" aria-hidden="true" />
-                                                       ) : (
-                                                            <X className="h-5 w-4 flex-none text-red-500" aria-hidden="true" />
-                                                       )}
-                                                       <span className={`text-xs ${hasFeature ? '' : 'text-red-500 line-through'}`}>{feature}</span>
-                                                  </li>
-                                             );
-                                        })}
-                                   </ul>
-                                   <button
-                                        className={`mt-6 block w-full rounded-md px-3 py-2 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors`}
-                                        style={
-                                             plan.popular
-                                                  ? {
-                                                       background: 'var(--color-secondary)',
-                                                       color: 'white',
-                                                       borderColor: 'var(--color-secondary)'
-                                                  }
-                                                  : {
-                                                       background: 'white',
-                                                       color: 'var(--color-secondary)',
-                                                       border: '1px solid var(--color-secondary)'
-                                                  }
-                                        }
-                                   >
-                                        {plan.cta}
-                                        <ArrowRight className="ml-2 inline h-4 w-4" />
-                                   </button>
-                              </div>
-                         ))}
-                    </div>
-               </>
-          );
-     }
-
      return (
           <div className="min-h-screen bg-white overflow-hidden">
                {/* Hero Section */}
                <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
-
-
 
                {/* Trust Metrics */}
                <section className="py-16 bg-gray-50">
@@ -460,8 +277,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          </div>
                     </div>
                </section>
-
-
 
                {/* Vertical Timeline Carousels */}
                <section className="py-20 bg-white overflow-hidden">
@@ -728,8 +543,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                     </div>
                </section>
 
-
-
                {/* Tarifs & Accompagnement Section */}
                <section className="py-20 bg-[#f7f5f7]">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -986,7 +799,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          </div>
                     </div>
                </section>
-
 
                <style jsx>{`
         @keyframes scroll-up {
