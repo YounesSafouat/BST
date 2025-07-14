@@ -148,7 +148,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 px-0 py-0 min-h-[80px] bg-white shadow transition-all duration-500 border-b border-gray-100 ${isLoaded ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}
+      className={`fixed top-0 left-0 w-full z-50 px-20  min-h-[80px] bg-white shadow transition-all duration-500 border-b border-gray-100 ${isLoaded ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}
     >
       <nav className="flex items-center justify-between w-full px-12 h-20">
         {/* Left: Logo only, vertically centered, larger size */}
@@ -158,7 +158,7 @@ export default function Header({ scrollY, isLoaded }: HeaderProps) {
               key={`${headerData?.logo?.image}-${headerData?.logo?.size}-${logoVersion}`}
               src={`${headerData?.logo?.image || "/bst.png"}?v=${logoVersion}&t=${Date.now()}`}
               alt={headerData?.logo?.alt || "blackswantechnology"}
-              className="object-contain w-20 h-20"
+              className="object-contain w-25 h-25"
             />
           </Link>
         </div>
