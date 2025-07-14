@@ -16,51 +16,7 @@ import Loader from '@/components/home/Loader';
 import { ContactContent, ContactHero, ContactStep, ContactField, ContactCard } from '@/app/types/content';
 
 export default function ContactDashboard() {
-  const [contactData, setContactData] = useState<ContactContent>({
-    hero: {
-      headline: "Parlons de Votre Projet",
-      highlight: "Projet",
-      description: "Chaque transformation commence par une conversation. Partagez-nous vos défis et objectifs pour que nous puissions vous proposer la solution parfaite."
-    },
-    steps: [
-      {
-        label: "Informations de Contact",
-        description: "Commençons par faire connaissance. Veuillez renseigner vos informations de base pour que nous puissions vous contacter.",
-        fields: [
-          { type: "text", name: "firstName", label: "Prénom", required: true },
-          { type: "text", name: "lastName", label: "Nom", required: true },
-          { type: "email", name: "email", label: "Email professionnel", required: true },
-          { type: "tel", name: "phone", label: "Téléphone", required: true },
-          { type: "text", name: "company", label: "Entreprise", required: true },
-          { type: "text", name: "position", label: "Poste", required: true },
-          { type: "url", name: "website", label: "Site web de l'entreprise", required: false }
-        ]
-      }
-    ],
-    cards: [
-      {
-        icon: "Phone",
-        title: "Appelez-nous",
-        description: "Parlons directement de votre projet",
-        contact: "+212 6 00 00 00 00",
-        subDescription: "Lun-Ven: 9h-18h"
-      },
-      {
-        icon: "Mail",
-        title: "Écrivez-nous",
-        description: "Réponse sous 2h en moyenne",
-        contact: "contact@blackswantechnology.ma",
-        subDescription: "Support 24/7"
-      },
-      {
-        icon: "MapPin",
-        title: "Visitez-nous",
-        description: "Rencontrons-nous en personne",
-        contact: "Casablanca, Maroc",
-        subDescription: "Twin Center"
-      }
-    ]
-  });
+  const [contactData, setContactData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -70,18 +26,12 @@ export default function ContactDashboard() {
 
   const fetchContactData = async () => {
     try {
-      const response = await fetch('/api/content?type=contact-page');
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+      const response = await fetch(`${baseUrl}/api/content?type=contact-page`);
       if (response.ok) {
         const data = await response.json();
         if (data.length > 0) {
-          // The API returns the data with a content field, extract it
-          const contactPageData = data[0];
-          if (contactPageData.content) {
-            setContactData(contactPageData.content);
-          } else {
-            // Fallback: if content field doesn't exist, use the data directly
-            setContactData(contactPageData);
-          }
+          setContactData(data[0]);
         }
       }
     } catch (error) {
@@ -97,30 +47,59 @@ export default function ContactDashboard() {
   };
 
   const saveContactData = async () => {
+    if (!contactData?._id) {
+      toast({
+        title: "Erreur",
+        description: "Aucune donnée à sauvegarder",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSaving(true);
     try {
-      const response = await fetch('/api/content/686e898f66bab2d583e8d937', {
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+      const requestBody = {
+        ...contactData,
+        title: 'Contact',
+        description: 'Page de contact dynamique avec étapes et cartes de contact',
+        isActive: true
+      };
+      
+      console.log('Saving contact data:', requestBody);
+      console.log('Contact data structure:', {
+        hasHero: !!contactData.hero,
+        hasSteps: !!contactData.steps,
+        hasCards: !!contactData.cards,
+        heroFields: contactData.hero ? Object.keys(contactData.hero) : [],
+        stepsCount: contactData.steps?.length || 0,
+        cardsCount: contactData.cards?.length || 0
+      });
+
+      const response = await fetch(`${baseUrl}/api/content/${contactData._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
         },
-        body: JSON.stringify({
-          title: 'Contact',
-          description: 'Page de contact dynamique avec étapes et cartes de contact',
-          content: contactData,
-          isActive: true
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
+        const savedData = await response.json();
+        console.log('Save successful, returned data:', savedData);
+        
+        // Update the local state with the saved data instead of refetching
+        setContactData(savedData);
+        
         toast({
           title: "Succès",
           description: "Données sauvegardées avec succès",
         });
-        // Refresh the data after saving
-        await fetchContactData();
       } else {
         const errorData = await response.json();
+        console.error('Save failed:', errorData);
         throw new Error(errorData.error || 'Erreur lors de la sauvegarde');
       }
     } catch (error) {
@@ -136,16 +115,16 @@ export default function ContactDashboard() {
   };
 
   const updateHeroField = (field: keyof ContactHero, value: string) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
       hero: { ...prev.hero, [field]: value }
     }));
   };
 
   const addStep = () => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      steps: [...prev.steps, {
+      steps: [...(prev.steps || []), {
         label: '',
         description: '',
         fields: []
@@ -154,25 +133,25 @@ export default function ContactDashboard() {
   };
 
   const removeStep = (index: number) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      steps: prev.steps.filter((_, i) => i !== index)
+      steps: prev.steps.filter((_: any, i: number) => i !== index)
     }));
   };
 
   const updateStep = (index: number, field: keyof ContactStep, value: any) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      steps: prev.steps.map((step, i) => 
+      steps: prev.steps.map((step: any, i: number) => 
         i === index ? { ...step, [field]: value } : step
       )
     }));
   };
 
   const addField = (stepIndex: number) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      steps: prev.steps.map((step, i) => 
+      steps: prev.steps.map((step: any, i: number) => 
         i === stepIndex ? {
           ...step,
           fields: [...step.fields, {
@@ -187,24 +166,24 @@ export default function ContactDashboard() {
   };
 
   const removeField = (stepIndex: number, fieldIndex: number) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      steps: prev.steps.map((step, i) => 
+      steps: prev.steps.map((step: any, i: number) => 
         i === stepIndex ? {
           ...step,
-          fields: step.fields.filter((_, j) => j !== fieldIndex)
+          fields: step.fields.filter((_: any, j: number) => j !== fieldIndex)
         } : step
       )
     }));
   };
 
   const updateField = (stepIndex: number, fieldIndex: number, field: keyof ContactField, value: any) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      steps: prev.steps.map((step, i) => 
+      steps: prev.steps.map((step: any, i: number) => 
         i === stepIndex ? {
           ...step,
-          fields: step.fields.map((f, j) => 
+          fields: step.fields.map((f: any, j: number) => 
             j === fieldIndex ? { ...f, [field]: value } : f
           )
         } : step
@@ -213,7 +192,7 @@ export default function ContactDashboard() {
   };
 
   const addCard = () => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
       cards: [...prev.cards, {
         icon: 'Phone',
@@ -226,16 +205,16 @@ export default function ContactDashboard() {
   };
 
   const removeCard = (index: number) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      cards: prev.cards.filter((_, i) => i !== index)
+      cards: prev.cards.filter((_: any, i: number) => i !== index)
     }));
   };
 
   const updateCard = (index: number, field: keyof ContactCard, value: string) => {
-    setContactData(prev => ({
+    setContactData((prev: any) => ({
       ...prev,
-      cards: prev.cards.map((card, i) => 
+      cards: prev.cards.map((card: any, i: number) => 
         i === index ? { ...card, [field]: value } : card
       )
     }));
@@ -276,7 +255,7 @@ export default function ContactDashboard() {
                 <Label htmlFor="hero-headline">Titre principal</Label>
                 <Input
                   id="hero-headline"
-                  value={contactData.hero.headline}
+                  value={contactData?.hero?.headline || ""}
                   onChange={(e) => updateHeroField('headline', e.target.value)}
                   placeholder="Parlons de Votre Projet"
                 />
@@ -285,7 +264,7 @@ export default function ContactDashboard() {
                 <Label htmlFor="hero-highlight">Mise en évidence</Label>
                 <Input
                   id="hero-highlight"
-                  value={contactData.hero.highlight}
+                  value={contactData?.hero?.highlight || ""}
                   onChange={(e) => updateHeroField('highlight', e.target.value)}
                   placeholder="Projet"
                 />
@@ -294,7 +273,7 @@ export default function ContactDashboard() {
                 <Label htmlFor="hero-description">Description</Label>
                 <Textarea
                   id="hero-description"
-                  value={contactData.hero.description}
+                  value={contactData?.hero?.description || ""}
                   onChange={(e) => updateHeroField('description', e.target.value)}
                   placeholder="Chaque transformation commence par une conversation..."
                 />
@@ -316,7 +295,7 @@ export default function ContactDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {contactData.steps.map((step, stepIndex) => (
+              {(contactData?.steps || []).map((step: any, stepIndex: number) => (
                 <div key={stepIndex} className="p-4 border rounded-lg space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="font-semibold">Étape {stepIndex + 1}</h4>
@@ -360,7 +339,7 @@ export default function ContactDashboard() {
                       </Button>
                     </div>
                     
-                    {step.fields.map((field, fieldIndex) => (
+                    {step.fields.map((field: any, fieldIndex: number) => (
                       <div key={fieldIndex} className="p-3 border rounded-lg space-y-3">
                         <div className="flex justify-between items-center">
                           <h6 className="font-medium">Champ {fieldIndex + 1}</h6>
@@ -464,7 +443,7 @@ export default function ContactDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {contactData.cards.map((card, index) => (
+              {(contactData?.cards || []).map((card: any, index: number) => (
                 <div key={index} className="p-4 border rounded-lg space-y-4">
                   <div className="flex justify-between items-center">
                     <h4 className="font-semibold">Carte {index + 1}</h4>

@@ -191,9 +191,7 @@ export default function CasClient() {
                 <h2 className="text-2xl font-bold text-black">
                   {filteredClients.length} Études de Cas
                 </h2>
-                <div className="text-sm text-gray">
-                  Découvrez nos réalisations par secteur et solution
-                </div>
+                
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

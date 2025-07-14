@@ -6,10 +6,16 @@ import Content from '@/models/Content';
 export async function GET(request: NextRequest) {
   try {
     await connectDB();
-    const id = request.url.split('/').pop();
+    
+    // Extract ID from the URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
+    
     const content = await Content.findById(id);
     if (!content) {
       return NextResponse.json({ error: 'Content not found' }, { status: 404 });
@@ -25,15 +31,43 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     await connectDB();
-    const id = request.url.split('/').pop();
+    
+    // Extract ID from the URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
+    
     const data = await request.json();
-    const content = await Content.findByIdAndUpdate(id, data, { 
-      new: true, 
-      runValidators: true 
+    
+    console.log('API PUT - Received data:', JSON.stringify(data, null, 2));
+    console.log('API PUT - Data structure check:', {
+      hasHero: !!data.hero,
+      hasSteps: !!data.steps,
+      hasCards: !!data.cards,
+      heroFields: data.hero ? Object.keys(data.hero) : [],
+      stepsCount: data.steps?.length || 0,
+      cardsCount: data.cards?.length || 0
     });
+    
+    // Ensure we preserve the _id and timestamps
+    const updateData = {
+      ...data,
+      updatedAt: new Date()
+    };
+    
+    // Use findByIdAndUpdate with $set to preserve all fields
+    const content = await Content.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { new: true, runValidators: false }
+    );
+    
+    console.log('API PUT - Saved content:', JSON.stringify(content, null, 2));
+    
     if (!content) {
       return NextResponse.json({ error: 'Content not found' }, { status: 404 });
     }
@@ -48,10 +82,16 @@ export async function PUT(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     await connectDB();
-    const id = request.url.split('/').pop();
+    
+    // Extract ID from the URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
+    
     const data = await request.json();
     const content = await Content.findByIdAndUpdate(id, data, { 
       new: true, 
@@ -71,10 +111,16 @@ export async function PATCH(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     await connectDB();
-    const id = request.url.split('/').pop();
+    
+    // Extract ID from the URL path
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
+    
     const content = await Content.findByIdAndDelete(id);
     if (!content) {
       return NextResponse.json({ error: 'Content not found' }, { status: 404 });

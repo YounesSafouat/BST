@@ -24,8 +24,11 @@ interface HeroData {
     suffix: string;
     label: string;
   }>;
+  companyName?: string;
+  badge?: string;
+  emphasis?: string;
 }
-  
+
 interface OdooHeroSplitProps {
   heroData: HeroData;
   isPreview?: boolean;
@@ -100,20 +103,23 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
+
           {/* Left Side - Text Content */}
           <div className="space-y-8">
-            {/* Odoo Logo */}
-            <div className="flex justify-start">
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                <Image
-                  src={heroData.logo || "/Odoo.svg"}
-                  alt="Odoo"
-                  width={120}
-                  height={60}
-                  className="h-12 w-auto"
+            {/* Avatar + Badge */}
+            <div className="flex items-center gap-4 mb-2">
+              {/* Odoo Silver Partner Logo as avatar */}
+              <div className="w-20 h-20 rounded-full bg-white border flex items-center justify-center overflow-hidden">
+                <img
+                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/oodo-silver-partner-logo.svg"
+                  alt="Odoo Silver Partner Logo"
+                  className="w-12 h-12 object-contain"
                 />
               </div>
+              {/* Dynamic Badge */}
+              <span className="bg-white text-[var(--color-secondary)] border border-[var(--color-secondary)] rounded-full px-4 py-1 text-xs font-semibold shadow-sm">
+                {heroData?.badge || 'Partenaire Silver Odoo'}
+              </span>
             </div>
 
             {/* Main Headline */}
@@ -131,17 +137,15 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
               {heroData.subheadline}
             </p>
 
-            {/* Description */}
-            <p
-              className={`text-lg text-gray-600 leading-relaxed transform transition-all duration-1000 delay-600 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-              style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
-              dangerouslySetInnerHTML={{ __html: heroData.description }}
-            />
+            {/* Emphasis Line (bold/colored) */}
+            {heroData.emphasis && (
+              <div className="text-lg font-bold text-[var(--color-secondary)] mb-2">{heroData.emphasis}</div>
+            )}
 
             {/* CTA Buttons */}
             <div className={`flex flex-col sm:flex-row gap-4 transform transition-all duration-1000 delay-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <button
-                className="group bg-[var(--color-secondary)] text-white px-8 py-4 rounded-lg hover:bg-[var(--color-secondary)]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                className="group bg-[var(--color-secondary)] text-white px-8 py-4 rounded-full hover:bg-[var(--color-secondary)]/90 transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 onClick={handleConsultationClick}
                 disabled={isLoading}
@@ -150,12 +154,11 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 {getIconComponent(heroData.ctaPrimary.icon)}
               </button>
               <button
-                className="group border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg hover:border-[var(--color-secondary)] hover:text-[var(--color-secondary)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                className="group border-2 border-[var(--color-secondary)] text-[var(--color-secondary)] px-8 py-4 rounded-full hover:bg-[var(--color-secondary)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 onClick={handleCaseStudyClick}
                 disabled={isLoading}
               >
-                {getIconComponent(heroData.ctaSecondary.icon)}
                 <span>{loadingType === 'projects' ? 'CHARGEMENT...' : heroData.ctaSecondary.text}</span>
               </button>
             </div>
@@ -178,7 +181,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                     <source src={heroData.videoUrl} type="video/webm" />
                     Your browser does not support the video tag.
                   </video>
-                  
+
                   {/* Sound Toggle Button */}
                   <button
                     onClick={toggleSound}
@@ -188,12 +191,12 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                     {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
                   </button>
                 </div>
-                
+
                 {/* Video Overlay Elements */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
               </div>
             </div>
-            
+
             {/* Floating Stats */}
             {heroData.stats && heroData.stats.length > 0 && (
               <>
@@ -203,7 +206,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                     <div className="text-sm text-gray-600">{heroData.stats[0]?.label}</div>
                   </div>
                 </div>
-                
+
                 {heroData.stats.length > 1 && (
                   <div className="absolute -top-20 -right-20 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
                     <div className="text-center">

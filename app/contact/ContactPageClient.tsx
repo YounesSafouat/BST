@@ -46,6 +46,8 @@ export default function ContactPage() {
   const fetchContactData = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+      console.log(baseUrl);
+      
       const response = await fetch(`${baseUrl}/api/content?type=contact-page`);
       if (response.ok) {
         const data = await response.json();
@@ -237,7 +239,6 @@ export default function ContactPage() {
           </div>
                 </div>
       </section>
-
       {/* Contact Form */}
       <section className="py-16 px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
@@ -297,7 +298,6 @@ export default function ContactPage() {
             </form>
         </div>
       </section>
-
       {/* Contact Cards */}
       <section className="py-20 px-6 lg:px-8 bg-gray-50">
         <div className="max-w-6xl mx-auto">
