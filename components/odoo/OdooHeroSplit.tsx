@@ -129,6 +129,11 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
               dangerouslySetInnerHTML={{ __html: heroData.headline }}
             />
 
+            {/* Experience Badge */}
+            <div className="inline-block bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] font-semibold px-4 py-1 rounded-full text-xs mb-2">
+              3 ans d'expérience Odoo
+            </div>
+
             {/* Subtitle */}
             <p
               className={`text-xl md:text-2xl text-gray-700 leading-relaxed font-normal transform transition-all duration-1000 delay-500 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
