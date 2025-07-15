@@ -7,6 +7,7 @@ import { ArrowRight, Users, Play, Volume2, VolumeX } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import StatsSection from '../StatsSection';
 
 interface HeroData {
   headline: string;
@@ -99,12 +100,12 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
   };
 
   return (
-    <section id="hero" className="relative pt-32 pb-20 lg:pb-32 overflow-hidden">
+    <section id="hero" className="relative h-screen flex flex-col justify-center overflow-hidden">
       <div className="absolute -bottom-1/3 -left-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="relative w-full px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-center mb-16 max-w-7xl mx-auto">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -194,6 +195,11 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
               </div>
             </div>
           </motion.div>
+        </div>
+
+        {/* Trust Metrics - Integrated in hero */}
+        <div className="mt-8 w-full">
+          <StatsSection />
         </div>
       </div>
     </section>

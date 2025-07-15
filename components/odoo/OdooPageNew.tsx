@@ -29,7 +29,6 @@ import OdooHeroSplit from './OdooHeroSplit';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
-import StatsSection from '../StatsSection';
 import PricingSection from '../PricingSection';
 import ContactSection from '../ContactSection';
 
@@ -264,19 +263,20 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
      return (
           <div className="min-h-screen bg-white overflow-hidden">
-               {/* Hero Section */}
-               <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
+               {/* Hero Section - Full Screen */}
+               <div className="h-screen">
+                    <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
+               </div>
 
-               {/* Trust Metrics */}
-               <StatsSection />
+
                {/* Vertical Timeline Carousels */}
-               <section className="py-20 bg-white overflow-hidden">
+               <section className="py-12 bg-white overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <div className="text-center mb-16">
-                              <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6">
+                         <div className="text-center mb-12">
+                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
                                    {odooData.platformSection.headline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{odooData.platformSection.headline.split(' ').slice(1).join(' ')}</span>
                               </h2>
-                              <p className="text-xl text-gray-600 max-w-3xl mx-auto font-light">
+                              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
                                    {odooData.platformSection.subheadline}
                               </p>
                          </div>
@@ -413,12 +413,12 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                {clientCases.length > 0 && (
                     <section className="py-20 bg-white">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                              <div className="text-center mb-16">
+                              <div className="text-center mb-12">
                                    <h2 className="text-sm font-semibold text-[var(--color-secondary)] tracking-widest uppercase">Cas Clients</h2>
-                                   <p className="mt-3 text-4xl font-bold text-gray-900 tracking-tighter">
+                                   <p className="mt-3 text-3xl font-semibold text-gray-900 tracking-tight">
                                         Ils nous font confiance
                                    </p>
-                                   <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
+                                   <p className="mt-4 max-w-2xl mx-auto text-base text-gray-600">
                                         Des entreprises de toutes tailles qui ont transformé leur activité avec Odoo
                                    </p>
                               </div>
@@ -542,7 +542,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE MÉTHODOLOGIE</div>
-                              <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
                                    Un processus éprouvé pour garantir votre succès
                               </h2>
                          </div>
@@ -590,8 +590,8 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE AGENCE</div>
-                              <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Plus qu'un intégrateur, un partenaire de confiance.</h2>
-                              <p className="text-lg text-gray-600 max-w-2xl mx-auto">Une équipe de consultants certifiés, passionnés par l'accompagnement de nos clients dans leur transformation digitale.</p>
+                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">Plus qu'un intégrateur, un partenaire de confiance.</h2>
+                              <p className="text-base text-gray-600 max-w-2xl mx-auto">Une équipe de consultants certifiés, passionnés par l'accompagnement de nos clients dans leur transformation digitale.</p>
                          </div>
                          <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
                               {/* Left: Image with badge */}
@@ -645,8 +645,8 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
                                    <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
-                                   <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-2">Nos clients témoignent</h2>
-                                   <div className="text-lg text-gray-600">Découvrez pourquoi nos clients nous recommandent</div>
+                                   <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-2">Nos clients témoignent</h2>
+                                   <div className="text-base text-gray-600">Découvrez pourquoi nos clients nous recommandent</div>
                               </div>
                               <div className="flex flex-col md:flex-row justify-center items-stretch gap-8">
                                    {odooData.testimonials.map((testimonialId: string, index: number) => {

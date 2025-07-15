@@ -22,9 +22,9 @@ export default function StatsSection() {
      ];
 
      return (
-          <section className="py-16 bg-[var(--odoo-purple-light)]">
+          <section className="py-8 bg-[var(--odoo-purple-light)] w-full">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                          {stats.map((stat, index) => (
                               <motion.div
                                    key={index}
