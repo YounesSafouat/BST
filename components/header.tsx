@@ -1,188 +1,128 @@
-"use client"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Phone, MessageCircle, Calendar, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import {
-  Menu,
-  X,
-  ArrowRight,
-  ChevronDown,
-  Mail,
-  Phone,
-  MapPin,
-  CheckCircle,
-  Star,
-  Briefcase,
-  HeadphonesIcon,
-  Database,
-  PieChart,
-  Workflow,
-  ShoppingCart,
-  Calendar,
-  Building,
-  GraduationCap,
-  TrendingUp,
-  Target,
-  Rocket,
-  BarChart3,
-  Zap,
-  Users,
-  Globe,
-  MessageCircle,
-  Home,
-  FileText,
-} from "lucide-react"
-import { useState, useEffect } from "react"
-import { FaWhatsapp } from "react-icons/fa"
-import { useGlobalLoader } from "@/components/LoaderProvider"
-import { useRouter } from "next/navigation"
-import { useButtonAnalytics } from '@/hooks/use-analytics'
+export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoaded: boolean }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-interface HeaderProps {
-  scrollY: number
-  isLoaded: boolean
-}
+  const isScrolled = scrollY > 50;
 
-const iconMap: { [key: string]: any } = {
-  Home,
-  Users,
-  Briefcase,
-  FileText,
-  TrendingUp,
-  Target,
-  HeadphonesIcon,
-  BarChart3,
-  Rocket,
-  GraduationCap,
-  Zap,
-  Database,
-  ShoppingCart,
-  Building,
-  Globe,
-  Star,
-  Mail,
-  CheckCircle,
-  PieChart,
-  Workflow,
-  Calendar,
-  MessageCircle,
-}
+  const navigation = [
+    { name: 'Solutions', href: '#modules' },
+    { name: 'Tarifs', href: '#pricing' },
+    { name: 'Témoignages', href: '#testimonials' },
+    { name: 'Notre Agence', href: '#team' },
+  ];
 
-export default function Header({ scrollY, isLoaded }: HeaderProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [headerData, setHeaderData] = useState<any>(null)
-  const [headerClients, setHeaderClients] = useState<any[]>([])
-  const [casClientMenuClients, setCasClientMenuClients] = useState<any[]>([])
-  const [logoVersion, setLogoVersion] = useState(0)
-  const { showLoader, hideLoader } = useGlobalLoader()
-  const router = useRouter()
-  const { trackButtonClick } = useButtonAnalytics()
-
-  const fetchHeaderData = () => {
-    // Fetch header data with cache busting
-    fetch("/api/content?type=header&t=" + Date.now())
-      .then(res => res.json())
-      .then(data => {
-        if (data.length > 0) {
-          console.log("Header data fetched:", data[0].content)
-          console.log("Logo size:", data[0].content?.logo?.size)
-          setHeaderData(data[0].content)
-          setLogoVersion(prev => prev + 1)
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching header data:", error)
-        setHeaderData(null)
-      })
-  }
-
-  useEffect(() => {
-    fetchHeaderData()
-  }, [])
-
-  useEffect(() => {
-    if (headerData?.logo?.size) {
-      console.log("Logo size changed to:", headerData.logo.size)
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
     }
-  }, [headerData?.logo?.size])
-
-  useEffect(() => {
-    // Fetch clients data
-    fetch("/api/content?type=clients-page")
-      .then(res => res.json())
-      .then(data => {
-        const page = Array.isArray(data) ? data[0] : data
-        const clients = page?.content?.clientCases || []
-        const featured = clients.filter((c: any) => c.featuredInHeader).slice(0, 2)
-        setHeaderClients(featured)
-        setCasClientMenuClients(
-          featured.length > 0 ? featured : clients.slice(0, 2)
-        )
-      })
-      .catch(() => {
-        setHeaderClients([])
-        setCasClientMenuClients([])
-      })
-  }, [])
-
-  const handleAppointmentClick = async () => {
-    showLoader()
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      window.location.href = headerData?.cta?.url || '/rendez-vous'
-    } finally {
-      hideLoader()
-    }
-  }
-
-  const handleNavClick = (path: string) => {
-    showLoader();
-    router.push(path);
   };
 
-  const getIcon = (iconName: string) => {
-    const IconComponent = iconMap[iconName]
-    return IconComponent ? <IconComponent className="w-4 h-4" /> : null
-  }
-
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 min-h-[64px] bg-[#f7f2f6]/80 backdrop-blur-md border-b border-[var(--color-secondary)]/10`}
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-white/95 backdrop-blur-md shadow-sm'
+        : 'bg-transparent'
+        }`}
     >
-      <div className="max-w-7xl mx-auto w-full">
-        <nav className="flex items-center justify-between w-full px-8 h-16">
-          {/* Left: Logo only, original image, smaller size */}
-          <div className="flex items-center flex-shrink-0 w-auto h-full">
-            <Link href="/" className="flex items-center h-full">
-              <img
-                key={`${headerData?.logo?.image}-${headerData?.logo?.size}-${logoVersion}`}
-                src={`${headerData?.logo?.image || "/bst.png"}?v=${logoVersion}&t=${Date.now()}`}
-                alt={headerData?.logo?.alt || "blackswantechnology"}
-                className="object-contain w-20 h-20"
-              />
-            </Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          {/* Logo */}
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection('#hero')}>
+            <img src="bst.png" alt="BlackSwan" />
           </div>
-          {/* Center: Navigation Links */}
-          <div className="hidden md:flex flex-1 justify-center items-center gap-8 h-full">
-            <Link href="#solutions" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Solutions</Link>
-            <Link href="#tarifs" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Tarifs</Link>
-            <Link href="#temoignages" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Témoignages</Link>
-            <Link href="#agence" className="text-gray-700 hover:text-[var(--color-secondary)] font-medium transition-colors">Notre Agence</Link>
-          </div>
-          {/* Right: Icons + Action Button, smaller */}
-          <div className="flex items-center gap-4 ml-auto h-full">
-            <Phone className="w-5 h-5 text-gray-700 hover:text-[var(--color-secondary)] cursor-pointer" />
-            <MessageCircle className="w-5 h-5 text-gray-700 hover:text-[var(--color-secondary)] cursor-pointer" />
-            <button
-              onClick={handleAppointmentClick}
-              className="ml-2 bg-[var(--color-secondary)] text-white font-semibold px-6 py-2 rounded-full flex items-center gap-2 hover:bg-[var(--color-secondary)]/90 transition-all"
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {navigation.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => scrollToSection(item.href)}
+                className="text-gray-700 hover:text-[var(--odoo-purple)] transition-colors duration-200 font-medium text-sm"
+              >
+                {item.name}
+              </button>
+            ))}
+          </nav>
+
+          {/* Contact Actions */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-gray-700 hover:text-[var(--odoo-purple)]"
+              onClick={() => window.open('tel:+33123456789')}
             >
-              Prendre RDV <Calendar className="w-5 h-5 ml-2" />
-            </button>
+              <Phone className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 text-gray-700 hover:text-[var(--odoo-accent)]"
+              onClick={() => window.open('https://wa.me/33123456789', '_blank')}
+            >
+              <MessageCircle className="w-4 h-4" />
+            </Button>
+            <Button
+              size="sm"
+              className="bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] gap-2 rounded-full px-4 text-sm"
+              onClick={() => scrollToSection('#contact')}
+            >
+              Prendre RDV
+              <Calendar className="w-3 h-3" />
+            </Button>
           </div>
-        </nav>
+
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </Button>
+        </div>
       </div>
-    </header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-white border-t"
+          >
+            <div className="px-4 py-4 space-y-4">
+              {navigation.map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => scrollToSection(item.href)}
+                  className="block w-full text-left py-2 text-gray-700 hover:text-[var(--odoo-purple)] transition-colors"
+                >
+                  {item.name}
+                </button>
+              ))}
+              <div className="flex flex-col gap-3 pt-4 border-t">
+                <Button
+                  className="bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] gap-2 justify-center"
+                  onClick={() => scrollToSection('#contact')}
+                >
+                  Prendre RDV
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }

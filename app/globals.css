@@ -12,6 +12,11 @@
   --color-gray: #6b7280;           /* Gray */
   --color-green: #10b981;          /* Green */
   
+  /* Odoo Purple Theme */
+  --odoo-purple: #714B67;
+  --odoo-purple-dark: #5A3A52;
+  --odoo-purple-light: #F7F2F6;
+  
   /* Tailwind/shadcn required variables */
   --background: 0 0% 100%; /* white */
   --foreground: 222.2 47.4% 11.2%; /* black */

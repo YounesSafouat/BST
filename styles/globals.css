@@ -47,8 +47,6 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-    --w-md-editor-text-color: #000 !important;
-    --w-md-editor-bg-color: #fff !important;
   }
   .dark {
     --background: 0 0% 3.9%;

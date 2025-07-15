@@ -21,12 +21,17 @@ import {
      Calendar,
      Shield,
      Phone,
-     Mail
+     Mail,
+     BarChart3,
+     FileText
 } from 'lucide-react';
 import OdooHeroSplit from './OdooHeroSplit';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
+import StatsSection from '../StatsSection';
+import PricingSection from '../PricingSection';
+import ContactSection from '../ContactSection';
 
 interface Testimonial {
      _id: string;
@@ -263,21 +268,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
 
                {/* Trust Metrics */}
-               <section className="py-20 bg-[#f7f2f6]">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <div className="flex flex-col md:flex-row justify-center items-center gap-8">
-                              {odooData.trustMetrics.map((metric, index) => (
-                                   <div key={index} className="bg-white rounded-xl px-12 py-8 text-center flex flex-col items-center min-w-[220px]">
-                                        <div className="text-4xl font-black text-[var(--color-secondary)] mb-1">
-                                             <AnimatedCounter target={metric.number} suffix={metric.suffix} />
-                                        </div>
-                                        <div className="text-base font-semibold text-gray-900 mb-1">{metric.label}</div>
-                                   </div>
-                              ))}
-                         </div>
-                    </div>
-               </section>
-
+               <StatsSection />
                {/* Vertical Timeline Carousels */}
                <section className="py-20 bg-white overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -422,108 +413,126 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                {clientCases.length > 0 && (
                     <section className="py-20 bg-white">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                              <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-gray-500 font-semibold mb-2">CAS CLIENTS</div>
-                                   <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                              <div className="text-center mb-16">
+                                   <h2 className="text-sm font-semibold text-[var(--color-secondary)] tracking-widest uppercase">Cas Clients</h2>
+                                   <p className="mt-3 text-4xl font-bold text-gray-900 tracking-tighter">
                                         Ils nous font confiance
-                                   </h2>
-                                   <p className="text-lg text-gray-600">
+                                   </p>
+                                   <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
                                         Des entreprises de toutes tailles qui ont transformé leur activité avec Odoo
                                    </p>
                               </div>
-                              {/* Carousel Cards */}
-                              {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).length === 1 ? (
-                                   <div className="flex justify-center mb-8">
-                                        {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, idx) => (
-                                             <Link key={client.slug} href={`/cas-client/${client.slug}`} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-8 flex flex-col items-center text-center hover:ring-2 hover:ring-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
-                                                  {/* Logo or Initial */}
-                                                  {client.logo ? (
-                                                       <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center mb-6">
-                                                            <Image src={client.logo} alt={client.name} width={60} height={60} className="object-contain w-12 h-12" />
-                                                       </div>
-                                                  ) : (
-                                                       <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center mb-6">
-                                                            <span className="text-3xl font-bold text-gray-500">{client.name.charAt(0)}</span>
-                                                       </div>
-                                                  )}
-                                                  <div className="mb-2 text-xl font-bold text-gray-900">{client.name}</div>
-                                                  <div className="text-sm text-gray-500 mb-4">{client.sector}</div>
-                                                  <div className="w-full border-t border-gray-200 my-4"></div>
-                                                  <div className="text-xs font-semibold text-gray-500 mb-2">Modules déployés</div>
-                                                  <div className="flex flex-wrap justify-center gap-2 mb-2">
-                                                       {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => (
-                                                            <div key={i} className="inline-flex items-center px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 text-[var(--color-secondary)] text-sm font-medium">
-                                                                 {/* You can add an icon here if you have one per module */}
-                                                                 {sol.module}
+
+                              <div className="relative">
+                                   <div className="grid lg:grid-cols-3 gap-8">
+                                        {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, index) => (
+                                             <div key={`${client.slug}-${clientCarouselPage}-${index}`} className="group">
+                                                  <Link href={`/cas-client/${client.slug}`} className="block h-full">
+                                                       <div className="h-full bg-[var(--color-secondary)]/5 border border-gray-200/80 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-2xl p-8">
+                                                            <div className="flex flex-col items-center text-center">
+                                                                 <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-6 overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105">
+                                                                      {client.logo ? (
+                                                                           <Image
+                                                                                src={client.logo}
+                                                                                alt={`${client.name} logo`}
+                                                                                width={96}
+                                                                                height={96}
+                                                                                className="max-w-16 max-h-16 object-contain"
+                                                                                onError={(e) => {
+                                                                                     e.currentTarget.style.display = 'none';
+                                                                                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                                                }}
+                                                                           />
+                                                                      ) : null}
+                                                                      <span className="text-2xl font-bold text-[var(--color-secondary)] hidden">
+                                                                           {client.name.charAt(0)}
+                                                                      </span>
+                                                                 </div>
+                                                                 <h3 className="text-xl font-bold text-gray-900 mb-2">{client.name}</h3>
+                                                                 <p className="text-gray-600 text-sm mb-6">{client.sector}</p>
+
+                                                                 <div className="w-full pt-6 border-t border-gray-300/60">
+                                                                      <h4 className="text-sm font-semibold text-gray-700 mb-4">Modules déployés</h4>
+                                                                      <div className="flex gap-3 justify-center flex-wrap">
+                                                                           {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => {
+                                                                                // Map module names to icons
+                                                                                const getModuleIcon = (moduleName: string) => {
+                                                                                     const iconMap: { [key: string]: any } = {
+                                                                                          'CRM': Users,
+                                                                                          'Project': BarChart3,
+                                                                                          'Accounting': FileText,
+                                                                                          'Manufacturing': Settings,
+                                                                                          'Inventory': Package,
+                                                                                          'E-commerce': ShoppingCart,
+                                                                                     };
+                                                                                     return iconMap[moduleName] || Settings;
+                                                                                };
+
+                                                                                const Icon = getModuleIcon(sol.module);
+                                                                                return (
+                                                                                     <div key={i} className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border">
+                                                                                          <Icon className="w-6 h-6 text-[var(--color-secondary)]" />
+                                                                                     </div>
+                                                                                );
+                                                                           })}
+                                                                      </div>
+                                                                 </div>
                                                             </div>
-                                                       ))}
-                                                  </div>
-                                             </Link>
+                                                       </div>
+                                                  </Link>
+                                             </div>
                                         ))}
                                    </div>
-                              ) : (
-                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                                        {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, idx) => (
-                                             <Link key={client.slug} href={`/cas-client/${client.slug}`} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 p-8 flex flex-col items-center text-center hover:ring-2 hover:ring-[var(--color-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
-                                                  {/* Logo or Initial */}
-                                                  {client.logo ? (
-                                                       <div className="w-20 h-20 rounded-xl bg-gray-50 flex items-center justify-center mb-6">
-                                                            <Image src={client.logo} alt={client.name} width={60} height={60} className="object-contain w-12 h-12" />
-                                                       </div>
-                                                  ) : (
-                                                       <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center mb-6">
-                                                            <span className="text-3xl font-bold text-gray-500">{client.name.charAt(0)}</span>
-                                                       </div>
-                                                  )}
-                                                  <div className="mb-2 text-xl font-bold text-gray-900">{client.name}</div>
-                                                  <div className="text-sm text-gray-500 mb-4">{client.sector}</div>
-                                                  <div className="w-full border-t border-gray-200 my-4"></div>
-                                                  <div className="text-xs font-semibold text-gray-500 mb-2">Modules déployés</div>
-                                                  <div className="flex flex-wrap justify-center gap-2 mb-2">
-                                                       {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => (
-                                                            <div key={i} className="inline-flex items-center px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 text-[var(--color-secondary)] text-sm font-medium">
-                                                                 {/* You can add an icon here if you have one per module */}
-                                                                 {sol.module}
-                                                            </div>
-                                                       ))}
-                                                  </div>
-                                             </Link>
-                                        ))}
-                                   </div>
-                              )}
-                              {/* Carousel Navigation */}
-                              <div className="flex items-center justify-center gap-4 mb-4">
-                                   <button
-                                        className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-[var(--color-secondary)] hover:bg-gray-100 transition"
-                                        onClick={() => setClientCarouselPage((prev) => Math.max(prev - 1, 0))}
-                                        disabled={clientCarouselPage === 0}
-                                        aria-label="Précédent"
-                                   >
-                                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                                   </button>
-                                   {/* Dots */}
-                                   {Array.from({ length: Math.ceil(clientCases.length / clientsPerPage) }).map((_, i) => (
+
+                                   {/* Navigation Buttons */}
+                                   <div className="flex justify-center items-center gap-4 mt-12">
                                         <button
-                                             key={i}
-                                             className={`w-3 h-3 rounded-full mx-1 ${i === clientCarouselPage ? 'bg-[var(--color-secondary)]' : 'bg-gray-300'}`}
-                                             onClick={() => setClientCarouselPage(i)}
-                                             aria-label={`Aller à la page ${i + 1}`}
-                                        />
-                                   ))}
-                                   <button
-                                        className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 text-[var(--color-secondary)] hover:bg-gray-100 transition"
-                                        onClick={() => setClientCarouselPage((prev) => Math.min(prev + 1, Math.ceil(clientCases.length / clientsPerPage) - 1))}
-                                        disabled={clientCarouselPage === Math.ceil(clientCases.length / clientsPerPage) - 1}
-                                        aria-label="Suivant"
-                                   >
-                                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                                   </button>
-                              </div>
-                              {/* Voir tous nos cas clients */}
-                              <div className="flex justify-center mt-4">
-                                   <a href="/cas-client" className="text-[var(--color-secondary)] font-semibold flex items-center gap-2 hover:underline">
-                                        Voir tous nos cas clients <ArrowRight className="w-4 h-4" />
-                                   </a>
+                                             onClick={() => setClientCarouselPage((prev) => Math.max(prev - 1, 0))}
+                                             disabled={clientCarouselPage === 0}
+                                             className="w-10 h-10 rounded-full border border-[var(--color-secondary)] text-[var(--color-secondary)] hover:bg-[var(--color-secondary)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                             aria-label="Précédent"
+                                        >
+                                             <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                                                  <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                             </svg>
+                                        </button>
+
+                                        <div className="flex gap-2">
+                                             {Array.from({ length: Math.ceil(clientCases.length / clientsPerPage) }).map((_, index) => (
+                                                  <button
+                                                       key={index}
+                                                       onClick={() => setClientCarouselPage(index)}
+                                                       className={`w-2 h-2 rounded-full transition-colors ${index === clientCarouselPage
+                                                            ? 'bg-[var(--color-secondary)]'
+                                                            : 'bg-gray-300'
+                                                            }`}
+                                                       aria-label={`Aller à la page ${index + 1}`}
+                                                  />
+                                             ))}
+                                        </div>
+
+                                        <button
+                                             onClick={() => setClientCarouselPage((prev) => Math.min(prev + 1, Math.ceil(clientCases.length / clientsPerPage) - 1))}
+                                             disabled={clientCarouselPage === Math.ceil(clientCases.length / clientsPerPage) - 1}
+                                             className="w-10 h-10 rounded-full border border-[var(--color-secondary)] text-[var(--color-secondary)] hover:bg-[var(--color-secondary)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                                             aria-label="Suivant"
+                                        >
+                                             <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                                                  <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                             </svg>
+                                        </button>
+                                   </div>
+
+                                   {/* View All Link */}
+                                   <div className="text-center mt-8">
+                                        <Link
+                                             href="/cas-client"
+                                             className="inline-flex items-center text-[var(--color-secondary)] hover:text-[var(--color-secondary)]/80 hover:bg-[var(--color-secondary)]/5 px-4 py-2 rounded-lg transition-colors group"
+                                        >
+                                             Voir tous nos cas clients
+                                             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </Link>
+                                   </div>
                               </div>
                          </div>
                     </section>
@@ -575,74 +584,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                </section>
 
                {/* Tarifs & Accompagnement Section */}
-               <section className="py-20 bg-[#f7f5f7]">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <div className="text-center mb-12">
-                              <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-                                   TARIFS & ACCOMPAGNEMENT
-                              </div>
-                              <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
-                                   Un partenariat, pas seulement une prestation
-                              </h2>
-                              <p className="text-lg text-gray-600">
-                                   Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions.
-                              </p>
-                         </div>
-                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                              {/* Pack Démarrage */}
-                              <div className="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-start relative">
-                                   <div className="text-xl font-bold text-[var(--color-secondary)] mb-2">Pack Démarrage</div>
-                                   <div className="text-gray-600 mb-4">Idéal pour débuter avec Odoo rapidement et efficacement.</div>
-                                   <div className="text-2xl font-black text-gray-900 mb-1">À partir de 1 500€</div>
-                                   <div className="text-gray-500 text-sm mb-4">~25 heures d'accompagnement</div>
-                                   <ul className="mb-8 space-y-2 text-gray-700">
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Audit détaillé de vos besoins</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Configuration de base Odoo</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Formation initiale équipe</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Support au démarrage (30j)</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Documentation personnalisée</li>
-                                   </ul>
-                                   <button className="w-full rounded-full bg-[var(--color-secondary)] text-white font-semibold py-3 mt-auto flex items-center justify-center gap-2 group">
-                                        Obtenir un devis <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                                   </button>
-                              </div>
-                              {/* Pack Croissance */}
-                              <div className="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-start border-2 border-[var(--color-secondary)] relative">
-                                   <div className="text-xl font-bold text-[var(--color-secondary)] mb-2">Pack Croissance</div>
-                                   <div className="text-gray-600 mb-4">Solution complète pour les entreprises en développement.</div>
-                                   <div className="text-2xl font-black text-gray-900 mb-1">À partir de 5 000€</div>
-                                   <div className="text-gray-500 text-sm mb-4">~100 heures d'accompagnement</div>
-                                   <ul className="mb-8 space-y-2 text-gray-700">
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Tous les avantages du pack Démarrage</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Développements spécifiques</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Intégration modules avancés</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Formation approfondie des équipes</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Accompagnement mensuel (6 mois)</li>
-                                   </ul>
-                                   <button className="w-full rounded-full bg-[var(--color-secondary)] text-white font-semibold py-3 mt-auto flex items-center justify-center gap-2 group">
-                                        Planifier un échange <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                                   </button>
-                              </div>
-                              {/* Pack Sur Mesure */}
-                              <div className="bg-white rounded-2xl shadow-lg p-10 flex flex-col items-start relative">
-                                   <div className="text-xl font-bold text-[var(--color-secondary)] mb-2">Pack Sur Mesure</div>
-                                   <div className="text-gray-600 mb-4">Accompagnement personnalisé selon vos besoins spécifiques.</div>
-                                   <div className="text-2xl font-black text-gray-900 mb-1">Devis personnalisé</div>
-                                   <div className="text-gray-500 text-sm mb-4">Volume d'heures adapté</div>
-                                   <ul className="mb-8 space-y-2 text-gray-700">
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Analyse approfondie de vos processus</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Solution 100% personnalisée</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Support prioritaire dédié</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Consultant attitré à votre projet</li>
-                                        <li className="flex items-center"><span className="inline-flex items-center justify-center w-7 h-7 rounded-full border-green-300 border-2 mr-2"><Check className="w-4 h-4 text-green-300" strokeWidth={3} /></span>Suivi stratégique long terme</li>
-                                   </ul>
-                                   <button className="w-full rounded-full bg-[var(--color-secondary)] text-white font-semibold py-3 mt-auto flex items-center justify-center gap-2 group">
-                                        Discutons ensemble <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                                   </button>
-                              </div>
-                         </div>
-                    </div>
-               </section>
+               <PricingSection />
                {/* Notre Agence Section */}
                <section className="py-20 bg-[#f7f5f7]">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -739,98 +681,8 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          </div>
                     </section>
                )}
-               {/* Parlons de votre projet Section */}
-               <section className="py-16 bg-transparent">
-                    <div className="max-w-4xl mx-auto">
-                         {/* Section Title and Subtitle */}
-                         <div className="text-center mb-10">
-                              <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TRANSFORMONS ENSEMBLE</div>
-                              <h2 className="text-2xl md:text-4xl font-black text-gray-900 mb-4">Prêt à révolutionner votre entreprise ?</h2>
-                              <div className="text-lg text-gray-700">
-                                   <span className="text-[var(--color-secondary)] font-semibold">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo<br className="hidden md:inline" /> change la donne.
-                              </div>
-                         </div>
-                         <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-2xl overflow-hidden">
-                              {/* Left: Form */}
-                              <div className="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
-                                   <h3 className="text-xl font-bold mb-2 text-gray-900">Parlons de votre projet</h3>
-                                   <p className="text-gray-600 text-sm mb-6">Échangeons sur vos défis et explorons ensemble comment Odoo peut transformer votre entreprise.</p>
-                                   <form className="space-y-4">
-                                        <div className="flex gap-3">
-                                             <div className="flex-1">
-                                                  <label className="block text-xs font-semibold text-gray-700 mb-1">Prénom & Nom *</label>
-                                                  <input type="text" placeholder="John Dupont" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--color-secondary)] focus:outline-none" />
-                                             </div>
-                                             <div className="flex-1">
-                                                  <label className="block text-xs font-semibold text-gray-700 mb-1">Entreprise *</label>
-                                                  <input type="text" placeholder="Ma Super Entreprise" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--color-secondary)] focus:outline-none" />
-                                             </div>
-                                        </div>
-                                        <div>
-                                             <label className="block text-xs font-semibold text-gray-700 mb-1">Email *</label>
-                                             <input type="email" placeholder="john@monentreprise.com" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--color-secondary)] focus:outline-none" />
-                                        </div>
-                                        <div>
-                                             <label className="block text-xs font-semibold text-gray-700 mb-1">Téléphone</label>
-                                             <input type="text" placeholder="01 23 45 67 89" className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--color-secondary)] focus:outline-none" />
-                                        </div>
-                                        <div>
-                                             <label className="block text-xs font-semibold text-gray-700 mb-1">Votre vision</label>
-                                             <textarea placeholder="Décrivez-nous vos ambitions : gains de temps, automatisation, croissance... Nous sommes là pour vous accompagner !" rows={3} className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--color-secondary)] focus:outline-none resize-none" />
-                                        </div>
-                                        <button type="submit" className="w-full mt-2 rounded-full bg-[var(--color-secondary)] text-white font-semibold py-3 flex items-center justify-center gap-2 group">
-                                             <Calendar className="w-5 h-5 mr-1" /> Lancer ma transformation
-                                        </button>
-                                   </form>
-                                   <div className="text-xs text-gray-500 text-center mt-4">
-                                        Réponse garantie sous 4h en journée • Échange sans engagement
-                                   </div>
-                              </div>
-                              {/* Right: Value Props */}
-                              <div className="w-full md:w-1/2 bg-[var(--color-secondary)] text-white p-8 md:p-10 flex flex-col justify-between">
-                                   <div>
-                                        <h4 className="text-lg font-bold mb-6 text-white">Ce qui vous attend :</h4>
-                                        <ul className="space-y-4 mb-6">
-                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
-                                                  <BadgeCheck className="w-7 h-7 text-green-300 mt-1" />
-                                                  <div>
-                                                       <span className="font-semibold text-white">Partenaire Silver Officiel</span><br />
-                                                       <span className="text-sm text-white/90">Certification garantissant notre expertise technique reconnue par Odoo</span>
-                                                  </div>
-                                             </li>
-                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
-                                                  <Rocket className="w-7 h-7 text-green-300 mt-1" />
-                                                  <div>
-                                                       <span className="font-semibold text-white">Transformation Express</span><br />
-                                                       <span className="text-sm text-white/90">Digitalisez vos processus en quelques semaines, pas en mois</span>
-                                                  </div>
-                                             </li>
-                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
-                                                  <Shield className="w-7 h-7 text-green-300 mt-1" />
-                                                  <div>
-                                                       <span className="font-semibold text-white">Accompagnement Sécurisé</span><br />
-                                                       <span className="text-sm text-white/90">De l'audit stratégique à la mise en production, nous restons à vos côtés</span>
-                                                  </div>
-                                             </li>
-                                             <li className="flex items-start gap-3 rounded-xl p-4 transition-all duration-200 bg-transparent hover:bg-white/20 cursor-pointer">
-                                                  <CircleCheckBig className="w-7 h-7 text-green-300 mt-1" />
-                                                  <div>
-                                                       <span className="font-semibold text-white">Consultation Stratégique Offerte</span><br />
-                                                       <span className="text-sm text-white/90">Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement.</span>
-                                                  </div>
-                                             </li>
-                                        </ul>
-
-                                   </div>
-                                   <div className="border-t border-white/20 pt-4 mt-4">
-                                        <div className="text-sm font-semibold mb-2 text-white">Contact direct</div>
-                                        <div className="flex items-center gap-2 text-white/90 text-sm mb-1"><Phone className="w-4 h-4" /> 01 23 45 67 89</div>
-                                        <div className="flex items-center gap-2 text-white/90 text-sm"><Mail className="w-4 h-4" /> contact@blackswan.fr</div>
-                                   </div>
-                              </div>
-                         </div>
-                    </div>
-               </section>
+               {/* Contact card */}
+               <ContactSection />
 
                <style jsx>{`
         @keyframes scroll-up {

@@ -55,7 +55,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.5.0",
     "embla-carousel-react": "8.5.1",
-    "framer-motion": "^12.18.1",
+    "framer-motion": "^12.23.5",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "mongodb": "^6.3.0",
