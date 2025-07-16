@@ -75,7 +75,7 @@ export default function ContactSection() {
                               Prêt à révolutionner votre entreprise ?
                          </h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              <span className="font-semibold text-[var(--color-secondary)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
+                              <span className="font-semibold text-[var(--color-teal)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
                          </p>
                     </motion.div>
 
@@ -169,7 +169,7 @@ export default function ContactSection() {
                                                   animate={{ opacity: 1, scale: 1 }}
                                                   className="text-center py-8"
                                              >
-                                                  <CheckCircle className="w-16 h-16 text-[#22B799] mx-auto mb-4" />
+                                                  <CheckCircle className="w-16 h-16 text-[var(--color-teal)] mx-auto mb-4" />
                                                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                                                        🚀 C'est parti !
                                                   </h3>
@@ -194,7 +194,7 @@ export default function ContactSection() {
                                                        className="flex gap-4"
                                                   >
                                                        <div className="flex-shrink-0">
-                                                            <benefit.icon className="w-6 h-6 text-[#22B799]" />
+                                                            <benefit.icon className="w-6 h-6 text-[var(--color-teal)]" />
                                                        </div>
                                                        <div>
                                                             <h4 className="font-semibold mb-1">{benefit.title}</h4>

@@ -17,6 +17,11 @@
   --odoo-purple-dark: #5A3A52;
   --odoo-purple-light: #F7F2F6;
   
+  /* Teal Accent Color */
+  --color-teal: #22B799;
+  --color-teal-dark: #0D9488;
+  --color-teal-light: #F0FDFA;
+  
   /* Tailwind/shadcn required variables */
   --background: 0 0% 100%; /* white */
   --foreground: 222.2 47.4% 11.2%; /* black */
@@ -83,6 +88,7 @@ a {
 .text-color-white { color: var(--color-white); }
 .text-color-gray { color: var(--color-gray); }
 .text-color-green { color: var(--color-green); }
+.text-color-teal { color: var(--color-teal); }
 
 .bg-color-main { background-color: var(--color-main); }
 .bg-color-secondary { background-color: var(--color-secondary); }
@@ -91,6 +97,7 @@ a {
 .bg-color-white { background-color: var(--color-white); }
 .bg-color-gray { background-color: var(--color-gray); }
 .bg-color-green { background-color: var(--color-green); }
+.bg-color-teal { background-color: var(--color-teal); }
 
 .border-color-main { border-color: var(--color-main); }
 .border-color-secondary { border-color: var(--color-secondary); }
@@ -99,6 +106,7 @@ a {
 .border-color-white { border-color: var(--color-white); }
 .border-color-gray { border-color: var(--color-gray); }
 .border-color-green { border-color: var(--color-green); }
+.border-color-teal { border-color: var(--color-teal); }
 
 /* Apple-style Scroll Animations */
 @keyframes scroll-fade-up {

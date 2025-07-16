@@ -142,7 +142,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 className="text-base text-gray-600 leading-relaxed max-w-lg"
               >
                 En tant que Partenaire Officiel Odoo, notre agence conçoit des implémentations sur mesure qui unifient vos processus métier.
-                <span className="font-semibold text-[var(--odoo-purple)]"> Simple, efficace, et abordable.</span>
+                <span className="font-semibold text-[var(--color-teal)]"> Simple, efficace, et abordable.</span>
               </motion.p>
             </div>
 
@@ -189,7 +189,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 {/* Small stats overlay */}
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-4 border">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-[var(--odoo-purple)]">5 ans</div>
+                    <div className="text-2xl font-bold text-[var(--color-teal)]">5 ans</div>
                     <div className="text-xs text-gray-600">d'expertise</div>
                   </div>
                 </div>
