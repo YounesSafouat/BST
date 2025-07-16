@@ -31,6 +31,7 @@ import Loader from '@/components/home/Loader';
 import Link from 'next/link';
 import PricingSection from '../PricingSection';
 import ContactSection from '../ContactSection';
+import StatsSection from '../StatsSection';
 
 interface Testimonial {
      _id: string;
@@ -263,10 +264,11 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
      return (
           <div className="min-h-screen bg-white overflow-hidden">
-               {/* Hero Section - Full Screen */}
-               <div className="h-screen">
+               {/* Hero Section - Reduced height */}
+               <div className="h-[90vh]">
                     <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
                </div>
+
 
 
                {/* Vertical Timeline Carousels */}

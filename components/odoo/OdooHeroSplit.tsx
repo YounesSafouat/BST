@@ -101,7 +101,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
 
   return (
     <section id="hero" className="relative h-screen flex flex-col justify-center overflow-hidden">
-      <div className="absolute -bottom-1/3 -left-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
+      <div className="absolute 3 -left-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
 
       <div className="relative w-full px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center">
@@ -196,11 +196,11 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
             </div>
           </motion.div>
         </div>
+      </div>
 
-        {/* Trust Metrics - Integrated in hero */}
-        <div className="mt-8 w-full">
-          <StatsSection />
-        </div>
+      {/* Trust Metrics - Full width outside hero container */}
+      <div className="w-full">
+        <StatsSection />
       </div>
     </section>
   );
