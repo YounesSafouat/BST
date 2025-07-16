@@ -602,10 +602,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                               <div className="relative w-full md:w-1/2 flex justify-center">
                                    <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg">
                                         <Image src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg" alt="Notre équipe" width={600} height={350} className="object-cover w-full h-72 md:h-80" />
-                                        <div className="absolute bottom-4 left-4 bg-white rounded-full px-4 py-2 flex items-center shadow-md">
-                                             <BadgeCheck className="w-5 h-5 text-[var(--color-secondary)] mr-2" />
-                                             <span className="text-[var(--color-secondary)] font-semibold text-sm">Partenaire Silver Certifié</span>
-                                        </div>
+
                                    </div>
                               </div>
                               {/* Right: Features */}

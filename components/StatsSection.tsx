@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 export default function StatsSection() {
      const stats = [
           {
-               value: "5 ans",
+               value: "3 ans",
                label: "d'expertise Odoo"
           },
           {
