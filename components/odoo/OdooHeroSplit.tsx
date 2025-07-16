@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import StatsSection from '../StatsSection';
+import CompaniesCarousel from '../CompaniesCarousel';
 
 interface HeroData {
   headline: string;
@@ -104,7 +105,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
       <div className="absolute 3 -left-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative w-full px-4 sm:px-6 lg:px-8 flex-1 flex flex-col justify-center">
+      <div className="relative w-full mr-10 ml-10 sm:px-12 lg:px-16 flex-1 flex flex-col justify-center">
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-16 max-w-7xl mx-auto">
           {/* Left Content */}
           <motion.div
@@ -175,7 +176,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="hidden lg:block"
+            className="hidden lg:block mr-20"
           >
             <div className="relative">
               <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl">
@@ -197,11 +198,19 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
           </motion.div>
         </div>
       </div>
+      {/* Companies Carousel */}
+      <div className="pb-4 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <CompaniesCarousel />
+        </div>
+      </div>
 
       {/* Trust Metrics - Full width outside hero container */}
       <div className="w-full">
         <StatsSection />
       </div>
+
     </section>
   );
 }

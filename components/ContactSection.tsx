@@ -70,12 +70,12 @@ export default function ContactSection() {
                          viewport={{ once: true }}
                          className="text-center mb-16"
                     >
-                         <h2 className="text-sm font-semibold text-[var(--odoo-purple)] tracking-widest uppercase">Transformons Ensemble</h2>
-                         <p className="mt-3 text-4xl font-bold text-gray-900 tracking-tighter">
+                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TRANSFORMONS ENSEMBLE</div>
+                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
                               Prêt à révolutionner votre entreprise ?
-                         </p>
-                         <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
-                              <span className="font-semibold text-[var(--odoo-purple)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
+                         </h2>
+                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                              <span className="font-semibold text-[var(--color-secondary)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
                          </p>
                     </motion.div>
 

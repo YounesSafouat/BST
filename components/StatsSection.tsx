@@ -32,7 +32,7 @@ export default function StatsSection() {
                                    whileInView={{ opacity: 1, y: 0 }}
                                    viewport={{ once: true }}
                                    transition={{ delay: index * 0.1 }}
-                                   className="text-center p-8 bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm hover:shadow-md transition-shadow"
+                                   className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm hover:shadow-md transition-shadow"
                               >
                                    <div className="text-4xl font-bold text-[var(--odoo-purple)] mb-2">{stat.value}</div>
                                    <div className="text-gray-700 font-medium">{stat.label}</div>
