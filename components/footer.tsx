@@ -66,7 +66,7 @@ export default function Footer() {
               <Input
                 type="email"
                 placeholder={newsletter.placeholder}
-                className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white h-12"
+                className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white h-12 w-full sm:w-80 md:w-96"
               />
               <Button
                 className="bg-white text-[var(--color-secondary)] hover:bg-white/90 h-12 px-6 whitespace-nowrap"
