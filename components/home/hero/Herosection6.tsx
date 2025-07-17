@@ -16,16 +16,16 @@ export default function HeroSection6() {
   const [isTextFlipping, setIsTextFlipping] = useState(false)
 
   const syncSteps = [
-    "Audit des systèmes", 
-    "Développement Agile", 
-    "Déploiement Sécurisé", 
+    "Audit des systèmes",
+    "Développement Agile",
+    "Déploiement Sécurisé",
     "Optimisation Continue"
   ]
 
   const integrationStatuses = [
     { text: "Architectes de votre transformation", icon: Activity, color: "green", bgColor: "bg-green-50", borderColor: "border-green-200" },
     { text: "Experts Odoo & HubSpot", icon: Sync, color: "blue", bgColor: "bg-blue-50", borderColor: "border-blue-200" },
-    { text: "Solutions 100% sur-mesure", icon: Shield, color: "purple", bgColor: "bg-purple-50", borderColor: "border-purple-200" },
+    { text: "Solutions 100% sur-mesure", icon: Shield, color: "var(--color-secondary)", bgColor: "bg-[var(--color-secondary)]/10", borderColor: "border-[var(--color-secondary)]/20" },
     { text: "Automatisation de vos processus", icon: Zap, color: "orange", bgColor: "bg-orange-50", borderColor: "border-orange-200" }
   ]
 
@@ -80,12 +80,12 @@ export default function HeroSection6() {
 
   useEffect(() => {
     setIsVisible(true)
-    
+
     // Sync steps animation
     const syncInterval = setInterval(() => {
       setActiveSync((prev) => (prev + 1) % syncSteps.length)
     }, 3000)
-    
+
     // Integration status animation with text flip effect
     const statusInterval = setInterval(() => {
       setIsTextFlipping(true)
@@ -96,7 +96,7 @@ export default function HeroSection6() {
         }, 150)
       }, 300)
     }, 4000)
-    
+
     return () => {
       clearInterval(syncInterval)
       clearInterval(statusInterval)
@@ -110,10 +110,10 @@ export default function HeroSection6() {
     <section className="min-h-screen bg-white flex items-center">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
+
           {/* Left Column - Content */}
           <div className={`space-y-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            
+
             {/* Animated Status with Text-Only Flip */}
             <div className={`inline-flex items-center gap-3 px-4 py-3 rounded-full border transition-all duration-1000 ${currentStatus.bgColor} ${currentStatus.borderColor}`}>
               <div className="relative">
@@ -122,7 +122,7 @@ export default function HeroSection6() {
               </div>
               <StatusIcon className={`w-4 h-4 text-${currentStatus.color}-600 transition-all duration-300`} />
               <div className="relative overflow-hidden">
-                <span 
+                <span
                   className={`text-sm font-medium text-${currentStatus.color}-700 transition-all duration-300 inline-block`}
                   style={{
                     transform: isTextFlipping ? 'rotateX(90deg)' : 'rotateX(0deg)',
@@ -143,7 +143,7 @@ export default function HeroSection6() {
                 <span style={{ color: 'var(--color-secondary)' }}>de votre </span>
                 <span style={{ color: 'var(--color-main)' }}>métier.</span>
               </h1>
-              
+
               <p className="text-xl text-gray-600 max-w-lg">
                 Nous concevons votre écosystème digital sur-mesure avec Odoo ou HubSpot pour transformer vos opérations et accélérer votre croissance.
               </p>
@@ -151,15 +151,15 @@ export default function HeroSection6() {
 
             {/* CTA */}
             <div className="flex gap-4">
-              <button 
-                className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+              <button
+                className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-black transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
                 Démo gratuite
                 <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              
-              <button 
+
+              <button
                 className="group w-[18em] bg-transparent text-[var(--color-main)] border-2 border-[var(--color-main)] px-4 py-2 rounded-lg hover:bg-[var(--color-main)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
@@ -168,13 +168,13 @@ export default function HeroSection6() {
               </button>
             </div>
 
-           
+
           </div>
 
           {/* Right Column - White Terminal */}
           <div className={`transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <div className="bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
-              
+
               {/* Terminal Header */}
               <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 border-b border-gray-200">
                 <div className="flex gap-1.5">
@@ -187,21 +187,21 @@ export default function HeroSection6() {
 
               {/* Terminal Content */}
               <div className="p-8 space-y-8">
-                
+
                 {/* Matrix Text Display */}
                 <div className="text-center py-6">
                   <div className="font-mono text-5xl font-bold mb-3">
-                    <span 
-                      style={{ 
+                    <span
+                      style={{
                         color: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-main)',
                         transition: 'color 0.3s ease'
                       }}
                     >
                       {matrixText}
                     </span>
-                    <span 
+                    <span
                       className={`inline-block w-1 h-12 ml-2 ${showCursor ? 'opacity-100' : 'opacity-0'}`}
-                      style={{ 
+                      style={{
                         backgroundColor: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-main)',
                         transition: 'all 0.1s ease'
                       }}
@@ -214,11 +214,11 @@ export default function HeroSection6() {
                 <div className="flex justify-center items-center gap-12">
                   {/* Odoo Logo */}
                   <div className={`transition-all duration-700 ${currentPlatform === 0 ? 'scale-110 opacity-100' : 'scale-90 opacity-40'}`}>
-                    <div 
+                    <div
                       className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-xl border-2 transition-all duration-500"
-                      style={{ 
+                      style={{
                         backgroundColor: 'white',
-                        borderColor: currentPlatform === 0 ? 'var(--color-secondary)' : 'var(--color-gray)',
+                        borderColor: currentPlatform === 0 ? 'var(--color-secondary)' : '#64748b',
                         transform: currentPlatform === 0 ? 'translateY(-4px)' : 'translateY(0)'
                       }}
                     >
@@ -231,11 +231,11 @@ export default function HeroSection6() {
 
                   {/* HubSpot Logo */}
                   <div className={`transition-all duration-700 ${currentPlatform === 1 ? 'scale-110 opacity-100' : 'scale-90 opacity-40'}`}>
-                    <div 
+                    <div
                       className="w-24 h-24 rounded-2xl flex items-center justify-center shadow-xl border-2 transition-all duration-500"
-                      style={{ 
+                      style={{
                         backgroundColor: 'white',
-                        borderColor: currentPlatform === 1 ? 'var(--color-main)' : 'var(--color-gray)',
+                        borderColor: currentPlatform === 1 ? 'var(--color-main)' : '#64748b',
                         transform: currentPlatform === 1 ? 'translateY(-4px)' : 'translateY(0)'
                       }}
                     >
@@ -267,7 +267,7 @@ export default function HeroSection6() {
                     </div>
                   </div>
                   <div className="relative overflow-hidden">
-                    <span 
+                    <span
                       className={`text-${currentStatus.color}-700 text-sm font-semibold inline-block`}
                       style={{
                         transform: isTextFlipping ? 'rotateX(90deg)' : 'rotateX(0deg)',

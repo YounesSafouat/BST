@@ -135,7 +135,7 @@ export default function HeroSection3({ hero }: HeroSection3Props) {
           height: 20px;
           font-size: var(--font-size);
           font-weight: 500;
-          color: #374151;
+          color: #64748b;
           white-space: nowrap;
           display: flex;
           align-items: center;
@@ -245,7 +245,7 @@ export default function HeroSection3({ hero }: HeroSection3Props) {
               <div className="flex flex-col sm:flex-row items-start gap-6">
                 <button
                   onClick={handleAppointmentClick}
-                  className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                  className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-black transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                   style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 >
                   PRENDRE UN RENDEZ-VOUS

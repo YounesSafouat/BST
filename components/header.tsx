@@ -45,7 +45,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="text-gray-700 hover:text-[var(--odoo-purple)] transition-colors duration-200 font-medium text-sm"
+                className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm"
               >
                 {item.name}
               </button>
@@ -57,7 +57,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             <Button
               variant="ghost"
               size="sm"
-              className="gap-2 text-gray-700 hover:text-[var(--odoo-purple)]"
+              className="gap-2 text-gray-700 hover:text-[var(--color-main)]"
               onClick={() => window.open('tel:+33123456789')}
             >
               <Phone className="w-4 h-4" />
@@ -72,7 +72,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             </Button>
             <Button
               size="sm"
-              className="bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] gap-2 rounded-full px-4 text-sm"
+              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] gap-2 rounded-full px-4 text-sm"
               onClick={() => scrollToSection('#contact')}
             >
               Prendre RDV
@@ -106,14 +106,14 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left py-2 text-gray-700 hover:text-[var(--odoo-purple)] transition-colors"
+                  className="block w-full text-left py-2 text-gray-700 hover:text-[var(--color-main)] transition-colors"
                 >
                   {item.name}
                 </button>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t">
                 <Button
-                  className="bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] gap-2 justify-center"
+                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] gap-2 justify-center"
                   onClick={() => scrollToSection('#contact')}
                 >
                   Prendre RDV

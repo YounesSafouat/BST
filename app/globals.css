@@ -3,24 +3,9 @@
 @tailwind utilities;
 
 :root {
-  /* Simplified Color System - Default Values */
-  --color-main: #ff5c35;           /* Orange */
-  --color-secondary: #714b67;      /* Purple */
-  --color-background: #ffffff;     /* White */
-  --color-black: #000000;          /* Black */
-  --color-white: #ffffff;          /* White */
-  --color-gray: #6b7280;           /* Gray */
-  --color-green: #10b981;          /* Green */
-  
-  /* Odoo Purple Theme */
-  --odoo-purple: #714B67;
-  --odoo-purple-dark: #5A3A52;
-  --odoo-purple-light: #F7F2F6;
-  
-  /* Teal Accent Color */
-  --color-teal: #22B799;
-  --color-teal-dark: #0D9488;
-  --color-teal-light: #F0FDFA;
+  /* Simplified Color System - Only Two Colors */
+  --color-main: #0EA5E9;           /* Sky Blue */
+  --color-secondary: #1E293B;      /* Dark Slate */
   
   /* Tailwind/shadcn required variables */
   --background: 0 0% 100%; /* white */
@@ -71,8 +56,8 @@ body {
   font-family: var(--font-family);
   font-size: var(--font-size);
   line-height: var(--line-height);
-  color: var(--color-black);
-  background-color: var(--color-background);
+  color: #000000;
+  background-color: #ffffff;
 }
 
 a {
@@ -80,33 +65,15 @@ a {
   text-decoration: none;
 }
 
-/* Utility classes for the simplified color system */
+/* Utility classes for the two-color system */
 .text-color-main { color: var(--color-main); }
 .text-color-secondary { color: var(--color-secondary); }
-.text-color-background { color: var(--color-background); }
-.text-color-black { color: var(--color-black); }
-.text-color-white { color: var(--color-white); }
-.text-color-gray { color: var(--color-gray); }
-.text-color-green { color: var(--color-green); }
-.text-color-teal { color: var(--color-teal); }
 
 .bg-color-main { background-color: var(--color-main); }
 .bg-color-secondary { background-color: var(--color-secondary); }
-.bg-color-background { background-color: var(--color-background); }
-.bg-color-black { background-color: var(--color-black); }
-.bg-color-white { background-color: var(--color-white); }
-.bg-color-gray { background-color: var(--color-gray); }
-.bg-color-green { background-color: var(--color-green); }
-.bg-color-teal { background-color: var(--color-teal); }
 
 .border-color-main { border-color: var(--color-main); }
 .border-color-secondary { border-color: var(--color-secondary); }
-.border-color-background { border-color: var(--color-background); }
-.border-color-black { border-color: var(--color-black); }
-.border-color-white { border-color: var(--color-white); }
-.border-color-gray { border-color: var(--color-gray); }
-.border-color-green { border-color: var(--color-green); }
-.border-color-teal { border-color: var(--color-teal); }
 
 /* Apple-style Scroll Animations */
 @keyframes scroll-fade-up {

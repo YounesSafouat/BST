@@ -63,14 +63,14 @@ const menuGroups = [
   {
     title: "Pages",
     items: [
-      
+
       {
         title: "Home Page",
         href: "/dashboard/content",
         icon: Home,
-        color: "from-green-200 to-green-100 text-green-700", 
+        color: "from-green-200 to-green-100 text-green-700",
       },
-      
+
       {
         title: "About Page",
         href: "/dashboard/about",
@@ -93,7 +93,7 @@ const menuGroups = [
         title: "Clients Page",
         href: "/dashboard/clients",
         icon: Building2,
-        color: "from-purple-200 to-purple-100 text-purple-700",
+        color: "from-[var(--color-secondary)]/20 to-[var(--color-secondary)]/10 text-[var(--color-secondary)]",
       },
       {
         title: "HubSpot Page",
@@ -105,7 +105,7 @@ const menuGroups = [
         title: "Odoo Page",
         href: "/dashboard/odoo",
         icon: Building2,
-        color: "from-purple-200 to-purple-100 text-purple-700",
+        color: "from-[var(--color-secondary)]/20 to-[var(--color-secondary)]/10 text-[var(--color-secondary)]",
       },
     ]
   },
@@ -167,8 +167,8 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   const [expandedGroups, setExpandedGroups] = useState<string[]>(['Main']); // Main group expanded by default
 
   const toggleGroup = (groupTitle: string) => {
-    setExpandedGroups(prev => 
-      prev.includes(groupTitle) 
+    setExpandedGroups(prev =>
+      prev.includes(groupTitle)
         ? prev.filter(title => title !== groupTitle)
         : [...prev, groupTitle]
     );
@@ -180,13 +180,12 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
   function SidebarContent({ isDrawer = false }: { isDrawer?: boolean }) {
     return (
       <aside
-        className={`h-screen bg-white shadow-xl border-r border-gray-200 flex flex-col items-center z-30 transition-all duration-300 ${
-          isDrawer 
-            ? "w-64" 
-            : collapsed 
-              ? "w-16 lg:w-20" 
-              : "w-64 lg:w-72"
-        }`}
+        className={`h-screen bg-white shadow-xl border-r border-gray-200 flex flex-col items-center z-30 transition-all duration-300 ${isDrawer
+          ? "w-64"
+          : collapsed
+            ? "w-16 lg:w-20"
+            : "w-64 lg:w-72"
+          }`}
       >
         {/* Collapse/Expand button (desktop only) */}
         {!isDrawer && (
@@ -201,9 +200,8 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
         )}
 
         {/* Company Logo */}
-        <div className={`mt-6 mb-8 flex items-center justify-center rounded-xl  overflow-hidden transition-all duration-300 ${
-          collapsed ? "w-12 h-12" : "w-[15em] h-[10em]"
-        }`}>
+        <div className={`mt-6 mb-8 flex items-center justify-center rounded-xl  overflow-hidden transition-all duration-300 ${collapsed ? "w-12 h-12" : "w-[15em] h-[10em]"
+          }`}>
           <img
             src="/bst.png"
             alt="Company Logo"
@@ -231,7 +229,7 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                   )}
                 </button>
               )}
-              
+
               {/* Group items */}
               {isGroupExpanded(group.title) && group.items.map((item) => {
                 const isActive = pathname === item.href;
@@ -240,11 +238,10 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
                     key={item.href}
                     href={item.href}
                     aria-label={item.title}
-                    className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative ${
-                      isActive 
-                        ? "bg-green-50 text-green-700 font-semibold border border-green-200" 
-                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                    } ${collapsed ? "justify-center px-0" : "justify-start px-3 ml-2"}`}
+                    className={`group flex items-center w-full h-12 rounded-xl transition-all duration-200 relative ${isActive
+                      ? "bg-green-50 text-green-700 font-semibold border border-green-200"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      } ${collapsed ? "justify-center px-0" : "justify-start px-3 ml-2"}`}
                     onClick={() => isDrawer && setDrawerOpen(false)}
                   >
                     <span className="flex items-center justify-center w-8 h-8">
@@ -272,9 +269,8 @@ export function Sidebar({ collapsed, setCollapsed }: SidebarProps) {
           <button
             onClick={() => signOut()}
             aria-label="Sign Out"
-            className={`flex items-center w-full h-12 rounded-xl hover:bg-red-50 hover:text-red-600 text-gray-500 transition-all duration-200 ${
-              collapsed ? "justify-center" : "justify-start px-3"
-            }`}
+            className={`flex items-center w-full h-12 rounded-xl hover:bg-red-50 hover:text-red-600 text-gray-500 transition-all duration-200 ${collapsed ? "justify-center" : "justify-start px-3"
+              }`}
           >
             <LogOut className="w-5 h-5" />
             {!collapsed && <span className="ml-3 text-sm font-medium">Sign Out</span>}

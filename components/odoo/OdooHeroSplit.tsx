@@ -102,11 +102,11 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
 
   return (
     <section id="hero" className="relative h-screen flex flex-col justify-center overflow-hidden">
-      <div className="absolute 3 -left-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
+      <div className="absolute -left-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-20 w-96 h-96 bg-white/50 rounded-full filter blur-3xl" />
 
       <div className="relative w-full mr-10 ml-10 sm:px-12 lg:px-16 flex-1 flex flex-col justify-center">
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-16 max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 items-center  max-w-7xl mx-auto">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -142,7 +142,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 className="text-base text-gray-600 leading-relaxed max-w-lg"
               >
                 En tant que Partenaire Officiel Odoo, notre agence conçoit des implémentations sur mesure qui unifient vos processus métier.
-                <span className="font-semibold text-[var(--color-teal)]"> Simple, efficace, et abordable.</span>
+                <span className="font-semibold text-[var(--color-main)]"> Simple, efficace, et abordable.</span>
               </motion.p>
             </div>
 
@@ -154,7 +154,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
             >
               <Button
                 size="lg"
-                className="bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] text-white px-6 py-3 text-base font-semibold group rounded-full"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-6 py-3 text-base font-semibold group rounded-full"
                 onClick={() => scrollToSection('#contact')}
               >
                 Parlons de votre projet
@@ -163,7 +163,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
               <Button
                 size="lg"
                 variant="outline"
-                className="px-6 py-3 text-base font-semibold border-2 border-[var(--odoo-purple)] text-[var(--odoo-purple)] hover:bg-[var(--odoo-purple)] hover:text-white rounded-full"
+                className="px-6 py-3 text-base font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full"
                 onClick={() => scrollToSection('#modules')}
               >
                 Découvrir nos solutions
@@ -189,7 +189,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                 {/* Small stats overlay */}
                 <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg p-4 border">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-[var(--color-teal)]">3 ans</div>
+                    <div className="text-2xl font-bold text-[var(--color-main)]">3 ans</div>
                     <div className="text-xs text-gray-600">d'expertise</div>
                   </div>
                 </div>

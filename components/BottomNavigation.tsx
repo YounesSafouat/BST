@@ -65,7 +65,7 @@ export default function BottomNavigation({ headerData }: BottomNavigationProps) 
         <Link
           href="/cas-client"
           onClick={handleCasClientClick}
-          className="flex-1 px-4 py-3 font-medium text-gray-600 transition-all duration-200 hover:bg-purple-50/80 hover:text-purple-600 flex flex-col items-center gap-1 active:scale-95"
+          className="flex-1 px-4 py-3 font-medium text-gray-600 transition-all duration-200 hover:bg-[var(--color-secondary)]/10 hover:text-[var(--color-secondary)] flex flex-col items-center gap-1 active:scale-95"
         >
           <Users className="w-5 h-5 sm:w-6 sm:h-6" />
           <span className="text-xs font-medium">Cas Client</span>

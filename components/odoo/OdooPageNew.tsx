@@ -33,6 +33,8 @@ import PricingSection from '../PricingSection';
 import ContactSection from '../ContactSection';
 import StatsSection from '../StatsSection';
 import CompaniesCarousel from '../CompaniesCarousel';
+import VideoTestimonialsSection from '../VideoTestimonialsSection';
+import FAQSection from '../FAQSection';
 
 interface Testimonial {
      _id: string;
@@ -266,11 +268,12 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
      return (
           <div className="min-h-screen bg-white overflow-hidden">
                {/* Hero Section - Proper flex layout */}
-               <div className="h-[95vh] flex flex-col justify-center">
+               <div className="h-[95vh] flex flex-col justify-center pt-20">
                     <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
                </div>
 
-
+               {/* Video Testimonials Section */}
+               <VideoTestimonialsSection />
 
                {/* Vertical Timeline Carousels */}
                <section className="py-12 bg-white overflow-hidden">
@@ -542,7 +545,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                     </section>
                )}
                {/* Notre Méthodologie Section */}
-               <section className="py-20 bg-[#fafbfc]">
+               <section className="py-20 bg-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE MÉTHODOLOGIE</div>
@@ -590,7 +593,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                {/* Tarifs & Accompagnement Section */}
                <PricingSection />
                {/* Notre Agence Section */}
-               <section className="py-20 bg-[#f7f5f7]">
+               <section className="py-20 bg-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE AGENCE</div>
@@ -642,7 +645,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
                {/* Testimonials */}
                {odooData && odooData.testimonials && odooData.testimonials.length > 0 && (
-                    <section className="py-20 bg-[#f7f2f6]">
+                    <section className="py-20 bg-white">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
                                    <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
@@ -684,6 +687,9 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                )}
                {/* Contact card */}
                <ContactSection />
+
+               {/* FAQ Section */}
+               <FAQSection />
 
                <style jsx>{`
         @keyframes scroll-up {

@@ -79,21 +79,21 @@ export function BlogPost({ post }: { post: Post }) {
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
         const apiUrl = baseUrl ? `${baseUrl}/api/content?type=blog-page` : "/api/content?type=blog-page";
         const res = await fetch(apiUrl);
-      const data = await res.json();
-      const blogData = Array.isArray(data) ? data[0] : data;
-      const allPosts: Post[] = blogData?.content?.blogPosts || [];
-        
+        const data = await res.json();
+        const blogData = Array.isArray(data) ? data[0] : data;
+        const allPosts: Post[] = blogData?.content?.blogPosts || [];
+
         // Get similar posts using the similarPosts array from the post
         if (post.similarPosts && post.similarPosts.length > 0) {
-          const similar = allPosts.filter((p) => 
+          const similar = allPosts.filter((p) =>
             post.similarPosts!.includes(p.slug) && p.slug !== post.slug
           );
           setSimilarPosts(similar);
         } else {
           // Fallback: same category, exclude current post, limit 3
-      const related = allPosts
+          const related = allPosts
             .filter((p) => p.slug !== post.slug && p.category === post.category && p.published !== false)
-        .slice(0, 3);
+            .slice(0, 3);
           setSimilarPosts(related);
         }
 
@@ -128,20 +128,20 @@ export function BlogPost({ post }: { post: Post }) {
 
   // Function to get category color
   const getCategoryColor = (categoryName: string) => {
-    // Generate a consistent color based on the category name
+    // Generate a consistent color based on the category name using CSS variables
     const colors = [
-      "#714b67", // Purple
-      "#ff5c35", // Orange
+      "var(--color-main)", // Dark Slate
+      "var(--color-secondary)", // Sky Blue
       "#000000", // Black
-      "#0070f3", // Blue
-      "#10b981", // Green
-      "#f59e0b", // Yellow
-      "#ef4444", // Red
-      "#8b5cf6", // Violet
-      "#06b6d4", // Cyan
-      "#84cc16", // Lime
+      "var(--color-secondary)", // Sky Blue variant
+      "var(--color-main)", // Dark Slate variant
+      "var(--color-secondary)", // Sky Blue variant
+      "var(--color-main)", // Dark Slate variant
+      "var(--color-secondary)", // Sky Blue variant
+      "var(--color-main)", // Dark Slate variant
+      "var(--color-secondary)", // Sky Blue variant
     ];
-    
+
     // Simple hash function to get consistent color for category
     let hash = 0;
     for (let i = 0; i < categoryName.length; i++) {
@@ -149,7 +149,7 @@ export function BlogPost({ post }: { post: Post }) {
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
-    
+
     return colors[Math.abs(hash) % colors.length];
   }
 
@@ -217,11 +217,11 @@ export function BlogPost({ post }: { post: Post }) {
       <section className="pb-12 px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-2xl mb-8">
-              <img
+            <img
               src={getImageUrl(post.cover || post.image)}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
+              alt={post.title}
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
@@ -235,7 +235,7 @@ export function BlogPost({ post }: { post: Post }) {
               <ReactMarkdown>{post.body}</ReactMarkdown>
             )}
           </div>
-          </div>
+        </div>
       </section>
 
       {/* Testimonials Section */}
@@ -246,88 +246,88 @@ export function BlogPost({ post }: { post: Post }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {testimonials.map((testimonial, index) => (
                 <div key={testimonial._id} className="bg-white p-6 rounded-xl shadow-sm">
-            <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
                       <Quote className="w-8 h-8 text-gray-400" />
-              </div>
+                    </div>
                     <div className="flex-1">
                       <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
                       <div className="flex items-center gap-3">
                         {testimonial.photo && (
-                          <img 
-                            src={testimonial.photo} 
+                          <img
+                            src={testimonial.photo}
                             alt={testimonial.author}
                             className="w-10 h-10 rounded-full object-cover"
                           />
                         )}
-              <div>
+                        <div>
                           <div className="font-medium text-black">{testimonial.author}</div>
                           <div className="text-sm text-gray-500">{testimonial.role}</div>
                         </div>
                       </div>
-              </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-              ))}
-          </div>
-        </div>
-      </section>
+        </section>
       )}
 
       {/* Similar Articles */}
       {similarPosts.length > 0 && (
-      <section className="py-16 px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-black mb-8">Articles Similaires</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section className="py-16 px-6 lg:px-8 bg-gray-50">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-black mb-8">Articles Similaires</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {similarPosts.map((relatedPost) => (
-              <div
-                key={relatedPost.slug}
-                className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-xl">
+                <div
+                  key={relatedPost.slug}
+                  className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-500"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <div className="aspect-video relative overflow-hidden bg-gray-100 rounded-xl">
                       {relatedPost.cover || relatedPost.image ? (
-                      <img
+                        <img
                           src={getImageUrl(relatedPost.cover || relatedPost.image)}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <img
-                        src="/placeholder.svg"
-                        alt="Placeholder"
-                        className="w-full h-full object-cover"
-                      />
-                    )}
+                          alt={relatedPost.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <img
+                          src="/placeholder.svg"
+                          alt="Placeholder"
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                    <div
+                      className="absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-medium"
+                      style={{ backgroundColor: getCategoryColor(relatedPost.category) }}
+                    >
+                      {relatedPost.category}
+                    </div>
                   </div>
-                  <div
-                    className="absolute top-3 left-3 px-3 py-1 rounded-full text-white text-xs font-medium"
-                    style={{ backgroundColor: getCategoryColor(relatedPost.category) }}
-                  >
-                    {relatedPost.category}
+                  <div className="p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="w-3 h-3 text-gray-400" />
+                      <span className="text-xs text-gray-500">{relatedPost.date}</span>
+                    </div>
+                    <h3 className="text-lg font-bold text-black mb-3 group-hover:text-[var(--color-secondary)] transition-colors duration-300 line-clamp-2">
+                      {relatedPost.title}
+                    </h3>
+                    <a
+                      href={`/blog/${relatedPost.slug}`}
+                      className="text-[var(--color-secondary)] font-medium text-sm flex items-center group-hover:underline"
+                    >
+                      Lire l'article <ArrowRight className="ml-1 w-4 h-4" />
+                    </a>
                   </div>
                 </div>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Calendar className="w-3 h-3 text-gray-400" />
-                    <span className="text-xs text-gray-500">{relatedPost.date}</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-black mb-3 group-hover:text-[var(--color-secondary)] transition-colors duration-300 line-clamp-2">
-                    {relatedPost.title}
-                  </h3>
-                  <a
-                    href={`/blog/${relatedPost.slug}`}
-                    className="text-[var(--color-secondary)] font-medium text-sm flex items-center group-hover:underline"
-                  >
-                    Lire l'article <ArrowRight className="ml-1 w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       )}
     </div>
   )

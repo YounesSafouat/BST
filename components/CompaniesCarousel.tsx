@@ -4,14 +4,14 @@ import React from 'react';
 import Image from 'next/image';
 
 const companies = [
-     { name: "HubSpot", logo: "/public/hubspot.svg" },
-     { name: "Odoo", logo: "/public/Odoo.svg" },
-     { name: "Microsoft", logo: "/public/logos/WQ.svg" },
-     { name: "Salesforce", logo: "/public/logos/Hubspot-fav.svg" },
-     { name: "Adobe", logo: "/public/logos/WQ.svg" },
-     { name: "Oracle", logo: "/public/logos/Hubspot-fav.svg" },
-     { name: "SAP", logo: "/public/logos/WQ.svg" },
-     { name: "NetSuite", logo: "/public/logos/Hubspot-fav.svg" },
+     { name: "Odoo", logo: "/Odoo.svg" },
+     { name: "HubSpot", logo: "/hubspot.svg" },
+     { name: "Microsoft", logo: "/logos/WQ.svg" },
+     { name: "Salesforce", logo: "/logos/Hubspot-fav.svg" },
+     { name: "Adobe", logo: "/logos/WQ.svg" },
+     { name: "Oracle", logo: "/logos/Hubspot-fav.svg" },
+     { name: "SAP", logo: "/logos/WQ.svg" },
+     { name: "NetSuite", logo: "/logos/Hubspot-fav.svg" },
 ];
 
 export default function CompaniesCarousel() {

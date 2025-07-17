@@ -82,9 +82,9 @@ export default function BlogPage() {
   }, [blogData, searchTerm, selectedCategory])
 
   // Function to get category color
-  const getCategoryColor = (categoryName:any) => {
+  const getCategoryColor = (categoryName: any) => {
     const category = blogData.content?.categories?.items?.find((cat: any) => cat.name === categoryName)
-    return category?.color || "#000000"
+    return category?.color || "var(--color-main)"
   }
 
   // Helper to get the correct image URL
@@ -142,7 +142,7 @@ export default function BlogPage() {
       {filteredPosts.find((post: any) => post.featured) && (
         <section className="pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            
+
 
             {filteredPosts
               .filter((post: any) => post.featured)
@@ -154,9 +154,9 @@ export default function BlogPage() {
                   <div className="relative h-64 lg:h-auto overflow-hidden">
                     <div className="aspect-video relative overflow-hidden bg-gray-100">
                       {post.image ? (
-                    <img
+                        <img
                           src={getImageUrl(post.image)}
-                      alt={post.title}
+                          alt={post.title}
                           className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
@@ -189,17 +189,17 @@ export default function BlogPage() {
                       {post.title}
                     </h3>
                     <p className="text-color-gray mb-6 leading-relaxed">{post.excerpt}</p>
-                      <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                       <User className="w-5 h-5 text-color-gray" />
-                        <div>
+                      <div>
                         <div className="font-medium text-color-black">{post.author}</div>
                         <div className="text-sm text-color-gray">{post.authorRole}</div>
                       </div>
                     </div>
-                        <Button className="bg-black text-white hover:bg-gray-900 group">
-                          Lire l'article{" "}
-                          <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                        </Button>
+                    <Button className="bg-black text-white hover:bg-gray-900 group">
+                      Lire l'article{" "}
+                      <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -224,16 +224,15 @@ export default function BlogPage() {
                     <button
                       key={category.name}
                       onClick={() => setSelectedCategory(category.name)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${
-                        selectedCategory === category.name
-                          ? "bg-gray-50 border-2 border-gray-200"
-                          : "hover:bg-gray-50 border-2 border-transparent"
-                      }`}
+                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${selectedCategory === category.name
+                        ? "bg-gray-50 border-2 border-gray-200"
+                        : "hover:bg-gray-50 border-2 border-transparent"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: category.color || "#000000" }}
+                          style={{ backgroundColor: category.color || "var(--color-main)" }}
                         ></div>
                         <span className="font-medium text-color-gray">{category.name}</span>
                       </div>
@@ -323,8 +322,8 @@ export default function BlogPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {paginatedPosts.map((post: any) => (
-                      <div
-                        key={post.slug}
+                    <div
+                      key={post.slug}
                       className="group relative flex flex-col bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
                     >
                       {/* Category badge */}
@@ -338,10 +337,10 @@ export default function BlogPage() {
                           <img
                             src={getImageUrl(post.image)}
                             alt={post.title}
-                              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                            />
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          />
                         </div>
-                          </div>
+                      </div>
                       {/* Card Content */}
                       <div className="flex flex-col flex-1 p-6">
                         {/* Author and Date Row */}
@@ -350,7 +349,7 @@ export default function BlogPage() {
                             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
                               {/* If you have author image, use it here. Otherwise, fallback to icon/initials */}
                               <User className="w-6 h-6 text-gray-500" />
-                        </div>
+                            </div>
                             <div>
                               <div className="font-semibold text-black leading-tight">{post.author}</div>
                               {post.authorRole && (
@@ -365,8 +364,8 @@ export default function BlogPage() {
                         </div>
                         {/* Title and Excerpt */}
                         <h3 className="text-xl font-bold text-black mb-2 group-hover:text-color-main transition-colors duration-300">
-                            {post.title}
-                          </h3>
+                          {post.title}
+                        </h3>
                         <p className="text-gray-500 mb-4 flex-1">{post.excerpt}</p>
                         {/* Bottom Row: Lire link right-aligned */}
                         <div className="flex items-center justify-end mt-auto">
@@ -374,9 +373,9 @@ export default function BlogPage() {
                             Lire <ArrowRight className="w-4 h-4 ml-1" />
                           </Link>
                         </div>
-                        </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
               )}
 

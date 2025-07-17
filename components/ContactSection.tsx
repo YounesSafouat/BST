@@ -75,7 +75,7 @@ export default function ContactSection() {
                               Prêt à révolutionner votre entreprise ?
                          </h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              <span className="font-semibold text-[var(--color-teal)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
+                              <span className="font-semibold text-[var(--color-secondary)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
                          </p>
                     </motion.div>
 
@@ -104,7 +104,7 @@ export default function ContactSection() {
                                                                  onChange={(e) => handleInputChange('name', e.target.value)}
                                                                  placeholder="John Dupont"
                                                                  required
-                                                                 className="mt-1 border-gray-300 focus:border-[var(--odoo-purple)] focus:ring-[var(--odoo-purple)]"
+                                                                 className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
                                                             />
                                                        </div>
                                                        <div>
@@ -115,7 +115,7 @@ export default function ContactSection() {
                                                                  onChange={(e) => handleInputChange('company', e.target.value)}
                                                                  placeholder="Ma Super Entreprise"
                                                                  required
-                                                                 className="mt-1 border-gray-300 focus:border-[var(--odoo-purple)] focus:ring-[var(--odoo-purple)]"
+                                                                 className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
                                                             />
                                                        </div>
                                                   </div>
@@ -128,7 +128,7 @@ export default function ContactSection() {
                                                             onChange={(e) => handleInputChange('email', e.target.value)}
                                                             placeholder="john@monentreprise.com"
                                                             required
-                                                            className="mt-1 border-gray-300 focus:border-[var(--odoo-purple)] focus:ring-[var(--odoo-purple)]"
+                                                            className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
                                                        />
                                                   </div>
                                                   <div>
@@ -138,7 +138,7 @@ export default function ContactSection() {
                                                             value={formData.phone}
                                                             onChange={(e) => handleInputChange('phone', e.target.value)}
                                                             placeholder="01 23 45 67 89"
-                                                            className="mt-1 border-gray-300 focus:border-[var(--odoo-purple)] focus:ring-[var(--odoo-purple)]"
+                                                            className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
                                                        />
                                                   </div>
                                                   <div>
@@ -149,12 +149,12 @@ export default function ContactSection() {
                                                             onChange={(e) => handleInputChange('message', e.target.value)}
                                                             placeholder="Décrivez-nous vos ambitions : gains de temps, automatisation, croissance... Nous sommes là pour vous accompagner !"
                                                             rows={4}
-                                                            className="mt-1 border-gray-300 focus:border-[var(--odoo-purple)] focus:ring-[var(--odoo-purple)]"
+                                                            className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
                                                        />
                                                   </div>
                                                   <Button
                                                        type="submit"
-                                                       className="w-full bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] py-4 text-lg font-semibold rounded-full group"
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] py-4 text-lg font-semibold rounded-full group"
                                                   >
                                                        <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
                                                        Lancer ma transformation
@@ -169,7 +169,7 @@ export default function ContactSection() {
                                                   animate={{ opacity: 1, scale: 1 }}
                                                   className="text-center py-8"
                                              >
-                                                  <CheckCircle className="w-16 h-16 text-[var(--color-teal)] mx-auto mb-4" />
+                                                  <CheckCircle className="w-16 h-16 text-[var(--color-secondary)] mx-auto mb-4" />
                                                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                                                        🚀 C'est parti !
                                                   </h3>
@@ -181,7 +181,7 @@ export default function ContactSection() {
                                    </div>
 
                                    {/* Benefits Side */}
-                                   <div className="bg-[var(--odoo-purple)] p-8 md:p-12 text-white">
+                                   <div className="bg-[var(--color-main)] p-8 md:p-12 text-white">
                                         <h3 className="text-2xl font-bold mb-8">Ce qui vous attend :</h3>
                                         <div className="space-y-6 mb-8">
                                              {benefits.map((benefit, index) => (
@@ -194,7 +194,7 @@ export default function ContactSection() {
                                                        className="flex gap-4"
                                                   >
                                                        <div className="flex-shrink-0">
-                                                            <benefit.icon className="w-6 h-6 text-[var(--color-teal)]" />
+                                                            <benefit.icon className="w-6 h-6 text-[var(--color-secondary)]" />
                                                        </div>
                                                        <div>
                                                             <h4 className="font-semibold mb-1">{benefit.title}</h4>
@@ -206,7 +206,7 @@ export default function ContactSection() {
 
                                         <div className="bg-white/10 rounded-xl p-6 mb-8">
                                              <h4 className="font-semibold mb-3 flex items-center gap-2">
-                                                  <CheckCircle className="w-5 h-5 text-[#22B799]" />
+                                                  <CheckCircle className="w-5 h-5 text-[var(--color-secondary)]" />
                                                   Consultation Stratégique Offerte
                                              </h4>
                                              <p className="text-purple-100 text-sm mb-4">

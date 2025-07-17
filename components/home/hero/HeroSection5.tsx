@@ -25,10 +25,10 @@ export default function HeroSection5() {
     <section className="min-h-screen bg-white flex items-center">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
+
           {/* Left Column - Content */}
           <div className={`space-y-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            
+
             {/* Status */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full border">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -44,24 +44,24 @@ export default function HeroSection5() {
                 <span className="text-gray-300 mx-3">+</span>
                 <span style={{ color: 'var(--color-main)' }}>HubSpot</span>
               </h1>
-              
+
               <p className="text-xl text-gray-600 max-w-lg">
-                Synchronisation automatique de vos données. 
+                Synchronisation automatique de vos données.
                 Configuration en 5 minutes.
               </p>
             </div>
 
             {/* CTA */}
             <div className="flex gap-4">
-              <button 
-                className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+              <button
+                className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-black transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
                 Démo gratuite
                 <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              
-              <button 
+
+              <button
                 className="group w-[18em] bg-transparent text-[var(--color-main)] border-2 border-[var(--color-main)] px-4 py-2 rounded-lg hover:bg-[var(--color-main)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                 style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
               >
@@ -90,7 +90,7 @@ export default function HeroSection5() {
           {/* Right Column - Terminal */}
           <div className={`transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <div className="bg-gray-900 rounded-2xl overflow-hidden shadow-2xl">
-              
+
               {/* Terminal Header */}
               <div className="flex items-center gap-2 px-4 py-3 bg-gray-800">
                 <div className="flex gap-1.5">
@@ -103,7 +103,7 @@ export default function HeroSection5() {
 
               {/* Terminal Content */}
               <div className="p-6 space-y-4 font-mono text-sm">
-                
+
                 {/* Odoo Connection */}
                 <div className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'var(--color-secondary)' }}>

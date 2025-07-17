@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react"
-import { 
-  Calendar, 
-  Play, 
-  ArrowRight, 
-  Zap, 
-  Workflow, 
-  TrendingUp, 
-  Users2, 
-  Settings, 
-  BarChart3, 
-  CheckCircle, 
-  ArrowUpRight, 
-  Database 
+import {
+  Calendar,
+  Play,
+  ArrowRight,
+  Zap,
+  Workflow,
+  TrendingUp,
+  Users2,
+  Settings,
+  BarChart3,
+  CheckCircle,
+  ArrowUpRight,
+  Database
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -42,10 +42,10 @@ export default function HeroSection4() {
 
       <div className="relative max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-12 gap-12 items-center min-h-screen py-20">
-          
+
           {/* Left Column - Content */}
           <div className={`lg:col-span-6 space-y-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            
+
             {/* Status Badge */}
             <div className="inline-flex items-center gap-3 px-5 py-3 bg-white border border-gray-200 rounded-full shadow-sm">
               <div className="relative">
@@ -69,9 +69,9 @@ export default function HeroSection4() {
                   sans effort
                 </span>
               </h1>
-              
+
               <p className="text-xl text-gray-600 max-w-xl leading-relaxed font-light">
-                Synchronisation bidirectionnelle, automatisation intelligente et reporting unifié. 
+                Synchronisation bidirectionnelle, automatisation intelligente et reporting unifié.
                 Transformez vos données en avantage concurrentiel.
               </p>
             </div>
@@ -82,9 +82,9 @@ export default function HeroSection4() {
                 { icon: Zap, text: "Sync temps réel", color: "text-yellow-600" },
                 { icon: Workflow, text: "Automatisation", color: "text-blue-600" },
                 { icon: TrendingUp, text: "ROI mesurable", color: "text-green-600" },
-                { icon: Users2, text: "Support expert", color: "text-purple-600" }
+                { icon: Users2, text: "Support expert", color: "text-[var(--color-secondary)]" }
               ].map((item, index) => (
-                <div 
+                <div
                   key={index}
                   className={`flex items-center gap-3 p-4 bg-gray-50/80 rounded-xl transition-all duration-500 delay-${index * 100} hover:bg-white hover:shadow-sm ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 >
@@ -97,15 +97,15 @@ export default function HeroSection4() {
             {/* CTA Section */}
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row gap-4">
-                <button 
-                  className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-[var(--color-black)] transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
+                <button
+                  className="group w-[18em] bg-[var(--color-main)] text-white px-4 py-2 rounded-lg hover:bg-black transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                   style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 >
                   Planifier une démo
                   <ArrowRight className="ml-5 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                
-                <button 
+
+                <button
                   className="group w-[18em] bg-transparent text-[var(--color-main)] border-2 border-[var(--color-main)] px-4 py-2 rounded-lg hover:bg-[var(--color-main)] hover:text-white transition-all duration-300 flex items-center justify-center space-x-2 font-semibold transform hover:scale-105"
                   style={{ fontFamily: 'var(--font-family), Inter, sans-serif' }}
                 >
@@ -135,10 +135,10 @@ export default function HeroSection4() {
           {/* Right Column - Integration Visual */}
           <div className={`lg:col-span-6 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <div className="relative max-w-lg mx-auto">
-              
+
               {/* Main Integration Dashboard */}
               <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden">
-                
+
                 {/* Dashboard Header */}
                 <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
                   <div className="flex items-center justify-between">
@@ -159,10 +159,10 @@ export default function HeroSection4() {
 
                 {/* Integration Flow */}
                 <div className="p-8 space-y-8">
-                  
+
                   {/* Odoo Section */}
                   <div className="relative">
-                    <div className="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 bg-gradient-to-r from-purple-50/50 to-white hover:shadow-md transition-all duration-300">
+                    <div className="flex items-center gap-4 p-5 rounded-2xl border-2 border-gray-100 bg-gradient-to-r from-[var(--color-secondary)]/10 to-white hover:shadow-md transition-all duration-300">
                       <div className="w-14 h-14 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: 'var(--color-secondary)' }}>
                         <Settings className="w-7 h-7 text-white" />
                       </div>
@@ -181,14 +181,14 @@ export default function HeroSection4() {
                   <div className="relative flex justify-center">
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex items-center gap-2">
-                        <div className="w-12 h-0.5 bg-gradient-to-r from-purple-400 to-orange-400 rounded-full"></div>
+                        <div className="w-12 h-0.5 bg-gradient-to-r from-[var(--color-secondary)] to-orange-400 rounded-full"></div>
                         <div className="relative">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-orange-500 flex items-center justify-center shadow-lg">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[var(--color-secondary)] to-orange-500 flex items-center justify-center shadow-lg">
                             <Zap className="w-4 h-4 text-white" />
                           </div>
-                          <div className="absolute inset-0 w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-orange-500 animate-ping opacity-30"></div>
+                          <div className="absolute inset-0 w-8 h-8 rounded-full bg-gradient-to-r from-[var(--color-secondary)] to-orange-500 animate-ping opacity-30"></div>
                         </div>
-                        <div className="w-12 h-0.5 bg-gradient-to-r from-purple-400 to-orange-400 rounded-full"></div>
+                        <div className="w-12 h-0.5 bg-gradient-to-r from-[var(--color-secondary)] to-orange-400 rounded-full"></div>
                       </div>
                       <div className="text-xs font-medium text-gray-600 bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm">
                         {dataFlows[activeFlow].from} → {dataFlows[activeFlow].to}
@@ -244,7 +244,7 @@ export default function HeroSection4() {
 
               <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 animate-float" style={{ animationDelay: '1s' }}>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-xl flex items-center justify-center">
                     <Database className="w-5 h-5 text-white" />
                   </div>
                   <div>

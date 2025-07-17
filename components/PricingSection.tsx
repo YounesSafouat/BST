@@ -79,11 +79,11 @@ export default function PricingSection() {
                                    className="h-full"
                               >
                                    <Card className={`h-full border-2 rounded-2xl transition-all duration-300 flex flex-col ${index === 1
-                                        ? 'border-[var(--odoo-purple)] shadow-2xl bg-white scale-105'
+                                        ? 'border-[var(--color-main)] shadow-2xl bg-white scale-105'
                                         : 'border-transparent bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl'
                                         }`}>
                                         <CardHeader className="p-8 flex-shrink-0">
-                                             <h3 className="text-xl font-bold text-[var(--color-teal)] mb-2">{plan.name}</h3>
+                                             <h3 className="text-xl font-bold text-[var(--color-secondary)] mb-2">{plan.name}</h3>
                                              <p className="text-gray-600 text-sm mb-4 h-12 flex items-center">{plan.description}</p>
                                              <div className="space-y-1">
                                                   <div className="text-2xl font-bold text-gray-900">{plan.price}</div>
@@ -95,7 +95,7 @@ export default function PricingSection() {
                                              <ul className="space-y-4 mb-8 flex-grow">
                                                   {plan.features.map((feature, idx) => (
                                                        <li key={idx} className="flex items-start gap-3">
-                                                            <CheckCircle className="w-5 h-5 text-[var(--color-teal)] mt-0.5 flex-shrink-0" />
+                                                            <CheckCircle className="w-5 h-5 text-[var(--color-secondary)] mt-0.5 flex-shrink-0" />
                                                             <span className="text-gray-700 text-sm">{feature}</span>
                                                        </li>
                                                   ))}
@@ -103,8 +103,8 @@ export default function PricingSection() {
 
                                              <Button
                                                   className={`w-full py-3 font-semibold group rounded-full ${index === 1
-                                                       ? 'bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] text-white'
-                                                       : 'bg-[var(--odoo-purple)] hover:bg-[var(--odoo-purple-dark)] text-white'
+                                                       ? 'bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white'
+                                                       : 'bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white'
                                                        }`}
                                                   onClick={() => {
                                                        const el = document.querySelector('#contact');

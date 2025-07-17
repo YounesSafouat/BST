@@ -152,13 +152,13 @@ export default function Footer() {
                 const iconKey = network.icon || key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
                 const Icon = IconMap[iconKey as keyof typeof IconMap];
                 const colorMap: any = {
-                  Facebook: '#1877f2',
-                  Twitter: '#1da1f2',
-                  Linkedin: '#0077b5',
-                  Instagram: '#e1306c',
-                  Youtube: '#ff0000',
+                  Facebook: 'var(--color-secondary)',
+                  Twitter: 'var(--color-secondary)',
+                  Linkedin: 'var(--color-secondary)',
+                  Instagram: 'var(--color-secondary)',
+                  Youtube: 'var(--color-secondary)',
                 };
-                const bgColor = network.color || colorMap[iconKey] || '#333';
+                const bgColor = network.color || colorMap[iconKey] || 'var(--color-main)';
                 return (
                   <a
                     key={key}

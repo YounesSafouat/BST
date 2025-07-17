@@ -169,7 +169,7 @@ export default function HeroSection({ hero }: HeroSection2Props) {
           overflow: hidden;
           white-space: nowrap;
           position: relative;
-          background: #fff;
+          background: var(--color-background);
           border-radius: 1.5rem;
           box-shadow: 0 2px 16px rgba(0,0,0,0.08);
           padding: 0.5rem 0;
