@@ -9,6 +9,13 @@ let maintenanceModeCache = {
 };
 
 export async function middleware(request: NextRequest) {
+  // Force HTTPS redirect in production
+  if (process.env.NODE_ENV === 'production' && request.headers.get('x-forwarded-proto') !== 'https') {
+    const url = request.nextUrl.clone();
+    url.protocol = 'https:';
+    return NextResponse.redirect(url, 301);
+  }
+
   // Skip middleware for API routes, dashboard, and auth
   if (
     request.nextUrl.pathname.startsWith('/api/') ||

@@ -1,0 +1,484 @@
+{
+  "type": "odoo-page",
+  "title": "Page Odoo - Blackswan Technology",
+  "hero": {
+    "headline": "Toute votre entreprise sur une plateforme.",
+    "subheadline": "Partenaire Officiel Odoo",
+    "description": "En tant que Partenaire Officiel Odoo, notre agence conçoit des implémentations sur mesure qui unifient vos processus métier. Simple, efficace, et abordable.",
+    "logo": "/Odoo.svg",
+    "videoUrl": "/rendez-vous.gif",
+    "ctaPrimary": {
+      "text": "Parlons de votre projet",
+      "icon": "ArrowRight"
+    },
+    "ctaSecondary": {
+      "text": "Découvrir nos solutions",
+      "icon": "ArrowRight"
+    },
+    "stats": [
+      {
+        "number": 3,
+        "suffix": " ans",
+        "label": "d'expertise"
+      }
+    ],
+    "badge": "Partenaire Silver Odoo",
+    "emphasis": "Simple, efficace, et abordable."
+  },
+  "trustMetrics": [
+    {
+      "number": 112,
+      "suffix": "+",
+      "label": "entreprises nous font confiance"
+    },
+    {
+      "number": 99,
+      "suffix": "%",
+      "label": "de satisfaction client"
+    },
+    {
+      "number": 4,
+      "suffix": "h",
+      "label": "de réponse garantie"
+    }
+  ],
+  "platformSection": {
+    "headline": "PLATEFORME TOUT-EN-UN",
+    "subheadline": "Découvrez la puissance d'Odoo avec nos modules spécialisés pour chaque aspect de votre entreprise.",
+    "apps": [
+      {
+        "icon": "/icones/odoo/CRM.svg",
+        "title": "CRM",
+        "description": "Gérez vos prospects et clients avec un CRM intelligent qui s'adapte à vos processus de vente.",
+        "features": [
+          "Pipeline de vente personnalisable",
+          "Suivi des opportunités",
+          "Gestion des contacts",
+          "Automatisation des emails",
+          "Rapports de performance"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/sales.svg",
+        "title": "Ventes",
+        "description": "Optimisez vos processus de vente avec des outils de gestion commerciale avancés.",
+        "features": [
+          "Devis et factures automatisés",
+          "Gestion des commandes",
+          "Suivi des commissions",
+          "Analyse des performances",
+          "Intégration e-commerce"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/accounting.svg",
+        "title": "Comptabilité",
+        "description": "Simplifiez votre comptabilité avec des outils intégrés et automatisés.",
+        "features": [
+          "Comptabilité multi-devises",
+          "Rapprochement bancaire",
+          "Gestion des taxes",
+          "Rapports financiers",
+          "Conformité fiscale"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/inventory.svg",
+        "title": "Inventaire",
+        "description": "Maîtrisez votre stock avec une gestion d'inventaire en temps réel.",
+        "features": [
+          "Suivi en temps réel",
+          "Gestion multi-entrepôts",
+          "Alertes de stock",
+          "Traçabilité produits",
+          "Optimisation des coûts"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/HR.svg",
+        "title": "Ressources Humaines",
+        "description": "Gérez vos équipes efficacement avec des outils RH complets.",
+        "features": [
+          "Gestion des employés",
+          "Suivi des congés",
+          "Évaluation des performances",
+          "Formation et développement",
+          "Paie intégrée"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/project.svg",
+        "title": "Projets",
+        "description": "Planifiez et suivez vos projets avec des outils collaboratifs avancés.",
+        "features": [
+          "Planification des tâches",
+          "Suivi du temps",
+          "Collaboration équipe",
+          "Gestion des ressources",
+          "Rapports de progression"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/website.svg",
+        "title": "Site Web",
+        "description": "Créez et gérez votre site web avec un CMS intégré et puissant.",
+        "features": [
+          "Éditeur drag & drop",
+          "SEO intégré",
+          "E-commerce",
+          "Blog et actualités",
+          "Analytics intégrés"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/email marketing.svg",
+        "title": "Email Marketing",
+        "description": "Développez votre audience avec des campagnes email personnalisées.",
+        "features": [
+          "Templates personnalisables",
+          "Segmentation avancée",
+          "A/B testing",
+          "Automatisation",
+          "Analytics détaillés"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/helpdesk.svg",
+        "title": "Support Client",
+        "description": "Offrez un support client exceptionnel avec un système de tickets intégré.",
+        "features": [
+          "Gestion des tickets",
+          "Base de connaissances",
+          "Chat en direct",
+          "Satisfaction client",
+          "Rapports de support"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/manufacturing.svg",
+        "title": "Production",
+        "description": "Optimisez votre production avec des outils de planification avancés.",
+        "features": [
+          "Planification de production",
+          "Gestion des BOM",
+          "Contrôle qualité",
+          "Maintenance préventive",
+          "Analyse des coûts"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/purchase.svg",
+        "title": "Achats",
+        "description": "Gérez vos achats efficacement avec des processus automatisés.",
+        "features": [
+          "Demandes d'achat",
+          "Appels d'offres",
+          "Gestion fournisseurs",
+          "Contrôle des prix",
+          "Rapports d'achat"
+        ]
+      },
+      {
+        "icon": "/icones/odoo/point of sale.svg",
+        "title": "Point de Vente",
+        "description": "Vendez en magasin avec un système de caisse moderne et intégré.",
+        "features": [
+          "Interface tactile",
+          "Gestion des stocks",
+          "Paiements multiples",
+          "Fidélité client",
+          "Rapports de vente"
+        ]
+      }
+    ]
+  },
+  "services": {
+    "headline": "NOS SERVICES",
+    "subheadline": "De l'audit à la mise en production, nous vous accompagnons à chaque étape.",
+    "capabilities": [
+      {
+        "icon": "Settings",
+        "title": "Implémentation",
+        "description": "Déploiement complet d'Odoo adapté à vos processus métier spécifiques."
+      },
+      {
+        "icon": "Users",
+        "title": "Formation",
+        "description": "Formation personnalisée de vos équipes pour une prise en main rapide."
+      },
+      {
+        "icon": "Shield",
+        "title": "Support",
+        "description": "Accompagnement continu et support technique réactif."
+      },
+      {
+        "icon": "BarChart3",
+        "title": "Optimisation",
+        "description": "Amélioration continue de vos processus et performances."
+      }
+    ]
+  },
+  "pricing": {
+    "headline": "TARIFS & ACCOMPAGNEMENT",
+    "subheadline": "Un partenariat, pas seulement une prestation",
+    "description": "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions.",
+    "plans": [
+      {
+        "name": "Pack Démarrage",
+        "description": "Idéal pour débuter avec Odoo rapidement et efficacement.",
+        "price": "À partir de 1 500€",
+        "estimation": "~25 heures d'accompagnement",
+        "features": [
+          "Audit détaillé de vos besoins",
+          "Configuration de base Odoo",
+          "Formation initiale équipe",
+          "Support au démarrage (30j)",
+          "Documentation personnalisée"
+        ],
+        "cta": "Obtenir un devis"
+      },
+      {
+        "name": "Pack Croissance",
+        "description": "Solution complète pour les entreprises en développement.",
+        "price": "À partir de 5 000€",
+        "estimation": "~100 heures d'accompagnement",
+        "features": [
+          "Tous les avantages du pack Démarrage",
+          "Développements spécifiques",
+          "Intégration modules avancés",
+          "Formation approfondie des équipes",
+          "Accompagnement mensuel (6 mois)"
+        ],
+        "cta": "Planifier un échange"
+      },
+      {
+        "name": "Pack Sur Mesure",
+        "description": "Accompagnement personnalisé selon vos besoins spécifiques.",
+        "price": "Devis personnalisé",
+        "estimation": "Volume d'heures adapté",
+        "features": [
+          "Analyse approfondie de vos processus",
+          "Solution 100% personnalisée",
+          "Support prioritaire dédié",
+          "Consultant attitré à votre projet",
+          "Suivi stratégique long terme"
+        ],
+        "cta": "Discutons ensemble"
+      }
+    ]
+  },
+  "partnership": {
+    "headline": "NOTRE AGENCE",
+    "description": "Plus qu'un intégrateur, un partenaire de confiance.",
+    "subdescription": "Une équipe de consultants certifiés, passionnés par l'accompagnement de nos clients dans leur transformation digitale.",
+    "modules": [
+      "Partenaire Silver Odoo",
+      "Équipe certifiée",
+      "Support réactif",
+      "Excellence reconnue"
+    ],
+    "expertiseText": "Certification officielle reconnaissant notre expertise",
+    "features": [
+      {
+        "title": "Partenaire Silver Odoo",
+        "description": "Certification officielle reconnaissant notre expertise",
+        "icon": "BadgeCheck"
+      },
+      {
+        "title": "Équipe certifiée",
+        "description": "100% de nos consultants sont certifiés Odoo",
+        "icon": "Users"
+      },
+      {
+        "title": "Support réactif",
+        "description": "Réponse garantie sous 4h en journée",
+        "icon": "Clock"
+      },
+      {
+        "title": "Excellence reconnue",
+        "description": "99% de satisfaction client sur tous nos projets",
+        "icon": "Star"
+      }
+    ]
+  },
+  "testimonials": [
+    "testimonial_id_1",
+    "testimonial_id_2",
+    "testimonial_id_3"
+  ],
+  "testimonialsSection": {
+    "headline": "TÉMOIGNAGES",
+    "description": "Nos clients témoignent",
+    "subdescription": "Découvrez pourquoi nos clients nous recommandent"
+  },
+  "videoTestimonials": {
+    "headline": "NOS DERNIERS PROJETS",
+    "description": "Témoignages clients",
+    "subdescription": "Découvrez comment nos clients ont transformé leur entreprise avec Odoo",
+    "videos": [
+      {
+        "id": "1",
+        "company": "ESSEM Business School",
+        "companyLogo": "ESSEM",
+        "tagline": "Découvrez notre client ESSEM",
+        "duration": "02:00",
+        "backgroundColor": "bg-gray-800",
+        "textColor": "text-white"
+      },
+      {
+        "id": "2",
+        "company": "AI Crafters",
+        "companyLogo": "AI Crafters",
+        "tagline": "Découvrez notre client AI Crafters",
+        "duration": "02:00",
+        "backgroundColor": "bg-gray-800",
+        "textColor": "text-white"
+      }
+    ]
+  },
+  "faq": {
+    "headline": "QUESTIONS FRÉQUENTES",
+    "description": "Tout savoir sur Odoo",
+    "subdescription": "Découvrez les réponses aux questions les plus courantes sur l'implémentation Odoo",
+    "items": [
+      {
+        "question": "Odoo est-il adapté à mon secteur d'activité ?",
+        "answer": "Absolument ! Odoo propose une architecture modulaire ultra-flexible qui s'adapte parfaitement à tous les secteurs d'activité : industrie, services, BTP, distribution, éducation, santé, et bien d'autres. Chez BlackswanTechnology, nous créons des solutions verticales sur mesure qui intègrent les spécificités métier de votre secteur pour maximiser votre productivité."
+      },
+      {
+        "question": "Comment se déroule un projet d'intégration Odoo avec BlackswanTechnology ?",
+        "answer": "Chez BlackswanTechnology, nous suivons une méthodologie éprouvée en 4 phases : cadrage détaillé de vos besoins, déploiement progressif, formation personnalisée de vos équipes, et support continu. Chaque étape est supervisée par nos experts certifiés Odoo pour garantir une mise en œuvre sans accroc et un ROI optimal."
+      },
+      {
+        "question": "Quels sont les délais moyens d'un projet d'intégration ?",
+        "answer": "Nos délais varient selon la complexité : pour un projet standard avec une équipe de taille humaine, comptez 6 à 16 semaines. Pour des projets plus complexes multi-services, les délais s'étendent de 12 à 22 semaines. Notre approche agile vous permet de voir des résultats concrets dès les premières semaines avec des livrables à chaque sprint."
+      },
+      {
+        "question": "Puis-je héberger Odoo sur le cloud ?",
+        "answer": "Bien sûr ! BlackswanTechnology propose un hébergement cloud managé de haute qualité via notre plateforme dédiée. Nous garantissons une haute disponibilité, des sauvegardes quotidiennes automatisées, et un monitoring 24/7 pour assurer la continuité de vos activités."
+      },
+      {
+        "question": "Proposez-vous une formation à l'utilisation d'Odoo ?",
+        "answer": "Oui, la formation est un élément clé de notre accompagnement ! Chaque projet inclut des sessions de formation personnalisées adaptées à vos processus métier. Nos experts BlackswanTechnology accompagnent vos équipes pour une prise en main rapide et efficace, garantissant l'autonomie de vos utilisateurs."
+      },
+      {
+        "question": "Comment se passe le support après la mise en production ?",
+        "answer": "Chez BlackswanTechnology, votre succès ne s'arrête pas à la mise en production ! Nous assurons un support technique et fonctionnel complet avec des SLA définis et respectés. Vous bénéficiez d'un accompagnement continu - vous n'êtes jamais seul, même après la mise en ligne de votre solution Odoo."
+      }
+    ]
+  },
+  "contact": {
+    "headline": "TRANSFORMONS ENSEMBLE",
+    "description": "Prêt à révolutionner votre entreprise ?",
+    "subdescription": "+112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne.",
+    "formTitle": "Parlons de votre projet",
+    "formDescription": "Échangeons sur vos défis et explorons ensemble comment Odoo peut transformer votre entreprise.",
+    "benefits": [
+      {
+        "title": "Partenaire Silver Officiel",
+        "description": "Certification garantissant notre expertise technique reconnue par Odoo",
+        "icon": "Award"
+      },
+      {
+        "title": "Transformation Express",
+        "description": "Digitalisez vos processus en quelques semaines, pas en mois",
+        "icon": "Zap"
+      },
+      {
+        "title": "Accompagnement Sécurisé",
+        "description": "De l'audit stratégique à la mise en production, nous restons à vos côtés",
+        "icon": "Shield"
+      }
+    ],
+    "consultation": {
+      "title": "Consultation Stratégique Offerte",
+      "description": "Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement."
+    },
+    "contactInfo": {
+      "phone": "+212 78 36 99 603",
+      "email": "contact@blackswantechnology.fr"
+    },
+    "guarantee": "Réponse garantie sous 4h en journée • Échange sans engagement"
+  },
+  "finalCta": {
+    "headline": "Prêt à transformer votre entreprise ?",
+    "description": "Rejoignez les centaines d'entreprises qui ont déjà révolutionné leurs processus avec Odoo.",
+    "ctaPrimary": {
+      "text": "Démarrer maintenant",
+      "icon": "ArrowRight"
+    },
+    "ctaSecondary": {
+      "text": "Voir nos réalisations",
+      "icon": "ArrowRight"
+    }
+  },
+  "metadata": {
+    "title": "Blackswan Technology - Partenaire Officiel Odoo au Maroc",
+    "description": "Expert Odoo ERP au Maroc. Implémentation, intégration et formation. Partenaire Silver Odoo. Solutions sur mesure pour entreprises marocaines.",
+    "keywords": [
+      "Odoo ERP Maroc",
+      "Partenaire Odoo Maroc",
+      "Implémentation Odoo",
+      "Intégration Odoo",
+      "Formation Odoo",
+      "Consultant Odoo",
+      "Expert Odoo",
+      "Développement Odoo",
+      "Migration Odoo",
+      "Support Odoo",
+      "Hébergement Odoo",
+      "Cloud Odoo",
+      "CRM Odoo",
+      "Comptabilité Odoo",
+      "Ventes Odoo",
+      "Inventaire Odoo",
+      "Ressources Humaines Odoo",
+      "Projets Odoo",
+      "Site Web Odoo",
+      "Email Marketing Odoo",
+      "Support Client Odoo",
+      "Production Odoo",
+      "Achats Odoo",
+      "Point de Vente Odoo",
+      "Transformation digitale Maroc"
+    ],
+    "ogTitle": "Blackswan Technology - Expert Odoo ERP & CRM au Maroc",
+    "ogDescription": "Partenaire Silver Odoo au Maroc. Implémentation, intégration et formation sur mesure pour votre transformation digitale.",
+    "canonical": "/odoo"
+  },
+  "styles": {
+    "colors": {
+      "primary": "var(--color-main)",
+      "secondary": "var(--color-secondary)",
+      "background": "var(--odoo-purple-light)"
+    },
+    "animations": {
+      "scrollUp": "scroll-up 60s linear infinite",
+      "scrollDown": "scroll-down 60s linear infinite",
+      "scrollUpSlow": "scroll-up-slow 80s linear infinite"
+    }
+  },
+  "seo": {
+    "structuredData": {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Blackswan Technology",
+      "url": "https://blackswantechnology.fr",
+      "logo": "https://blackswantechnology.fr/BSTLogo.svg",
+      "description": "Partenaire Officiel Odoo au Maroc",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "MA"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+212-78-36-99-603",
+        "contactType": "customer service",
+        "email": "contact@blackswantechnology.fr"
+      },
+      "sameAs": [
+        "https://www.odoo.com/partners/blackswan-technology-18572551"
+      ]
+    }
+  }
+} 

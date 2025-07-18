@@ -103,7 +103,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+    <section id="hero" className="relative flex flex-col justify-center overflow-hidden">
       {/* Background blur elements - responsive positioning */}
       <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
@@ -125,8 +125,12 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                   transition={{ delay: 0.2 }}
                   className="flex items-center gap-2 mb-4 sm:mb-0"
                 >
-                  <Badge variant="outline" className="border-gray-300 text-gray-600 px-3 py-1.5 text-xs sm:text-sm bg-white/80 backdrop-blur-sm">
-                    Partenaire Silver Odoo
+                  <Badge
+                    variant="outline"
+                    className="border-gray-300 text-gray-600 px-3 py-1.5 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
+                  >
+                    {heroData.badge || 'Partenaire Silver Odoo'}
                   </Badge>
                 </motion.div>
 
@@ -137,7 +141,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                   className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-none tracking-tighter"
                   style={{ lineHeight: '1.1' }}
                 >
-                  Toute votre entreprise sur une plateforme.
+                  {heroData.headline}
                 </motion.h1>
 
                 <motion.p
@@ -146,8 +150,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                   transition={{ delay: 0.4 }}
                   className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed max-w-lg"
                 >
-                  En tant que Partenaire Officiel Odoo, notre agence conçoit des implémentations sur mesure qui unifient vos processus métier.
-                  <span className="font-semibold text-[var(--color-main)]"> Simple, efficace, et abordable.</span>
+                  {heroData.description}
                 </motion.p>
               </div>
 
@@ -162,8 +165,8 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                   className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold group rounded-full w-full sm:w-auto"
                   onClick={() => scrollToSection('#contact')}
                 >
-                  Parlons de votre projet
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  {heroData.ctaPrimary.text}
+                  {getIconComponent(heroData.ctaPrimary.icon)}
                 </Button>
                 <Button
                   size="lg"
@@ -171,7 +174,7 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
                   className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto"
                   onClick={() => scrollToSection('#modules')}
                 >
-                  Découvrir nos solutions
+                  {heroData.ctaSecondary.text}
                 </Button>
               </motion.div>
             </motion.div>
@@ -225,16 +228,13 @@ function OdooHeroSplit({ heroData, isPreview = false }: OdooHeroSplitProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="pb-4 bg-white">
+      <div className="bg-white pt-[5em]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel />
         </div>
       </div>
 
-      {/* Trust Metrics - Full width outside hero container */}
-      <div className="w-full">
-        <StatsSection />
-      </div>
+
     </section>
   );
 }

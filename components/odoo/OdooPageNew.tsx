@@ -147,31 +147,57 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
      const [clientCases, setClientCases] = useState<any[]>([]);
      const [clientCarouselPage, setClientCarouselPage] = useState(0);
      const clientsPerPage = 3;
+     const [mounted, setMounted] = useState(false);
 
      useEffect(() => {
+          setMounted(true);
+     }, []);
+
+     useEffect(() => {
+          if (!mounted) return;
+
           const timer = setTimeout(() => setStatsVisible(true), 800);
           const loadTimer = setTimeout(() => setIsLoaded(true), 100);
 
-          // Fetch Odoo data
-          fetchOdooData();
-          fetchTestimonials();
-          fetchClientCases();
+          // Fetch Odoo data with a small delay to ensure proper initialization
+          setTimeout(() => {
+               fetchOdooData();
+               fetchTestimonials();
+               fetchClientCases();
+          }, 100);
 
           return () => {
                clearTimeout(timer);
                clearTimeout(loadTimer);
           };
-     }, []);
+     }, [mounted]);
 
      const fetchOdooData = async () => {
           try {
-               const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-               const response = await fetch(`${baseUrl}/api/content?type=odoo-page`);
+               const timestamp = Date.now();
+               const random = Math.random();
+               console.log('Fetching Odoo data with timestamp:', timestamp, 'random:', random);
+               const response = await fetch(`/api/content/odoo?t=${timestamp}&r=${random}`, {
+                    cache: 'no-store',
+                    headers: {
+                         'Cache-Control': 'no-cache, no-store, must-revalidate',
+                         'Pragma': 'no-cache',
+                         'Expires': '0'
+                    }
+               });
+               console.log('Response status:', response.status);
                if (response.ok) {
                     const data = await response.json();
-                    if (data.length > 0 && data[0].content) {
-                         setOdooData(data[0].content);
+                    console.log('Fetched Odoo data:', data);
+                    if (data && typeof data === 'object') {
+                         setOdooData(data);
+                    } else {
+                         console.error('Invalid data format:', data);
                     }
+               } else {
+                    console.error('Failed to fetch Odoo data:', response.status);
+                    const errorText = await response.text();
+                    console.error('Error response:', errorText);
                }
           } catch (error) {
                console.error('Error fetching Odoo data:', error);
@@ -180,8 +206,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
      const fetchTestimonials = async () => {
           try {
-               const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-               const response = await fetch(`${baseUrl}/api/content?type=testimonial`);
+               const timestamp = Date.now();
+               const response = await fetch(`/api/content?type=testimonial&t=${timestamp}`, {
+                    cache: 'no-store'
+               });
                if (response.ok) {
                     const data = await response.json();
                     setAvailableTestimonials(data.map((item: any) => ({ ...item.content, _id: item._id })));
@@ -193,8 +221,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
      const fetchClientCases = async () => {
           try {
-               const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-               const response = await fetch(`${baseUrl}/api/content?type=clients-page`);
+               const timestamp = Date.now();
+               const response = await fetch(`/api/content?type=clients-page&t=${timestamp}`, {
+                    cache: 'no-store'
+               });
                if (response.ok) {
                     const data = await response.json();
                     if (data.length > 0 && data[0].content && data[0].content.clientCases) {
@@ -207,7 +237,23 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
      };
 
      if (!odooData) {
-          return <Loader />;
+          return (
+               <div className="min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                         <Loader />
+                         <p className="mt-4 text-gray-600">Chargement des données Odoo...</p>
+                         <button
+                              onClick={() => {
+                                   console.log('Manual refresh triggered');
+                                   fetchOdooData();
+                              }}
+                              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                         >
+                              Actualiser manuellement
+                         </button>
+                    </div>
+               </div>
+          );
      }
 
      const AnimatedCounter = ({ target, suffix, duration = 2500 }: { target: number, suffix: string, duration?: number }) => {
@@ -260,19 +306,22 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
           }
      };
 
-     // Split apps into 3 columns for timelines
-     // Add GMAO module to the apps list
-     const gmaoModule = {
-          icon: "/icons/gmao-icon.png", // You'll need to add this icon
-          title: "GMAO",
-          description: "Gestion de Maintenance Assistée par Ordinateur",
-          features: ["Planification préventive", "Gestion des interventions", "Suivi des équipements", "Rapports de maintenance"]
-     };
+     // Split apps into 3 columns for timelines with priority for most demanded modules
+     // Get existing apps from data and filter out modules without icons
+     const existingApps = odooData?.platformSection?.apps || [];
+     const appsWithIcons = existingApps.filter(app =>
+          app.icon &&
+          app.icon.trim() !== '' &&
+          app.icon !== 'undefined' &&
+          app.icon !== 'null' &&
+          !app.icon.includes('placeholder')
+     );
 
-     const allApps = [...(odooData?.platformSection?.apps || []), gmaoModule];
-     const timeline1 = allApps.slice(0, 6) || [];
-     const timeline2 = allApps.slice(6, 12) || [];
-     const timeline3 = allApps.slice(12, 18) || [];
+     // Create timelines with most demanded modules appearing more frequently
+     // Just duplicate the existing apps to make them appear more often
+     const timeline1 = [...appsWithIcons, ...appsWithIcons.slice(0, 3)];
+     const timeline2 = [...appsWithIcons.slice(2), ...appsWithIcons, ...appsWithIcons.slice(0, 2)];
+     const timeline3 = [...appsWithIcons.slice(4), ...appsWithIcons, ...appsWithIcons.slice(2, 4)];
 
      return (
           <div className="min-h-screen bg-white overflow-hidden">
@@ -302,7 +351,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                         {[...timeline1, ...timeline1].map((app, index) => (
                                              <div
                                                   key={`timeline1-${index}`}
-                                                  className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                                                  className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                                              >
                                                   <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                                                        <img
@@ -310,14 +359,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                                             alt={app.title}
                                                             className="w-12 h-12 object-contain"
                                                             onError={(e) => {
-                                                                 // Fallback to a default icon if image fails to load
-                                                                 e.currentTarget.style.display = 'none';
-                                                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                                 // Hide the entire card if icon fails to load
+                                                                 e.currentTarget.closest('.timeline-card')?.remove();
                                                             }}
                                                        />
-                                                       <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center hidden">
-                                                            <span className="text-[var(--color-secondary)] font-bold text-lg">{app.title.charAt(0)}</span>
-                                                       </div>
                                                   </div>
                                                   <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
                                                   <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
@@ -342,7 +387,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                         {[...timeline2, ...timeline2].map((app, index) => (
                                              <div
                                                   key={`timeline2-${index}`}
-                                                  className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                                                  className="timeline-card bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                                              >
                                                   <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                                                        <img
@@ -350,14 +395,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                                             alt={app.title}
                                                             className="w-12 h-12 object-contain"
                                                             onError={(e) => {
-                                                                 // Fallback to a default icon if image fails to load
-                                                                 e.currentTarget.style.display = 'none';
-                                                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                                 // Hide the entire card if icon fails to load
+                                                                 e.currentTarget.closest('.timeline-card')?.remove();
                                                             }}
                                                        />
-                                                       <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center hidden">
-                                                            <span className="text-[var(--color-secondary)] font-bold text-lg">{app.title.charAt(0)}</span>
-                                                       </div>
                                                   </div>
                                                   <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
                                                   <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
@@ -382,7 +423,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                         {[...timeline3, ...timeline3].map((app, index) => (
                                              <div
                                                   key={`timeline3-${index}`}
-                                                  className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                                                  className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                                              >
                                                   <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
                                                        <img
@@ -390,14 +431,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                                             alt={app.title}
                                                             className="w-12 h-12 object-contain"
                                                             onError={(e) => {
-                                                                 // Fallback to a default icon if image fails to load
-                                                                 e.currentTarget.style.display = 'none';
-                                                                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                                 // Hide the entire card if icon fails to load
+                                                                 e.currentTarget.closest('.timeline-card')?.remove();
                                                             }}
                                                        />
-                                                       <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-lg flex items-center justify-center hidden">
-                                                            <span className="text-[var(--color-secondary)] font-bold text-lg">{app.title.charAt(0)}</span>
-                                                       </div>
                                                   </div>
                                                   <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
                                                   <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">

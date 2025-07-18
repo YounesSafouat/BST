@@ -58,7 +58,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               variant="ghost"
               size="sm"
               className="gap-2 text-gray-700 hover:text-[var(--color-main)]"
-              onClick={() => window.open('tel:+33123456789')}
+              onClick={() => window.open('tel:+212783699603')}
             >
               <Phone className="w-4 h-4" />
             </Button>
@@ -66,7 +66,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               variant="ghost"
               size="sm"
               className="gap-2 text-gray-700 hover:text-[var(--odoo-accent)]"
-              onClick={() => window.open('https://wa.me/33123456789', '_blank')}
+              onClick={() => window.open('https://wa.me/212783699603', '_blank')}
             >
               <MessageCircle className="w-4 h-4" />
             </Button>

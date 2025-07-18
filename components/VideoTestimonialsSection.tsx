@@ -24,19 +24,19 @@ const VideoTestimonialsSection = () => {
      const testimonials: VideoTestimonial[] = [
           {
                id: '1',
-               company: 'taap.it',
-               companyLogo: '→',
-               duration: '00:54',
-               backgroundColor: 'bg-green-500',
+               company: 'ESSEM Business School',
+               companyLogo: 'ESSEM',
+               duration: '02:00',
+               backgroundColor: 'bg-gray-800',
                textColor: 'text-white'
           },
           {
-               id: '5',
-               company: 'slack',
-               companyLogo: '💬',
-               tagline: 'Where the future works',
-               duration: '01:01',
-               backgroundColor: 'bg-[var(--color-secondary)]',
+               id: '2',
+               company: 'AI Crafters',
+               companyLogo: 'AI Crafters',
+               tagline: 'Découvrez notre client AI Crafters',
+               duration: '02:00',
+               backgroundColor: 'bg-gray-800',
                textColor: 'text-white'
           }
      ];
@@ -131,86 +131,20 @@ const VideoTestimonialsSection = () => {
                               >
                                    {/* Video Content */}
                                    <div className="aspect-video relative">
-                                        {testimonial.id === '2' ? (
-                                             // Placeholder for second video
-                                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                  <div className="text-center text-gray-500">
-                                                       <div className="text-4xl mb-2">📹</div>
-                                                       <div className="text-sm">Video en cours de préparation</div>
+                                        {/* Placeholder design for both videos */}
+                                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                             <div className="text-center">
+                                                  <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                       <Play className="w-8 h-8 text-white" />
                                                   </div>
-                                             </div>
-                                        ) : (
-                                             <video
-                                                  ref={(el) => {
-                                                       videoRefs.current[testimonial.id] = el;
-                                                  }}
-                                                  className="w-full h-full object-cover"
-                                                  onEnded={() => handleVideoEnded(testimonial.id)}
-                                                  onTimeUpdate={() => handleTimeUpdate(testimonial.id)}
-                                                  onLoadedMetadata={() => handleLoadedMetadata(testimonial.id)}
-                                                  muted={mutedVideos[testimonial.id] || false}
-                                                  loop
-                                             >
-                                                  <source
-                                                       src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/14048946_1920_1080_24fps.mp4"
-                                                       type="video/mp4"
-                                                  />
-                                                  Your browser does not support the video tag.
-                                             </video>
-                                        )}
-
-
-                                   </div>
-
-                                   {/* Video Controls Bar - Only for real videos */}
-                                   {testimonial.id !== '2' && (
-                                        <div className="absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm p-3">
-                                             <div className="flex items-center justify-between">
-                                                  <div className="flex items-center gap-3">
-                                                       <button
-                                                            onClick={() => togglePlay(testimonial.id)}
-                                                            className="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
-                                                       >
-                                                            {playingVideos[testimonial.id] ? (
-                                                                 <Pause className="w-4 h-4 text-white" />
-                                                            ) : (
-                                                                 <Play className="w-4 h-4 text-white ml-0.5" />
-                                                            )}
-                                                       </button>
-                                                       <span className="text-white text-sm font-medium">
-                                                            {formatTime(currentTime[testimonial.id] || 0)} / {formatTime(duration[testimonial.id] || 0)}
-                                                       </span>
-                                                  </div>
-
-                                                  {/* Progress Bar */}
-                                                  <div className="flex-1 mx-4">
-                                                       <div
-                                                            className="w-full bg-white/20 rounded-full h-1 cursor-pointer"
-                                                            onClick={(e) => handleProgressClick(testimonial.id, e)}
-                                                       >
-                                                            <div
-                                                                 className="bg-white h-1 rounded-full transition-all duration-100"
-                                                                 style={{ width: `${progress[testimonial.id] || 0}%` }}
-                                                            ></div>
-                                                       </div>
-                                                  </div>
-
-                                                  <div className="flex items-center gap-2">
-                                                       <button
-                                                            onClick={() => toggleMute(testimonial.id)}
-                                                            className="w-6 h-6 text-white/70 hover:text-white transition-colors"
-                                                            title="Volume"
-                                                       >
-                                                            {mutedVideos[testimonial.id] ? (
-                                                                 <VolumeX className="w-4 h-4" />
-                                                            ) : (
-                                                                 <Volume2 className="w-4 h-4" />
-                                                            )}
-                                                       </button>
-                                                  </div>
+                                                  <p className="text-white text-lg font-medium">
+                                                       {testimonial.id === '1' ? 'Découvrez notre client ESSEM' : 'Découvrez notre client AI Crafters'}
+                                                  </p>
                                              </div>
                                         </div>
-                                   )}
+                                   </div>
+
+                                   {/* No white card - just the placeholder design */}
                               </div>
                          ))}
                     </div>

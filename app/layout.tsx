@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'Expert Odoo ERP et HubSpot CRM au Maroc. Implémentation, intégration et formation. Partenaire Platinum HubSpot et Partenaire Officiel Odoo. Solutions sur mesure pour entreprises marocaines.',
   keywords: [
     'Odoo ERP Maroc',
-    'HubSpot CRM Maroc', 
+    'HubSpot CRM Maroc',
     'Intégration Odoo',
     'Implémentation HubSpot',
     'Partenaire Odoo Maroc',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"),
   alternates: {
     canonical: '/',
   },

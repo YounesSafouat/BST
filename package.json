@@ -10,7 +10,8 @@
     "export": "next export",
     "seed:companies": "ts-node scripts/seedCompanies.ts",
     "seed:contact": "ts-node scripts/seedContactInfo.ts",
-    "seed:content": "node scripts/seedContent.js"
+    "seed:content": "node scripts/seedContent.js",
+    "seed:odoo": "node scripts/seedOdooData.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

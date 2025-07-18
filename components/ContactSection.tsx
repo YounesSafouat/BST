@@ -302,13 +302,13 @@ export default function ContactSection() {
                                         <div className="pt-6 border-t border-white/20">
                                              <h4 className="font-semibold mb-4">Contact direct</h4>
                                              <div className="space-y-3">
-                                                  <a href="tel:+33123456789" className="flex items-center gap-3 group hover:text-white/80 transition-colors">
+                                                  <a href="tel:+212783699603" className="flex items-center gap-3 group hover:text-white/80 transition-colors">
                                                        <Phone className="w-5 h-5" />
-                                                       <span>01 23 45 67 89</span>
+                                                       <span>+212 78 36 99 603</span>
                                                   </a>
-                                                  <a href="mailto:contact@blackswan.fr" className="flex items-center gap-3 group hover:text-white/80 transition-colors">
+                                                  <a href="mailto:contact@blackswantechnology.fr" className="flex items-center gap-3 group hover:text-white/80 transition-colors">
                                                        <Mail className="w-5 h-5" />
-                                                       <span>contact@blackswan.fr</span>
+                                                       <span>contact@blackswantechnology.fr</span>
                                                   </a>
                                              </div>
                                         </div>

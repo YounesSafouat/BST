@@ -62,6 +62,23 @@ export default function CompaniesCarousel() {
                                    )}
                               </div>
                          ))}
+
+                         {/* Third set for extra seamless loop */}
+                         {companies.map((company, index) => (
+                              <div key={`third-${index}`} className="flex items-center justify-center min-w-[120px] h-12">
+                                   {company.logo ? (
+                                        <Image
+                                             src={company.logo}
+                                             alt={company.name}
+                                             width={120}
+                                             height={40}
+                                             className="object-contain opacity-60 hover:opacity-100 transition-opacity"
+                                        />
+                                   ) : (
+                                        <span className="text-gray-400 font-semibold text-sm">{company.name}</span>
+                                   )}
+                              </div>
+                         ))}
                     </div>
                </div>
 
@@ -71,7 +88,7 @@ export default function CompaniesCarousel() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-33.333%);
           }
         }
 
