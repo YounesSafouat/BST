@@ -18,22 +18,61 @@ export default function ContactSection() {
           needs: ''
      });
      const [isSubmitted, setIsSubmitted] = useState(false);
+     const [isSubmitting, setIsSubmitting] = useState(false);
+     const [submitError, setSubmitError] = useState('');
 
-     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
-          setIsSubmitted(true);
+          setIsSubmitting(true);
+          setSubmitError('');
 
-          setTimeout(() => {
-               setIsSubmitted(false);
-               setFormData({
-                    name: '',
-                    email: '',
-                    company: '',
-                    phone: '',
-                    message: '',
-                    needs: ''
+          try {
+               // Prepare the data for submission
+               const submissionData = {
+                    ...formData,
+                    // Add source information for tracking
+                    source: 'odoo_page_contact',
+                    page: 'odoo',
+                    submitted_at: new Date().toISOString()
+               };
+
+               const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+               const response = await fetch(`${baseUrl}/api/contact`, {
+                    method: 'POST',
+                    headers: {
+                         'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submissionData),
                });
-          }, 3000);
+
+               if (response.ok) {
+                    const result = await response.json();
+                    console.log('Contact form submitted successfully:', result);
+                    setIsSubmitted(true);
+
+                    // Reset form after successful submission
+                    setTimeout(() => {
+                         setIsSubmitted(false);
+                         setFormData({
+                              name: '',
+                              email: '',
+                              company: '',
+                              phone: '',
+                              message: '',
+                              needs: ''
+                         });
+                    }, 5000);
+               } else {
+                    const errorData = await response.json();
+                    console.error('Form submission failed:', errorData);
+                    setSubmitError('Une erreur s\'est produite. Veuillez réessayer.');
+               }
+          } catch (error) {
+               console.error('Error submitting form:', error);
+               setSubmitError('Une erreur s\'est produite. Veuillez réessayer.');
+          } finally {
+               setIsSubmitting(false);
+          }
      };
 
      const handleInputChange = (field: string, value: string) => {
@@ -154,11 +193,28 @@ export default function ContactSection() {
                                                   </div>
                                                   <Button
                                                        type="submit"
-                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] py-4 text-lg font-semibold rounded-full group"
+                                                       disabled={isSubmitting}
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] py-4 text-lg font-semibold rounded-full group disabled:opacity-50"
                                                   >
-                                                       <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                                                       Lancer ma transformation
+                                                       {isSubmitting ? (
+                                                            <>
+                                                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                                                 Envoi en cours...
+                                                            </>
+                                                       ) : (
+                                                            <>
+                                                                 <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                                                                 Lancer ma transformation
+                                                            </>
+                                                       )}
                                                   </Button>
+
+                                                  {submitError && (
+                                                       <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg">
+                                                            {submitError}
+                                                       </div>
+                                                  )}
+
                                                   <p className="text-xs text-gray-500 text-center">
                                                        Réponse garantie sous 4h en journée • Échange sans engagement
                                                   </p>
@@ -173,6 +229,9 @@ export default function ContactSection() {
                                                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                                                        🚀 C'est parti !
                                                   </h3>
+                                                  <p className="text-gray-600 mb-4">
+                                                       Votre demande a été enregistrée avec succès dans notre CRM.
+                                                  </p>
                                                   <p className="text-gray-600">
                                                        Un de nos experts Odoo vous recontacte dans les 4h pour échanger sur votre projet.
                                                   </p>

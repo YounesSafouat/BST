@@ -38,6 +38,8 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<any>({});
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     fetchContactData();
@@ -47,7 +49,7 @@ export default function ContactPage() {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
       console.log(baseUrl);
-      
+
       const response = await fetch(`${baseUrl}/api/content?type=contact-page`);
       if (response.ok) {
         const data = await response.json();
@@ -98,15 +100,58 @@ export default function ContactPage() {
     if (currentStep > 1) setCurrentStep(currentStep - 1)
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
-    // Handle form submission
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    try {
+      // Prepare the data for submission
+      const submissionData = {
+        ...formData,
+        // Add timestamp
+        submitted_at: new Date().toISOString(),
+        // Add source information
+        source: 'contact_form',
+        page: 'contact'
+      }
+
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL
+      const response = await fetch(`${baseUrl}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Form submitted successfully:', result)
+        setSubmitStatus('success')
+
+        // Reset form after successful submission
+        setTimeout(() => {
+          setFormData({})
+          setCurrentStep(1)
+          setSubmitStatus('idle')
+        }, 3000)
+      } else {
+        const errorData = await response.json()
+        console.error('Form submission failed:', errorData)
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const renderField = (field: any, stepIndex: number, fieldIndex: number) => {
     const fieldId = `${field.name}-${stepIndex}-${fieldIndex}`;
-    
+
     switch (field.type) {
       case 'text':
       case 'email':
@@ -123,7 +168,7 @@ export default function ContactPage() {
             placeholder={field.label}
           />
         );
-      
+
       case 'textarea':
         return (
           <Textarea
@@ -135,7 +180,7 @@ export default function ContactPage() {
             placeholder={field.label}
           />
         );
-      
+
       case 'select':
         return (
           <Select value={formData[field.name] || ''} onValueChange={(value) => handleInputChange(field.name, value)}>
@@ -151,7 +196,7 @@ export default function ContactPage() {
             </SelectContent>
           </Select>
         );
-      
+
       case 'radio':
         return (
           <RadioGroup value={formData[field.name] || ''} onValueChange={(value) => handleInputChange(field.name, value)}>
@@ -163,7 +208,7 @@ export default function ContactPage() {
             ))}
           </RadioGroup>
         );
-      
+
       case 'checkbox-group':
         return (
           <div className="space-y-2">
@@ -179,7 +224,7 @@ export default function ContactPage() {
             ))}
           </div>
         );
-      
+
       default:
         return null;
     }
@@ -202,7 +247,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white mt-10 md:mt-20">
-        {/* Hero Section */}
+      {/* Hero Section */}
       <section className="relative py-20 px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-black mb-6 tracking-tight">
@@ -216,7 +261,7 @@ export default function ContactPage() {
                 )}
               </React.Fragment>
             ))}
-            </h1>
+          </h1>
 
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
             {contactData.hero.description}
@@ -237,7 +282,7 @@ export default function ContactPage() {
               ></div>
             </div>
           </div>
-                </div>
+        </div>
       </section>
       {/* Contact Form */}
       <section className="py-16 px-6 lg:px-8">
@@ -258,9 +303,9 @@ export default function ContactPage() {
                             {field.label} {field.required && '*'}
                           </Label>
                           {renderField(field, stepIndex, fieldIndex)}
-                </div>
+                        </div>
                       ))}
-              </div>
+                    </div>
                   </CardContent>
                 </Card>
               )
@@ -277,7 +322,7 @@ export default function ContactPage() {
               >
                 Précédent
               </Button>
-              
+
               {currentStep < contactData.steps.length ? (
                 <Button
                   type="button"
@@ -289,13 +334,39 @@ export default function ContactPage() {
               ) : (
                 <Button
                   type="submit"
-                  className="px-8 py-3 bg-[var(--color-main)] hover:bg-[var(--color-main)]/90"
+                  disabled={isSubmitting}
+                  className="px-8 py-3 bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 disabled:opacity-50"
                 >
-                  Envoyer
+                  {isSubmitting ? 'Envoi en cours...' : 'Envoyer'}
                 </Button>
               )}
             </div>
-            </form>
+
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                  <p className="text-green-800 font-medium">
+                    Merci ! Votre message a été envoyé avec succès. Nous vous contacterons bientôt.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {submitStatus === 'error' && (
+              <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-red-800 font-medium">
+                    Une erreur s'est produite lors de l'envoi. Veuillez réessayer.
+                  </p>
+                </div>
+              </div>
+            )}
+          </form>
         </div>
       </section>
       {/* Contact Cards */}
@@ -305,7 +376,7 @@ export default function ContactPage() {
             <h2 className="text-3xl font-bold text-black mb-4">Autres façons de nous contacter</h2>
             <p className="text-gray-600">Choisissez le moyen qui vous convient le mieux</p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {contactData.cards.map((card, index) => {
               const IconComponent = getIconComponent(card.icon);
@@ -313,7 +384,7 @@ export default function ContactPage() {
                 <Card key={index} className="text-center p-8 hover:shadow-lg transition-all duration-300">
                   <div className="w-16 h-16 bg-[var(--color-main)] rounded-full flex items-center justify-center mx-auto mb-6">
                     <IconComponent className="w-8 h-8 text-white" />
-      </div>
+                  </div>
                   <h3 className="text-xl font-bold text-black mb-4">{card.title}</h3>
                   <p className="text-gray-600 mb-4">{card.description}</p>
                   <div className="text-lg font-semibold text-[var(--color-main)] mb-2">{card.contact}</div>
@@ -321,7 +392,7 @@ export default function ContactPage() {
                 </Card>
               );
             })}
-            </div>
+          </div>
         </div>
       </section>
     </div>

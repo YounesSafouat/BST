@@ -14,19 +14,27 @@ const FAQSection = () => {
      const faqs: FAQItem[] = [
           {
                question: "Odoo est-il adapté à mon secteur d'activité ?",
-               answer: "Oui, Odoo propose une architecture modulaire qui permet une adaptation fine à tous les secteurs : industrie, services, BTP, distribution, éducation, santé, etc. Nos solutions verticales sont conçues pour intégrer les besoins spécifiques de chaque métier."
+               answer: "Absolument ! Odoo propose une architecture modulaire ultra-flexible qui s'adapte parfaitement à tous les secteurs d'activité : industrie, services, BTP, distribution, éducation, santé, et bien d'autres. Chez BlackswanTechnology, nous créons des solutions verticales sur mesure qui intègrent les spécificités métier de votre secteur pour maximiser votre productivité."
           },
           {
-               question: "Comment se déroule un projet d'intégration Odoo avec Blackswantechnology ?",
-               answer: "Nous suivons une méthodologie structurée : cadrage, déploiement, formation, support. Chaque étape est encadrée par nos experts fonctionnels et techniques pour assurer une mise en œuvre fluide."
-          },
-          {
-               question: "Odoo est-il compatible avec la comptabilité marocaine ?",
-               answer: "Oui. Nous déployons Odoo avec un module comptable entièrement conforme aux normes marocaines (Plan Comptable Marocain, déclarations fiscales, TVA, etc.)."
+               question: "Comment se déroule un projet d'intégration Odoo avec BlackswanTechnology ?",
+               answer: "Chez BlackswanTechnology, nous suivons une méthodologie éprouvée en 4 phases : cadrage détaillé de vos besoins, déploiement progressif, formation personnalisée de vos équipes, et support continu. Chaque étape est supervisée par nos experts certifiés Odoo pour garantir une mise en œuvre sans accroc et un ROI optimal."
           },
           {
                question: "Quels sont les délais moyens d'un projet d'intégration ?",
-               answer: "Pour un projet standard, avec peu d'adaptations et une équipe à taille humaine, la durée moyenne est de 6 à 16 semaines. Pour des projets plus complexes, impliquant plusieurs services ou un haut niveau d'intégration, les délais varient entre 12 et 22 semaines, grâce à notre approche agile qui permet d'avancer par étapes avec des livrables concrets à chaque sprint."
+               answer: "Nos délais varient selon la complexité : pour un projet standard avec une équipe de taille humaine, comptez 6 à 16 semaines. Pour des projets plus complexes multi-services, les délais s'étendent de 12 à 22 semaines. Notre approche agile vous permet de voir des résultats concrets dès les premières semaines avec des livrables à chaque sprint."
+          },
+          {
+               question: "Puis-je héberger Odoo sur le cloud ?",
+               answer: "Bien sûr ! BlackswanTechnology propose un hébergement cloud managé de haute qualité via notre plateforme dédiée. Nous garantissons une haute disponibilité, des sauvegardes quotidiennes automatisées, et un monitoring 24/7 pour assurer la continuité de vos activités."
+          },
+          {
+               question: "Proposez-vous une formation à l'utilisation d'Odoo ?",
+               answer: "Oui, la formation est un élément clé de notre accompagnement ! Chaque projet inclut des sessions de formation personnalisées adaptées à vos processus métier. Nos experts BlackswanTechnology accompagnent vos équipes pour une prise en main rapide et efficace, garantissant l'autonomie de vos utilisateurs."
+          },
+          {
+               question: "Comment se passe le support après la mise en production ?",
+               answer: "Chez BlackswanTechnology, votre succès ne s'arrête pas à la mise en production ! Nous assurons un support technique et fonctionnel complet avec des SLA définis et respectés. Vous bénéficiez d'un accompagnement continu - vous n'êtes jamais seul, même après la mise en ligne de votre solution Odoo."
           }
      ];
 

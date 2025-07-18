@@ -61,8 +61,8 @@ export default function LayoutWrapper({
 
   return (
     <ThemeProvider>
-      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <Header scrollY={scrollY} isLoaded={isLoaded} />}
-      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <MobileHeader />}
+      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <div className="hidden md:block"><Header scrollY={scrollY} isLoaded={isLoaded} /></div>}
+      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <div className="md:hidden"><MobileHeader /></div>}
       <main className="flex-grow pb-16 md:pb-0 pt-16 md:pt-0">
         {children}
       </main>
