@@ -56,8 +56,8 @@ export default function SuccessSection({ success }: SuccessSectionProps) {
       const response = await fetch(`${baseUrl}/api/content?type=testimonial`);
       if (response.ok) {
         const data = await response.json();
-        const mapped = data.map((item: any) => ({ 
-          ...item.content, 
+        const mapped = data.map((item: any) => ({
+          ...item.content,
           _id: typeof item._id === 'object' && item._id.$oid ? item._id.$oid : item._id.toString()
         }));
         setAvailableTestimonials(mapped);
@@ -75,7 +75,7 @@ export default function SuccessSection({ success }: SuccessSectionProps) {
   const shouldUseCarousel = testimonialCount > 4;
 
   // For carousel, triple the testimonials for smooth infinite scroll
-  const infiniteTestimonials = shouldUseCarousel 
+  const infiniteTestimonials = shouldUseCarousel
     ? [...testimonialObjects, ...testimonialObjects, ...testimonialObjects]
     : testimonialObjects;
 
@@ -108,8 +108,10 @@ export default function SuccessSection({ success }: SuccessSectionProps) {
             </div>
           )}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <span className="font-semibold text-gray-900 truncate">{testimonial.name}</span>
+              <div className="text-sm text-gray-500">•</div>
+              <span className="text-sm text-gray-500 truncate">{testimonial.role}</span>
               <CheckCircle className="w-4 h-4 ml-1" style={{ color: 'var(--color-main)' }} />
             </div>
             <div className="text-gray-500 text-sm truncate">{username}</div>
@@ -121,7 +123,7 @@ export default function SuccessSection({ success }: SuccessSectionProps) {
         </div>
         {/* Bottom: See on, Icon, Date */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-100 text-sm text-gray-500">
-          
+
           {date && <span>{date}</span>}
         </div>
       </div>

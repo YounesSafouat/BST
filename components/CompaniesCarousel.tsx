@@ -4,14 +4,21 @@ import React from 'react';
 import Image from 'next/image';
 
 const companies = [
-     { name: "Odoo", logo: "/Odoo.svg" },
-     { name: "HubSpot", logo: "/hubspot.svg" },
-     { name: "Microsoft", logo: "/logos/WQ.svg" },
-     { name: "Salesforce", logo: "/logos/Hubspot-fav.svg" },
-     { name: "Adobe", logo: "/logos/WQ.svg" },
-     { name: "Oracle", logo: "/logos/Hubspot-fav.svg" },
-     { name: "SAP", logo: "/logos/WQ.svg" },
-     { name: "NetSuite", logo: "/logos/Hubspot-fav.svg" },
+     { name: "FitnessPark", logo: "/ref/fitnespark-vectorized-white-3.svg" },
+     { name: "IDC Pharma", logo: "/ref/idc_pharma-horizontal-white-vector.svg" },
+     { name: "Yamaha Motors", logo: "/ref/yamaha_motors-horizontal-white-vector.svg" },
+     { name: "Malt", logo: "/ref/malt-horizontal-white-vector.svg" },
+     { name: "Optisam", logo: "/ref/optisam-horizontal-white-vector.svg" },
+     { name: "Essem", logo: "/ref/essem-1-2.svg" },
+     { name: "Jeanne d'Arc", logo: "/ref/jeannedarc-vectorized.svg" },
+     { name: "Allisone", logo: "/ref/allisone-vectorized-white.svg" },
+     { name: "Aicrafters", logo: "/ref/aicrafters-vectorized-white.svg" },
+     { name: "Barthener", logo: "/ref/barthener-vectorized-white.svg" },
+     { name: "Beks", logo: "/ref/beks-vectorized-white.svg" },
+     { name: "Call Center Group", logo: "/ref/callcenter_group-vectorized-white.svg" },
+     { name: "Chabi Chic", logo: "/ref/chabi-chic-vectorized-white.svg" },
+     { name: "ICAT", logo: "/ref/icat-vectorized-white.svg" },
+     { name: "Titre Français", logo: "/ref/titre-francais-vectorized-white.svg" },
 ];
 
 export default function CompaniesCarousel() {

@@ -38,22 +38,6 @@ const VideoTestimonialsSection = () => {
                duration: '01:01',
                backgroundColor: 'bg-[var(--color-secondary)]',
                textColor: 'text-white'
-          },
-          {
-               id: '3',
-               company: 'zapier',
-               companyLogo: '_',
-               duration: '00:57',
-               backgroundColor: 'bg-amber-100',
-               textColor: 'text-gray-800'
-          },
-          {
-               id: '4',
-               company: 'submagic',
-               companyLogo: '✨',
-               duration: '01:13',
-               backgroundColor: 'bg-white',
-               textColor: 'text-gray-800'
           }
      ];
 

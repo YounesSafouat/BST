@@ -36,7 +36,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection('#hero')}>
-            <img src="bst.png" alt="BlackSwan" />
+            <img src="BSTLogo.svg" alt="BlackSwan" />
           </div>
 
           {/* Desktop Navigation */}

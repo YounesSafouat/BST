@@ -13,36 +13,20 @@ const FAQSection = () => {
 
      const faqs: FAQItem[] = [
           {
-               question: "Qu'est-ce qu'Odoo et pourquoi l'utiliser ?",
-               answer: "Odoo est une suite d'applications business open-source qui couvre tous les besoins de votre entreprise : CRM, comptabilité, gestion de projet, e-commerce, et bien plus. Elle offre une solution intégrée, personnalisable et évolutive pour optimiser vos processus métier."
+               question: "Odoo est-il adapté à mon secteur d'activité ?",
+               answer: "Oui, Odoo propose une architecture modulaire qui permet une adaptation fine à tous les secteurs : industrie, services, BTP, distribution, éducation, santé, etc. Nos solutions verticales sont conçues pour intégrer les besoins spécifiques de chaque métier."
           },
           {
-               question: "Combien de temps faut-il pour implémenter Odoo ?",
-               answer: "Le délai d'implémentation varie selon la complexité de votre projet et le nombre de modules. En moyenne, une implémentation complète prend entre 4 à 12 semaines. Nous commençons par une phase de consultation pour définir vos besoins précis."
+               question: "Comment se déroule un projet d'intégration Odoo avec Blackswantechnology ?",
+               answer: "Nous suivons une méthodologie structurée : cadrage, déploiement, formation, support. Chaque étape est encadrée par nos experts fonctionnels et techniques pour assurer une mise en œuvre fluide."
           },
           {
-               question: "Odoo est-il adapté aux petites entreprises ?",
-               answer: "Absolument ! Odoo propose des solutions adaptées à tous les types d'entreprises. Pour les PME, nous recommandons de commencer par les modules essentiels (CRM, comptabilité, vente) et d'étendre progressivement selon vos besoins."
+               question: "Odoo est-il compatible avec la comptabilité marocaine ?",
+               answer: "Oui. Nous déployons Odoo avec un module comptable entièrement conforme aux normes marocaines (Plan Comptable Marocain, déclarations fiscales, TVA, etc.)."
           },
           {
-               question: "Quels sont les coûts d'une implémentation Odoo ?",
-               answer: "Nos tarifs varient selon vos besoins. Nous proposons des packages d'accompagnement à partir de 2 500€/mois incluant la configuration, la formation et le support. Contactez-nous pour un devis personnalisé."
-          },
-          {
-               question: "Proposez-vous une formation pour nos équipes ?",
-               answer: "Oui, la formation de vos équipes fait partie intégrante de nos services. Nous organisons des sessions de formation sur mesure pour chaque module et adaptons le contenu aux rôles de vos collaborateurs."
-          },
-          {
-               question: "Odoo peut-il s'intégrer avec nos outils existants ?",
-               answer: "Odoo offre de nombreuses possibilités d'intégration via des API et des connecteurs. Nous pouvons l'intégrer avec vos outils actuels (comptabilité, e-commerce, outils marketing) pour une transition en douceur."
-          },
-          {
-               question: "Quel support proposez-vous après l'implémentation ?",
-               answer: "Nous offrons un support réactif avec une réponse garantie sous 4h en journée. Nos packages incluent la maintenance, les mises à jour, l'optimisation continue et l'accompagnement pour de nouveaux modules."
-          },
-          {
-               question: "Odoo est-il sécurisé pour nos données ?",
-               answer: "Odoo respecte les standards de sécurité les plus élevés (ISO 27001, GDPR). Vos données sont hébergées sur des serveurs sécurisés avec sauvegarde automatique. Nous vous accompagnons également dans la mise en conformité RGPD."
+               question: "Quels sont les délais moyens d'un projet d'intégration ?",
+               answer: "Pour un projet standard, avec peu d'adaptations et une équipe à taille humaine, la durée moyenne est de 6 à 16 semaines. Pour des projets plus complexes, impliquant plusieurs services ou un haut niveau d'intégration, les délais varient entre 12 et 22 semaines, grâce à notre approche agile qui permet d'avancer par étapes avec des livrables concrets à chaque sprint."
           }
      ];
 

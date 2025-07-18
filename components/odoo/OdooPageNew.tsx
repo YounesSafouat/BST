@@ -261,9 +261,18 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
      };
 
      // Split apps into 3 columns for timelines
-     const timeline1 = odooData?.platformSection?.apps?.slice(0, 6) || [];
-     const timeline2 = odooData?.platformSection?.apps?.slice(6, 12) || [];
-     const timeline3 = odooData?.platformSection?.apps?.slice(12, 18) || [];
+     // Add GMAO module to the apps list
+     const gmaoModule = {
+          icon: "/icons/gmao-icon.png", // You'll need to add this icon
+          title: "GMAO",
+          description: "Gestion de Maintenance Assistée par Ordinateur",
+          features: ["Planification préventive", "Gestion des interventions", "Suivi des équipements", "Rapports de maintenance"]
+     };
+
+     const allApps = [...(odooData?.platformSection?.apps || []), gmaoModule];
+     const timeline1 = allApps.slice(0, 6) || [];
+     const timeline2 = allApps.slice(6, 12) || [];
+     const timeline3 = allApps.slice(12, 18) || [];
 
      return (
           <div className="min-h-screen bg-white overflow-hidden">
@@ -271,9 +280,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                <div className="h-[95vh] flex flex-col justify-center pt-20">
                     <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
                </div>
-
-               {/* Video Testimonials Section */}
-               <VideoTestimonialsSection />
 
                {/* Vertical Timeline Carousels */}
                <section className="py-12 bg-white overflow-hidden">
@@ -416,179 +422,12 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          </div>
                     </div>
                </section>
-               {/* Cas Clients Carousel Section */}
-               {clientCases.length > 0 && (
-                    <section className="py-20 bg-white">
-                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                              <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">CAS CLIENTS</div>
-                                   <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                        Ils nous font confiance
-                                   </h2>
-                                   <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                        Des entreprises de toutes tailles qui ont transformé leur activité avec Odoo
-                                   </p>
-                              </div>
 
-                              <div className="relative">
-                                   <div className="grid lg:grid-cols-3 gap-8">
-                                        {clientCases.slice(clientCarouselPage * clientsPerPage, clientCarouselPage * clientsPerPage + clientsPerPage).map((client, index) => (
-                                             <div key={`${client.slug}-${clientCarouselPage}-${index}`} className="group">
-                                                  <Link href={`/cas-client/${client.slug}`} className="block h-full">
-                                                       <div className="h-full bg-[var(--color-secondary)]/5 border border-gray-200/80 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 rounded-2xl p-8">
-                                                            <div className="flex flex-col items-center text-center">
-                                                                 <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mb-6 overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105">
-                                                                      {client.logo ? (
-                                                                           <Image
-                                                                                src={client.logo}
-                                                                                alt={`${client.name} logo`}
-                                                                                width={96}
-                                                                                height={96}
-                                                                                className="max-w-16 max-h-16 object-contain"
-                                                                                onError={(e) => {
-                                                                                     e.currentTarget.style.display = 'none';
-                                                                                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                                                                                }}
-                                                                           />
-                                                                      ) : null}
-                                                                      <span className="text-2xl font-bold text-[var(--color-secondary)] hidden">
-                                                                           {client.name.charAt(0)}
-                                                                      </span>
-                                                                 </div>
-                                                                 <h3 className="text-xl font-bold text-gray-900 mb-2">{client.name}</h3>
-                                                                 <p className="text-gray-600 text-sm mb-6">{client.sector}</p>
+               {/* Video Testimonials Section */}
+               <VideoTestimonialsSection />
 
-                                                                 <div className="w-full pt-6 border-t border-gray-300/60">
-                                                                      <h4 className="text-sm font-semibold text-gray-700 mb-4">Modules déployés</h4>
-                                                                      <div className="flex gap-3 justify-center flex-wrap">
-                                                                           {client.solutions && client.solutions.slice(0, 3).map((sol: any, i: number) => {
-                                                                                // Map module names to icons
-                                                                                const getModuleIcon = (moduleName: string) => {
-                                                                                     const iconMap: { [key: string]: any } = {
-                                                                                          'CRM': Users,
-                                                                                          'Project': BarChart3,
-                                                                                          'Accounting': FileText,
-                                                                                          'Manufacturing': Settings,
-                                                                                          'Inventory': Package,
-                                                                                          'E-commerce': ShoppingCart,
-                                                                                     };
-                                                                                     return iconMap[moduleName] || Settings;
-                                                                                };
 
-                                                                                const Icon = getModuleIcon(sol.module);
-                                                                                return (
-                                                                                     <div key={i} className="w-12 h-12 bg-white rounded-lg flex items-center justify-center border">
-                                                                                          <Icon className="w-6 h-6 text-[var(--color-secondary)]" />
-                                                                                     </div>
-                                                                                );
-                                                                           })}
-                                                                      </div>
-                                                                 </div>
-                                                            </div>
-                                                       </div>
-                                                  </Link>
-                                             </div>
-                                        ))}
-                                   </div>
 
-                                   {/* Navigation Buttons */}
-                                   <div className="flex justify-center items-center gap-4 mt-12">
-                                        <button
-                                             onClick={() => setClientCarouselPage((prev) => Math.max(prev - 1, 0))}
-                                             disabled={clientCarouselPage === 0}
-                                             className="w-10 h-10 rounded-full border border-[var(--color-secondary)] text-[var(--color-secondary)] hover:bg-[var(--color-secondary)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                                             aria-label="Précédent"
-                                        >
-                                             <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                                                  <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                             </svg>
-                                        </button>
-
-                                        <div className="flex gap-2">
-                                             {Array.from({ length: Math.ceil(clientCases.length / clientsPerPage) }).map((_, index) => (
-                                                  <button
-                                                       key={index}
-                                                       onClick={() => setClientCarouselPage(index)}
-                                                       className={`w-2 h-2 rounded-full transition-colors ${index === clientCarouselPage
-                                                            ? 'bg-[var(--color-secondary)]'
-                                                            : 'bg-gray-300'
-                                                            }`}
-                                                       aria-label={`Aller à la page ${index + 1}`}
-                                                  />
-                                             ))}
-                                        </div>
-
-                                        <button
-                                             onClick={() => setClientCarouselPage((prev) => Math.min(prev + 1, Math.ceil(clientCases.length / clientsPerPage) - 1))}
-                                             disabled={clientCarouselPage === Math.ceil(clientCases.length / clientsPerPage) - 1}
-                                             className="w-10 h-10 rounded-full border border-[var(--color-secondary)] text-[var(--color-secondary)] hover:bg-[var(--color-secondary)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                                             aria-label="Suivant"
-                                        >
-                                             <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                                                  <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                             </svg>
-                                        </button>
-                                   </div>
-
-                                   {/* View All Link */}
-                                   <div className="text-center mt-8">
-                                        <Link
-                                             href="/cas-client"
-                                             className="inline-flex items-center text-[var(--color-secondary)] hover:text-[var(--color-secondary)]/80 hover:bg-[var(--color-secondary)]/5 px-4 py-2 rounded-lg transition-colors group"
-                                        >
-                                             Voir tous nos cas clients
-                                             <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                        </Link>
-                                   </div>
-                              </div>
-                         </div>
-                    </section>
-               )}
-               {/* Notre Méthodologie Section */}
-               <section className="py-20 bg-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <div className="text-center mb-12">
-                              <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE MÉTHODOLOGIE</div>
-                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                   Un processus éprouvé pour garantir votre succès
-                              </h2>
-                         </div>
-                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                              {/* Step 1 */}
-                              <div className="relative bg-white rounded-2xl shadow-md p-8 flex flex-col items-start min-h-[260px] transition-all hover:shadow-xl">
-                                   <div className="w-14 h-14 rounded-xl bg-[var(--color-secondary)] flex items-center justify-center mb-6">
-                                        <MessageCircle className="w-8 h-8 text-white" />                                   </div>
-                                   <div className="absolute top-6 right-8 text-5xl font-black text-gray-100 select-none pointer-events-none">01</div>
-                                   <div className="text-xl font-bold text-gray-900 mb-2">Consultation</div>
-                                   <div className="text-gray-600 text-sm">Analyse de vos besoins et définition d'une stratégie sur mesure.</div>
-                              </div>
-                              {/* Step 2 */}
-                              <div className="relative bg-white rounded-2xl shadow-md p-8 flex flex-col items-start min-h-[260px] transition-all hover:shadow-xl">
-                                   <div className="w-14 h-14 rounded-xl bg-[var(--color-secondary)] flex items-center justify-center mb-6">
-                                        <Settings className="w-8 h-8 text-white" />                                   </div>
-                                   <div className="absolute top-6 right-8 text-5xl font-black text-gray-100 select-none pointer-events-none">02</div>
-                                   <div className="text-xl font-bold text-gray-900 mb-2">Paramétrage</div>
-                                   <div className="text-gray-600 text-sm">Configuration et personnalisation de votre plateforme Odoo.</div>
-                              </div>
-                              {/* Step 3 */}
-                              <div className="relative bg-white rounded-2xl shadow-md p-8 flex flex-col items-start min-h-[260px] transition-all hover:shadow-xl">
-                                   <div className="w-14 h-14 rounded-xl bg-[var(--color-secondary)] flex items-center justify-center mb-6">
-                                        <Rocket className="w-8 h-8 text-white" />                                   </div>
-                                   <div className="absolute top-6 right-8 text-5xl font-black text-gray-100 select-none pointer-events-none">03</div>
-                                   <div className="text-xl font-bold text-gray-900 mb-2">Déploiement</div>
-                                   <div className="text-gray-600 text-sm">Formation de vos équipes et accompagnement au lancement.</div>
-                              </div>
-                              {/* Step 4 */}
-                              <div className="relative bg-white rounded-2xl shadow-md p-8 flex flex-col items-start min-h-[260px] transition-all hover:shadow-xl">
-                                   <div className="w-14 h-14 rounded-xl bg-[var(--color-secondary)] flex items-center justify-center mb-6">
-                                        <CircleCheckBig className="w-8 h-8 text-white" />                                   </div>
-                                   <div className="absolute top-6 right-8 text-5xl font-black text-gray-100 select-none pointer-events-none">04</div>
-                                   <div className="text-xl font-bold text-gray-900 mb-2">Support & Optimisation</div>
-                                   <div className="text-gray-600 text-sm">Suivi continu et améliorations pour soutenir votre croissance.</div>
-                              </div>
-                         </div>
-                    </div>
-               </section>
 
                {/* Tarifs & Accompagnement Section */}
                <PricingSection />
@@ -670,11 +509,14 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                                                   {/* Author */}
                                                   <div className="flex items-center gap-4 mt-2">
                                                        {renderAvatar(testimonialId)}
-                                                       <div>
-                                                            <div className="font-bold text-gray-900">{testimonial.name}</div>
-                                                            <div className="text-sm text-gray-500">{testimonial.role}</div>
+                                                       <div className="flex-1">
+                                                            <div className="flex items-center gap-2">
+                                                                 <div className="font-bold text-gray-900">{testimonial.name}</div>
+                                                                 <div className="text-sm text-gray-500">•</div>
+                                                                 <div className="text-sm text-gray-500">{testimonial.role}</div>
+                                                            </div>
                                                             {testimonial.company && (
-                                                                 <div className="text-sm text-[var(--color-secondary)] font-semibold">{testimonial.company}</div>
+                                                                 <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1">{testimonial.company}</div>
                                                             )}
                                                        </div>
                                                   </div>
