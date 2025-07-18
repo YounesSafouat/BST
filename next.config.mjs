@@ -8,7 +8,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ['localhost', 'your-domain.com', '0.0.0.0'],
+    domains: ['localhost', 'agence-blackswan.com', '0.0.0.0'],
   },
   output: 'standalone',
   experimental: {
