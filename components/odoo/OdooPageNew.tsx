@@ -282,7 +282,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                </div>
 
                {/* Vertical Timeline Carousels */}
-               <section className="py-12 bg-white overflow-hidden">
+               <section className="py-12 bg-white overflow-hidden" id="modules">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">PLATEFORME TOUT-EN-UN</div>
@@ -429,7 +429,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                {/* Tarifs & Accompagnement Section */}
                <PricingSection />
                {/* Notre Agence Section */}
-               <section className="py-20 bg-white">
+               <section className="py-20 bg-white" id="team">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE AGENCE</div>
@@ -481,7 +481,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
 
                {/* Testimonials */}
                {odooData && odooData.testimonials && odooData.testimonials.length > 0 && (
-                    <section className="py-20 bg-white">
+                    <section className="py-20 bg-white" id="testimonials">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
                                    <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>

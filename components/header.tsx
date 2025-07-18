@@ -11,8 +11,8 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const navigation = [
     { name: 'Solutions', href: '#modules' },
     { name: 'Tarifs', href: '#pricing' },
-    { name: 'Témoignages', href: '#testimonials' },
     { name: 'Notre Agence', href: '#team' },
+    { name: 'Témoignages', href: '#testimonials' },
   ];
 
   const scrollToSection = (href: string) => {
