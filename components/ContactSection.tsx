@@ -26,6 +26,13 @@ export default function ContactSection() {
           setIsSubmitting(true);
           setSubmitError('');
 
+          console.log('Form submission started');
+          console.log('Environment check:', {
+               NODE_ENV: process.env.NODE_ENV,
+               NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+               window_location: typeof window !== 'undefined' ? window.location.origin : 'server-side'
+          });
+
           try {
                // Prepare the data for submission
                const submissionData = {
@@ -36,14 +43,33 @@ export default function ContactSection() {
                     submitted_at: new Date().toISOString()
                };
 
-               const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-               const response = await fetch(`${baseUrl}/api/contact`, {
-                    method: 'POST',
-                    headers: {
-                         'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(submissionData),
-               });
+               // Use relative URL for better compatibility with different environments
+               let response;
+               try {
+                    response = await fetch(`/api/contact`, {
+                         method: 'POST',
+                         headers: {
+                              'Content-Type': 'application/json',
+                         },
+                         body: JSON.stringify(submissionData),
+                    });
+               } catch (fetchError) {
+                    console.error('Fetch error:', fetchError);
+                    // Try test endpoint as fallback
+                    try {
+                         response = await fetch(`/api/test-contact`, {
+                              method: 'POST',
+                              headers: {
+                                   'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify(submissionData),
+                         });
+                         console.log('Using test endpoint as fallback');
+                    } catch (testError) {
+                         console.error('Test endpoint also failed:', testError);
+                         throw fetchError;
+                    }
+               }
 
                if (response.ok) {
                     const result = await response.json();
@@ -65,7 +91,7 @@ export default function ContactSection() {
                } else {
                     const errorData = await response.json();
                     console.error('Form submission failed:', errorData);
-                    setSubmitError('Une erreur s\'est produite. Veuillez réessayer.');
+                    setSubmitError(`Erreur serveur: ${errorData.error || 'Une erreur s\'est produite. Veuillez réessayer.'}`);
                }
           } catch (error) {
                console.error('Error submitting form:', error);

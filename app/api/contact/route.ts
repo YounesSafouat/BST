@@ -5,8 +5,10 @@ import { HubSpotService, ContactData } from '@/lib/hubspot'
 
 export async function POST(req: Request) {
   try {
+    console.log('Contact API endpoint called')
     await connectDB()
     const body = await req.json()
+    console.log('Request body received:', body)
     
     // Extract form data - handle both simple and complex form structures
     let contactData: ContactData = {
@@ -27,6 +29,7 @@ export async function POST(req: Request) {
 
     // Validate required fields
     if (!contactData.email) {
+      console.log('Validation failed: Email is required')
       return NextResponse.json(
         { error: "Email is required" },
         { status: 400 }
@@ -42,11 +45,14 @@ export async function POST(req: Request) {
       message: contactData.message,
     })
 
+    console.log('Saving to MongoDB...')
     await submission.save()
+    console.log('Successfully saved to MongoDB')
 
     // Integrate with HubSpot CRM
     let hubspotResult = null
     try {
+      console.log('Attempting HubSpot integration...')
       hubspotResult = await HubSpotService.upsertContact(contactData)
       console.log('HubSpot integration successful:', hubspotResult)
     } catch (hubspotError) {
@@ -55,6 +61,7 @@ export async function POST(req: Request) {
       // The contact is still saved in MongoDB
     }
 
+    console.log('Returning success response')
     return NextResponse.json({
       success: true,
       submission,
@@ -64,7 +71,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Error creating contact submission:", error)
     return NextResponse.json(
-      { error: "Error creating contact submission" },
+      { error: "Error creating contact submission", details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }

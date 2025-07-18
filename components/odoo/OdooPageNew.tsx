@@ -426,9 +426,6 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                {/* Video Testimonials Section */}
                <VideoTestimonialsSection />
 
-
-
-
                {/* Tarifs & Accompagnement Section */}
                <PricingSection />
                {/* Notre Agence Section */}

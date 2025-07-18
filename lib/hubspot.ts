@@ -1,5 +1,11 @@
 import { Client } from '@hubspot/api-client';
 
+// Debug: Check if environment variable is available
+console.log('HubSpot Access Token available:', !!process.env.HUBSPOT_ACCESS_TOKEN);
+if (!process.env.HUBSPOT_ACCESS_TOKEN) {
+  console.error('HUBSPOT_ACCESS_TOKEN environment variable is not set!');
+}
+
 const hubspotClient = new Client({ accessToken: process.env.HUBSPOT_ACCESS_TOKEN });
 
 export interface ContactData {
