@@ -22,6 +22,10 @@ module.exports = {
     error_file: '/root/BST/logs/err.log',
     out_file: '/root/BST/logs/out.log',
     log_file: '/root/BST/logs/combined.log',
-    time: true
+    time: true,
+    // Add restart delay to prevent rapid restarts
+    min_uptime: '10s',
+    max_restarts: 10,
+    restart_delay: 4000
   }]
 } 
