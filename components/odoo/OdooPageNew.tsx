@@ -285,12 +285,16 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
           const testimonial = availableTestimonials.find(t => t._id === testimonialId);
           if (!testimonial) return null;
 
+          // Add safety check for testimonial properties
+          const avatar = testimonial?.avatar || '';
+          const name = testimonial?.name || '';
+
           // Check if avatar is a URL (starts with http or /)
-          if (testimonial.avatar && (testimonial.avatar.startsWith('http') || testimonial.avatar.startsWith('/'))) {
+          if (avatar && (avatar.startsWith('http') || avatar.startsWith('/'))) {
                return (
                     <Image
-                         src={testimonial.avatar}
-                         alt={testimonial.name}
+                         src={avatar}
+                         alt={name}
                          width={40}
                          height={40}
                          className="w-10 h-10 rounded-full object-cover"
@@ -298,9 +302,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                );
           } else {
                // Use initials
+               const initials = name.split(' ').map(n => n[0]).join('');
                return (
                     <div className="w-10 h-10 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-secondary)] rounded-full flex items-center justify-center">
-                         <span className="text-white font-bold text-sm">{testimonial.avatar || testimonial.name.split(' ').map(n => n[0]).join('')}</span>
+                         <span className="text-white font-bold text-sm">{avatar || initials}</span>
                     </div>
                );
           }
@@ -323,11 +328,23 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
      const timeline2 = [...appsWithIcons.slice(2), ...appsWithIcons, ...appsWithIcons.slice(0, 2)];
      const timeline3 = [...appsWithIcons.slice(4), ...appsWithIcons, ...appsWithIcons.slice(2, 4)];
 
+     // Add safety check for odooData
+     if (!odooData) {
+          return (
+               <div className="min-h-screen bg-white flex items-center justify-center">
+                    <div className="text-center">
+                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-secondary)] mx-auto mb-4"></div>
+                         <p className="text-gray-600">Chargement des données...</p>
+                    </div>
+               </div>
+          );
+     }
+
      return (
           <div className="min-h-screen bg-white overflow-hidden">
                {/* Hero Section - Proper flex layout */}
                <div className="h-[95vh] flex flex-col justify-center pt-20">
-                    <OdooHeroSplit heroData={odooData.hero} isPreview={isPreview} />
+                    <OdooHeroSplit heroData={odooData?.hero} isPreview={isPreview} />
                </div>
 
                {/* Vertical Timeline Carousels */}
@@ -336,10 +353,16 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">PLATEFORME TOUT-EN-UN</div>
                               <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                   {odooData.platformSection.headline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{odooData.platformSection.headline.split(' ').slice(1).join(' ')}</span>
+                                   {odooData?.platformSection?.headline ? (
+                                        <>
+                                             {odooData.platformSection.headline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{odooData.platformSection.headline.split(' ').slice(1).join(' ')}</span>
+                                        </>
+                                   ) : (
+                                        'PLATEFORME TOUT-EN-UN'
+                                   )}
                               </h2>
                               <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                                   {odooData.platformSection.subheadline}
+                                   {odooData?.platformSection?.subheadline || 'Une plateforme complète pour tous vos besoins'}
                               </p>
                          </div>
 
