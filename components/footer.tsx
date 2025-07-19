@@ -58,21 +58,21 @@ export default function Footer() {
 
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="md:max-w-md">
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">{newsletter.title}</h3>
-              <p className="text-white/80">{newsletter.description}</p>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">{newsletter?.title || "Restez informé"}</h3>
+              <p className="text-white/80">{newsletter?.description || "Recevez nos dernières actualités"}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Input
                 type="email"
-                placeholder={newsletter.placeholder}
+                placeholder={newsletter?.placeholder || "Votre email"}
                 className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white h-12 w-full sm:w-80 md:w-96"
               />
               <Button
                 className="bg-white text-[var(--color-secondary)] hover:bg-white/90 h-12 px-6 whitespace-nowrap"
                 onClick={handleNewsletterSubmit}
               >
-                {newsletter.buttonText}
+                {newsletter?.buttonText || "S'abonner"}
               </Button>
             </div>
 
@@ -86,15 +86,15 @@ export default function Footer() {
             <div className="flex items-center space-x-3 mb-6">
               <div className="relative">
                 <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                  <img src={companyInfo.logo.image} alt={companyInfo.logo.alt} className="w-5 h-5" />
+                  <img src={companyInfo?.logo?.image || "/bst.png"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="w-5 h-5" />
                 </div>
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--color-secondary)] rounded-full"></div>
               </div>
-              <span className="text-lg font-bold tracking-tight">{companyInfo.logo.alt}</span>
+              <span className="text-lg font-bold tracking-tight">{companyInfo?.logo?.alt || "Black Swan Technology"}</span>
             </div>
-            <p className="text-gray-400 mb-6 text-sm">{companyInfo.description}</p>
+            <p className="text-gray-400 mb-6 text-sm">{companyInfo?.description || "Votre partenaire digital de confiance"}</p>
             <div className="space-y-3">
-              {companyInfo.contact && Object.entries(companyInfo.contact).map(([key, value]: [string, any]) => {
+              {companyInfo?.contact && Object.entries(companyInfo.contact).map(([key, value]: [string, any]) => {
                 const Icon = IconMap[value.icon as keyof typeof IconMap];
                 return (
                   <div key={key} className="flex items-center gap-3 text-sm text-gray-300">
@@ -108,7 +108,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-bold mb-6">{quickLinks.title}</h4>
+            <h4 className="text-lg font-bold mb-6">{quickLinks?.title || "Liens rapides"}</h4>
             <ul className="space-y-3">
               {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
@@ -126,7 +126,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="text-lg font-bold mb-6">{services.title}</h4>
+            <h4 className="text-lg font-bold mb-6">{services?.title || "Services"}</h4>
             <ul className="space-y-3">
               {services.links && Array.isArray(services.links) && services.links.map((service: any, index: number) => (
                 <li key={index}>
@@ -174,9 +174,9 @@ export default function Footer() {
               })}
             </div>
 
-            <h4 className="text-lg font-bold mb-4">{certifications.title || 'Certifications'}</h4>
+            <h4 className="text-lg font-bold mb-4">{certifications?.title || 'Certifications'}</h4>
             <div className="flex flex-wrap gap-3">
-              {certifications.badges && Array.isArray(certifications.badges) && certifications.badges.map((cert: string, index: number) => (
+              {certifications?.badges && Array.isArray(certifications.badges) && certifications.badges.map((cert: string, index: number) => (
                 <span key={index} className="bg-gray-800 text-xs text-gray-300 px-3 py-1.5 rounded-full">
                   {cert}
                 </span>
@@ -187,9 +187,9 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between">
-          <p className="text-gray-500 text-sm mb-4 md:mb-0">{legal.copyright}</p>
+          <p className="text-gray-500 text-sm mb-4 md:mb-0">{legal?.copyright || "© 2024 Black Swan Technology. Tous droits réservés."}</p>
           <div className="flex gap-6">
-            {legal.links && Array.isArray(legal.links) && legal.links.map((link: any, index: number) => (
+            {legal?.links && Array.isArray(legal.links) && legal.links.map((link: any, index: number) => (
               <a key={index} href={link.url} className="text-gray-500 hover:text-white text-sm transition-colors duration-200">
                 {link.text}
               </a>
