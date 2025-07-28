@@ -25,7 +25,7 @@ import {
      BarChart3,
      FileText
 } from 'lucide-react';
-import OdooHeroSplit from './Hero/HeroSection';
+import OdooHeroSplit from '@/components/home/Hero/HeroSection';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
