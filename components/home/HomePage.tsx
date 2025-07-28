@@ -25,7 +25,7 @@ import {
      BarChart3,
      FileText
 } from 'lucide-react';
-import HomeHeroSplit from '@/components/home/Hero/HeroSection';
+import HeroSection from '@/components/home/Hero/HeroSection';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
@@ -390,7 +390,7 @@ export default function HomePage() {
           <div className="min-h-screen bg-white overflow-hidden">
                {/* Hero Section - Proper flex layout */}
                <div className="h-[95vh] flex flex-col justify-center pt-20">
-                    <HomeHeroSplit heroData={odooData?.hero} isPreview={false} />
+                    <HeroSection heroData={odooData?.hero} isPreview={false} />
                </div>
 
                {/* Vertical Timeline Carousels */}

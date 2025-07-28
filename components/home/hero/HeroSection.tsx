@@ -34,12 +34,12 @@ interface HeroData {
   emphasis?: string;
 }
 
-interface HomeHeroSplitProps {
+interface HeroSectionProps {
   heroData: HeroData;
   isPreview?: boolean;
 }
 
-function HomeHeroSplit({ heroData, isPreview = false }: HomeHeroSplitProps) {
+function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingType, setLoadingType] = useState<string>('');
@@ -239,4 +239,4 @@ function HomeHeroSplit({ heroData, isPreview = false }: HomeHeroSplitProps) {
   );
 }
 
-export default HomeHeroSplit; 
+export default HeroSection; 
