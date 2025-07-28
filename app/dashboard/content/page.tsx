@@ -24,7 +24,7 @@ import { availableIcons } from '@/lib/iconList';
 // Lazy load components for preview to prevent performance issues
 import dynamic from 'next/dynamic';
 
-const HeroSection2 = dynamic(() => import("@/components/home/Hero/HeroSection"), { ssr: false });
+const HeroSection2 = dynamic(() => import("@/components/home/hero/HeroSection"), { ssr: false });
 
 // --- INTERFACES (TOP-LEVEL) ---
 
