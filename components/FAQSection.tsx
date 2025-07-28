@@ -8,10 +8,22 @@ interface FAQItem {
      answer: string;
 }
 
-const FAQSection = () => {
+interface FAQData {
+     headline: string;
+     description: string;
+     subdescription?: string;
+     items: FAQItem[];
+}
+
+interface FAQSectionProps {
+     faqData?: FAQData;
+}
+
+const FAQSection = ({ faqData }: FAQSectionProps) => {
      const [openItems, setOpenItems] = useState<number[]>([]);
 
-     const faqs: FAQItem[] = [
+     // Fallback data if no data is provided
+     const fallbackFaqs: FAQItem[] = [
           {
                question: "Odoo est-il adapté à mon secteur d'activité ?",
                answer: "Absolument ! Odoo propose une architecture modulaire ultra-flexible qui s'adapte parfaitement à tous les secteurs d'activité : industrie, services, BTP, distribution, éducation, santé, et bien d'autres. Chez BlackswanTechnology, nous créons des solutions verticales sur mesure qui intègrent les spécificités métier de votre secteur pour maximiser votre productivité."
@@ -38,6 +50,11 @@ const FAQSection = () => {
           }
      ];
 
+     const faqs = faqData?.items || fallbackFaqs;
+     const headline = faqData?.headline || 'QUESTIONS FRÉQUENTES';
+     const description = faqData?.description || 'Tout savoir sur Odoo';
+     const subdescription = faqData?.subdescription || 'Découvrez les réponses aux questions les plus courantes sur l\'implémentation Odoo';
+
      const toggleItem = (index: number) => {
           setOpenItems(prev =>
                prev.includes(index)
@@ -51,13 +68,13 @@ const FAQSection = () => {
                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-                              QUESTIONS FRÉQUENTES
+                              {headline}
                          </div>
                          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                              Tout savoir sur Odoo
+                              {description}
                          </h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              Découvrez les réponses aux questions les plus courantes sur l'implémentation Odoo
+                              {subdescription}
                          </p>
                     </div>
 

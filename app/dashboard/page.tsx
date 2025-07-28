@@ -16,7 +16,7 @@ import {
   MousePointer,
   TrendingUp,
 } from "lucide-react";
-import AcceuilPage from "@/app/components/acceuil-page";
+
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -84,22 +84,22 @@ export default function DashboardPage() {
   }, []);
 
   const fetchData = async () => {
-      try {
+    try {
       const [viewsResponse, clicksResponse] = await Promise.all([
         fetch('/api/dashboard/page-views'),
         fetch('/api/dashboard/button-clicks')
-        ]);
+      ]);
 
       const viewsData = await viewsResponse.json();
       const clicksData = await clicksResponse.json();
 
       setPageViews(viewsData);
       setButtonClicks(clicksData);
-      } catch (error) {
+    } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
-      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const totalPageViews = pageViews.reduce((sum, pv) => sum + pv.count, 0);
@@ -170,7 +170,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-          {/* Page Views Table */}
+      {/* Page Views Table */}
       <Card>
         <CardHeader>
           <CardTitle>Recent Page Views</CardTitle>
@@ -183,13 +183,13 @@ export default function DashboardPage() {
                 <span className="text-sm text-muted-foreground">
                   {view.count} views
                 </span>
-            </div>
+              </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-          {/* Button Clicks Table */}
+      {/* Button Clicks Table */}
       <Card>
         <CardHeader>
           <CardTitle>Recent Button Clicks</CardTitle>
@@ -202,7 +202,7 @@ export default function DashboardPage() {
                 <span className="text-sm text-muted-foreground">
                   {click.count} clicks
                 </span>
-            </div>
+              </div>
             ))}
           </div>
         </CardContent>

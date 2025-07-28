@@ -1,11 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CheckCircle, ArrowRight } from "lucide-react";
 
-export default function PricingSection() {
-     const plans = [
+interface PricingData {
+     headline: string;
+     subheadline: string;
+     description?: string;
+     plans: Array<{
+          name: string;
+          description: string;
+          price: string;
+          estimation: string;
+          features: string[];
+          cta: string;
+     }>;
+}
+
+interface PricingSectionProps {
+     pricingData?: PricingData;
+}
+
+export default function PricingSection({ pricingData }: PricingSectionProps) {
+     const [pricingContent, setPricingContent] = useState<PricingData | null>(null);
+     const [isLoading, setIsLoading] = useState(true);
+
+     useEffect(() => {
+          const fetchPricingData = async () => {
+               try {
+                    // If pricingData is passed as prop, use it
+                    if (pricingData) {
+                         setPricingContent(pricingData);
+                         setIsLoading(false);
+                         return;
+                    }
+
+                    // Otherwise, fetch from API
+                    const response = await fetch('/api/content/odoo', {
+                         cache: 'no-store'
+                    });
+
+                    if (response.ok) {
+                         const data = await response.json();
+                         if (data && data.pricing) {
+                              setPricingContent(data.pricing);
+                         }
+                    }
+               } catch (error) {
+                    console.error('Error fetching pricing data:', error);
+               } finally {
+                    setIsLoading(false);
+               }
+          };
+
+          fetchPricingData();
+     }, [pricingData]);
+
+     // Fallback data if no data is available
+     const fallbackPlans = [
           {
                name: "Pack Démarrage",
                description: "Idéal pour débuter avec Odoo rapidement et efficacement.",
@@ -50,6 +103,23 @@ export default function PricingSection() {
           }
      ];
 
+     const plans = pricingContent?.plans || fallbackPlans;
+     const headline = pricingContent?.headline || "Un partenariat, pas seulement une prestation";
+     const subheadline = pricingContent?.subheadline || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions.";
+
+     if (isLoading) {
+          return (
+               <section id="pricing" className="py-20 bg-[var(--odoo-purple-light)]">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                         <div className="text-center">
+                              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-secondary)] mx-auto mb-4"></div>
+                              <p className="text-gray-600">Chargement des tarifs...</p>
+                         </div>
+                    </div>
+               </section>
+          );
+     }
+
      return (
           <section id="pricing" className="py-20 bg-[var(--odoo-purple-light)]">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -61,10 +131,10 @@ export default function PricingSection() {
                     >
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TARIFS & ACCOMPAGNEMENT</div>
                          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                              Un partenariat, pas seulement une prestation
+                              {headline}
                          </h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions.
+                              {subheadline}
                          </p>
                     </motion.div>
 
@@ -86,7 +156,9 @@ export default function PricingSection() {
                                              <h3 className="text-xl font-bold text-[var(--color-secondary)] mb-2">{plan.name}</h3>
                                              <p className="text-gray-600 text-sm mb-4 h-12 flex items-center">{plan.description}</p>
                                              <div className="space-y-1">
-                                                  <div className="text-2xl font-bold text-gray-900">{plan.price}</div>
+                                                  <div className="text-2xl font-bold text-gray-900">
+                                                       {plan.price}
+                                                  </div>
                                                   <div className="text-sm text-gray-500">{plan.estimation}</div>
                                              </div>
                                         </CardHeader>
@@ -102,17 +174,13 @@ export default function PricingSection() {
                                              </ul>
 
                                              <Button
-                                                  className={`w-full py-3 font-semibold group rounded-full ${index === 1
-                                                       ? 'bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white'
-                                                       : 'bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white'
+                                                  className={`w-full h-12 ${index === 1
+                                                       ? 'bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white'
+                                                       : 'bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white'
                                                        }`}
-                                                  onClick={() => {
-                                                       const el = document.querySelector('#contact');
-                                                       if (el) el.scrollIntoView({ behavior: 'smooth' });
-                                                  }}
                                              >
                                                   {plan.cta}
-                                                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                  <ArrowRight className="w-4 h-4 ml-2" />
                                              </Button>
                                         </CardContent>
                                    </Card>

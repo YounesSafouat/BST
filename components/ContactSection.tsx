@@ -8,7 +8,33 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Phone, Mail, Calendar, CheckCircle, Award, Zap, Shield } from "lucide-react";
 
-export default function ContactSection() {
+interface ContactData {
+     headline: string;
+     description: string;
+     subdescription?: string;
+     formTitle: string;
+     formDescription: string;
+     benefits: Array<{
+          title: string;
+          description: string;
+          icon: string;
+     }>;
+     consultation: {
+          title: string;
+          description: string;
+     };
+     contactInfo: {
+          phone: string;
+          email: string;
+     };
+     guarantee: string;
+}
+
+interface ContactSectionProps {
+     contactData?: ContactData;
+}
+
+export default function ContactSection({ contactData }: ContactSectionProps) {
      const [formData, setFormData] = useState({
           name: '',
           email: '',
@@ -20,6 +46,43 @@ export default function ContactSection() {
      const [isSubmitted, setIsSubmitted] = useState(false);
      const [isSubmitting, setIsSubmitting] = useState(false);
      const [submitError, setSubmitError] = useState('');
+
+     // Fallback data if no data is provided
+     const fallbackContactData: ContactData = {
+          headline: "TRANSFORMONS ENSEMBLE",
+          description: "Prêt à révolutionner votre entreprise ?",
+          subdescription: "+112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne.",
+          formTitle: "Parlons de votre projet",
+          formDescription: "Échangeons sur vos défis et explorons ensemble comment Odoo peut transformer votre entreprise.",
+          benefits: [
+               {
+                    title: "Partenaire Silver Officiel",
+                    description: "Certification garantissant notre expertise technique reconnue par Odoo",
+                    icon: "Award"
+               },
+               {
+                    title: "Transformation Express",
+                    description: "Digitalisez vos processus en quelques semaines, pas en mois",
+                    icon: "Zap"
+               },
+               {
+                    title: "Accompagnement Sécurisé",
+                    description: "De l'audit stratégique à la mise en production, nous restons à vos côtés",
+                    icon: "Shield"
+               }
+          ],
+          consultation: {
+               title: "Consultation Stratégique Offerte",
+               description: "Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement."
+          },
+          contactInfo: {
+               phone: "+212 78 36 99 603",
+               email: "contact@blackswantechnology.fr"
+          },
+          guarantee: "Réponse garantie sous 4h en journée • Échange sans engagement"
+     };
+
+     const data = contactData || fallbackContactData;
 
      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -135,13 +198,9 @@ export default function ContactSection() {
                          viewport={{ once: true }}
                          className="text-center mb-16"
                     >
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TRANSFORMONS ENSEMBLE</div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                              Prêt à révolutionner votre entreprise ?
-                         </h2>
-                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              <span className="font-semibold text-[var(--color-secondary)]">+112 entreprises nous font confiance.</span> Rejoignez-les et découvrez pourquoi Odoo change la donne.
-                         </p>
+                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{data.headline}</div>
+                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">{data.description}</h2>
+                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">{data.subdescription}</p>
                     </motion.div>
 
                     <div className="max-w-6xl mx-auto">
@@ -150,12 +209,8 @@ export default function ContactSection() {
                                    {/* Form Side */}
                                    <div className="p-8 md:p-12">
                                         <div className="mb-8">
-                                             <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                                                  Parlons de votre projet
-                                             </h3>
-                                             <p className="text-gray-600">
-                                                  Échangeons sur vos défis et explorons ensemble comment Odoo peut transformer votre entreprise.
-                                             </p>
+                                             <h3 className="text-2xl font-bold text-gray-900 mb-3">{data.formTitle}</h3>
+                                             <p className="text-gray-600">{data.formDescription}</p>
                                         </div>
 
                                         {!isSubmitted ? (
@@ -242,7 +297,7 @@ export default function ContactSection() {
                                                   )}
 
                                                   <p className="text-xs text-gray-500 text-center">
-                                                       Réponse garantie sous 4h en journée • Échange sans engagement
+                                                       {data.guarantee}
                                                   </p>
                                              </form>
                                         ) : (
@@ -269,7 +324,7 @@ export default function ContactSection() {
                                    <div className="bg-[var(--color-main)] p-8 md:p-12 text-white">
                                         <h3 className="text-2xl font-bold mb-8">Ce qui vous attend :</h3>
                                         <div className="space-y-6 mb-8">
-                                             {benefits.map((benefit, index) => (
+                                             {data.benefits.map((benefit, index) => (
                                                   <motion.div
                                                        key={index}
                                                        initial={{ opacity: 0, x: 20 }}
@@ -279,7 +334,9 @@ export default function ContactSection() {
                                                        className="flex gap-4"
                                                   >
                                                        <div className="flex-shrink-0">
-                                                            <benefit.icon className="w-6 h-6 text-[var(--color-secondary)]" />
+                                                            {benefit.icon === 'Award' && <Award className="w-6 h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Zap' && <Zap className="w-6 h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Shield' && <Shield className="w-6 h-6 text-[var(--color-secondary)]" />}
                                                        </div>
                                                        <div>
                                                             <h4 className="font-semibold mb-1">{benefit.title}</h4>
@@ -292,23 +349,23 @@ export default function ContactSection() {
                                         <div className="bg-white/10 rounded-xl p-6 mb-8">
                                              <h4 className="font-semibold mb-3 flex items-center gap-2">
                                                   <CheckCircle className="w-5 h-5 text-[var(--color-secondary)]" />
-                                                  Consultation Stratégique Offerte
+                                                  {data.consultation.title}
                                              </h4>
                                              <p className="text-purple-100 text-sm mb-4">
-                                                  Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement.
+                                                  {data.consultation.description}
                                              </p>
                                         </div>
 
                                         <div className="pt-6 border-t border-white/20">
                                              <h4 className="font-semibold mb-4">Contact direct</h4>
                                              <div className="space-y-3">
-                                                  <a href="tel:+212783699603" className="flex items-center gap-3 group hover:text-white/80 transition-colors">
+                                                  <a href={`tel:${data.contactInfo.phone}`} className="flex items-center gap-3 group hover:text-white/80 transition-colors">
                                                        <Phone className="w-5 h-5" />
-                                                       <span>+212 78 36 99 603</span>
+                                                       <span>{data.contactInfo.phone}</span>
                                                   </a>
-                                                  <a href="mailto:contact@blackswantechnology.fr" className="flex items-center gap-3 group hover:text-white/80 transition-colors">
+                                                  <a href={`mailto:${data.contactInfo.email}`} className="flex items-center gap-3 group hover:text-white/80 transition-colors">
                                                        <Mail className="w-5 h-5" />
-                                                       <span>contact@blackswantechnology.fr</span>
+                                                       <span>{data.contactInfo.email}</span>
                                                   </a>
                                              </div>
                                         </div>

@@ -16,18 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    {
-      url: `${baseUrl || "https://localhost:3000"}/odoo`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl || "https://localhost:3000"}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
+
     {
       url: `${baseUrl || "https://localhost:3000"}/blog`,
       lastModified: new Date(),

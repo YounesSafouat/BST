@@ -25,7 +25,7 @@ import {
      BarChart3,
      FileText
 } from 'lucide-react';
-import OdooHeroSplit from './OdooHeroSplit';
+import OdooHeroSplit from './Hero/HeroSection';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
@@ -96,27 +96,77 @@ interface OdooData {
      pricing: {
           headline: string;
           subheadline: string;
+          description?: string;
           plans: Array<{
                name: string;
                description: string;
-               monthlyPrice: number;
-               yearlyPrice: number;
-               popular: boolean;
-               consultantHours: string;
+               price: string;
+               estimation: string;
                features: string[];
                cta: string;
           }>;
      };
      partnership: {
           headline: string;
-          description: string;
-          modules: string[];
-          expertiseText: string;
+          description?: string;
+          subdescription?: string;
+          modules?: string[];
+          expertiseText?: string;
+          features?: Array<{
+               title: string;
+               description: string;
+               icon: string;
+          }>;
      };
      testimonials: string[];
      testimonialsSection: {
           headline: string;
           description: string;
+          subdescription?: string;
+     };
+     videoTestimonials?: {
+          headline: string;
+          description: string;
+          subdescription?: string;
+          videos: Array<{
+               id: string;
+               company: string;
+               companyLogo: string;
+               tagline?: string;
+               duration: string;
+               backgroundColor: string;
+               textColor: string;
+          }>;
+     };
+     faq?: {
+          headline: string;
+          description: string;
+          subdescription?: string;
+          items: Array<{
+               question: string;
+               answer: string;
+          }>;
+     };
+     contact?: {
+          headline: string;
+          description: string;
+          subdescription?: string;
+          formTitle: string;
+          formDescription: string;
+          benefits: Array<{
+               title: string;
+               description: string;
+               icon: string;
+          }>;
+          consultation: {
+               title: string;
+               description: string;
+          };
+          contactInfo: {
+               phone: string;
+               email: string;
+          };
+          guarantee: string;
      };
      finalCta: {
           headline: string;
@@ -132,11 +182,7 @@ interface OdooData {
      };
 }
 
-interface OdooPageNewProps {
-     isPreview?: boolean;
-}
-
-function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
+export default function HomePage() {
      const [activeTab, setActiveTab] = useState(0);
      const [statsVisible, setStatsVisible] = useState(false);
      const [isLoaded, setIsLoaded] = useState(false);
@@ -344,7 +390,7 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
           <div className="min-h-screen bg-white overflow-hidden">
                {/* Hero Section - Proper flex layout */}
                <div className="h-[95vh] flex flex-col justify-center pt-20">
-                    <OdooHeroSplit heroData={odooData?.hero} isPreview={isPreview} />
+                    <OdooHeroSplit heroData={odooData?.hero} isPreview={false} />
                </div>
 
                {/* Vertical Timeline Carousels */}
@@ -484,17 +530,21 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                </section>
 
                {/* Video Testimonials Section */}
-               <VideoTestimonialsSection />
+               <VideoTestimonialsSection videoTestimonialsData={odooData?.videoTestimonials} />
 
                {/* Tarifs & Accompagnement Section */}
-               <PricingSection />
+               <PricingSection pricingData={odooData?.pricing} />
                {/* Notre Agence Section */}
                <section className="py-20 bg-white" id="team">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE AGENCE</div>
-                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">Plus qu'un intégrateur, un partenaire de confiance.</h2>
-                              <p className="text-lg text-gray-600 max-w-2xl mx-auto">Une équipe de consultants certifiés, passionnés par l'accompagnement de nos clients dans leur transformation digitale.</p>
+                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                                   {odooData?.partnership?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
+                              </h2>
+                              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                   {odooData?.partnership?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
+                              </p>
                          </div>
                          <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
                               {/* Left: Image with badge */}
@@ -506,36 +556,60 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                               </div>
                               {/* Right: Features */}
                               <div className="w-full md:w-1/2 flex flex-col gap-6">
-                                   <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                        <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />
-                                        <div>
-                                             <div className="font-bold text-lg text-gray-900">Partenaire Silver Odoo</div>
-                                             <div className="text-gray-500 text-sm">Certification officielle reconnaissant notre expertise</div>
-                                        </div>
-                                   </div>
-                                   <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                        <Users className="w-8 h-8 text-[var(--color-secondary)]" />
-                                        <div>
-                                             <div className="font-bold text-lg text-gray-900">Équipe certifiée</div>
-                                             <div className="text-gray-500 text-sm">100% de nos consultants sont certifiés Odoo</div>
-                                        </div>
-                                   </div>
-                                   <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                        <Clock className="w-8 h-8 text-[var(--color-secondary)]" />
-                                        <div>
-                                             <div className="font-bold text-lg text-gray-900">Support réactif</div>
-                                             <div className="text-gray-500 text-sm">Réponse garantie sous 4h en journée</div>
-                                        </div>
-                                   </div>
-                                   <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                        <Star className="w-8 h-8 text-[var(--color-secondary)]" />
-                                        <div>
-                                             <div className="font-bold text-lg text-gray-900">Excellence reconnue</div>
-                                             <div className="text-gray-500 text-sm">99% de satisfaction client sur tous nos projets</div>
-                                        </div>
-                                   </div>
+                                   {odooData?.partnership?.features ? (
+                                        odooData.partnership.features.map((feature: any, index: number) => (
+                                             <div key={index} className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                  {feature.icon === 'BadgeCheck' && <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                  {feature.icon === 'Users' && <Users className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                  {feature.icon === 'Clock' && <Clock className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                  {feature.icon === 'Star' && <Star className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                  <div>
+                                                       <div className="font-bold text-lg text-gray-900">{feature.title}</div>
+                                                       <div className="text-gray-500 text-sm">{feature.description}</div>
+                                                  </div>
+                                             </div>
+                                        ))
+                                   ) : (
+                                        <>
+                                             <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                  <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                  <div>
+                                                       <div className="font-bold text-lg text-gray-900">Partenaire Silver Odoo</div>
+                                                       <div className="text-gray-500 text-sm">Certification officielle reconnaissant notre expertise</div>
+                                                  </div>
+                                             </div>
+                                             <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                  <Users className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                  <div>
+                                                       <div className="font-bold text-lg text-gray-900">Équipe certifiée</div>
+                                                       <div className="text-gray-500 text-sm">100% de nos consultants sont certifiés Odoo</div>
+                                                  </div>
+                                             </div>
+                                             <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                  <Clock className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                  <div>
+                                                       <div className="font-bold text-lg text-gray-900">Support réactif</div>
+                                                       <div className="text-gray-500 text-sm">Réponse garantie sous 4h en journée</div>
+                                                  </div>
+                                             </div>
+                                             <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                  <Star className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                  <div>
+                                                       <div className="font-bold text-lg text-gray-900">Excellence reconnue</div>
+                                                       <div className="text-gray-500 text-sm">99% de satisfaction client sur tous nos projets</div>
+                                                  </div>
+                                             </div>
+                                        </>
+                                   )}
                               </div>
                          </div>
+                         {odooData?.partnership?.expertiseText && (
+                              <div className="mt-12 text-center">
+                                   <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                                        {odooData.partnership.expertiseText}
+                                   </p>
+                              </div>
+                         )}
                     </div>
                </section>
 
@@ -545,8 +619,12 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
                                    <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
-                                   <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">Nos clients témoignent</h2>
-                                   <p className="text-lg text-gray-600">Découvrez pourquoi nos clients nous recommandent</p>
+                                   <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                                        {odooData?.testimonialsSection?.description || 'Nos clients témoignent'}
+                                   </h2>
+                                   <p className="text-lg text-gray-600">
+                                        {odooData?.testimonialsSection?.subdescription || 'Découvrez pourquoi nos clients nous recommandent'}
+                                   </p>
                               </div>
                               <div className="flex flex-col md:flex-row justify-center items-stretch gap-8">
                                    {odooData.testimonials.map((testimonialId: string, index: number) => {
@@ -585,10 +663,10 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
                     </section>
                )}
                {/* Contact card */}
-               <ContactSection />
+               <ContactSection contactData={odooData?.contact} />
 
                {/* FAQ Section */}
-               <FAQSection />
+               <FAQSection faqData={odooData?.faq} />
 
                <style jsx>{`
         @keyframes scroll-up {
@@ -639,5 +717,3 @@ function OdooPageNew({ isPreview = false }: OdooPageNewProps) {
           </div>
      );
 }
-
-export default OdooPageNew;

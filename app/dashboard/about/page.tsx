@@ -136,7 +136,7 @@ export default function AboutDashboard() {
       description: "Notre mission est d'accompagner les entreprises marocaines dans leur transformation digitale en leur offrant des solutions innovantes, sur mesure et performantes.",
       cta: {
         text: "Découvrir Notre Mission",
-        url: "/contact"
+        url: "/#contact"
       }
     }
   });

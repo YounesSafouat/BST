@@ -66,7 +66,7 @@ const menuGroups = [
 
       {
         title: "Home Page",
-        href: "/dashboard/content",
+        href: "/dashboard/home-page",
         icon: Home,
         color: "from-green-200 to-green-100 text-green-700",
       },
@@ -77,12 +77,7 @@ const menuGroups = [
         icon: Info,
         color: "from-cyan-200 to-cyan-100 text-cyan-700",
       },
-      {
-        title: "Contact Page",
-        href: "/dashboard/contact",
-        icon: MessageSquare,
-        color: "from-blue-200 to-blue-100 text-blue-700",
-      },
+
       {
         title: "Blog Page",
         href: "/dashboard/blog",
@@ -101,12 +96,7 @@ const menuGroups = [
         icon: Globe,
         color: "from-orange-200 to-orange-100 text-orange-700",
       },
-      {
-        title: "Odoo Page",
-        href: "/dashboard/odoo",
-        icon: Building2,
-        color: "from-[var(--color-secondary)]/20 to-[var(--color-secondary)]/10 text-[var(--color-secondary)]",
-      },
+
     ]
   },
   {

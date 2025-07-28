@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
 import dynamic from "next/dynamic";
-import OdooPageNew from '../components/odoo/OdooPageNew';
+import HomePage from '../components/home/HomePage';
 
 export async function generateMetadata(): Promise<Metadata> {
   const seoData = await getSEOData('home');
@@ -12,6 +12,4 @@ export async function generateMetadata(): Promise<Metadata> {
   );
 }
 
-export default function Home() {
-  return <OdooPageNew />;
-}
+export default HomePage;

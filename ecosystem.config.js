@@ -11,9 +11,10 @@ module.exports = {
       NEXT_PUBLIC_SITE_URL: 'https://agence-blackswan.com',
       NEXT_PUBLIC_BASE_URL: 'https://agence-blackswan.com',
       NEXTAUTH_URL: 'https://agence-blackswan.com',
-      MONGODB_URI: 'mongodb+srv://younes:Bst.987654321@cluster0.7oaxi3p.mongodb.net/blackswantechnology?retryWrites=true&w=majority&appName=Cluster0',
-      NEXTAUTH_SECRET: 'blackswantechnology_website_we_invest_in_the_future',
-      HUBSPOT_ACCESS_TOKEN: 'pat-eul-91e2254b-ca7b-4a18-8d99-76304a2b69a5'
+      // Load sensitive data from environment variables
+      MONGODB_URI: process.env.MONGODB_URI,
+      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+      HUBSPOT_ACCESS_TOKEN: process.env.HUBSPOT_ACCESS_TOKEN
     },
     instances: 1,
     autorestart: true,

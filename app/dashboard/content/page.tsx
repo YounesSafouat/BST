@@ -24,12 +24,7 @@ import { availableIcons } from '@/lib/iconList';
 // Lazy load components for preview to prevent performance issues
 import dynamic from 'next/dynamic';
 
-const HeroSection2 = dynamic(() => import("@/components/home/hero/HeroSection"), { ssr: false });
-const ChallengeSection = dynamic(() => import("@/components/home/challenge/ChallengeSection"), { ssr: false });
-const SolutionSection = dynamic(() => import("@/components/home/solution/SolutionSection"), { ssr: false });
-const TransformationSection = dynamic(() => import("@/components/home/transformation/TransformationSection"), { ssr: false });
-const SuccessSection = dynamic(() => import("@/components/home/success/SuccessSection"), { ssr: false });
-const CTASection = dynamic(() => import("@/components/home/cta/CTASection"), { ssr: false });
+const HeroSection2 = dynamic(() => import("@/components/home/Hero/HeroSection"), { ssr: false });
 
 // --- INTERFACES (TOP-LEVEL) ---
 
@@ -254,47 +249,7 @@ const renderSectionPreview = (section: ContentSection) => {
                 return (
                     <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
                         <div className="w-full">
-                            <HeroSection2 hero={section} />
-                        </div>
-                    </div>
-                );
-            case 'challenge':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <ChallengeSection challenge={section} />
-                        </div>
-                    </div>
-                );
-            case 'solution':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <SolutionSection solution={section} />
-                        </div>
-                    </div>
-                );
-            case 'transformation':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <TransformationSection transformation={section} />
-                        </div>
-                    </div>
-                );
-            case 'success':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <SuccessSection success={section} />
-                        </div>
-                    </div>
-                );
-            case 'cta':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <CTASection cta={section} />
+                            <HeroSection2 heroData={section.content as any} isPreview={true} />
                         </div>
                     </div>
                 );
@@ -381,47 +336,7 @@ function renderEditPreview(section: ContentSection) {
                 return (
                     <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
                         <div className="w-full">
-                            <HeroSection2 hero={section} />
-                        </div>
-                    </div>
-                );
-            case 'challenge':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <ChallengeSection challenge={section} />
-                        </div>
-                    </div>
-                );
-            case 'solution':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <SolutionSection solution={section} />
-                        </div>
-                    </div>
-                );
-            case 'transformation':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <TransformationSection transformation={section} />
-                        </div>
-                    </div>
-                );
-            case 'success':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <SuccessSection success={section} />
-                        </div>
-                    </div>
-                );
-            case 'cta':
-                return (
-                    <div className="preview-container w-full max-w-full overflow-hidden rounded-lg border bg-white shadow-sm">
-                        <div className="w-full">
-                            <CTASection cta={section} />
+                            <HeroSection2 heroData={section.content as any} isPreview={true} />
                         </div>
                     </div>
                 );
@@ -856,7 +771,7 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                 <Input
                                     value={content.ctaButtons?.primary?.url || ""}
                                     onChange={(e) => handleNestedChange("ctaButtons", "primary", { ...content.ctaButtons?.primary, url: e.target.value })}
-                                    placeholder="/contact"
+                                    placeholder="/#contact"
                                     className="w-full"
                                 />
                             </div>

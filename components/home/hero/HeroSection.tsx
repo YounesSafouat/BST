@@ -1,486 +1,242 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { CheckCircle, Calendar, ArrowUpRight, ArrowRight } from "lucide-react"
-import { useAnimation } from "framer-motion"
-import { useRef } from "react"
-import Image from "next/image"
-import { ContentSection, HeroContent } from "@/app/types/content"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Users, Play, Volume2, VolumeX } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import StatsSection from '../../StatsSection';
+import CompaniesCarousel from '../../CompaniesCarousel';
 
-interface HeroSection2Props {
-  hero: ContentSection
+interface HeroData {
+  headline: string;
+  subheadline: string;
+  description: string;
+  logo: string;
+  videoUrl: string;
+  ctaPrimary: {
+    text: string;
+    icon: string;
+  };
+  ctaSecondary: {
+    text: string;
+    icon: string;
+  };
+  stats: Array<{
+    number: number;
+    suffix: string;
+    label: string;
+  }>;
+  companyName?: string;
+  badge?: string;
+  emphasis?: string;
 }
 
-export default function HeroSection({ hero }: HeroSection2Props) {
-  const router = useRouter()
-  const [logoRotationIndex, setLogoRotationIndex] = useState(0)
-  const [integrationIndex, setIntegrationIndex] = useState(0)
-  const [specificationIndex, setSpecificationIndex] = useState(0)
-  const [locationIndex, setLocationIndex] = useState(0)
+interface HomeHeroSplitProps {
+  heroData: HeroData;
+  isPreview?: boolean;
+}
 
-  // Get data from hero content
-  const heroContent = hero.content as any
-  const integrations = heroContent?.integrations || []
-  const specifications = heroContent?.specifications || []
-  const locations = heroContent?.locations || []
-  const logos = heroContent?.logos || {}
-  const ctaButtons = heroContent?.ctaButtons || {}
-  const companies = heroContent?.companies || []
-  const animations = heroContent?.animations || {}
+function HomeHeroSplit({ heroData, isPreview = false }: HomeHeroSplitProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingType, setLoadingType] = useState<string>('');
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const router = useRouter();
 
-  const logoControls = useAnimation()
-  const logoRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (integrations.length > 0) {
-        setIntegrationIndex((prev) => (prev + 1) % integrations.length)
-      }
-      if (specifications.length > 0) {
-        setSpecificationIndex((prev) => (prev + 1) % specifications.length)
-      }
-      if (locations.length > 0) {
-        setLocationIndex((prev) => (prev + 1) % locations.length)
-      }
-    }, animations.rouletteInterval || 5000)
-    return () => clearInterval(interval)
-  }, [integrations.length, specifications.length, locations.length, animations.rouletteInterval])
-
-  // Separate interval for logo rotation
-  useEffect(() => {
-    const logoInterval = setInterval(() => {
-      setLogoRotationIndex((prev) => (prev + 1) % 2)
-    }, animations.logoRotationInterval || 2000)
-    return () => clearInterval(logoInterval)
-  }, [animations.logoRotationInterval])
-
-  useEffect(() => {
-    const observer = new window.IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          logoControls.start({ opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } })
-        }
-      },
-      { threshold: 0.5 },
-    )
-    if (logoRef.current) observer.observe(logoRef.current)
-    return () => {
-      if (logoRef.current) observer.unobserve(logoRef.current)
+  const scrollToSection = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [logoControls])
+  };
 
-  const handleAppointmentClick = () => {
-    router.push(ctaButtons.primary?.url || '/contact')
-  }
+  useEffect(() => {
+    const loadTimer = setTimeout(() => setIsLoaded(true), 100);
+    return () => clearTimeout(loadTimer);
+  }, []);
 
-  const handleProjectsClick = () => {
-    router.push(ctaButtons.secondary?.url || '/cas-client')
-  }
+  const handleAsyncAction = async (action: () => Promise<void>, type: string) => {
+    setIsLoading(true);
+    setLoadingType(type);
+    try {
+      await action();
+    } catch (error) {
+      console.error('Action failed:', error);
+    } finally {
+      setIsLoading(false);
+      setLoadingType('');
+    }
+  };
 
-  if (!hero) return null
+  const handleConsultationClick = async () => {
+    await handleAsyncAction(async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      router.push('/#contact');
+    }, 'appointment');
+  };
+
+  const handleCaseStudyClick = async () => {
+    await handleAsyncAction(async () => {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      router.push('/#contact');
+    }, 'projects');
+  };
+
+  const toggleSound = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const getIconComponent = (iconName: string) => {
+    const iconMap: { [key: string]: React.ReactNode } = {
+      ArrowRight: <ArrowRight className="w-5 h-5" />,
+      Users: <Users className="w-5 h-5" />,
+      Play: <Play className="w-5 h-5" />
+    };
+    return iconMap[iconName] || <ArrowRight className="w-5 h-5" />;
+  };
 
   return (
-    <>
-      <style jsx>{`
-        .logo-container {
-          position: relative;
-          height: 80px;
-          width: 100%;
-          overflow: hidden;
-          margin-top: -10px;
-        }
+    <section id="hero" className="relative flex flex-col justify-center overflow-hidden">
+      {/* Background blur elements - responsive positioning */}
+      <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
+      <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-        .logo-track {
-          position: absolute;
-          width: 100%;
-          height: 200%;
-          transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .logo-item {
-          height: 50%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-        }
-
-        .logo-item-inner {
-          width: 300px;
-          height: 80px;
-          position: relative;
-        }
-
-        .bg-odoo {
-          padding: 8px;
-        }
-
-        .bg-hubspot {
-          padding: 8px;
-        }
-
-        .smooth-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 16px;
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 50px;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .smooth-badge:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .roulette-container {
-          position: relative;
-          height: 20px;
-          min-width: 140px;
-          overflow: hidden;
-        }
-
-        .roulette-track {
-          position: absolute;
-          width: 100%;
-          transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .roulette-item {
-          height: 20px;
-          font-size: var(--font-size);
-          font-weight: 500;
-          color: var(--color-gray);
-          white-space: nowrap;
-          display: flex;
-          align-items: center;
-          justify-content: flex-start;
-        }
-
-        .companies-scroll {
-          overflow: hidden;
-          white-space: nowrap;
-          position: relative;
-          background: var(--color-background);
-          border-radius: 1.5rem;
-          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-          padding: 0.5rem 0;
-        }
-
-        .companies-track {
-          display: inline-flex;
-          animation: scroll 30s linear infinite;
-        }
-
-        .company-item {
-          display: inline-block;
-          padding: 0 2rem;
-          font-size: var(--heading-font-size);
-          font-weight: 600;
-          color: var(--color-gray);
-          white-space: nowrap;
-        }
-        .company-item img, .company-item .object-contain {
-          opacity: 1 !important;
-          filter: none !important;
-        }
-
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .cta-button-primary {
-          background: linear-gradient(135deg, var(--color-main) 0%, var(--color-secondary) 100%);
-          color: white;
-          border: none;
-          padding: 16px 32px;
-          border-radius: 16px;
-          font-size: 16px;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          min-width: 280px;
-          box-shadow: 
-            0 8px 32px rgba(102, 126, 234, 0.3),
-            0 4px 16px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .cta-button-primary::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-          transition: left 0.5s;
-        }
-
-        .cta-button-primary:hover::before {
-          left: 100%;
-        }
-
-        .cta-button-primary:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 
-            0 12px 40px var(--color-white),
-            0 6px 20px var(--color-black);
-        }
-
-        .cta-button-secondary {
-          background: rgba(255, 255, 255, 0.1);
-          color: var(--color-main);
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          padding: 14px 32px;
-          border-radius: 16px;
-          font-size: 16px;
-          font-weight: 600;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          min-width: 280px;
-          backdrop-filter: blur(20px);
-          box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-          cursor: pointer;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .cta-button-secondary:hover {
-          background: rgba(255, 255, 255, 0.2);
-          border-color: rgba(255, 255, 255, 0.5);
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 
-            0 12px 40px rgba(0, 0, 0, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-      `}</style>
-
-      <section className="relative min-h-screen pt-40 pb-20 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          {/* Description in one line */}
-          <h1 className="text-4xl md:text-6xl font-bold mb-6" style={{ color: 'var(--color-black)' }}>
-            {hero.description}
-          </h1>
-
-          {/* "avec" in a separate line */}
-          <div className="text-4xl md:text-6xl font-bold mb-8" style={{ color: 'var(--color-black)' }}>
-            de A à Z grâce à
-          </div>
-
-          {/* Logo Section with vertical rotation */}
-          {logos.odoo && logos.hubspot && (
-            <div className="logo-container mb-12">
-              <div
-                className="logo-track"
-                style={{
-                  transform: `translateY(-${logoRotationIndex * 50}%)`
-                }}
-              >
-                <div className="logo-item bg-odoo">
-                  <div className="logo-item-inner">
-                    <Image
-                      src={logos.odoo.url}
-                      alt={logos.odoo.alt}
-                      fill
-                      className="object-contain"
-                      priority
-                    />
-                  </div>
-                </div>
-                <div className="logo-item bg-hubspot">
-                  <div className="logo-item-inner">
-                    <Image
-                      src={logos.hubspot.url}
-                      alt={logos.hubspot.alt}
-                      fill
-                      className="object-contain"
-                      priority
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Subtitle */}
-          <div
-            className="text-lg mb-4 max-w-4xl mx-auto leading-relaxed"
-            style={{
-              color: 'var(--color-gray)',
-              fontFamily: 'var(--font-family)',
-              fontSize: 'var(--font-size)',
-              lineHeight: 'var(--line-height)',
-            }}
-            dangerouslySetInnerHTML={{ __html: heroContent.subtitle || "" }}
-          />
-
-          {/* Feature Badges - WITH ROULETTE ANIMATIONS */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mb-12 relative z-10">
-            {/* First Badge - What we integrate */}
-            {integrations.length > 0 && (
-              <div className="smooth-badge">
-                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-main)' }} />
-                </div>
-                <div className="roulette-container">
-                  <div
-                    className="roulette-track"
-                    style={{
-                      transform: `translateY(${-integrationIndex * 20}px)`,
-                    }}
-                  >
-                    {integrations.map((integration: any, i: number) => (
-                      <div key={i} className="roulette-item">
-                        {integration.text}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Second Badge - Our specifications */}
-            {specifications.length > 0 && (
-              <div className="smooth-badge">
-                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-main)' }} />
-                </div>
-                <div className="roulette-container">
-                  <div
-                    className="roulette-track"
-                    style={{
-                      transform: `translateY(${-specificationIndex * 20}px)`,
-                    }}
-                  >
-                    {specifications.map((specification: any, i: number) => (
-                      <div key={i} className="roulette-item">
-                        {specification.text}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Third Badge - Locations */}
-            {locations.length > 0 && (
-              <div className="smooth-badge">
-                <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <CheckCircle className="w-3 h-3" style={{ color: 'var(--color-main)' }} />
-                </div>
-                <div className="roulette-container">
-                  <div
-                    className="roulette-track"
-                    style={{
-                      transform: `translateY(${-locationIndex * 20}px)`,
-                    }}
-                  >
-                    {locations.map((location: any, i: number) => (
-                      <div key={i} className="roulette-item">
-                        {location.text}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <span className="ml-1 text-xs bg-white px-1 py-0.5 rounded font-semibold flex-shrink-0 shadow-sm" style={{ color: 'var(--color-secondary)' }}>
-                  {locations[locationIndex]?.code}
-                </span>
-              </div>
-            )}
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20 relative z-10">
-            {ctaButtons.primary && (
-              <button
-                onClick={handleAppointmentClick}
-                className="cta-button-primary"
-              >
-                {ctaButtons.primary.text}
-                <Calendar className="w-5 h-5" />
-              </button>
-            )}
-
-            {ctaButtons.secondary && (
-              <button
-                onClick={handleProjectsClick}
-                className="cta-button-secondary"
-              >
-                {ctaButtons.secondary.text}
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            )}
-          </div>
-
-          {/* Companies Carousel */}
-          {companies.length > 0 && (
-            <div className="relative overflow-hidden">
-              <div className="absolute left-0 top-0 w-20 h-full z-10" style={{ background: 'linear-gradient(to right, var(--color-background), transparent)' }}></div>
-              <div className="absolute right-0 top-0 w-20 h-full z-10" style={{ background: 'linear-gradient(to left, var(--color-background), transparent)' }}></div>
-
-              <div className="companies-scroll">
-                <div
-                  className="companies-track"
-                  style={{ animationDuration: `${animations.companyScrollDuration || 30}s` }}
+      <div className="relative w-full flex-1 flex flex-col justify-center py-8 sm:py-12 pt-16 sm:pt-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-6 sm:space-y-8 order-2 lg:order-1"
+            >
+              <div className="space-y-4 sm:space-y-6">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="flex items-center gap-2 mb-4 sm:mb-0"
                 >
-                  {/* First set */}
-                  {companies.map((company: any, index: number) => (
-                    <div key={`first-${index}`} className="company-item">
-                      {company.logo ? (
-                        <Image
-                          src={company.logo}
-                          alt={company.name}
-                          width={120}
-                          height={40}
-                          className="object-contain"
-                        />
-                      ) : (
-                        company.name
-                      )}
-                    </div>
-                  ))}
+                  <Badge
+                    variant="outline"
+                    className="border-gray-300 text-gray-600 px-3 py-1.5 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
+                  >
+                    {heroData.badge || 'Partenaire Silver Odoo'}
+                  </Badge>
+                </motion.div>
 
-                  {/* Duplicate for seamless loop */}
-                  {companies.map((company: any, index: number) => (
-                    <div key={`second-${index}`} className="company-item">
-                      {company.logo ? (
-                        <Image
-                          src={company.logo}
-                          alt={company.name}
-                          width={120}
-                          height={40}
-                          className="object-contain"
-                        />
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-none tracking-tighter"
+                  style={{ lineHeight: '1.1' }}
+                >
+                  {heroData.headline}
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed max-w-lg"
+                >
+                  {heroData.description}
+                </motion.p>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+              >
+                <Button
+                  size="lg"
+                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold group rounded-full w-full sm:w-auto"
+                  onClick={() => scrollToSection('#contact')}
+                >
+                  {heroData.ctaPrimary.text}
+                  {getIconComponent(heroData.ctaPrimary.icon)}
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto"
+                  onClick={() => scrollToSection('#modules')}
+                >
+                  {heroData.ctaSecondary.text}
+                </Button>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Content - Video */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="order-1 lg:order-2"
+            >
+              <div className="relative">
+                <div className="bg-white/90 backdrop-blur-sm p-3 sm:p-4 lg:p-6 rounded-2xl sm:rounded-3xl shadow-xl lg:shadow-2xl">
+                  <div className="relative aspect-video bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-xl sm:rounded-2xl overflow-hidden">
+                    {/* Video element */}
+                    <video
+                      ref={videoRef}
+                      src={heroData.videoUrl}
+                      muted
+                      autoPlay
+                      loop
+                      className="w-full h-full object-cover"
+                      playsInline
+                    />
+
+                    {/* Sound toggle button - only on larger screens */}
+                    <button
+                      onClick={toggleSound}
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
+                    >
+                      {isMuted ? (
+                        <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" />
                       ) : (
-                        company.name
+                        <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
                       )}
+                    </button>
+                  </div>
+
+                  {/* Small stats overlay - responsive positioning */}
+                  <div className="absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 lg:-bottom-4 lg:-right-4 bg-white rounded-lg sm:rounded-xl shadow-lg p-2 sm:p-3 lg:p-4 border">
+                    <div className="text-center">
+                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-main)]">3 ans</div>
+                      <div className="text-xs sm:text-sm text-gray-600">d'expertise</div>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            </motion.div>
+          </div>
         </div>
-      </section>
-    </>
-  )
+      </div>
+
+      {/* Companies Carousel */}
+      <div className="bg-white pt-[5em]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <CompaniesCarousel />
+        </div>
+      </div>
+
+
+    </section>
+  );
 }
+
+export default HomeHeroSplit; 

@@ -70,38 +70,26 @@ export default function MobileHeader() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200/50 px-4 py-6 space-y-4">
-          <button 
-            onClick={() => { trackButtonClick('mobile-nav-hubspot'); handleNavClick('/hubspot'); }} 
+          <button
+            onClick={() => { trackButtonClick('mobile-nav-hubspot'); handleNavClick('/hubspot'); }}
             className="block w-full text-left text-gray-600 hover:text-black transition-colors font-medium py-2"
           >
             HubSpot
           </button>
-          <button 
-            onClick={() => { trackButtonClick('mobile-nav-odoo'); handleNavClick('/odoo'); }} 
-            className="block w-full text-left text-gray-600 hover:text-black transition-colors font-medium py-2"
-          >
-            Odoo
-          </button>
-          <button 
-            onClick={() => { trackButtonClick('mobile-nav-about'); handleNavClick('/about'); }} 
+          <button
+            onClick={() => { trackButtonClick('mobile-nav-about'); handleNavClick('/about'); }}
             className="block w-full text-left text-gray-600 hover:text-black transition-colors font-medium py-2"
           >
             À Propos
           </button>
-          <button 
-            onClick={() => { trackButtonClick('mobile-nav-contact'); handleNavClick('/contact'); }} 
-            className="block w-full text-left text-gray-600 hover:text-black transition-colors font-medium py-2"
-          >
-            Contact
-          </button>
-          <button 
-            onClick={() => { trackButtonClick('mobile-nav-cas-client'); handleNavClick('/cas-client'); }} 
+          <button
+            onClick={() => { trackButtonClick('mobile-nav-cas-client'); handleNavClick('/cas-client'); }}
             className="block w-full text-left text-gray-600 hover:text-black transition-colors font-medium py-2"
           >
             Cas Client
           </button>
-          <button 
-            onClick={() => { trackButtonClick('mobile-nav-blog'); handleNavClick('/blog'); }} 
+          <button
+            onClick={() => { trackButtonClick('mobile-nav-blog'); handleNavClick('/blog'); }}
             className="block w-full text-left text-gray-600 hover:text-black transition-colors font-medium py-2"
           >
             Blog

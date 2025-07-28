@@ -23,8 +23,11 @@ export default function Footer() {
     fetch("/api/content?type=footer")
       .then(res => res.json())
       .then(data => {
-        const content = Array.isArray(data) ? data[0] : data;
-        setFooterContent(content?.content);
+        // Find the object with type === "footer"
+        const footerObj = Array.isArray(data)
+          ? data.find(item => item.type === "footer")
+          : data;
+        setFooterContent(footerObj?.content);
       })
       .catch(error => {
         console.error('Error fetching footer content:', error);

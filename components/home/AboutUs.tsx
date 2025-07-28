@@ -140,11 +140,11 @@ export default function AboutUs() {
   }, [])
 
   const handleMissionClick = () => {
-    router.push(aboutContent?.mission?.cta?.url || '/contact')
+    router.push(aboutContent?.mission?.cta?.url || '/#contact')
   }
 
   const handleProjectsClick = () => {
-    router.push('/contact')
+    router.push('/#contact')
   }
 
   if (loading) {
@@ -254,7 +254,7 @@ export default function AboutUs() {
       <section className="relative z-10 px-6 lg:px-8 pt-20 pb-20 mt-20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            
+
             <h1 className="text-6xl md:text-9xl font-black text-black mb-12 leading-none tracking-tighter">
               <span className="block">{heroTitle}</span>
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] via-[var(--color-secondary)] to-[var(--color-main)] animate-pulse">
@@ -266,7 +266,7 @@ export default function AboutUs() {
             </h1>
 
             <div className="max-w-5xl mx-auto mb-20">
-               
+
 
               <div className="flex flex-wrap items-center justify-center gap-12 text-lg text-gray-600">
                 {heroStats.map((stat: any, index: number) => {
@@ -275,18 +275,18 @@ export default function AboutUs() {
                     <div key={index} className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
                       <Icon className="w-6 h-6 text-[var(--color-main)]" />
                       <span className="font-medium">{stat.title}</span>
-                </div>
+                    </div>
                   );
                 })}
               </div>
             </div>
           </div>
 
-          
+
         </div>
       </section>
 
-      
+
       {/* The People: Our Soul */}
       <section className="relative z-10 py-40 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -337,7 +337,7 @@ export default function AboutUs() {
             <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-main)]/10 border border-gray-200 mb-12 shadow-lg">
               <Heart className="w-6 h-6 text-[var(--color-secondary)] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOS VALEURS</span>
-              </div>
+            </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
               {valuesTitle}
             </h2>
@@ -350,10 +350,10 @@ export default function AboutUs() {
             {valuesItems.map((value: any, index: number) => {
               const Icon = getIconComponent(value.icon);
               return (
-              <div
-                key={index}
+                <div
+                  key={index}
                   className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-              >
+                >
                   <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)]"></div>
                   <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[var(--color-secondary)]/10 to-[var(--color-main)]/10">
                     <Icon className="w-8 h-8 text-[var(--color-secondary)]" />
@@ -376,10 +376,10 @@ export default function AboutUs() {
             <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-main)]/10 to-[var(--color-secondary)]/10 border border-gray-200 mb-12 shadow-lg">
               <Rocket className="w-6 h-6 text-[var(--color-main)] mr-4" />
               <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE MISSION</span>
-        </div>
+            </div>
             <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
               {missionTitle}
-          </h2>
+            </h2>
             <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
               {missionDescription}
             </p>

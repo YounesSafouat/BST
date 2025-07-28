@@ -6,22 +6,22 @@ export async function GET() {
   try {
     await connectDB();
     
-    // Récupérer les données de la page Odoo
-    const odooData = await Content.findOne({ type: 'odoo-page' });
+    // Récupérer les données de la page Home
+    const homeData = await Content.findOne({ type: 'home-page' });
     
-    if (!odooData) {
+    if (!homeData) {
       return NextResponse.json(
-        { error: "Données Odoo non trouvées" },
+        { error: "Données Home non trouvées" },
         { status: 404 }
       );
     }
 
     // Convertir l'ObjectId en string pour la sérialisation JSON
     // Return only the content field, not the entire document
-    const serializedData = JSON.parse(JSON.stringify(odooData.content));
+    const serializedData = JSON.parse(JSON.stringify(homeData.content));
     return NextResponse.json(serializedData);
   } catch (error) {
-    console.error('Erreur lors de la récupération des données Odoo:', error);
+    console.error('Erreur lors de la récupération des données Home:', error);
     return NextResponse.json(
       { error: "Erreur serveur" },
       { status: 500 }
@@ -34,11 +34,11 @@ export async function PUT(req: Request) {
     await connectDB();
     const body = await req.json();
 
-    // Mettre à jour ou créer les données Odoo
-    const odooData = await Content.findOneAndUpdate(
-      { type: 'odoo-page' },
+    // Mettre à jour ou créer les données Home
+    const homeData = await Content.findOneAndUpdate(
+      { type: 'home-page' },
       { 
-        type: 'odoo-page',
+        type: 'home-page',
         content: body,
         updatedAt: new Date()
       },
@@ -48,9 +48,9 @@ export async function PUT(req: Request) {
       }
     );
 
-    return NextResponse.json(odooData);
+    return NextResponse.json(homeData);
   } catch (error) {
-    console.error('Erreur lors de la mise à jour des données Odoo:', error);
+    console.error('Erreur lors de la mise à jour des données Home:', error);
     return NextResponse.json(
       { error: "Erreur serveur" },
       { status: 500 }

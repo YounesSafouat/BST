@@ -13,7 +13,18 @@ interface VideoTestimonial {
      textColor: string;
 }
 
-const VideoTestimonialsSection = () => {
+interface VideoTestimonialsData {
+     headline: string;
+     description: string;
+     subdescription?: string;
+     videos: VideoTestimonial[];
+}
+
+interface VideoTestimonialsSectionProps {
+     videoTestimonialsData?: VideoTestimonialsData;
+}
+
+const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSectionProps) => {
      const [playingVideos, setPlayingVideos] = useState<{ [key: string]: boolean }>({});
      const [mutedVideos, setMutedVideos] = useState<{ [key: string]: boolean }>({});
      const [progress, setProgress] = useState<{ [key: string]: number }>({});
@@ -21,7 +32,8 @@ const VideoTestimonialsSection = () => {
      const [duration, setDuration] = useState<{ [key: string]: number }>({});
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
 
-     const testimonials: VideoTestimonial[] = [
+     // Fallback data if no data is provided
+     const fallbackTestimonials: VideoTestimonial[] = [
           {
                id: '1',
                company: 'ESSEM Business School',
@@ -40,6 +52,11 @@ const VideoTestimonialsSection = () => {
                textColor: 'text-white'
           }
      ];
+
+     const testimonials = videoTestimonialsData?.videos || fallbackTestimonials;
+     const headline = videoTestimonialsData?.headline || 'NOS DERNIERS PROJETS';
+     const description = videoTestimonialsData?.description || 'Témoignages clients';
+     const subdescription = videoTestimonialsData?.subdescription || 'Découvrez comment nos clients ont transformé leur entreprise avec Odoo';
 
      const togglePlay = (videoId: string) => {
           const video = videoRefs.current[videoId];
@@ -113,13 +130,13 @@ const VideoTestimonialsSection = () => {
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-                              NOS DERNIERS PROJETS
+                              {headline}
                          </div>
                          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                              Témoignages clients
+                              {description}
                          </h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              Découvrez comment nos clients ont transformé leur entreprise avec Odoo
+                              {subdescription}
                          </p>
                     </div>
 
