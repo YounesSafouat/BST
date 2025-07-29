@@ -653,7 +653,7 @@ export default function HomePageDashboard() {
                                         {homeData.hero.videoUrl && (
                                              <div className="mt-4 p-4 border rounded-lg bg-gray-50">
                                                   <Label className="text-sm font-medium mb-2 block">Aperçu de la vidéo</Label>
-                                                  <div className="aspect-video bg-black rounded overflow-hidden">
+                                                  <div className="w-full max-w-md aspect-video bg-black rounded overflow-hidden">
                                                        {homeData.hero.videoUrl.startsWith('data:') || homeData.hero.videoUrl.startsWith('blob:') ? (
                                                             <video
                                                                  src={homeData.hero.videoUrl}
@@ -716,8 +716,8 @@ export default function HomePageDashboard() {
                                                        onClick={() => {
                                                             const currentCompanies = homeData.hero.carousel?.companies || [];
                                                             updateField('hero.carousel.companies', [
-                                                                 ...currentCompanies,
-                                                                 { name: 'Nouvelle entreprise', logo: '/ref/placeholder.svg', url: '' }
+                                                                 { name: 'Nouvelle entreprise', logo: '/ref/placeholder.svg', url: '' },
+                                                                 ...currentCompanies
                                                             ]);
                                                        }}
                                                        size="sm"
@@ -773,7 +773,7 @@ export default function HomePageDashboard() {
                                                        </div>
                                                   </div>
 
-                                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                        <div>
                                                             <Label>Nom de l'entreprise</Label>
                                                             <Input
@@ -785,6 +785,7 @@ export default function HomePageDashboard() {
                                                                       updateField('hero.carousel.companies', updatedCompanies);
                                                                  }}
                                                                  placeholder="Nom de l'entreprise"
+                                                                 className="h-10"
                                                             />
                                                        </div>
                                                        <div>
@@ -799,7 +800,7 @@ export default function HomePageDashboard() {
                                                                            updateField('hero.carousel.companies', updatedCompanies);
                                                                       }}
                                                                       placeholder="URL du logo ou télécharger un fichier"
-                                                                      className="flex-1"
+                                                                      className="flex-1 h-10"
                                                                  />
                                                                  <div className="relative">
                                                                       <input
@@ -836,19 +837,7 @@ export default function HomePageDashboard() {
                                                                  </div>
                                                             )}
                                                        </div>
-                                                       <div>
-                                                            <Label>URL (optionnel)</Label>
-                                                            <Input
-                                                                 value={company.url || ''}
-                                                                 onChange={(e) => {
-                                                                      const currentCompanies = homeData.hero.carousel?.companies || [];
-                                                                      const updatedCompanies = [...currentCompanies];
-                                                                      updatedCompanies[index] = { ...updatedCompanies[index], url: e.target.value };
-                                                                      updateField('hero.carousel.companies', updatedCompanies);
-                                                                 }}
-                                                                 placeholder="URL de l'entreprise"
-                                                            />
-                                                       </div>
+
                                                   </div>
                                              </Card>
                                         ))}
