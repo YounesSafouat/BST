@@ -3,7 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 
-const companies = [
+// Default companies data (fallback)
+const defaultCompanies = [
      { name: "FitnessPark", logo: "/ref/fitnespark-vectorized-white-3.svg" },
      { name: "IDC Pharma", logo: "/ref/idc_pharma-horizontal-white-vector.svg" },
      { name: "Yamaha Motors", logo: "/ref/yamaha_motors-horizontal-white-vector.svg" },
@@ -21,7 +22,18 @@ const companies = [
      { name: "Titre Français", logo: "/ref/titre-francais-vectorized-white.svg" },
 ];
 
-export default function CompaniesCarousel() {
+interface Company {
+     name: string;
+     logo: string;
+     url?: string;
+}
+
+interface CompaniesCarouselProps {
+     companies?: Company[];
+     speed?: number; // Animation duration in seconds
+}
+
+export default function CompaniesCarousel({ companies = defaultCompanies, speed = 20 }: CompaniesCarouselProps) {
      return (
           <div className="relative overflow-hidden">
                <div className="absolute left-0 top-0 w-20 h-full z-10 bg-gradient-to-r from-white to-transparent"></div>
@@ -93,12 +105,10 @@ export default function CompaniesCarousel() {
         }
 
         .animate-scroll {
-          animation: scroll 30s linear infinite;
+          animation: scroll ${speed}s linear infinite;
         }
 
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
+        /* Removed the hover pause - now it keeps running on hover */
       `}</style>
           </div>
      );

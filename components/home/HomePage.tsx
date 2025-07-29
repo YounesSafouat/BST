@@ -68,6 +68,14 @@ interface OdooData {
                suffix: string;
                label: string;
           }>;
+          carousel?: {
+               companies: Array<{
+                    name: string;
+                    logo: string;
+                    url?: string;
+               }>;
+               speed?: number;
+          };
      };
      trustMetrics: Array<{
           number: number;

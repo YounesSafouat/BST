@@ -32,6 +32,14 @@ interface HeroData {
   companyName?: string;
   badge?: string;
   emphasis?: string;
+  carousel?: {
+    companies: Array<{
+      name: string;
+      logo: string;
+      url?: string;
+    }>;
+    speed?: number;
+  };
 }
 
 interface HeroSectionProps {
@@ -230,7 +238,10 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       {/* Companies Carousel */}
       <div className="bg-white pt-[5em]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CompaniesCarousel />
+          <CompaniesCarousel
+            companies={heroData.carousel?.companies}
+            speed={heroData.carousel?.speed}
+          />
         </div>
       </div>
 
