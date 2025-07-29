@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { CheckCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, ArrowRight, MapPin } from "lucide-react";
+import { getUserLocation, getRegionFromCountry, getLocalizedPricing, getLocalizedCurrency, type Region } from "@/lib/geolocation";
 
 interface PricingData {
      headline: string;
@@ -15,6 +16,7 @@ interface PricingData {
           estimation: string;
           features: string[];
           cta: string;
+          targetRegions?: string[]; // New field for region targeting
      }>;
 }
 
@@ -25,6 +27,26 @@ interface PricingSectionProps {
 export default function PricingSection({ pricingData }: PricingSectionProps) {
      const [pricingContent, setPricingContent] = useState<PricingData | null>(null);
      const [isLoading, setIsLoading] = useState(true);
+     const [userRegion, setUserRegion] = useState<Region>('international');
+     const [locationLoading, setLocationLoading] = useState(true);
+
+     useEffect(() => {
+          const detectUserLocation = async () => {
+               try {
+                    const location = await getUserLocation();
+                    if (location) {
+                         const region = getRegionFromCountry(location.countryCode);
+                         setUserRegion(region);
+                    }
+               } catch (error) {
+                    console.error('Error detecting user location:', error);
+               } finally {
+                    setLocationLoading(false);
+               }
+          };
+
+          detectUserLocation();
+     }, []);
 
      useEffect(() => {
           const fetchPricingData = async () => {
@@ -71,7 +93,8 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                     "Support au démarrage (30j)",
                     "Documentation personnalisée"
                ],
-               cta: "Obtenir un devis"
+               cta: "Obtenir un devis",
+               targetRegions: ['france', 'morocco', 'international']
           },
           {
                name: "Pack Croissance",
@@ -85,7 +108,8 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                     "Formation approfondie des équipes",
                     "Accompagnement mensuel (6 mois)"
                ],
-               cta: "Planifier un échange"
+               cta: "Planifier un échange",
+               targetRegions: ['france', 'morocco', 'international']
           },
           {
                name: "Pack Sur Mesure",
@@ -99,21 +123,46 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                     "Consultant attitré à votre projet",
                     "Suivi stratégique long terme"
                ],
-               cta: "Discutons ensemble"
+               cta: "Contactez-nous",
+               targetRegions: ['france', 'morocco', 'international']
           }
      ];
 
      const plans = pricingContent?.plans || fallbackPlans;
-     const headline = pricingContent?.headline || "Un partenariat, pas seulement une prestation";
-     const subheadline = pricingContent?.subheadline || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions.";
+     const headline = pricingContent?.headline || "Tarifs & Accompagnement";
+     const subheadline = pricingContent?.subheadline || "Des solutions adaptées à votre budget et vos objectifs";
+     const description = pricingContent?.description || "Choisissez le pack qui correspond le mieux à vos besoins et commencez votre transformation digitale dès aujourd'hui.";
+
+     // Filter plans based on user region
+     const filteredPlans = plans.filter(plan => {
+          if (!plan.targetRegions || plan.targetRegions.length === 0) {
+               return true; // Show all if no specific regions defined
+          }
+          return plan.targetRegions.includes(userRegion) || plan.targetRegions.includes('all');
+     });
+
+     const getRegionDisplayName = (region: Region): string => {
+          switch (region) {
+               case 'france':
+                    return 'France';
+               case 'morocco':
+                    return 'Maroc';
+               case 'international':
+                    return 'International';
+               default:
+                    return 'International';
+          }
+     };
 
      if (isLoading) {
           return (
-               <section id="pricing" className="py-20 bg-[var(--odoo-purple-light)]">
+               <section className="py-20 bg-gray-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center">
-                              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-secondary)] mx-auto mb-4"></div>
-                              <p className="text-gray-600">Chargement des tarifs...</p>
+                              <div className="animate-pulse">
+                                   <div className="h-8 bg-gray-300 rounded w-1/3 mx-auto mb-4"></div>
+                                   <div className="h-6 bg-gray-300 rounded w-1/2 mx-auto mb-8"></div>
+                              </div>
                          </div>
                     </div>
                </section>
@@ -121,72 +170,92 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      }
 
      return (
-          <section id="pricing" className="py-20 bg-[var(--odoo-purple-light)]">
+          <section className="py-20 bg-gray-50">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                         initial={{ opacity: 0, y: 20 }}
-                         whileInView={{ opacity: 1, y: 0 }}
-                         viewport={{ once: true }}
-                         className="text-center mb-16"
-                    >
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TARIFS & ACCOMPAGNEMENT</div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                    {/* Location Indicator */}
+                    {!locationLoading && (
+                         <div className="text-center mb-8">
+                              <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border">
+                                   <MapPin className="w-4 h-4 text-gray-500" />
+                                   <span className="text-sm text-gray-600">
+                                        Tarifs affichés pour : <span className="font-semibold text-[var(--color-secondary)]">{getRegionDisplayName(userRegion)}</span>
+                                   </span>
+                              </div>
+                         </div>
+                    )}
+
+                    <div className="text-center mb-12">
+                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {headline}
+                         </div>
+                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                              {subheadline}
                          </h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                              {subheadline}
+                              {description}
                          </p>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-3 gap-8">
-                         {plans.map((plan, index) => (
-                              <motion.div
-                                   key={index}
-                                   initial={{ opacity: 0, y: 30 }}
-                                   whileInView={{ opacity: 1, y: 0 }}
-                                   viewport={{ once: true }}
-                                   transition={{ delay: index * 0.1 }}
-                                   className="h-full"
-                              >
-                                   <Card className={`h-full border-2 rounded-2xl transition-all duration-300 flex flex-col ${index === 1
-                                        ? 'border-[var(--color-main)] shadow-2xl bg-white scale-105'
-                                        : 'border-transparent bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl'
-                                        }`}>
-                                        <CardHeader className="p-8 flex-shrink-0">
-                                             <h3 className="text-xl font-bold text-[var(--color-secondary)] mb-2">{plan.name}</h3>
-                                             <p className="text-gray-600 text-sm mb-4 h-12 flex items-center">{plan.description}</p>
-                                             <div className="space-y-1">
-                                                  <div className="text-2xl font-bold text-gray-900">
-                                                       {plan.price}
-                                                  </div>
-                                                  <div className="text-sm text-gray-500">{plan.estimation}</div>
-                                             </div>
-                                        </CardHeader>
-
-                                        <CardContent className="p-8 pt-0 flex-grow flex flex-col">
-                                             <ul className="space-y-4 mb-8 flex-grow">
-                                                  {plan.features.map((feature, idx) => (
-                                                       <li key={idx} className="flex items-start gap-3">
-                                                            <CheckCircle className="w-5 h-5 text-[var(--color-secondary)] mt-0.5 flex-shrink-0" />
-                                                            <span className="text-gray-700 text-sm">{feature}</span>
-                                                       </li>
-                                                  ))}
-                                             </ul>
-
-                                             <Button
-                                                  className={`w-full h-12 ${index === 1
-                                                       ? 'bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white'
-                                                       : 'bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white'
-                                                       }`}
-                                             >
-                                                  {plan.cta}
-                                                  <ArrowRight className="w-4 h-4 ml-2" />
-                                             </Button>
-                                        </CardContent>
-                                   </Card>
-                              </motion.div>
-                         ))}
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                         {filteredPlans.map((plan, index) => {
+                              const localizedPrice = getLocalizedPricing(userRegion, plan.price);
+                              const currency = getLocalizedCurrency(userRegion);
+
+                              return (
+                                   <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                   >
+                                        <Card className="h-full bg-white hover:shadow-xl transition-all duration-300 border-2 hover:border-[var(--color-secondary)] group">
+                                             <CardHeader className="text-center pb-4">
+                                                  <h3 className="text-2xl font-semibold text-gray-900 mb-2 group-hover:text-[var(--color-secondary)] transition-colors">
+                                                       {plan.name}
+                                                  </h3>
+                                                  <p className="text-gray-600 text-sm leading-relaxed">
+                                                       {plan.description}
+                                                  </p>
+                                                  <div className="mt-4">
+                                                       <div className="text-3xl font-bold text-[var(--color-secondary)] mb-1">
+                                                            {localizedPrice}
+                                                       </div>
+                                                       <div className="text-sm text-gray-500">
+                                                            {plan.estimation}
+                                                       </div>
+                                                  </div>
+                                             </CardHeader>
+                                             <CardContent className="pt-0">
+                                                  <ul className="space-y-3 mb-8">
+                                                       {plan.features.map((feature, featureIndex) => (
+                                                            <li key={featureIndex} className="flex items-start">
+                                                                 <CheckCircle className="w-5 h-5 text-[var(--color-secondary)] mr-3 mt-0.5 flex-shrink-0" />
+                                                                 <span className="text-gray-700 text-sm">{feature}</span>
+                                                            </li>
+                                                       ))}
+                                                  </ul>
+                                                  <Button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white group-hover:scale-105 transition-transform duration-200">
+                                                       {plan.cta}
+                                                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                  </Button>
+                                             </CardContent>
+                                        </Card>
+                                   </motion.div>
+                              );
+                         })}
+                    </div>
+
+                    {/* No plans available message */}
+                    {filteredPlans.length === 0 && (
+                         <div className="text-center py-12">
+                              <p className="text-gray-500 text-lg">
+                                   Aucun tarif disponible pour votre région actuellement.
+                              </p>
+                              <p className="text-gray-400 text-sm mt-2">
+                                   Contactez-nous pour un devis personnalisé.
+                              </p>
+                         </div>
+                    )}
                </div>
           </section>
      );

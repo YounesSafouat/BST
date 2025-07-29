@@ -560,7 +560,9 @@ export default function HomePage() {
                <VideoTestimonialsSection videoTestimonialsData={odooData?.videoTestimonials} />
 
                {/* Tarifs & Accompagnement Section */}
-               <PricingSection pricingData={odooData?.pricing} />
+               <section id="pricing">
+                    <PricingSection pricingData={odooData?.pricing} />
+               </section>
                {/* Notre Agence Section */}
                <section className="py-20 bg-white" id="team">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

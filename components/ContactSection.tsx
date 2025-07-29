@@ -285,7 +285,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                        ) : (
                                                             <>
                                                                  <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                                                                 Lancer ma transformation
+                                                                 Commencer ma transformation
                                                             </>
                                                        )}
                                                   </Button>

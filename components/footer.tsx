@@ -83,17 +83,13 @@ export default function Footer() {
         </div>
 
         {/* secondary Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           {/* Company Info */}
           <div>
             <div className="flex items-center space-x-3 mb-6">
               <div className="relative">
-                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
-                  <img src={companyInfo?.logo?.image || "/bst.png"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="w-5 h-5" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--color-secondary)] rounded-full"></div>
+                <img src={companyInfo?.logo?.image || "/bst.png"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="h-16 w-auto" />
               </div>
-              <span className="text-lg font-bold tracking-tight">{companyInfo?.logo?.alt || "Black Swan Technology"}</span>
             </div>
             <p className="text-gray-400 mb-6 text-sm">{companyInfo?.description || "Votre partenaire digital de confiance"}</p>
             <div className="space-y-3">
@@ -115,31 +111,18 @@ export default function Footer() {
             <ul className="space-y-3">
               {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
-                  <a
-                    href={link.url}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm"
+                  <button
+                    onClick={() => {
+                      const element = document.querySelector(link.url);
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm w-full text-left"
                   >
                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
                     {link.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="text-lg font-bold mb-6">{services?.title || "Services"}</h4>
-            <ul className="space-y-3">
-              {services.links && Array.isArray(services.links) && services.links.map((service: any, index: number) => (
-                <li key={index}>
-                  <a
-                    href={service.url}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm"
-                  >
-                    <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
-                    {service.text}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>

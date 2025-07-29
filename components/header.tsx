@@ -73,7 +73,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             <Button
               size="sm"
               className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] gap-2 rounded-full px-4 text-sm"
-              onClick={() => scrollToSection('#contact')}
+              onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
             >
               Prendre RDV
               <Calendar className="w-3 h-3" />
@@ -114,7 +114,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               <div className="flex flex-col gap-3 pt-4 border-t">
                 <Button
                   className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] gap-2 justify-center"
-                  onClick={() => scrollToSection('#contact')}
+                  onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
                 >
                   Prendre RDV
                 </Button>

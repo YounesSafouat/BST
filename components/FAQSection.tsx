@@ -113,7 +113,15 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                          <p className="text-gray-600 mb-4">
                               Vous ne trouvez pas la réponse à votre question ?
                          </p>
-                         <button className="inline-flex items-center px-6 py-3 bg-[var(--color-secondary)] text-white font-semibold rounded-lg hover:bg-[var(--color-secondary)]/90 transition-colors duration-300">
+                         <button
+                              onClick={() => {
+                                   const contactSection = document.getElementById('contact');
+                                   if (contactSection) {
+                                        contactSection.scrollIntoView({ behavior: 'smooth' });
+                                   }
+                              }}
+                              className="inline-flex items-center px-6 py-3 bg-[var(--color-secondary)] text-white font-semibold rounded-lg hover:bg-[var(--color-secondary)]/90 transition-colors duration-300"
+                         >
                               Contactez-nous
                               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

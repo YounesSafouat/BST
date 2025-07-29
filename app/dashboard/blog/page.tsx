@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
 import { toast } from "@/components/ui/use-toast";
 import './mdeditor-black-text.css';
-import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, Star } from "lucide-react";
+import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, Star, MapPin } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import Loader from '@/components/home/Loader';
 import { BlogPost } from "@/components/BlogPost";
@@ -36,6 +36,7 @@ interface BlogPost {
   body: string;
   testimonials?: string[];
   similarPosts?: string[];
+  targetRegions?: string[];
 }
 
 function emptyPost() {
@@ -55,6 +56,7 @@ function emptyPost() {
     body: "",
     testimonials: [],
     similarPosts: [],
+    targetRegions: ['france', 'morocco', 'international'],
   };
 }
 
@@ -179,10 +181,10 @@ export default function BlogAdminPage() {
   }
 
   // Helper for dropdown options
-  const blogOptions = useMemo(() => posts.map(p => ({ 
-    value: p.slug, 
+  const blogOptions = useMemo(() => posts.map(p => ({
+    value: p.slug,
     label: p.title,
-    description: p.excerpt 
+    description: p.excerpt
   })), [posts]);
   const testimonialOptions = useMemo(() => allTestimonials.map(t => ({
     value: typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString(),
@@ -204,7 +206,7 @@ export default function BlogAdminPage() {
           Nouvel Article
         </Button>
       </div>
-      
+
       {/* Preview Modal */}
       {previewing && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-2 sm:p-4">
@@ -231,8 +233,8 @@ export default function BlogAdminPage() {
                 {editing === "new" ? "Nouvel Article" : `Modifier: ${form.title}`}
               </h2>
               <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => setPreviewing(form)}
                   className="text-xs"
@@ -240,12 +242,12 @@ export default function BlogAdminPage() {
                   <Eye className="w-3 h-3 mr-1" />
                   Prévisualiser
                 </Button>
-              <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
-                <X className="h-4 w-4 sm:h-6 sm:w-6" />
-              </Button>
+                <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
+                  <X className="h-4 w-4 sm:h-6 sm:w-6" />
+                </Button>
               </div>
             </div>
-            
+
             <div className="flex-grow overflow-y-auto p-4">
               <div className="space-y-6">
                 {/* Basic Information */}
@@ -338,6 +340,60 @@ export default function BlogAdminPage() {
                   </CardContent>
                 </Card>
 
+                {/* Region Targeting */}
+                <Card>
+                  <CardHeader><CardTitle>Régions cibles</CardTitle></CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4">
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={form.targetRegions?.includes('france') || false}
+                          onChange={(e) => {
+                            const currentRegions = form.targetRegions || [];
+                            const newRegions = e.target.checked
+                              ? [...currentRegions, 'france']
+                              : currentRegions.filter(r => r !== 'france');
+                            setForm(f => ({ ...f, targetRegions: newRegions }));
+                          }}
+                        />
+                        <span className="text-sm">France</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={form.targetRegions?.includes('morocco') || false}
+                          onChange={(e) => {
+                            const currentRegions = form.targetRegions || [];
+                            const newRegions = e.target.checked
+                              ? [...currentRegions, 'morocco']
+                              : currentRegions.filter(r => r !== 'morocco');
+                            setForm(f => ({ ...f, targetRegions: newRegions }));
+                          }}
+                        />
+                        <span className="text-sm">Maroc</span>
+                      </label>
+                      <label className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={form.targetRegions?.includes('international') || false}
+                          onChange={(e) => {
+                            const currentRegions = form.targetRegions || [];
+                            const newRegions = e.target.checked
+                              ? [...currentRegions, 'international']
+                              : currentRegions.filter(r => r !== 'international');
+                            setForm(f => ({ ...f, targetRegions: newRegions }));
+                          }}
+                        />
+                        <span className="text-sm">International</span>
+                      </label>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Laissez vide pour afficher dans toutes les régions
+                    </p>
+                  </CardContent>
+                </Card>
+
                 {/* Related Content */}
                 <Card>
                   <CardHeader><CardTitle>Contenu Associé</CardTitle></CardHeader>
@@ -385,20 +441,20 @@ export default function BlogAdminPage() {
 
             {/* Sticky Action Bar */}
             <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t mt-0 bg-white sticky bottom-0 z-20 px-4 pb-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="lg" 
-                className="min-w-[120px] text-base font-semibold" 
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                className="min-w-[120px] text-base font-semibold"
                 onClick={cancelEdit}
               >
                 Annuler
               </Button>
-              
-              <Button 
-                type="button" 
-                size="lg" 
-                className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg" 
+
+              <Button
+                type="button"
+                size="lg"
+                className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg"
                 onClick={savePost}
                 disabled={saving}
               >
@@ -461,9 +517,8 @@ export default function BlogAdminPage() {
               {/* Bottom Section: Status & Actions */}
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mt-4">
                 <div className="flex items-center space-x-2">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                    post.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                }`}>
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${post.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
                     {post.published ? 'Publié' : 'Brouillon'}
                   </span>
                   {post.featured && (
@@ -472,10 +527,16 @@ export default function BlogAdminPage() {
                       Vedette
                     </span>
                   )}
+                  {post.targetRegions && post.targetRegions.length > 0 && (
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      {post.targetRegions.length === 3 ? 'Toutes' : post.targetRegions.join(', ')}
+                    </span>
+                  )}
                 </div>
                 <div className="flex flex-row gap-2">
                   <Button
-                    variant="outline" 
+                    variant="outline"
                     size="sm"
                     onClick={() => setPreviewing(post)}
                     className="border-gray-300 hover:bg-gray-100 text-xs"
@@ -483,8 +544,8 @@ export default function BlogAdminPage() {
                     <Eye className="w-3 h-3 mr-1" />
                     Prévisualiser
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => editPost(idx)}
                     className="border-gray-300 hover:bg-gray-100 text-xs"

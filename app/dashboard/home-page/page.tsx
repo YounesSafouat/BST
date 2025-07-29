@@ -94,6 +94,7 @@ interface HomePageData {
                estimation: string;
                features: string[];
                cta: string;
+               targetRegions?: string[];
           }>;
      };
      partnership: {
@@ -1073,7 +1074,8 @@ export default function HomePageDashboard() {
                                                        price: 'Prix',
                                                        estimation: 'Estimation',
                                                        features: ['Fonctionnalité 1'],
-                                                       cta: 'Commander'
+                                                       cta: 'Commander',
+                                                       targetRegions: ['france', 'morocco', 'international']
                                                   })}
                                                   size="sm"
                                                   className="flex items-center gap-2"
@@ -1140,6 +1142,58 @@ export default function HomePageDashboard() {
                                                             placeholder="Description du plan"
                                                             rows={2}
                                                        />
+                                                  </div>
+
+                                                  {/* Region Targeting */}
+                                                  <div className="mb-4">
+                                                       <Label>Régions cibles</Label>
+                                                       <div className="grid grid-cols-3 gap-2 mt-2">
+                                                            <label className="flex items-center space-x-2">
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      checked={plan.targetRegions?.includes('france') || false}
+                                                                      onChange={(e) => {
+                                                                           const currentRegions = plan.targetRegions || [];
+                                                                           const newRegions = e.target.checked
+                                                                                ? [...currentRegions, 'france']
+                                                                                : currentRegions.filter(r => r !== 'france');
+                                                                           updateArrayField('pricing.plans', index, 'targetRegions', newRegions);
+                                                                      }}
+                                                                 />
+                                                                 <span className="text-sm">France</span>
+                                                            </label>
+                                                            <label className="flex items-center space-x-2">
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      checked={plan.targetRegions?.includes('morocco') || false}
+                                                                      onChange={(e) => {
+                                                                           const currentRegions = plan.targetRegions || [];
+                                                                           const newRegions = e.target.checked
+                                                                                ? [...currentRegions, 'morocco']
+                                                                                : currentRegions.filter(r => r !== 'morocco');
+                                                                           updateArrayField('pricing.plans', index, 'targetRegions', newRegions);
+                                                                      }}
+                                                                 />
+                                                                 <span className="text-sm">Maroc</span>
+                                                            </label>
+                                                            <label className="flex items-center space-x-2">
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      checked={plan.targetRegions?.includes('international') || false}
+                                                                      onChange={(e) => {
+                                                                           const currentRegions = plan.targetRegions || [];
+                                                                           const newRegions = e.target.checked
+                                                                                ? [...currentRegions, 'international']
+                                                                                : currentRegions.filter(r => r !== 'international');
+                                                                           updateArrayField('pricing.plans', index, 'targetRegions', newRegions);
+                                                                      }}
+                                                                 />
+                                                                 <span className="text-sm">International</span>
+                                                            </label>
+                                                       </div>
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            Laissez vide pour afficher dans toutes les régions
+                                                       </p>
                                                   </div>
 
                                                   {/* Features */}

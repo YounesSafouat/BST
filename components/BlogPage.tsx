@@ -1,9 +1,10 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp } from "lucide-react"
+import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { getUserLocation, getRegionFromCountry, shouldShowContent, type Region } from "@/lib/geolocation"
 import {
   Pagination,
   PaginationContent,
@@ -24,7 +25,27 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [userRegion, setUserRegion] = useState<Region>('international');
+  const [locationLoading, setLocationLoading] = useState(true);
   const pageSize = 6;
+
+  useEffect(() => {
+    const detectUserLocation = async () => {
+      try {
+        const location = await getUserLocation();
+        if (location) {
+          const region = getRegionFromCountry(location.countryCode);
+          setUserRegion(region);
+        }
+      } catch (error) {
+        console.error('Error detecting user location:', error);
+      } finally {
+        setLocationLoading(false);
+      }
+    };
+
+    detectUserLocation();
+  }, []);
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -63,6 +84,9 @@ export default function BlogPage() {
 
     let filtered = (blogData.content?.blogPosts || []).filter((post: any) => post.published === true);
 
+    // Filter by user region
+    filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
+
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
@@ -79,7 +103,7 @@ export default function BlogPage() {
 
     setFilteredPosts(filtered)
     setCurrentPage(1); // Reset to first page on filter/search change
-  }, [blogData, searchTerm, selectedCategory])
+  }, [blogData, searchTerm, selectedCategory, userRegion])
 
   // Function to get category color
   const getCategoryColor = (categoryName: any) => {
@@ -92,6 +116,19 @@ export default function BlogPage() {
     if (!img) return '/placeholder.svg';
     if (img.startsWith('/https://') || img.startsWith('/http://')) return img.slice(1);
     return img;
+  };
+
+  const getRegionDisplayName = (region: Region): string => {
+    switch (region) {
+      case 'france':
+        return 'France';
+      case 'morocco':
+        return 'Maroc';
+      case 'international':
+        return 'International';
+      default:
+        return 'International';
+    }
   };
 
   if (loading) return <div>Chargement...</div>;
@@ -135,6 +172,18 @@ export default function BlogPage() {
               />
             </div>
           </div>
+
+          {/* Location Indicator */}
+          {!locationLoading && (
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border">
+                <MapPin className="w-4 h-4 text-gray-500" />
+                <span className="text-sm text-gray-600">
+                  Articles affichés pour : <span className="font-semibold text-[var(--color-secondary)]">{getRegionDisplayName(userRegion)}</span>
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
