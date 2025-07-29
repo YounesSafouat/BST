@@ -33,15 +33,15 @@ interface CompaniesCarouselProps {
      speed?: number; // Animation duration in seconds
 }
 
-export default function CompaniesCarousel({ companies = defaultCompanies, speed = 20 }: CompaniesCarouselProps) {
+export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1 }: CompaniesCarouselProps) {
      return (
           <div className="relative overflow-hidden">
                <div className="absolute left-0 top-0 w-20 h-full z-10 bg-gradient-to-r from-white to-transparent"></div>
                <div className="absolute right-0 top-0 w-20 h-full z-10 bg-gradient-to-l from-white to-transparent"></div>
 
                <div className="flex animate-scroll">
+                    {/* First set */}
                     <div className="flex space-x-16 whitespace-nowrap">
-                         {/* First set */}
                          {companies.map((company, index) => (
                               <div key={`first-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
                                    {company.logo ? (
@@ -59,8 +59,10 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                                    )}
                               </div>
                          ))}
+                    </div>
 
-                         {/* Duplicate for seamless loop */}
+                    {/* Duplicate set for seamless loop */}
+                    <div className="flex space-x-16 whitespace-nowrap">
                          {companies.map((company, index) => (
                               <div key={`second-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
                                    {company.logo ? (
@@ -78,10 +80,96 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                                    )}
                               </div>
                          ))}
+                    </div>
 
-                         {/* Third set for extra seamless loop */}
+                    {/* Third set for extra seamless loop */}
+                    <div className="flex space-x-16 whitespace-nowrap">
                          {companies.map((company, index) => (
                               <div key={`third-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
+                                   {company.logo ? (
+                                        <div className="w-[120px] h-[40px] flex items-center justify-center">
+                                             <Image
+                                                  src={company.logo}
+                                                  alt={company.name}
+                                                  width={120}
+                                                  height={40}
+                                                  className="max-w-[120px] max-h-[40px] w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                                             />
+                                        </div>
+                                   ) : (
+                                        <span className="text-gray-400 font-semibold text-sm text-center">{company.name}</span>
+                                   )}
+                              </div>
+                         ))}
+                    </div>
+
+                    {/* Fourth set to ensure perfect loop */}
+                    <div className="flex space-x-16 whitespace-nowrap">
+                         {companies.map((company, index) => (
+                              <div key={`fourth-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
+                                   {company.logo ? (
+                                        <div className="w-[120px] h-[40px] flex items-center justify-center">
+                                             <Image
+                                                  src={company.logo}
+                                                  alt={company.name}
+                                                  width={120}
+                                                  height={40}
+                                                  className="max-w-[120px] max-h-[40px] w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                                             />
+                                        </div>
+                                   ) : (
+                                        <span className="text-gray-400 font-semibold text-sm text-center">{company.name}</span>
+                                   )}
+                              </div>
+                         ))}
+                    </div>
+
+                    {/* Fifth set for extra seamless loop */}
+                    <div className="flex space-x-16 whitespace-nowrap">
+                         {companies.map((company, index) => (
+                              <div key={`fifth-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
+                                   {company.logo ? (
+                                        <div className="w-[120px] h-[40px] flex items-center justify-center">
+                                             <Image
+                                                  src={company.logo}
+                                                  alt={company.name}
+                                                  width={120}
+                                                  height={40}
+                                                  className="max-w-[120px] max-h-[40px] w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                                             />
+                                        </div>
+                                   ) : (
+                                        <span className="text-gray-400 font-semibold text-sm text-center">{company.name}</span>
+                                   )}
+                              </div>
+                         ))}
+                    </div>
+
+                    {/* Sixth set for extra seamless loop */}
+                    <div className="flex space-x-16 whitespace-nowrap">
+                         {companies.map((company, index) => (
+                              <div key={`sixth-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
+                                   {company.logo ? (
+                                        <div className="w-[120px] h-[40px] flex items-center justify-center">
+                                             <Image
+                                                  src={company.logo}
+                                                  alt={company.name}
+                                                  width={120}
+                                                  height={40}
+                                                  className="max-w-[120px] max-h-[40px] w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+                                             />
+                                        </div>
+                                   ) : (
+                                        <span className="text-gray-400 font-semibold text-sm text-center">{company.name}</span>
+                                   )}
+                              </div>
+                         ))}
+                    </div>
+
+                    {/* Seventh set for extra seamless loop */}
+                    <div className="flex space-x-16 whitespace-nowrap">
+                         {companies.map((company, index) => (
+                              <div key={`seventh-${index}`} className="flex items-center justify-center min-w-[120px] h-12 w-[120px]">
                                    {company.logo ? (
                                         <div className="w-[120px] h-[40px] flex items-center justify-center">
                                              <Image
@@ -106,7 +194,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(-14.285%);
           }
         }
 

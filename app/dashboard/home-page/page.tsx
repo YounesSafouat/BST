@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { Save, Eye, ArrowLeft, Plus, Trash2, X, GripVertical, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -64,11 +65,13 @@ interface HomePageData {
      platformSection: {
           headline: string;
           subheadline: string;
+          description?: string;
           apps: Array<{
                icon: string;
                title: string;
                description: string;
                features: string[];
+               showProminently?: boolean;
           }>;
      };
      services: {
@@ -123,6 +126,7 @@ interface HomePageData {
                duration: string;
                backgroundColor: string;
                textColor: string;
+               videoUrl?: string;
           }>;
      };
      faq?: {
@@ -522,6 +526,24 @@ export default function HomePageDashboard() {
           return url;
      };
 
+     const handleVideoUploadForTestimonial = async (file: File, videoIndex: number) => {
+          try {
+               const reader = new FileReader();
+               reader.onload = (e) => {
+                    const base64 = e.target?.result as string;
+                    updateArrayField('videoTestimonials.videos', videoIndex, 'videoUrl', base64);
+               };
+               reader.readAsDataURL(file);
+          } catch (error) {
+               console.error('Error uploading video:', error);
+               toast({
+                    title: "Erreur",
+                    description: "Impossible de télécharger la vidéo",
+                    variant: "destructive",
+               });
+          }
+     };
+
 
 
      if (loading) {
@@ -574,13 +596,15 @@ export default function HomePageDashboard() {
                </div>
 
                <Tabs defaultValue="hero" className="space-y-6">
-                    <TabsList className="grid w-full grid-cols-7">
+                    <TabsList className="grid w-full grid-cols-9">
                          <TabsTrigger value="hero">Hero</TabsTrigger>
+                         <TabsTrigger value="platform">Plateforme</TabsTrigger>
                          <TabsTrigger value="pricing">Tarifs</TabsTrigger>
                          <TabsTrigger value="partnership">Agence</TabsTrigger>
                          <TabsTrigger value="contact">Contact</TabsTrigger>
                          <TabsTrigger value="faq">FAQ</TabsTrigger>
                          <TabsTrigger value="testimonials">Témoignages</TabsTrigger>
+                         <TabsTrigger value="videoTestimonials">Vidéos</TabsTrigger>
                          <TabsTrigger value="final">CTA Final</TabsTrigger>
                     </TabsList>
 
@@ -838,6 +862,164 @@ export default function HomePageDashboard() {
                                                             )}
                                                        </div>
 
+                                                  </div>
+                                             </Card>
+                                        ))}
+                                   </div>
+                              </CardContent>
+                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="platform" className="space-y-6">
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>Section Plateforme</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                             <Label>Titre</Label>
+                                             <Input
+                                                  value={homeData.platformSection.headline}
+                                                  onChange={(e) => updateField('platformSection.headline', e.target.value)}
+                                                  placeholder="Titre de la section plateforme"
+                                             />
+                                        </div>
+                                        <div>
+                                             <Label>Sous-titre</Label>
+                                             <Input
+                                                  value={homeData.platformSection.subheadline}
+                                                  onChange={(e) => updateField('platformSection.subheadline', e.target.value)}
+                                                  placeholder="Sous-titre"
+                                             />
+                                        </div>
+                                   </div>
+                                   <div>
+                                        <Label>Description</Label>
+                                        <Textarea
+                                             value={homeData.platformSection.description || ''}
+                                             onChange={(e) => updateField('platformSection.description', e.target.value)}
+                                             placeholder="Description"
+                                             rows={3}
+                                        />
+                                   </div>
+
+                                   {/* Apps */}
+                                   <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                             <Label className="text-lg font-semibold">Applications</Label>
+                                             <Button
+                                                  onClick={() => addArrayItem('platformSection.apps', {
+                                                       icon: 'Star',
+                                                       title: 'Nouvelle application',
+                                                       description: 'Description de l\'application',
+                                                       features: ['Fonctionnalité 1'],
+                                                       showProminently: false
+                                                  })}
+                                                  size="sm"
+                                                  className="flex items-center gap-2"
+                                             >
+                                                  <Plus className="w-4 h-4" />
+                                                  Ajouter une application
+                                             </Button>
+                                        </div>
+
+                                        {homeData.platformSection.apps?.map((app, index) => (
+                                             <Card key={index} className="p-4">
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <h4 className="font-semibold">Application {index + 1}</h4>
+                                                       <Button
+                                                            onClick={() => removeArrayItem('platformSection.apps', index)}
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-red-600 hover:text-red-700"
+                                                       >
+                                                            <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label>Icône</Label>
+                                                            <Input
+                                                                 value={app.icon}
+                                                                 onChange={(e) => updateArrayField('platformSection.apps', index, 'icon', e.target.value)}
+                                                                 placeholder="Nom de l'icône (ex: Star, Check, etc.)"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label>Titre</Label>
+                                                            <Input
+                                                                 value={app.title}
+                                                                 onChange={(e) => updateArrayField('platformSection.apps', index, 'title', e.target.value)}
+                                                                 placeholder="Titre de l'application"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <div className="flex items-center justify-between">
+                                                            <Label className="text-sm font-medium">Afficher en évidence (carousel)</Label>
+                                                            <Switch
+                                                                 checked={app.showProminently || false}
+                                                                 onCheckedChange={(checked) => updateArrayField('platformSection.apps', index, 'showProminently', checked)}
+                                                            />
+                                                       </div>
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            Les applications activées seront affichées dans un carousel en évidence
+                                                       </p>
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <Label>Description</Label>
+                                                       <Textarea
+                                                            value={app.description}
+                                                            onChange={(e) => updateArrayField('platformSection.apps', index, 'description', e.target.value)}
+                                                            placeholder="Description de l'application"
+                                                            rows={2}
+                                                       />
+                                                  </div>
+
+                                                  {/* Features */}
+                                                  <div className="space-y-2">
+                                                       <div className="flex items-center justify-between">
+                                                            <Label>Fonctionnalités</Label>
+                                                            <Button
+                                                                 onClick={() => {
+                                                                      const newFeatures = [...app.features, 'Nouvelle fonctionnalité'];
+                                                                      updateArrayField('platformSection.apps', index, 'features', newFeatures);
+                                                                 }}
+                                                                 size="sm"
+                                                                 variant="outline"
+                                                            >
+                                                                 <Plus className="w-3 h-3 mr-1" />
+                                                                 Ajouter
+                                                            </Button>
+                                                       </div>
+                                                       {app.features.map((feature, featureIndex) => (
+                                                            <div key={featureIndex} className="flex items-center gap-2">
+                                                                 <Input
+                                                                      value={feature}
+                                                                      onChange={(e) => {
+                                                                           const newFeatures = [...app.features];
+                                                                           newFeatures[featureIndex] = e.target.value;
+                                                                           updateArrayField('platformSection.apps', index, 'features', newFeatures);
+                                                                      }}
+                                                                      placeholder="Fonctionnalité"
+                                                                 />
+                                                                 <Button
+                                                                      onClick={() => {
+                                                                           const newFeatures = app.features.filter((_, i) => i !== featureIndex);
+                                                                           updateArrayField('platformSection.apps', index, 'features', newFeatures);
+                                                                      }}
+                                                                      variant="ghost"
+                                                                      size="sm"
+                                                                      className="text-red-600 hover:text-red-700"
+                                                                 >
+                                                                      <X className="w-3 h-3" />
+                                                                 </Button>
+                                                            </div>
+                                                       ))}
                                                   </div>
                                              </Card>
                                         ))}
@@ -1483,6 +1665,204 @@ export default function HomePageDashboard() {
                                                   );
                                              })
                                         )}
+                                   </div>
+                              </CardContent>
+                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="videoTestimonials" className="space-y-6">
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>Section Témoignages Vidéo</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                             <Label>Titre</Label>
+                                             <Input
+                                                  value={homeData.videoTestimonials?.headline || ''}
+                                                  onChange={(e) => updateField('videoTestimonials.headline', e.target.value)}
+                                                  placeholder="Titre de la section témoignages vidéo"
+                                             />
+                                        </div>
+                                        <div>
+                                             <Label>Description</Label>
+                                             <Input
+                                                  value={homeData.videoTestimonials?.description || ''}
+                                                  onChange={(e) => updateField('videoTestimonials.description', e.target.value)}
+                                                  placeholder="Description"
+                                             />
+                                        </div>
+                                   </div>
+                                   <div>
+                                        <Label>Sous-description</Label>
+                                        <Input
+                                             value={homeData.videoTestimonials?.subdescription || ''}
+                                             onChange={(e) => updateField('videoTestimonials.subdescription', e.target.value)}
+                                             placeholder="Sous-description"
+                                        />
+                                   </div>
+
+                                   {/* Video Testimonials */}
+                                   <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                             <Label className="text-lg font-semibold">Témoignages vidéo</Label>
+                                             <Button
+                                                  onClick={() => addArrayItem('videoTestimonials.videos', {
+                                                       id: `video-${Date.now()}`,
+                                                       company: 'Nouvelle entreprise',
+                                                       companyLogo: 'Nouveau logo',
+                                                       tagline: 'Découvrez notre client',
+                                                       duration: '02:00',
+                                                       backgroundColor: 'bg-gray-800',
+                                                       textColor: 'text-white',
+                                                       videoUrl: ''
+                                                  })}
+                                                  size="sm"
+                                                  className="flex items-center gap-2"
+                                             >
+                                                  <Plus className="w-4 h-4" />
+                                                  Ajouter un témoignage vidéo
+                                             </Button>
+                                        </div>
+
+                                        {homeData.videoTestimonials?.videos?.map((video, index) => (
+                                             <Card key={index} className="p-4">
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <h4 className="font-semibold">Témoignage vidéo {index + 1}</h4>
+                                                       <Button
+                                                            onClick={() => removeArrayItem('videoTestimonials.videos', index)}
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-red-600 hover:text-red-700"
+                                                       >
+                                                            <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label>Entreprise</Label>
+                                                            <Input
+                                                                 value={video.company}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'company', e.target.value)}
+                                                                 placeholder="Nom de l'entreprise"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label>Logo de l'entreprise</Label>
+                                                            <Input
+                                                                 value={video.companyLogo}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'companyLogo', e.target.value)}
+                                                                 placeholder="Logo de l'entreprise"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                       <div>
+                                                            <Label>Tagline</Label>
+                                                            <Input
+                                                                 value={video.tagline || ''}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'tagline', e.target.value)}
+                                                                 placeholder="Tagline"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label>Durée</Label>
+                                                            <Input
+                                                                 value={video.duration}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'duration', e.target.value)}
+                                                                 placeholder="Durée (ex: 02:00)"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                       <div>
+                                                            <Label>Couleur de fond</Label>
+                                                            <Input
+                                                                 value={video.backgroundColor}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'backgroundColor', e.target.value)}
+                                                                 placeholder="Couleur de fond (ex: bg-gray-800)"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label>Couleur du texte</Label>
+                                                            <Input
+                                                                 value={video.textColor}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'textColor', e.target.value)}
+                                                                 placeholder="Couleur du texte (ex: text-white)"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <Label>URL de la vidéo</Label>
+                                                       <div className="flex gap-2">
+                                                            <Input
+                                                                 value={video.videoUrl || ''}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'videoUrl', e.target.value)}
+                                                                 placeholder="URL de la vidéo (YouTube, Vimeo, etc.) ou télécharger un fichier"
+                                                                 className="flex-1"
+                                                            />
+                                                            <div className="relative">
+                                                                 <input
+                                                                      type="file"
+                                                                      accept="video/*"
+                                                                      onChange={(e) => {
+                                                                           const file = e.target.files?.[0];
+                                                                           if (file) {
+                                                                                handleVideoUploadForTestimonial(file, index);
+                                                                           }
+                                                                      }}
+                                                                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                                      aria-label="Télécharger une vidéo"
+                                                                      title="Télécharger une vidéo"
+                                                                 />
+                                                                 <Button variant="outline" size="sm" className="h-10">
+                                                                      <Upload className="h-4 w-4" />
+                                                                 </Button>
+                                                            </div>
+                                                       </div>
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            Vous pouvez utiliser une URL (YouTube, Vimeo) ou télécharger un fichier vidéo
+                                                       </p>
+
+                                                       {/* Video Preview */}
+                                                       {video.videoUrl && (
+                                                            <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+                                                                 <Label className="text-sm font-medium mb-2 block">Aperçu de la vidéo</Label>
+                                                                 <div className="w-full max-w-md aspect-video bg-black rounded overflow-hidden">
+                                                                      {video.videoUrl.startsWith('data:') || video.videoUrl.startsWith('blob:') ? (
+                                                                           <video
+                                                                                src={video.videoUrl}
+                                                                                controls
+                                                                                className="w-full h-full object-contain"
+                                                                                onError={(e) => {
+                                                                                     e.currentTarget.style.display = 'none';
+                                                                                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                                                }}
+                                                                           />
+                                                                      ) : (
+                                                                           <iframe
+                                                                                src={getVideoEmbedUrl(video.videoUrl)}
+                                                                                title="Video preview"
+                                                                                className="w-full h-full"
+                                                                                frameBorder="0"
+                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                allowFullScreen
+                                                                           />
+                                                                      )}
+                                                                      <div className="hidden w-full h-full flex items-center justify-center text-white text-sm">
+                                                                           Impossible de charger la vidéo
+                                                                      </div>
+                                                                 </div>
+                                                            </div>
+                                                       )}
+                                                  </div>
+                                             </Card>
+                                        ))}
                                    </div>
                               </CardContent>
                          </Card>

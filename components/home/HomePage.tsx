@@ -90,6 +90,7 @@ interface OdooData {
                title: string;
                description: string;
                features: string[];
+               showProminently?: boolean;
           }>;
      };
      services: {
@@ -144,6 +145,7 @@ interface OdooData {
                duration: string;
                backgroundColor: string;
                textColor: string;
+               videoUrl?: string;
           }>;
      };
      faq?: {
@@ -376,11 +378,26 @@ export default function HomePage() {
           !app.icon.includes('placeholder')
      );
 
-     // Create timelines with most demanded modules appearing more frequently
-     // Just duplicate the existing apps to make them appear more often
-     const timeline1 = [...appsWithIcons, ...appsWithIcons.slice(0, 3)];
-     const timeline2 = [...appsWithIcons.slice(2), ...appsWithIcons, ...appsWithIcons.slice(0, 2)];
-     const timeline3 = [...appsWithIcons.slice(4), ...appsWithIcons, ...appsWithIcons.slice(2, 4)];
+     // Create timelines with prominently marked apps appearing more frequently
+     // Add prominent apps at different positions to distribute them evenly
+     const prominentApps = appsWithIcons.filter(app => app.showProminently);
+
+     // Create base timeline and insert prominent apps at different positions
+     const createTimelineWithProminent = (apps: any[], offset: number) => {
+          const timeline = [...apps];
+
+          // Insert prominent apps at different positions based on offset
+          prominentApps.forEach((prominentApp, index) => {
+               const insertPosition = (offset + index * 2) % timeline.length;
+               timeline.splice(insertPosition, 0, prominentApp);
+          });
+
+          return timeline;
+     };
+
+     const timeline1 = createTimelineWithProminent(appsWithIcons, 0);
+     const timeline2 = createTimelineWithProminent(appsWithIcons, 2);
+     const timeline3 = createTimelineWithProminent(appsWithIcons, 4);
 
      // Add safety check for odooData
      if (!odooData) {
@@ -419,6 +436,8 @@ export default function HomePage() {
                                    {odooData?.platformSection?.subheadline || 'Une plateforme complète pour tous vos besoins'}
                               </p>
                          </div>
+
+
 
                          {/* Three Vertical Timelines */}
                          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[600px] relative">

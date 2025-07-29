@@ -11,6 +11,7 @@ interface VideoTestimonial {
      duration: string;
      backgroundColor: string;
      textColor: string;
+     videoUrl?: string;
 }
 
 interface VideoTestimonialsData {
@@ -148,17 +149,78 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                               >
                                    {/* Video Content */}
                                    <div className="aspect-video relative">
-                                        {/* Placeholder design for both videos */}
-                                        <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                             <div className="text-center">
-                                                  <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                       <Play className="w-8 h-8 text-white" />
+                                        {testimonial.videoUrl ? (
+                                             // Actual video with controls
+                                             <div className="w-full h-full relative group">
+                                                  <video
+                                                       ref={(el) => { videoRefs.current[testimonial.id] = el; }}
+                                                       src={testimonial.videoUrl}
+                                                       className="w-full h-full object-cover"
+                                                       onTimeUpdate={() => handleTimeUpdate(testimonial.id)}
+                                                       onLoadedMetadata={() => handleLoadedMetadata(testimonial.id)}
+                                                       onEnded={() => handleVideoEnded(testimonial.id)}
+                                                       muted={mutedVideos[testimonial.id]}
+                                                  />
+
+                                                  {/* Video Controls Overlay */}
+                                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                                       {/* Play/Pause Button */}
+                                                       <button
+                                                            onClick={() => togglePlay(testimonial.id)}
+                                                            className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
+                                                       >
+                                                            {playingVideos[testimonial.id] ? (
+                                                                 <Pause className="w-8 h-8 text-gray-800" />
+                                                            ) : (
+                                                                 <Play className="w-8 h-8 text-gray-800 ml-1" />
+                                                            )}
+                                                       </button>
                                                   </div>
-                                                  <p className="text-white text-lg font-medium">
-                                                       {testimonial.id === '1' ? 'Découvrez notre client ESSEM' : 'Découvrez notre client AI Crafters'}
-                                                  </p>
+
+                                                  {/* Bottom Controls */}
+                                                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                       {/* Progress Bar */}
+                                                       <div
+                                                            className="w-full h-1 bg-gray-600 rounded-full cursor-pointer mb-2"
+                                                            onClick={(e) => handleProgressClick(testimonial.id, e)}
+                                                       >
+                                                            <div
+                                                                 className="h-full bg-white rounded-full transition-all duration-100"
+                                                                 style={{ width: `${progress[testimonial.id] || 0}%` }}
+                                                            />
+                                                       </div>
+
+                                                       <div className="flex items-center justify-between text-white text-sm">
+                                                            <span>{formatTime(currentTime[testimonial.id] || 0)}</span>
+                                                            <div className="flex items-center gap-2">
+                                                                 <button
+                                                                      onClick={() => toggleMute(testimonial.id)}
+                                                                      className="hover:bg-white hover:bg-opacity-20 p-1 rounded"
+                                                                 >
+                                                                      {mutedVideos[testimonial.id] ? (
+                                                                           <VolumeX className="w-4 h-4" />
+                                                                      ) : (
+                                                                           <Volume2 className="w-4 h-4" />
+                                                                      )}
+                                                                 </button>
+                                                                 <span>{formatTime(duration[testimonial.id] || 0)}</span>
+                                                            </div>
+                                                       </div>
+                                                  </div>
                                              </div>
-                                        </div>
+                                        ) : (
+                                             // Placeholder design when no video URL
+                                             <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                                  <div className="text-center">
+                                                       <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                            <Play className="w-8 h-8 text-white" />
+                                                       </div>
+                                                       <p className="text-white text-lg font-medium">
+                                                            {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                       </p>
+                                                  </div>
+                                             </div>
+                                        )}
                                    </div>
 
                                    {/* No white card - just the placeholder design */}
