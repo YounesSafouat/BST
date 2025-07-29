@@ -52,11 +52,13 @@ export default function BlogPage() {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
         const apiUrl = baseUrl
-          ? `${baseUrl}/api/content?type=blog-page`
-          : "/api/content?type=blog-page";
+          ? `${baseUrl}/api/blog`
+          : "/api/blog";
+        console.log("Fetching blog data from:", apiUrl);
         const res = await fetch(apiUrl);
         const data = await res.json();
-        setBlogData(Array.isArray(data) ? data[0] : data);
+        console.log("Blog data received:", data);
+        setBlogData({ content: { blogPosts: data } });
       } catch (err) {
         console.error("Failed to fetch blog data", err);
       } finally {
@@ -82,10 +84,12 @@ export default function BlogPage() {
   useEffect(() => {
     if (!blogData) return;
 
+    console.log("Blog data for filtering:", blogData);
     let filtered = (blogData.content?.blogPosts || []).filter((post: any) => post.published === true);
+    console.log("Posts after published filter:", filtered.length);
 
-    // Filter by user region
-    filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
+    // Filter by user region - temporarily disabled for debugging
+    // filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
 
     // Filter by search term
     if (searchTerm) {

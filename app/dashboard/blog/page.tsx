@@ -21,6 +21,7 @@ const MarkdownPreview: any = dynamic(() => import("@uiw/react-markdown-preview")
 
 // Updated BlogPost interface with all new fields
 interface BlogPost {
+  _id?: string;
   title: string;
   slug: string;
   excerpt: string;
@@ -74,16 +75,17 @@ export default function BlogAdminPage() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetch("/api/content?type=blog-page").then((res) => res.json()),
+      fetch("/api/blog").then((res) => res.json()),
       fetch("/api/content?type=testimonial").then((res) => res.json()),
     ])
-      .then(([blogData, testimonials]) => {
-        const blogPage = Array.isArray(blogData) ? blogData[0] : blogData;
-        setPosts(blogPage?.content?.blogPosts || []);
+      .then(([blogPosts, testimonials]) => {
+        console.log("Blog posts received:", blogPosts);
+        setPosts(blogPosts || []);
         setAllTestimonials(testimonials || []);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("Error fetching blog data:", error);
         toast({ title: "Erreur", description: "Impossible de charger les articles ou témoignages." });
         setLoading(false);
       });
@@ -138,23 +140,41 @@ export default function BlogAdminPage() {
   // Save (create or update) post
   async function savePost() {
     setSaving(true);
-    let updatedPosts: BlogPost[];
-    if (editing === "new") {
-      updatedPosts = [...posts, form];
-    } else {
-      updatedPosts = posts.map((p, i) => (i === editing ? form : p));
-    }
-    // Save to API (update the blog-page document)
-    const res = await fetch("/api/content?type=blog-page", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: { blogPosts: updatedPosts } }),
-    });
-    if (res.ok) {
-      setPosts(updatedPosts);
-      toast({ title: "Succès", description: "Article enregistré." });
-      cancelEdit();
-    } else {
+    try {
+      if (editing === "new") {
+        // Create new blog post
+        const res = await fetch("/api/blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        if (res.ok) {
+          const newPost = await res.json();
+          setPosts([...posts, newPost.content]);
+          toast({ title: "Succès", description: "Article créé." });
+          cancelEdit();
+        } else {
+          toast({ title: "Erreur", description: "Échec de la création." });
+        }
+      } else {
+        // Update existing blog post
+        const postToUpdate = posts[editing as number];
+        const res = await fetch(`/api/blog?id=${postToUpdate._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        if (res.ok) {
+          const updatedPosts = posts.map((p, i) => (i === editing ? form : p));
+          setPosts(updatedPosts);
+          toast({ title: "Succès", description: "Article mis à jour." });
+          cancelEdit();
+        } else {
+          toast({ title: "Erreur", description: "Échec de la mise à jour." });
+        }
+      }
+    } catch (error) {
+      console.error("Error saving post:", error);
       toast({ title: "Erreur", description: "Échec de l'enregistrement." });
     }
     setSaving(false);
@@ -163,18 +183,22 @@ export default function BlogAdminPage() {
   // Delete post
   async function deletePost(idx: number) {
     if (!window.confirm("Supprimer cet article ?")) return;
-    const updatedPosts = posts.filter((_, i) => i !== idx);
+    const postToDelete = posts[idx];
     setSaving(true);
-    const res = await fetch("/api/content?type=blog-page", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content: { blogPosts: updatedPosts } }),
-    });
-    if (res.ok) {
-      setPosts(updatedPosts);
-      toast({ title: "Supprimé", description: "Article supprimé." });
-      cancelEdit();
-    } else {
+    try {
+      const res = await fetch(`/api/blog?id=${postToDelete._id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res.ok) {
+        const updatedPosts = posts.filter((_, i) => i !== idx);
+        setPosts(updatedPosts);
+        toast({ title: "Supprimé", description: "Article supprimé." });
+      } else {
+        toast({ title: "Erreur", description: "Échec de la suppression." });
+      }
+    } catch (error) {
+      console.error("Error deleting post:", error);
       toast({ title: "Erreur", description: "Échec de la suppression." });
     }
     setSaving(false);
