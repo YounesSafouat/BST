@@ -17,7 +17,14 @@ export async function GET(req: NextRequest) {
 
     if (blogPageContent && blogPageContent.content && blogPageContent.content.blogPosts) {
       console.log("Blog API: Found blog posts in blog-page:", blogPageContent.content.blogPosts.length);
-      return NextResponse.json(blogPageContent.content.blogPosts, {
+      // Add the blog-page document ID to each blog post for reference
+      const blogPostsWithId = blogPageContent.content.blogPosts.map((post: any, index: number) => ({
+        ...post,
+        _id: `${blogPageContent._id}_${index}`,
+        _blogPageId: blogPageContent._id,
+        _index: index
+      }));
+      return NextResponse.json(blogPostsWithId, {
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -81,24 +88,59 @@ export async function PUT(req: NextRequest) {
     }
     const body = await req.json();
     
-    const updated = await Content.findByIdAndUpdate(
-      id,
-      { $set: { content: body } },
-      { new: true }
-    );
-    
-    if (!updated) {
-      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+    // Check if this is a blog post from blog-page (has _blogPageId)
+    if (id.includes('_') && !id.match(/^[0-9a-fA-F]{24}$/)) {
+      // This is a blog post from blog-page document
+      const [blogPageId, indexStr] = id.split('_');
+      const index = parseInt(indexStr);
+      
+      console.log("Blog API: Updating blog post in blog-page:", { blogPageId, index, body });
+      
+      const blogPage = await Content.findById(blogPageId);
+      if (!blogPage || !blogPage.content || !blogPage.content.blogPosts) {
+        return NextResponse.json({ error: 'Blog page not found' }, { status: 404 });
+      }
+      
+      // Update the specific blog post in the array
+      blogPage.content.blogPosts[index] = body;
+      await blogPage.save();
+      
+      return NextResponse.json({ 
+        ...body, 
+        _id: id, 
+        _blogPageId: blogPageId, 
+        _index: index 
+      }, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
+    } else {
+      // This is an individual blog post
+      console.log("Blog API: Updating individual blog post:", { id, body });
+      
+      const updated = await Content.findByIdAndUpdate(
+        id,
+        { $set: { content: body } },
+        { new: true }
+      );
+      
+      if (!updated) {
+        return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+      }
+      
+      return NextResponse.json(updated, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
     }
-    
-    return NextResponse.json(updated, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
   } catch (error: any) {
     console.error('Blog API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
@@ -115,20 +157,50 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
     }
     
-    const deleted = await Content.findByIdAndDelete(id);
-    
-    if (!deleted) {
-      return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+    // Check if this is a blog post from blog-page (has _blogPageId)
+    if (id.includes('_') && !id.match(/^[0-9a-fA-F]{24}$/)) {
+      // This is a blog post from blog-page document
+      const [blogPageId, indexStr] = id.split('_');
+      const index = parseInt(indexStr);
+      
+      console.log("Blog API: Deleting blog post from blog-page:", { blogPageId, index });
+      
+      const blogPage = await Content.findById(blogPageId);
+      if (!blogPage || !blogPage.content || !blogPage.content.blogPosts) {
+        return NextResponse.json({ error: 'Blog page not found' }, { status: 404 });
+      }
+      
+      // Remove the specific blog post from the array
+      blogPage.content.blogPosts.splice(index, 1);
+      await blogPage.save();
+      
+      return NextResponse.json({ message: 'Blog post deleted successfully' }, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
+    } else {
+      // This is an individual blog post
+      console.log("Blog API: Deleting individual blog post:", { id });
+      
+      const deleted = await Content.findByIdAndDelete(id);
+      
+      if (!deleted) {
+        return NextResponse.json({ error: 'Blog post not found' }, { status: 404 });
+      }
+      
+      return NextResponse.json({ message: 'Blog post deleted successfully' }, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
     }
-    
-    return NextResponse.json({ message: 'Blog post deleted successfully' }, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
   } catch (error: any) {
     console.error('Blog API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

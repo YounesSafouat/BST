@@ -143,6 +143,7 @@ export default function BlogAdminPage() {
     try {
       if (editing === "new") {
         // Create new blog post
+        console.log("Creating new blog post:", form);
         const res = await fetch("/api/blog", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -150,26 +151,34 @@ export default function BlogAdminPage() {
         });
         if (res.ok) {
           const newPost = await res.json();
+          console.log("New blog post created:", newPost);
           setPosts([...posts, newPost.content]);
           toast({ title: "Succès", description: "Article créé." });
           cancelEdit();
         } else {
+          const errorData = await res.text();
+          console.error("Failed to create blog post:", errorData);
           toast({ title: "Erreur", description: "Échec de la création." });
         }
       } else {
         // Update existing blog post
         const postToUpdate = posts[editing as number];
+        console.log("Updating blog post:", { postToUpdate, form });
         const res = await fetch(`/api/blog?id=${postToUpdate._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
         if (res.ok) {
-          const updatedPosts = posts.map((p, i) => (i === editing ? form : p));
+          const updatedPost = await res.json();
+          console.log("Blog post updated:", updatedPost);
+          const updatedPosts = posts.map((p, i) => (i === editing ? { ...form, _id: postToUpdate._id } : p));
           setPosts(updatedPosts);
           toast({ title: "Succès", description: "Article mis à jour." });
           cancelEdit();
         } else {
+          const errorData = await res.text();
+          console.error("Failed to update blog post:", errorData);
           toast({ title: "Erreur", description: "Échec de la mise à jour." });
         }
       }
@@ -184,6 +193,7 @@ export default function BlogAdminPage() {
   async function deletePost(idx: number) {
     if (!window.confirm("Supprimer cet article ?")) return;
     const postToDelete = posts[idx];
+    console.log("Deleting blog post:", postToDelete);
     setSaving(true);
     try {
       const res = await fetch(`/api/blog?id=${postToDelete._id}`, {
@@ -191,10 +201,14 @@ export default function BlogAdminPage() {
         headers: { "Content-Type": "application/json" },
       });
       if (res.ok) {
+        const result = await res.json();
+        console.log("Blog post deleted:", result);
         const updatedPosts = posts.filter((_, i) => i !== idx);
         setPosts(updatedPosts);
         toast({ title: "Supprimé", description: "Article supprimé." });
       } else {
+        const errorData = await res.text();
+        console.error("Failed to delete blog post:", errorData);
         toast({ title: "Erreur", description: "Échec de la suppression." });
       }
     } catch (error) {
@@ -576,6 +590,16 @@ export default function BlogAdminPage() {
                   >
                     <Pencil className="w-3 h-3 mr-1" />
                     Modifier
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => deletePost(idx)}
+                    className="border-red-300 hover:bg-red-100 text-red-600 text-xs"
+                    disabled={saving}
+                  >
+                    <Trash2 className="w-3 h-3 mr-1" />
+                    {saving ? "..." : "Supprimer"}
                   </Button>
                 </div>
               </div>
