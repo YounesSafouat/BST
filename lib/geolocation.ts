@@ -10,51 +10,76 @@ export type Region = 'france' | 'morocco' | 'international';
 
 export async function getUserLocation(): Promise<GeolocationData | null> {
   try {
-    // Use a free IP geolocation service
-    const response = await fetch('https://ipapi.co/json/', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    // Try multiple geolocation services for better accuracy
+    const services = [
+      'https://ipapi.co/json/',
+      'https://ipapi.com/ip_api.php?ip=',
+      'https://ipinfo.io/json',
+      'https://api.ipgeolocation.io/ipgeo?apiKey=free'
+    ];
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch location data');
+    for (const serviceUrl of services) {
+      try {
+        console.log('Trying geolocation service:', serviceUrl);
+        const response = await fetch(serviceUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Geolocation data received from', serviceUrl, ':', data);
+          
+          // Handle different response formats
+          let countryName, countryCode, region, city, timezone;
+          
+          if (serviceUrl.includes('ipapi.co')) {
+            countryName = data.country_name;
+            countryCode = data.country_code;
+            region = data.region;
+            city = data.city;
+            timezone = data.timezone;
+          } else if (serviceUrl.includes('ipapi.com')) {
+            countryName = data.country_name;
+            countryCode = data.country_code;
+            region = data.region;
+            city = data.city;
+            timezone = data.timezone;
+          } else if (serviceUrl.includes('ipinfo.io')) {
+            countryName = data.country;
+            countryCode = data.country;
+            region = data.region;
+            city = data.city;
+            timezone = data.timezone;
+          } else if (serviceUrl.includes('ipgeolocation.io')) {
+            countryName = data.country_name;
+            countryCode = data.country_code2;
+            region = data.state_prov;
+            city = data.city;
+            timezone = data.timezone.name;
+          }
+          
+          if (countryName && countryCode) {
+            return {
+              country: countryName,
+              countryCode: countryCode,
+              region: region,
+              city: city,
+              timezone: timezone,
+            };
+          }
+        }
+      } catch (serviceError) {
+        console.error('Error with service', serviceUrl, ':', serviceError);
+        continue; // Try next service
+      }
     }
-
-    const data = await response.json();
     
-    console.log('Geolocation data received:', data); // Debug log
-    
-    return {
-      country: data.country_name,
-      countryCode: data.country_code,
-      region: data.region,
-      city: data.city,
-      timezone: data.timezone,
-    };
+    throw new Error('All geolocation services failed');
   } catch (error) {
     console.error('Error fetching user location:', error);
-    
-    // Fallback: Try alternative geolocation service
-    try {
-      const fallbackResponse = await fetch('https://ipapi.com/ip_api.php?ip=');
-      if (fallbackResponse.ok) {
-        const fallbackData = await fallbackResponse.json();
-        console.log('Fallback geolocation data:', fallbackData);
-        
-        return {
-          country: fallbackData.country_name,
-          countryCode: fallbackData.country_code,
-          region: fallbackData.region,
-          city: fallbackData.city,
-          timezone: fallbackData.timezone,
-        };
-      }
-    } catch (fallbackError) {
-      console.error('Fallback geolocation also failed:', fallbackError);
-    }
-    
     return null;
   }
 }
@@ -64,23 +89,31 @@ export function getRegionFromCountry(countryCode: string): Region {
   
   console.log('Detecting region for country code:', countryCodeUpper); // Debug log
   
-  // Manual override for testing - you can temporarily set this to 'MA' to test Morocco
-  const manualOverride = 'MA'; // Uncomment this line and set to 'MA' to test Morocco
-  if (manualOverride) {
-    console.log('Manual override detected, using Morocco');
+  // Manual override for testing - set to 'MA' to force Morocco detection
+  // Uncomment the next line to force Morocco for testing
+  // const forceMorocco = true;
+  
+  // Morocco detection - handle various possible codes
+  if (countryCodeUpper === 'MA' || countryCodeUpper === 'MAR' || countryCodeUpper === 'MOROCCO') {
+    console.log('Region detected: Morocco');
     return 'morocco';
   }
   
-  if (countryCodeUpper === 'FR') {
+  // France detection
+  if (countryCodeUpper === 'FR' || countryCodeUpper === 'FRA' || countryCodeUpper === 'FRANCE') {
     console.log('Region detected: France');
     return 'france';
-  } else if (countryCodeUpper === 'MA') {
-    console.log('Region detected: Morocco');
-    return 'morocco';
-  } else {
+  }
+  
+  // If we get a valid country code but not France or Morocco, it's international
+  if (countryCodeUpper && countryCodeUpper.length >= 2) {
     console.log('Region detected: International (country code:', countryCodeUpper, ')');
     return 'international';
   }
+  
+  // Fallback to international if no valid country code
+  console.log('No valid country code, defaulting to International');
+  return 'international';
 }
 
 export function getLocalizedPricing(region: Region, basePrice: string): string {
