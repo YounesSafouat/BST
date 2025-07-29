@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Content from '@/models/Content';
 
+export const dynamic = 'force-dynamic';
+
 // GET: List or filter content
 export async function GET(req: NextRequest) {
   try {
