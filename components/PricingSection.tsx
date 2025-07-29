@@ -172,17 +172,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      return (
           <section className="py-20 bg-gray-50">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Location Indicator */}
-                    {!locationLoading && (
-                         <div className="text-center mb-8">
-                              <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border">
-                                   <MapPin className="w-4 h-4 text-gray-500" />
-                                   <span className="text-sm text-gray-600">
-                                        Tarifs affichés pour : <span className="font-semibold text-[var(--color-secondary)]">{getRegionDisplayName(userRegion)}</span>
-                                   </span>
-                              </div>
-                         </div>
-                    )}
+
 
                     <div className="text-center mb-12">
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
