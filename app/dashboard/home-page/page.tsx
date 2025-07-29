@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-import { Save, Eye, ArrowLeft, Plus, Trash2, X } from "lucide-react";
+import { Save, Eye, ArrowLeft, Plus, Trash2, X, GripVertical, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/home/Loader";
 
@@ -47,6 +47,14 @@ interface HomePageData {
                suffix: string;
                label: string;
           }>;
+          carousel?: {
+               companies: Array<{
+                    name: string;
+                    logo: string;
+                    url?: string;
+               }>;
+               speed?: number;
+          };
      };
      trustMetrics: Array<{
           number: number;
@@ -178,6 +186,37 @@ export default function HomePageDashboard() {
                const response = await fetch('/api/content/odoo');
                if (response.ok) {
                     const data = await response.json();
+
+                    // Initialize carousel data if it doesn't exist
+                    if (!data.hero.carousel) {
+                         data.hero.carousel = {
+                              companies: [],
+                              speed: 20
+                         };
+                    }
+
+                    // Initialize with default companies if no companies exist
+                    if (!data.hero.carousel.companies || data.hero.carousel.companies.length === 0) {
+                         const defaultCompanies = [
+                              { name: "FitnessPark", logo: "/ref/fitnespark-vectorized-white-3.svg" },
+                              { name: "IDC Pharma", logo: "/ref/idc_pharma-horizontal-white-vector.svg" },
+                              { name: "Yamaha Motors", logo: "/ref/yamaha_motors-horizontal-white-vector.svg" },
+                              { name: "Malt", logo: "/ref/malt-horizontal-white-vector.svg" },
+                              { name: "Optisam", logo: "/ref/optisam-horizontal-white-vector.svg" },
+                              { name: "Essem", logo: "/ref/essem-1-2.svg" },
+                              { name: "Jeanne d'Arc", logo: "/ref/jeannedarc-vectorized.svg" },
+                              { name: "Allisone", logo: "/ref/allisone-vectorized-white.svg" },
+                              { name: "Aicrafters", logo: "/ref/aicrafters-vectorized-white.svg" },
+                              { name: "Barthener", logo: "/ref/barthener-vectorized-white.svg" },
+                              { name: "Beks", logo: "/ref/beks-vectorized-white.svg" },
+                              { name: "Call Center Group", logo: "/ref/callcenter_group-vectorized-white.svg" },
+                              { name: "Chabi Chic", logo: "/ref/chabi-chic-vectorized-white.svg" },
+                              { name: "ICAT", logo: "/ref/icat-vectorized-white.svg" },
+                              { name: "Titre Français", logo: "/ref/titre-francais-vectorized-white.svg" },
+                         ];
+                         data.hero.carousel.companies = defaultCompanies;
+                    }
+
                     setHomeData(data);
                } else {
                     console.error('Failed to fetch home data');
@@ -383,6 +422,106 @@ export default function HomePageDashboard() {
           });
      };
 
+     const reorderCompanies = (fromIndex: number, toIndex: number) => {
+          if (!homeData || !homeData.hero.carousel?.companies) return;
+
+          const companies = [...homeData.hero.carousel.companies];
+          const [movedCompany] = companies.splice(fromIndex, 1);
+          companies.splice(toIndex, 0, movedCompany);
+
+          setHomeData({
+               ...homeData,
+               hero: {
+                    ...homeData.hero,
+                    carousel: {
+                         ...homeData.hero.carousel,
+                         companies
+                    }
+               }
+          });
+     };
+
+     const handleImageUpload = async (file: File, companyIndex: number) => {
+          try {
+               // For now, we'll use a simple approach - convert to base64
+               // In production, you'd want to upload to a CDN or cloud storage
+               const reader = new FileReader();
+               reader.onload = (e) => {
+                    const base64 = e.target?.result as string;
+                    if (homeData && homeData.hero.carousel?.companies) {
+                         const companies = [...homeData.hero.carousel.companies];
+                         companies[companyIndex] = { ...companies[companyIndex], logo: base64 };
+
+                         setHomeData({
+                              ...homeData,
+                              hero: {
+                                   ...homeData.hero,
+                                   carousel: {
+                                        ...homeData.hero.carousel,
+                                        companies
+                                   }
+                              }
+                         });
+                    }
+               };
+               reader.readAsDataURL(file);
+          } catch (error) {
+               console.error('Error uploading image:', error);
+               toast({
+                    title: "Erreur",
+                    description: "Erreur lors du téléchargement de l'image",
+                    variant: "destructive",
+               });
+          }
+     };
+
+     const handleVideoUpload = async (file: File) => {
+          try {
+               // For now, we'll use a simple approach - convert to base64
+               // In production, you'd want to upload to a CDN or cloud storage
+               const reader = new FileReader();
+               reader.onload = (e) => {
+                    const base64 = e.target?.result as string;
+                    if (homeData) {
+                         setHomeData({
+                              ...homeData,
+                              hero: {
+                                   ...homeData.hero,
+                                   videoUrl: base64
+                              }
+                         });
+                    }
+               };
+               reader.readAsDataURL(file);
+          } catch (error) {
+               console.error('Error uploading video:', error);
+               toast({
+                    title: "Erreur",
+                    description: "Erreur lors du téléchargement de la vidéo",
+                    variant: "destructive",
+               });
+          }
+     };
+
+     const getVideoEmbedUrl = (url: string): string => {
+          // YouTube
+          if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
+               const videoId = url.includes('youtube.com/watch')
+                    ? url.split('v=')[1]?.split('&')[0]
+                    : url.split('youtu.be/')[1]?.split('?')[0];
+               return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+          }
+
+          // Vimeo
+          if (url.includes('vimeo.com/')) {
+               const videoId = url.split('vimeo.com/')[1]?.split('?')[0];
+               return videoId ? `https://player.vimeo.com/video/${videoId}` : url;
+          }
+
+          // For other URLs, return as is
+          return url;
+     };
+
 
 
      if (loading) {
@@ -478,6 +617,70 @@ export default function HomePageDashboard() {
                                              rows={3}
                                         />
                                    </div>
+                                   <div>
+                                        <Label>Vidéo</Label>
+                                        <div className="flex gap-2">
+                                             <Input
+                                                  value={homeData.hero.videoUrl}
+                                                  onChange={(e) => updateField('hero.videoUrl', e.target.value)}
+                                                  placeholder="URL de la vidéo (YouTube, Vimeo, etc.) ou télécharger un fichier"
+                                                  className="flex-1"
+                                             />
+                                             <div className="relative">
+                                                  <input
+                                                       type="file"
+                                                       accept="video/*"
+                                                       onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                 handleVideoUpload(file);
+                                                            }
+                                                       }}
+                                                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                       aria-label="Télécharger une vidéo"
+                                                       title="Télécharger une vidéo"
+                                                  />
+                                                  <Button variant="outline" size="sm" className="h-10">
+                                                       <Upload className="h-4 w-4" />
+                                                  </Button>
+                                             </div>
+                                        </div>
+                                        <p className="text-xs text-gray-500 mt-1">
+                                             Vous pouvez utiliser une URL (YouTube, Vimeo) ou télécharger un fichier vidéo
+                                        </p>
+
+                                        {/* Video Preview */}
+                                        {homeData.hero.videoUrl && (
+                                             <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+                                                  <Label className="text-sm font-medium mb-2 block">Aperçu de la vidéo</Label>
+                                                  <div className="aspect-video bg-black rounded overflow-hidden">
+                                                       {homeData.hero.videoUrl.startsWith('data:') || homeData.hero.videoUrl.startsWith('blob:') ? (
+                                                            <video
+                                                                 src={homeData.hero.videoUrl}
+                                                                 controls
+                                                                 className="w-full h-full object-contain"
+                                                                 onError={(e) => {
+                                                                      e.currentTarget.style.display = 'none';
+                                                                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                                                 }}
+                                                            />
+                                                       ) : (
+                                                            <iframe
+                                                                 src={getVideoEmbedUrl(homeData.hero.videoUrl)}
+                                                                 title="Video preview"
+                                                                 className="w-full h-full"
+                                                                 frameBorder="0"
+                                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                 allowFullScreen
+                                                            />
+                                                       )}
+                                                       <div className="hidden w-full h-full flex items-center justify-center text-white text-sm">
+                                                            Impossible de charger la vidéo
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        )}
+                                   </div>
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Bouton principal - Texte</Label>
@@ -495,6 +698,160 @@ export default function HomePageDashboard() {
                                                   placeholder="Texte du bouton secondaire"
                                              />
                                         </div>
+                                   </div>
+
+                                   {/* Carousel Management */}
+                                   <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                             <Label className="text-lg font-semibold">Carousel des entreprises</Label>
+                                             <div className="flex gap-2">
+                                                  <Input
+                                                       type="number"
+                                                       value={homeData.hero.carousel?.speed || 20}
+                                                       onChange={(e) => updateField('hero.carousel.speed', parseInt(e.target.value) || 20)}
+                                                       placeholder="Vitesse (secondes)"
+                                                       className="w-24"
+                                                  />
+                                                  <Button
+                                                       onClick={() => {
+                                                            const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                            updateField('hero.carousel.companies', [
+                                                                 ...currentCompanies,
+                                                                 { name: 'Nouvelle entreprise', logo: '/ref/placeholder.svg', url: '' }
+                                                            ]);
+                                                       }}
+                                                       size="sm"
+                                                       className="flex items-center gap-2"
+                                                  >
+                                                       <Plus className="w-4 h-4" />
+                                                       Ajouter une entreprise
+                                                  </Button>
+                                             </div>
+                                        </div>
+
+                                        {(homeData.hero.carousel?.companies || []).map((company, index) => (
+                                             <Card key={index} className="p-4">
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <div className="flex items-center gap-2">
+                                                            <div className="cursor-move text-gray-400 hover:text-gray-600">
+                                                                 <GripVertical className="w-4 h-4" />
+                                                            </div>
+                                                            <h4 className="font-semibold">Entreprise {index + 1}</h4>
+                                                       </div>
+                                                       <div className="flex items-center gap-2">
+                                                            {index > 0 && (
+                                                                 <Button
+                                                                      onClick={() => reorderCompanies(index, index - 1)}
+                                                                      variant="ghost"
+                                                                      size="sm"
+                                                                      className="text-gray-600 hover:text-gray-800"
+                                                                 >
+                                                                      ↑
+                                                                 </Button>
+                                                            )}
+                                                            {index < (homeData.hero.carousel?.companies?.length || 0) - 1 && (
+                                                                 <Button
+                                                                      onClick={() => reorderCompanies(index, index + 1)}
+                                                                      variant="ghost"
+                                                                      size="sm"
+                                                                      className="text-gray-600 hover:text-gray-800"
+                                                                 >
+                                                                      ↓
+                                                                 </Button>
+                                                            )}
+                                                            <Button
+                                                                 onClick={() => {
+                                                                      const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                      updateField('hero.carousel.companies', currentCompanies.filter((_, i) => i !== index));
+                                                                 }}
+                                                                 variant="ghost"
+                                                                 size="sm"
+                                                                 className="text-red-600 hover:text-red-700"
+                                                            >
+                                                                 <Trash2 className="w-4 h-4" />
+                                                            </Button>
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                       <div>
+                                                            <Label>Nom de l'entreprise</Label>
+                                                            <Input
+                                                                 value={company.name}
+                                                                 onChange={(e) => {
+                                                                      const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                      const updatedCompanies = [...currentCompanies];
+                                                                      updatedCompanies[index] = { ...updatedCompanies[index], name: e.target.value };
+                                                                      updateField('hero.carousel.companies', updatedCompanies);
+                                                                 }}
+                                                                 placeholder="Nom de l'entreprise"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label>Logo</Label>
+                                                            <div className="flex gap-2">
+                                                                 <Input
+                                                                      value={company.logo}
+                                                                      onChange={(e) => {
+                                                                           const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                           const updatedCompanies = [...currentCompanies];
+                                                                           updatedCompanies[index] = { ...updatedCompanies[index], logo: e.target.value };
+                                                                           updateField('hero.carousel.companies', updatedCompanies);
+                                                                      }}
+                                                                      placeholder="URL du logo ou télécharger un fichier"
+                                                                      className="flex-1"
+                                                                 />
+                                                                 <div className="relative">
+                                                                      <input
+                                                                           type="file"
+                                                                           accept="image/*"
+                                                                           onChange={(e) => {
+                                                                                const file = e.target.files?.[0];
+                                                                                if (file) {
+                                                                                     handleImageUpload(file, index);
+                                                                                }
+                                                                           }}
+                                                                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                                           aria-label="Télécharger une image"
+                                                                           title="Télécharger une image"
+                                                                      />
+                                                                      <Button variant="outline" size="sm" className="h-10">
+                                                                           <Upload className="h-4 w-4" />
+                                                                      </Button>
+                                                                 </div>
+                                                            </div>
+                                                            <p className="text-xs text-gray-500 mt-1">
+                                                                 Vous pouvez utiliser une URL ou télécharger une image
+                                                            </p>
+                                                            {company.logo && (
+                                                                 <div className="mt-2 p-2 border rounded bg-gray-50">
+                                                                      <img
+                                                                           src={company.logo}
+                                                                           alt={company.name}
+                                                                           className="h-8 object-contain"
+                                                                           onError={(e) => {
+                                                                                e.currentTarget.style.display = 'none';
+                                                                           }}
+                                                                      />
+                                                                 </div>
+                                                            )}
+                                                       </div>
+                                                       <div>
+                                                            <Label>URL (optionnel)</Label>
+                                                            <Input
+                                                                 value={company.url || ''}
+                                                                 onChange={(e) => {
+                                                                      const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                      const updatedCompanies = [...currentCompanies];
+                                                                      updatedCompanies[index] = { ...updatedCompanies[index], url: e.target.value };
+                                                                      updateField('hero.carousel.companies', updatedCompanies);
+                                                                 }}
+                                                                 placeholder="URL de l'entreprise"
+                                                            />
+                                                       </div>
+                                                  </div>
+                                             </Card>
+                                        ))}
                                    </div>
                               </CardContent>
                          </Card>

@@ -8,7 +8,16 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
-    domains: ['localhost', 'agence-blackswan.com', '0.0.0.0', '212.227.28.148'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
   },
   output: 'standalone',
   experimental: {
