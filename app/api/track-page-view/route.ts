@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import PageView from '@/models/PageView';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   await dbConnect();
   const { path } = await req.json();

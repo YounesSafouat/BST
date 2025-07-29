@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb'
 import ContactSubmission from '@/models/ContactSubmission'
 import { HubSpotService, ContactData } from '@/lib/hubspot'
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   try {
     console.log('Contact API endpoint called')

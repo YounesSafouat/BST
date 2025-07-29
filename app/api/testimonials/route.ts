@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import mongoose from 'mongoose';
 
+export const dynamic = 'force-dynamic';
+
 const TestimonialSchema = new mongoose.Schema({
   author: String,
   role: String,
