@@ -111,13 +111,20 @@ export default function BlogAdminPage() {
   // Handle form field changes
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
+    console.log("Form field change:", { name, value, type, checked });
+    setForm((f) => {
+      const newForm = { ...f, [name]: type === "checkbox" ? checked : value };
+      console.log("Updated form:", newForm);
+      return newForm;
+    });
   }
 
 
 
   // Start editing a post
   function editPost(idx: number) {
+    console.log("Editing post at index:", idx);
+    console.log("Post data:", posts[idx]);
     setEditing(idx);
     setForm(posts[idx]);
     setIsModalOpen(true);
@@ -141,14 +148,29 @@ export default function BlogAdminPage() {
   async function savePost() {
     setSaving(true);
     try {
+      // Ensure all required fields are present and properly formatted
+      const formData = {
+        ...form,
+        date: form.date || new Date().toISOString().split('T')[0], // Ensure date is set
+        published: form.published !== undefined ? form.published : true,
+        featured: form.featured !== undefined ? form.featured : false,
+        testimonials: form.testimonials || [],
+        similarPosts: form.similarPosts || [],
+        targetRegions: form.targetRegions || ['france', 'morocco', 'international'],
+      };
+
+      console.log("Form data to save:", formData);
+
       if (editing === "new") {
         // Create new blog post
-        console.log("Creating new blog post:", form);
+        console.log("Creating new blog post:", formData);
         const res = await fetch("/api/blog", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(formData),
         });
+        console.log("Create response status:", res.status);
+
         if (res.ok) {
           const newPost = await res.json();
           console.log("New blog post created:", newPost);
@@ -163,23 +185,38 @@ export default function BlogAdminPage() {
       } else {
         // Update existing blog post
         const postToUpdate = posts[editing as number];
-        console.log("Updating blog post:", { postToUpdate, form });
-        const res = await fetch(`/api/blog?id=${postToUpdate._id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        });
-        if (res.ok) {
-          const updatedPost = await res.json();
-          console.log("Blog post updated:", updatedPost);
-          const updatedPosts = posts.map((p, i) => (i === editing ? { ...form, _id: postToUpdate._id } : p));
-          setPosts(updatedPosts);
-          toast({ title: "Succès", description: "Article mis à jour." });
-          cancelEdit();
-        } else {
-          const errorData = await res.text();
-          console.error("Failed to update blog post:", errorData);
-          toast({ title: "Erreur", description: "Échec de la mise à jour." });
+        console.log("Updating blog post:", { postToUpdate, formData });
+        console.log("Update URL:", `/api/blog?id=${postToUpdate._id}`);
+
+        try {
+          const res = await fetch(`/api/blog?id=${postToUpdate._id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          });
+          console.log("Update response status:", res.status);
+          console.log("Update response headers:", res.headers);
+
+          if (res.ok) {
+            const updatedPost = await res.json();
+            console.log("Blog post updated:", updatedPost);
+
+            // Update the posts array with the new data
+            const updatedPosts = posts.map((p, i) =>
+              i === editing ? { ...formData, _id: postToUpdate._id } : p
+            );
+            setPosts(updatedPosts);
+
+            toast({ title: "Succès", description: "Article mis à jour." });
+            cancelEdit();
+          } else {
+            const errorData = await res.text();
+            console.error("Failed to update blog post:", errorData);
+            toast({ title: "Erreur", description: "Échec de la mise à jour." });
+          }
+        } catch (fetchError) {
+          console.error("Fetch error:", fetchError);
+          toast({ title: "Erreur", description: "Erreur de connexion." });
         }
       }
     } catch (error) {
@@ -577,29 +614,29 @@ export default function BlogAdminPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setPreviewing(post)}
-                    className="border-gray-300 hover:bg-gray-100 text-xs"
+                    className="border-gray-300 hover:bg-gray-100 text-xs min-w-fit"
                   >
                     <Eye className="w-3 h-3 mr-1" />
-                    Prévisualiser
+                    <span className="whitespace-nowrap">Prévisualiser</span>
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => editPost(idx)}
-                    className="border-gray-300 hover:bg-gray-100 text-xs"
+                    className="border-gray-300 hover:bg-gray-100 text-xs min-w-fit"
                   >
                     <Pencil className="w-3 h-3 mr-1" />
-                    Modifier
+                    <span className="whitespace-nowrap">Modifier</span>
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => deletePost(idx)}
-                    className="border-red-300 hover:bg-red-100 text-red-600 text-xs"
+                    className="border-red-300 hover:bg-red-100 text-red-600 text-xs min-w-fit"
                     disabled={saving}
                   >
                     <Trash2 className="w-3 h-3 mr-1" />
-                    {saving ? "..." : "Supprimer"}
+                    <span className="whitespace-nowrap">{saving ? "..." : "Supprimer"}</span>
                   </Button>
                 </div>
               </div>
