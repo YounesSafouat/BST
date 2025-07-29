@@ -132,11 +132,11 @@ export default function SettingsPage() {
   const loadSettings = async () => {
     try {
       setLoading(true);
-      
+
       // Load main settings
       const response = await fetch('/api/content?type=settings');
       let mergedSettings = { ...emptySettings };
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.length > 0 && data[0].content) {
@@ -149,7 +149,7 @@ export default function SettingsPage() {
           };
         }
       }
-      
+
       // Load contact info separately
       try {
         const contactResponse = await fetch('/api/content?type=contact-info');
@@ -172,12 +172,12 @@ export default function SettingsPage() {
                 youtube: contactInfo.social?.youtube || "",
               },
             });
+          }
         }
-      }
       } catch (contactError) {
         console.error('Error loading contact info:', contactError);
       }
-      
+
       setSettings(mergedSettings);
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -200,32 +200,32 @@ export default function SettingsPage() {
 
     try {
       setSaving(true);
-      
+
       // First, try to get existing settings
       const getResponse = await fetch('/api/content?type=settings');
       let settingsId = null;
-      
+
       if (getResponse.ok) {
         const settingsData = await getResponse.json();
         if (settingsData.length > 0) {
           settingsId = settingsData[0]._id;
         }
       }
-      
+
       // Save main settings
       let response;
       if (settingsId) {
         // Update existing settings
         response = await fetch(`/api/content/${settingsId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'settings',
-          title: 'Paramètres du site',
-          description: 'Configuration générale du site',
-          content: settings
-        }),
-      });
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'settings',
+            title: 'Paramètres du site',
+            description: 'Configuration générale du site',
+            content: settings
+          }),
+        });
       } else {
         // Create new settings
         response = await fetch('/api/content', {
@@ -261,7 +261,7 @@ export default function SettingsPage() {
         });
 
         setHasChanges(false);
-        
+
         // If maintenance mode was toggled, show additional info
         if (settings.general.maintenanceMode) {
           toast({
@@ -291,14 +291,14 @@ export default function SettingsPage() {
       // Get existing contact-info content
       const contactInfoResponse = await fetch('/api/content?type=contact-info');
       let contactInfoId = null;
-      
+
       if (contactInfoResponse.ok) {
         const contactInfoData = await contactInfoResponse.json();
         if (contactInfoData.length > 0) {
           contactInfoId = contactInfoData[0]._id;
         }
       }
-      
+
       let response;
       if (contactInfoId) {
         // Update existing contact info
@@ -325,7 +325,7 @@ export default function SettingsPage() {
           })
         });
       }
-      
+
       if (!response.ok) {
         console.error('Failed to save contact info:', await response.text());
         throw new Error('Contact info save failed');
@@ -340,15 +340,15 @@ export default function SettingsPage() {
     try {
       // Fetch contact info from centralized object
       const contactInfoResponse = await fetch('/api/content?type=contact-info');
-      let contactInfo = null;
-      
+      let contactInfo: any = null;
+
       if (contactInfoResponse.ok) {
         const contactInfoData = await contactInfoResponse.json();
         if (contactInfoData.length > 0) {
           contactInfo = contactInfoData[0].content;
         }
       }
-      
+
       // Update structured data with new contact information
       const structuredData = {
         "@context": "https://schema.org",
@@ -375,7 +375,7 @@ export default function SettingsPage() {
           contactInfo?.social?.twitter
         ].filter(Boolean)
       };
-      
+
       // Get existing structured data
       const structuredResponse = await fetch('/api/content?type=structured-data');
       if (structuredResponse.ok) {
@@ -386,13 +386,13 @@ export default function SettingsPage() {
             ...existingStructured,
             content: structuredData
           };
-          
+
           const updateResponse = await fetch(`/api/content/${existingStructured._id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedStructured)
           });
-          
+
           if (!updateResponse.ok) {
             console.error('Failed to update structured data:', await updateResponse.text());
             throw new Error('Structured data update failed');
@@ -409,7 +409,7 @@ export default function SettingsPage() {
               content: structuredData
             })
           });
-          
+
           if (!createResponse.ok) {
             console.error('Failed to create structured data:', await createResponse.text());
             throw new Error('Structured data creation failed');
@@ -470,7 +470,7 @@ export default function SettingsPage() {
     setHasChanges(true);
     setShowMaintenanceDialog(false);
     setPendingMaintenanceMode(false);
-    
+
     toast({
       title: "Mode maintenance activé",
       description: "Tous les visiteurs seront redirigés vers la page de maintenance",
@@ -554,7 +554,7 @@ export default function SettingsPage() {
               Modifications non sauvegardées
             </Badge>
           )}
-          <Button 
+          <Button
             variant="outline"
             onClick={() => {
               setSettings(emptySettings);
@@ -565,8 +565,8 @@ export default function SettingsPage() {
           >
             Réinitialiser
           </Button>
-          <Button 
-            onClick={saveSettings} 
+          <Button
+            onClick={saveSettings}
             disabled={saving || !hasChanges}
             className="bg-[--color-black] hover:bg-primary-dark text-white"
           >
@@ -677,17 +677,17 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <div className="flex items-center space-x-3">
-                <Switch
-                  id="maintenance-mode"
-                  checked={settings.general.maintenanceMode}
-                  onCheckedChange={(checked) => updateSetting('general', 'maintenanceMode', checked)}
-                />
-                <div>
+                  <Switch
+                    id="maintenance-mode"
+                    checked={settings.general.maintenanceMode}
+                    onCheckedChange={(checked) => updateSetting('general', 'maintenanceMode', checked)}
+                  />
+                  <div>
                     <Label htmlFor="maintenance-mode" className="text-base font-medium">Mode maintenance</Label>
                     <p className="text-sm text-gray-600">
                       Activez cette option pour rediriger tous les visiteurs vers une page de maintenance
                     </p>
-                </div>
+                  </div>
                 </div>
                 {settings.general.maintenanceMode && (
                   <div className="flex flex-col gap-2">
@@ -702,7 +702,7 @@ export default function SettingsPage() {
                     >
                       Voir la page de maintenance
                     </Button>
-              </div>
+                  </div>
                 )}
               </div>
             </CardContent>
@@ -903,57 +903,57 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                             <div>
-                 <Label>Téléphone</Label>
-                 <Input
-                   value={contactInfo.phone}
-                   onChange={(e) => updateContactInfoField('phone', e.target.value)}
-                   placeholder="+212 693 99 34 19"
-                 />
-               </div>
-               <div>
-                 <Label>Email</Label>
-                 <Input
-                   value={contactInfo.email}
-                   onChange={(e) => updateContactInfoField('email', e.target.value)}
-                   placeholder="contact@blackswantechnology.ma"
-                 />
-               </div>
-               <div>
-                 <Label>Adresse</Label>
-                 <Textarea
-                   value={contactInfo.address}
-                   onChange={(e) => updateContactInfoField('address', e.target.value)}
-                   placeholder="Twin Center"
-                   rows={3}
-                 />
-               </div>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                 <div>
-                   <Label>Ville</Label>
-                   <Input
-                     value={contactInfo.city}
-                     onChange={(e) => updateContactInfoField('city', e.target.value)}
-                     placeholder="Casablanca"
-                   />
-                 </div>
-                 <div>
-                   <Label>Pays</Label>
-                   <Input
-                     value={contactInfo.country}
-                     onChange={(e) => updateContactInfoField('country', e.target.value)}
-                     placeholder="Maroc"
-                   />
-                 </div>
-               </div>
-               <div>
-                 <Label>Code postal</Label>
-                 <Input
-                   value={contactInfo.postalCode}
-                   onChange={(e) => updateContactInfoField('postalCode', e.target.value)}
-                   placeholder="20000"
-                 />
-               </div>
+              <div>
+                <Label>Téléphone</Label>
+                <Input
+                  value={contactInfo.phone}
+                  onChange={(e) => updateContactInfoField('phone', e.target.value)}
+                  placeholder="+212 693 99 34 19"
+                />
+              </div>
+              <div>
+                <Label>Email</Label>
+                <Input
+                  value={contactInfo.email}
+                  onChange={(e) => updateContactInfoField('email', e.target.value)}
+                  placeholder="contact@blackswantechnology.ma"
+                />
+              </div>
+              <div>
+                <Label>Adresse</Label>
+                <Textarea
+                  value={contactInfo.address}
+                  onChange={(e) => updateContactInfoField('address', e.target.value)}
+                  placeholder="Twin Center"
+                  rows={3}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label>Ville</Label>
+                  <Input
+                    value={contactInfo.city}
+                    onChange={(e) => updateContactInfoField('city', e.target.value)}
+                    placeholder="Casablanca"
+                  />
+                </div>
+                <div>
+                  <Label>Pays</Label>
+                  <Input
+                    value={contactInfo.country}
+                    onChange={(e) => updateContactInfoField('country', e.target.value)}
+                    placeholder="Maroc"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>Code postal</Label>
+                <Input
+                  value={contactInfo.postalCode}
+                  onChange={(e) => updateContactInfoField('postalCode', e.target.value)}
+                  placeholder="20000"
+                />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -968,45 +968,45 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-                             <div>
-                 <Label>Facebook</Label>
-                 <Input
-                   value={contactInfo.social.facebook}
-                   onChange={(e) => updateContactInfoField('social.facebook', e.target.value)}
-                   placeholder="https://facebook.com/blackswantechnology"
-                 />
-               </div>
-               <div>
-                 <Label>Twitter</Label>
-                 <Input
-                   value={contactInfo.social.twitter}
-                   onChange={(e) => updateContactInfoField('social.twitter', e.target.value)}
-                   placeholder="https://twitter.com/blackswantech"
-                 />
-               </div>
-               <div>
-                 <Label>LinkedIn</Label>
-                 <Input
-                   value={contactInfo.social.linkedin}
-                   onChange={(e) => updateContactInfoField('social.linkedin', e.target.value)}
-                   placeholder="https://linkedin.com/company/blackswantechnology"
-                 />
-               </div>
-               <div>
-                 <Label>Instagram</Label>
-                 <Input
-                   value={contactInfo.social.instagram}
-                   onChange={(e) => updateContactInfoField('social.instagram', e.target.value)}
-                   placeholder="https://instagram.com/blackswantechnology"
-                 />
-               </div>
-               <div>
-                 <Label>YouTube</Label>
-                 <Input
-                   value={contactInfo.social.youtube}
-                   onChange={(e) => updateContactInfoField('social.youtube', e.target.value)}
-                   placeholder="https://youtube.com/@blackswantechnology"
-                 />
+              <div>
+                <Label>Facebook</Label>
+                <Input
+                  value={contactInfo.social.facebook}
+                  onChange={(e) => updateContactInfoField('social.facebook', e.target.value)}
+                  placeholder="https://facebook.com/blackswantechnology"
+                />
+              </div>
+              <div>
+                <Label>Twitter</Label>
+                <Input
+                  value={contactInfo.social.twitter}
+                  onChange={(e) => updateContactInfoField('social.twitter', e.target.value)}
+                  placeholder="https://twitter.com/blackswantech"
+                />
+              </div>
+              <div>
+                <Label>LinkedIn</Label>
+                <Input
+                  value={contactInfo.social.linkedin}
+                  onChange={(e) => updateContactInfoField('social.linkedin', e.target.value)}
+                  placeholder="https://linkedin.com/company/blackswantechnology"
+                />
+              </div>
+              <div>
+                <Label>Instagram</Label>
+                <Input
+                  value={contactInfo.social.instagram}
+                  onChange={(e) => updateContactInfoField('social.instagram', e.target.value)}
+                  placeholder="https://instagram.com/blackswantechnology"
+                />
+              </div>
+              <div>
+                <Label>YouTube</Label>
+                <Input
+                  value={contactInfo.social.youtube}
+                  onChange={(e) => updateContactInfoField('social.youtube', e.target.value)}
+                  placeholder="https://youtube.com/@blackswantechnology"
+                />
               </div>
             </CardContent>
           </Card>
@@ -1022,7 +1022,7 @@ export default function SettingsPage() {
               Activer le mode maintenance ?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action va rediriger tous les visiteurs vers une page de maintenance. 
+              Cette action va rediriger tous les visiteurs vers une page de maintenance.
               Seuls les administrateurs pourront accéder au site normalement.
               <br /><br />
               Êtes-vous sûr de vouloir activer le mode maintenance ?
@@ -1032,7 +1032,7 @@ export default function SettingsPage() {
             <AlertDialogCancel onClick={cancelMaintenanceMode}>
               Annuler
             </AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={confirmMaintenanceMode}
               className="bg-red-600 hover:bg-red-700"
             >

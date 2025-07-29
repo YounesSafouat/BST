@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     console.log('Successfully saved to MongoDB')
 
     // Integrate with HubSpot CRM
-    let hubspotResult = null
+    let hubspotResult: any = null
     try {
       console.log('Attempting HubSpot integration...')
       hubspotResult = await HubSpotService.upsertContact(contactData)
