@@ -13,20 +13,28 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
     // Try multiple geolocation services for better accuracy
     const services = [
       'https://ipapi.co/json/',
-      'https://ipapi.com/ip_api.php?ip=',
       'https://ipinfo.io/json',
-      'https://api.ipgeolocation.io/ipgeo?apiKey=free'
+      'https://api.ipgeolocation.io/ipgeo?apiKey=free',
+      'https://ipapi.com/ip_api.php?ip='
     ];
 
     for (const serviceUrl of services) {
       try {
         console.log('Trying geolocation service:', serviceUrl);
+        
+        // Add timeout to prevent hanging requests
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        
         const response = await fetch(serviceUrl, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
           },
+          signal: controller.signal,
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
@@ -36,12 +44,6 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
           let countryName, countryCode, region, city, timezone;
           
           if (serviceUrl.includes('ipapi.co')) {
-            countryName = data.country_name;
-            countryCode = data.country_code;
-            region = data.region;
-            city = data.city;
-            timezone = data.timezone;
-          } else if (serviceUrl.includes('ipapi.com')) {
             countryName = data.country_name;
             countryCode = data.country_code;
             region = data.region;
@@ -58,7 +60,13 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
             countryCode = data.country_code2;
             region = data.state_prov;
             city = data.city;
-            timezone = data.timezone.name;
+            timezone = data.timezone?.name;
+          } else if (serviceUrl.includes('ipapi.com')) {
+            countryName = data.country_name;
+            countryCode = data.country_code;
+            region = data.region;
+            city = data.city;
+            timezone = data.timezone;
           }
           
           if (countryName && countryCode) {
@@ -77,6 +85,32 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
       }
     }
     
+    // If all services fail, try a simple fallback
+    try {
+      console.log('Trying fallback geolocation service');
+      const fallbackResponse = await fetch('https://httpbin.org/ip', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+      
+      if (fallbackResponse.ok) {
+        const fallbackData = await fallbackResponse.json();
+        console.log('Fallback IP data:', fallbackData);
+        // Return a default international response
+        return {
+          country: 'Unknown',
+          countryCode: 'XX',
+          region: 'Unknown',
+          city: 'Unknown',
+          timezone: 'UTC',
+        };
+      }
+    } catch (fallbackError) {
+      console.error('Fallback geolocation also failed:', fallbackError);
+    }
+    
     throw new Error('All geolocation services failed');
   } catch (error) {
     console.error('Error fetching user location:', error);
@@ -88,10 +122,6 @@ export function getRegionFromCountry(countryCode: string): Region {
   const countryCodeUpper = countryCode.toUpperCase();
   
   console.log('Detecting region for country code:', countryCodeUpper); // Debug log
-  
-  // Manual override for testing - set to 'MA' to force Morocco detection
-  // Uncomment the next line to force Morocco for testing
-  // const forceMorocco = true;
   
   // Morocco detection - handle various possible codes
   if (countryCodeUpper === 'MA' || countryCodeUpper === 'MAR' || countryCodeUpper === 'MOROCCO') {
@@ -106,7 +136,7 @@ export function getRegionFromCountry(countryCode: string): Region {
   }
   
   // If we get a valid country code but not France or Morocco, it's international
-  if (countryCodeUpper && countryCodeUpper.length >= 2) {
+  if (countryCodeUpper && countryCodeUpper.length >= 2 && countryCodeUpper !== 'XX') {
     console.log('Region detected: International (country code:', countryCodeUpper, ')');
     return 'international';
   }

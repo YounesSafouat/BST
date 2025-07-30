@@ -33,10 +33,22 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      useEffect(() => {
           const detectUserLocation = async () => {
                try {
+                    // Log device information for debugging
+                    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                    console.log('Device detection:', {
+                         userAgent: navigator.userAgent,
+                         isMobile: isMobile,
+                         platform: navigator.platform,
+                         language: navigator.language
+                    });
+
                     const location = await getUserLocation();
                     if (location) {
                          const region = getRegionFromCountry(location.countryCode);
                          setUserRegion(region);
+                         console.log('User location detected:', location, 'Region:', region);
+                    } else {
+                         console.log('No location detected, using default region');
                     }
                } catch (error) {
                     console.error('Error detecting user location:', error);

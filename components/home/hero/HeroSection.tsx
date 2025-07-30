@@ -111,31 +111,31 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
   };
 
   return (
-    <section id="hero" className="relative flex flex-col justify-center overflow-hidden">
+    <section id="hero" className="relative overflow-hidden">
       {/* Background blur elements - responsive positioning */}
       <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative w-full flex-1 flex flex-col justify-center py-8 sm:py-12 pt-16 sm:pt-12">
+      <div className="relative w-full py-1 pt-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-2 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="space-y-6 sm:space-y-8 order-2 lg:order-1"
+              className="space-y-2 order-2 lg:order-1"
             >
-              <div className="space-y-4 sm:space-y-6">
+              <div className="space-y-2">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center gap-2 mb-4 sm:mb-0"
+                  className="flex items-center gap-2 mb-1"
                 >
                   <Badge
                     variant="outline"
-                    className="border-gray-300 text-gray-600 px-3 py-1.5 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="border-gray-300 text-gray-600 px-2 py-0.5 text-xs bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
                   >
                     {heroData.badge || 'Partenaire Silver Odoo'}
@@ -146,7 +146,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-none tracking-tighter"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 leading-none tracking-tighter"
                   style={{ lineHeight: '1.1' }}
                 >
                   {heroData.headline}
@@ -156,7 +156,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-sm sm:text-base lg:text-lg text-gray-600 leading-relaxed max-w-lg"
+                  className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-lg"
                 >
                   {heroData.description}
                 </motion.p>
@@ -166,20 +166,20 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4"
+                className="flex flex-col sm:flex-row gap-2"
               >
                 <Button
-                  size="lg"
-                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold group rounded-full w-full sm:w-auto"
+                  size="sm"
+                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-2 py-1 text-sm font-semibold group rounded-full w-full sm:w-auto"
                   onClick={() => scrollToSection('#contact')}
                 >
                   {heroData.ctaPrimary.text}
                   {getIconComponent(heroData.ctaPrimary.icon)}
                 </Button>
                 <Button
-                  size="lg"
+                  size="sm"
                   variant="outline"
-                  className="px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto"
+                  className="px-2 py-1 text-sm font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto"
                   onClick={() => scrollToSection('#modules')}
                 >
                   {heroData.ctaSecondary.text}
@@ -195,8 +195,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               className="order-1 lg:order-2"
             >
               <div className="relative">
-                <div className="bg-white/90 backdrop-blur-sm p-3 sm:p-4 lg:p-6 rounded-2xl sm:rounded-3xl shadow-xl lg:shadow-2xl">
-                  <div className="relative aspect-video bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-xl sm:rounded-2xl overflow-hidden">
+                <div className="bg-white/90 backdrop-blur-sm p-1 rounded-lg shadow-md">
+                  <div className="relative aspect-[2/1] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-md overflow-hidden">
                     {/* Video element */}
                     <video
                       ref={videoRef}
@@ -211,21 +211,21 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     {/* Sound toggle button - only on larger screens */}
                     <button
                       onClick={toggleSound}
-                      className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-black/50 hover:bg-black/70 text-white p-1.5 sm:p-2 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
+                      className="absolute top-1 right-1 bg-black/50 hover:bg-black/70 text-white p-0.5 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
                     >
                       {isMuted ? (
-                        <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <VolumeX className="w-2 h-2" />
                       ) : (
-                        <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <Volume2 className="w-2 h-2" />
                       )}
                     </button>
                   </div>
 
                   {/* Small stats overlay - responsive positioning */}
-                  <div className="absolute -bottom-2 -right-2 sm:-bottom-3 sm:-right-3 lg:-bottom-4 lg:-right-4 bg-white rounded-lg sm:rounded-xl shadow-lg p-2 sm:p-3 lg:p-4 border">
+                  <div className="absolute -bottom-1 -right-1 bg-white rounded-sm shadow-sm p-1 border">
                     <div className="text-center">
-                      <div className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-main)]">3 ans</div>
-                      <div className="text-xs sm:text-sm text-gray-600">d'expertise</div>
+                      <div className="text-xs font-bold text-[var(--color-main)]">3 ans</div>
+                      <div className="text-xs text-gray-600">d'expertise</div>
                     </div>
                   </div>
                 </div>
@@ -236,7 +236,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="bg-white pt-[5em]">
+      <div className="bg-white pt-2 sm:pt-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData.carousel?.companies}

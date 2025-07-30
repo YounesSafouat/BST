@@ -88,8 +88,9 @@ export default function BlogPage() {
     let filtered = (blogData.content?.blogPosts || []).filter((post: any) => post.published === true);
     console.log("Posts after published filter:", filtered.length);
 
-    // Filter by user region - temporarily disabled for debugging
-    // filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
+    // Filter by user region
+    filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
+    console.log("Posts after region filter:", filtered.length, "for region:", userRegion);
 
     // Filter by search term
     if (searchTerm) {
@@ -161,6 +162,11 @@ export default function BlogPage() {
             <p className="text-xl text-color-gray max-w-3xl mx-auto leading-relaxed">
               Guides pratiques, études de cas et insights sur Odoo ERP, HubSpot CRM et la transformation digitale.
             </p>
+            {!locationLoading && (
+              <div className="mt-4 text-sm text-color-gray">
+                Contenu affiché pour : <span className="font-semibold text-color-main">{getRegionDisplayName(userRegion)}</span>
+              </div>
+            )}
           </div>
 
           {/* Search Section */}
