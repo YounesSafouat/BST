@@ -35,23 +35,25 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                try {
                     // Log device information for debugging
                     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                    console.log('Device detection:', {
+                    console.log('Pricing Section - Device detection:', {
                          userAgent: navigator.userAgent,
                          isMobile: isMobile,
                          platform: navigator.platform,
-                         language: navigator.language
+                         language: navigator.language,
+                         screenSize: `${window.screen.width}x${window.screen.height}`,
+                         viewport: `${window.innerWidth}x${window.innerHeight}`
                     });
 
                     const location = await getUserLocation();
                     if (location) {
                          const region = getRegionFromCountry(location.countryCode);
                          setUserRegion(region);
-                         console.log('User location detected:', location, 'Region:', region);
+                         console.log('Pricing Section - User location detected:', location, 'Region:', region);
                     } else {
-                         console.log('No location detected, using default region');
+                         console.log('Pricing Section - No location detected, using default region');
                     }
                } catch (error) {
-                    console.error('Error detecting user location:', error);
+                    console.error('Pricing Section - Error detecting user location:', error);
                } finally {
                     setLocationLoading(false);
                }
@@ -147,11 +149,25 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
 
      // Filter plans based on user region
      const filteredPlans = plans.filter(plan => {
+          console.log('Checking plan:', plan.name, 'targetRegions:', plan.targetRegions, 'userRegion:', userRegion);
+
+          // If no targetRegions specified, show to all regions (this is the key fix)
           if (!plan.targetRegions || plan.targetRegions.length === 0) {
-               return true; // Show all if no specific regions defined
+               console.log('Plan has no targetRegions, showing to all:', plan.name);
+               return true;
           }
-          return plan.targetRegions.includes(userRegion) || plan.targetRegions.includes('all');
+
+          // Check if plan is available for user's region
+          const isAvailable = plan.targetRegions.includes(userRegion) || plan.targetRegions.includes('all');
+          console.log('Plan availability for', userRegion, ':', isAvailable, plan.name);
+
+          return isAvailable;
      });
+
+     // If no plans are filtered, show all plans (temporary fix for API data issues)
+     const finalPlans = filteredPlans.length > 0 ? filteredPlans : plans;
+     console.log('Final plans count:', finalPlans.length, 'for region:', userRegion);
+     console.log('All plans:', plans.map(p => ({ name: p.name, targetRegions: p.targetRegions })));
 
      const getRegionDisplayName = (region: Region): string => {
           switch (region) {
@@ -196,10 +212,17 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                               {description}
                          </p>
+
+                         {/* Region indicator for debugging */}
+                         {!locationLoading && (
+                              <div className="mt-4 text-sm text-gray-500">
+                                   Tarifs affichés pour : <span className="font-semibold text-[var(--color-secondary)]">{getRegionDisplayName(userRegion)}</span>
+                              </div>
+                         )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                         {filteredPlans.map((plan, index) => {
+                         {finalPlans.map((plan, index) => {
                               const localizedPrice = getLocalizedPricing(userRegion, plan.price);
                               const currency = getLocalizedCurrency(userRegion);
 
@@ -248,7 +271,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                     </div>
 
                     {/* No plans available message */}
-                    {filteredPlans.length === 0 && (
+                    {finalPlans.length === 0 && (
                          <div className="text-center py-12">
                               <p className="text-gray-500 text-lg">
                                    Aucun tarif disponible pour votre région actuellement.

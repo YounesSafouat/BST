@@ -10,26 +10,41 @@ export type Region = 'france' | 'morocco' | 'international';
 
 export async function getUserLocation(): Promise<GeolocationData | null> {
   try {
-    // Try multiple geolocation services for better accuracy
-    const services = [
+    // Detect if we're on mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    console.log('Device detection - Mobile:', isMobile, 'User Agent:', navigator.userAgent);
+
+    // For mobile devices, try simpler services first
+    const mobileServices = [
+      'https://ipinfo.io/json',
+      'https://ipapi.co/json/',
+      'https://api.ipgeolocation.io/ipgeo?apiKey=free'
+    ];
+
+    // For desktop, use the full service list
+    const desktopServices = [
       'https://ipapi.co/json/',
       'https://ipinfo.io/json',
       'https://api.ipgeolocation.io/ipgeo?apiKey=free',
       'https://ipapi.com/ip_api.php?ip='
     ];
 
+    const services = isMobile ? mobileServices : desktopServices;
+
     for (const serviceUrl of services) {
       try {
-        console.log('Trying geolocation service:', serviceUrl);
+        console.log('Trying geolocation service:', serviceUrl, 'on mobile:', isMobile);
         
-        // Add timeout to prevent hanging requests
+        // Add timeout to prevent hanging requests (shorter timeout for mobile)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        const timeout = isMobile ? 3000 : 5000; // 3 seconds for mobile, 5 for desktop
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
         
         const response = await fetch(serviceUrl, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'User-Agent': isMobile ? 'Mobile-Browser/1.0' : 'Desktop-Browser/1.0',
           },
           signal: controller.signal,
         });

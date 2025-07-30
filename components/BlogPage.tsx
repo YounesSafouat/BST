@@ -32,13 +32,27 @@ export default function BlogPage() {
   useEffect(() => {
     const detectUserLocation = async () => {
       try {
+        // Log device information for debugging
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        console.log('Blog Page - Device detection:', {
+          userAgent: navigator.userAgent,
+          isMobile: isMobile,
+          platform: navigator.platform,
+          language: navigator.language,
+          screenSize: `${window.screen.width}x${window.screen.height}`,
+          viewport: `${window.innerWidth}x${window.innerHeight}`
+        });
+
         const location = await getUserLocation();
         if (location) {
           const region = getRegionFromCountry(location.countryCode);
           setUserRegion(region);
+          console.log('Blog Page - User location detected:', location, 'Region:', region);
+        } else {
+          console.log('Blog Page - No location detected, using default region');
         }
       } catch (error) {
-        console.error('Error detecting user location:', error);
+        console.error('Blog Page - Error detecting user location:', error);
       } finally {
         setLocationLoading(false);
       }
