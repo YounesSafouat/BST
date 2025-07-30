@@ -51,6 +51,20 @@ export default function Footer() {
     await new Promise(resolve => setTimeout(resolve, 2000))
   }
 
+  const handleLinkClick = (url: string) => {
+    // Check if it's an external route (starts with /)
+    if (url.startsWith('/')) {
+      // For external routes like /blog, /about, etc.
+      window.location.href = url;
+    } else {
+      // For internal anchor links like #hero, #contact, etc.
+      const element = document.querySelector(url);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
   return (
     <footer className="bg-gray-900 text-white pt-20 pb-10 px-6 lg:px-8 relative z-10">
       <div className="max-w-7xl mx-auto">
@@ -112,12 +126,7 @@ export default function Footer() {
               {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
                   <button
-                    onClick={() => {
-                      const element = document.querySelector(link.url);
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
+                    onClick={() => handleLinkClick(link.url)}
                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm w-full text-left"
                   >
                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
