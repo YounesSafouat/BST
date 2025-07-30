@@ -211,12 +211,12 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     {/* Sound toggle button - only on larger screens */}
                     <button
                       onClick={toggleSound}
-                      className="absolute top-1 right-1 bg-black/50 hover:bg-black/70 text-white p-0.5 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
+                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
                     >
                       {isMuted ? (
-                        <VolumeX className="w-2 h-2" />
+                        <VolumeX className="w-4 h-4" />
                       ) : (
-                        <Volume2 className="w-2 h-2" />
+                        <Volume2 className="w-4 h-4" />
                       )}
                     </button>
                   </div>
@@ -236,7 +236,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="bg-white pt-2 sm:pt-3">
+      <div className="bg-white pt-8 sm:pt-12 md:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData.carousel?.companies}
