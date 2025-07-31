@@ -142,6 +142,8 @@ export async function PUT(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
     console.log("Blog API: ID from params:", id);
+    console.log("Blog API: ID length:", id?.length);
+    console.log("Blog API: Full URL:", req.url);
     
     if (!id) {
       console.log("Blog API: Missing id parameter");

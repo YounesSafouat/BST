@@ -342,6 +342,8 @@ export default function BlogAdminPage() {
         const postToUpdate = filteredPosts[editing as number];
         console.log("Updating blog post:", { postToUpdate, formData });
         console.log("Update URL:", `/api/blog?id=${postToUpdate._id}`);
+        console.log("Full ID being sent:", postToUpdate._id);
+        console.log("ID length:", postToUpdate._id?.length);
 
         try {
           const res = await fetch(`/api/blog?id=${postToUpdate._id}`, {
