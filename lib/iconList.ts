@@ -73,6 +73,7 @@ import {
      { value: 'Linkedin', label: 'LinkedIn', icon: Linkedin },
      { value: 'Instagram', label: 'Instagram', icon: Instagram },
      { value: 'Youtube', label: 'YouTube', icon: Youtube },
+     { value: 'MessageSquare', label: 'WhatsApp', icon: MessageSquare },
      
      // Files & Data
      { value: 'Download', label: 'Download', icon: Download },

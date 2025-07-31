@@ -25,7 +25,8 @@ import {
   Briefcase,
   Award,
   Shield,
-  Youtube
+  Youtube,
+  MessageSquare
 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import Loader from '@/components/home/Loader';
@@ -100,7 +101,8 @@ const IconMap = {
   Twitter,
   Linkedin,
   Instagram,
-  Youtube
+  Youtube,
+  MessageSquare
 };
 const colorMap: any = {
   facebook: '#1877f2',
@@ -108,6 +110,7 @@ const colorMap: any = {
   linkedin: '#0077b5',
   instagram: '#e1306c',
   youtube: '#ff0000',
+  whatsapp: '#25d366'
 };
 
 export default function FooterDashboard() {
@@ -169,6 +172,8 @@ export default function FooterDashboard() {
       const response = await fetch("/api/content?type=footer")
       if (response.ok) {
         const data = await response.json()
+        console.log("Footer API response:", data)
+
         if (data && data.length > 0 && data[0].content) {
           // Deep merge the API response with default structure to ensure all nested objects exist
           const apiData = data[0].content
@@ -212,13 +217,20 @@ export default function FooterDashboard() {
               ...apiData.social
             }
           }))
+        } else {
+          console.log("No footer data found, using defaults")
+          // If no footer data exists, we'll keep the default structure
         }
+      } else {
+        console.error("Footer API response not ok:", response.status)
       }
 
       // Fetch contact info from centralized object
       const contactResponse = await fetch("/api/content?type=contact-info")
       if (contactResponse.ok) {
         const contactData = await contactResponse.json()
+        console.log("Contact API response:", contactData)
+
         if (contactData && contactData.length > 0) {
           const contactInfo = contactData[0].content || {}
           const socialInfo = contactInfo.social || {}
@@ -246,10 +258,13 @@ export default function FooterDashboard() {
               twitter: { icon: "Twitter", color: "#1da1f2", url: socialInfo.twitter || "" },
               linkedin: { icon: "Linkedin", color: "#0077b5", url: socialInfo.linkedin || "" },
               instagram: { icon: "Instagram", color: "#e1306c", url: socialInfo.instagram || "" },
-              youtube: { icon: "Youtube", color: "#ff0000", url: socialInfo.youtube || "" }
+              youtube: { icon: "Youtube", color: "#ff0000", url: socialInfo.youtube || "" },
+              whatsapp: { icon: "MessageSquare", color: "#25d366", url: socialInfo.whatsapp || "" }
             }
           }))
         }
+      } else {
+        console.error("Contact API response not ok:", contactResponse.status)
       }
     } catch (error) {
       console.error("Error fetching footer data:", error)
@@ -680,7 +695,26 @@ export default function FooterDashboard() {
               />
             </div>
             <div className="space-y-3">
-              <Label>Réseaux</Label>
+              <div className="flex justify-between items-center">
+                <Label>Réseaux</Label>
+                <Button
+                  onClick={() => {
+                    const newSocial = { ...footerData.social };
+                    newSocial.whatsapp = {
+                      icon: "MessageSquare",
+                      color: "#25d366",
+                      url: ""
+                    };
+                    updateField('social', newSocial);
+                  }}
+                  size="sm"
+                  variant="outline"
+                  disabled={!!footerData.social?.whatsapp}
+                >
+                  <MessageSquare className="h-4 w-4 mr-1" />
+                  Ajouter WhatsApp
+                </Button>
+              </div>
               {/* Display each social network as a row with icon, color, name, and URL */}
               {Object.entries(footerData.social || {})
                 .filter(([key, value]) => key !== 'title' && value && typeof value === 'object' && 'icon' in value && 'color' in value && 'url' in value)
