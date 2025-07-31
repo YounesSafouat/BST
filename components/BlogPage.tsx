@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin, FileText } from "lucide-react"
+import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin, FileText, Award, Users, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { getUserLocation, getRegionFromCountry, shouldShowContent, type Region } from "@/lib/geolocation"
@@ -28,7 +28,6 @@ function isBlogReleased(post: any): boolean {
 export default function BlogPage() {
   // All hooks at the top!
   const [blogData, setBlogData] = useState<any>(null);
-  const [blogSettings, setBlogSettings] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
   const [loading, setLoading] = useState(true);
   const [scrollY, setScrollY] = useState(0);
@@ -85,14 +84,7 @@ export default function BlogPage() {
         console.log("Blog data received:", data);
         setBlogData({ content: { blogPosts: data } });
 
-        // Fetch blog settings for popular articles
-        const settingsUrl = baseUrl
-          ? `${baseUrl}/api/blog?settings=true`
-          : "/api/blog?settings=true";
-        const settingsRes = await fetch(settingsUrl);
-        const settingsData = await settingsRes.json();
-        console.log("Blog settings received:", settingsData);
-        setBlogSettings(settingsData);
+
       } catch (err) {
         console.error("Failed to fetch blog data", err);
       } finally {
@@ -194,28 +186,7 @@ export default function BlogPage() {
   };
 
   // Get popular articles (for now, just the most recent 3, but this could be enhanced with view counts)
-  const getPopularArticles = () => {
-    // First, try to get CMS-selected popular articles from global settings
-    if (blogSettings && blogSettings.popularArticles && blogSettings.popularArticles.length > 0) {
-      // Get the actual post objects for the selected popular articles
-      const popularPostSlugs = [...new Set(blogSettings.popularArticles)]; // Remove duplicates
-      const selectedPopularArticles = popularPostSlugs
-        .map(slug => blogPosts.find((post: any) => post.slug === slug))
-        .filter(Boolean)
-        .slice(0, 3);
-
-      return selectedPopularArticles;
-    }
-
-    // Fallback to most recent articles
-    return blogPosts
-      .filter((post: any) => isBlogReleased(post))
-      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      .slice(0, 3);
-  };
-
   const actualCategories = generateCategoriesFromPosts();
-  const popularArticles = getPopularArticles();
 
   // Pagination logic
   const totalPages = Math.ceil(filteredPosts.length / pageSize);
@@ -375,53 +346,7 @@ export default function BlogPage() {
                 </div>
               </div>
 
-              {/* Popular Posts */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
-                <div className="flex items-center gap-3 mb-6">
-                  <TrendingUp className="w-5 h-5 text-color-gray" />
-                  <h3 className="text-lg font-bold text-color-black">Articles Populaires</h3>
-                </div>
-                <div className="space-y-4">
-                  {popularArticles.map((post: any) => (
-                    <a
-                      key={post.slug}
-                      href={`/blog/${post.slug}`}
-                      className="flex items-start gap-3 group hover:bg-gray-50 p-2 rounded-lg transition-colors"
-                    >
-                      <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
-                        {post.image ? (
-                          <img
-                            src={getImageUrl(post.image)}
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                            onError={(e) => {
-                              e.currentTarget.src = '/placeholder.svg';
-                            }}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                            <FileText className="w-6 h-6 text-gray-400" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-color-gray group-hover:text-color-secondary transition-colors line-clamp-2 text-sm">
-                          {post.title}
-                        </h4>
-                        <div className="flex items-center gap-1 mt-2">
-                          <Clock className="w-3 h-3 text-color-gray" />
-                          <span className="text-xs text-color-gray">{post.readTime}</span>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                  {popularArticles.length === 0 && (
-                    <div className="text-center py-4 text-sm text-gray-500">
-                      Aucun article populaire disponible
-                    </div>
-                  )}
-                </div>
-              </div>
+
 
               {/* Newsletter - Static only, no functionality */}
               <div className="bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-2xl p-6 text-white">
@@ -586,28 +511,81 @@ export default function BlogPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
-            Prêt à Transformer Votre Entreprise ?
-          </h2>
-          <div className="text-sm text-gray">
-            Découvrez comment nos solutions peuvent vous aider à atteindre vos objectifs.
+      <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] text-sm font-semibold mb-6">
+              <span className="w-2 h-2 bg-[var(--color-secondary)] rounded-full mr-2"></span>
+              TRANSFORMATION DIGITALE
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Prêt à Transformer Votre Entreprise ?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
+              Rejoignez les centaines d'entreprises qui ont déjà révolutionné leurs processus avec Odoo.
+            </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
             <Button
               size="lg"
-              className="bg-black text-white hover:bg-gray-900 px-8 py-6 text-lg font-medium rounded-xl"
+              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+              onClick={() => {
+                const contactSection = document.querySelector('#contact');
+                if (contactSection) {
+                  contactSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
-              Contacter un Expert
+              Démarrer maintenant
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
             <Button
-              size="lg"
               variant="outline"
-              className="border-2 border-gray-300 hover:bg-gray-50 px-8 py-6 text-lg font-medium rounded-xl"
+              size="lg"
+              className="border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 group"
+              onClick={() => {
+                const modulesSection = document.querySelector('#modules');
+                if (modulesSection) {
+                  modulesSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
             >
-              Voir nos Services
+              Voir nos réalisations
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>
+          </div>
+
+          {/* Trust Indicators */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-8 h-8 text-[var(--color-secondary)]" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Expertise Certifiée</h3>
+              <p className="text-gray-600">Partenaire officiel Odoo & HubSpot</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-[var(--color-secondary)]" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">+100 Clients Satisfaits</h3>
+              <p className="text-gray-600">Transformations réussies au Maroc</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-8 h-8 text-[var(--color-secondary)]" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Résultats Rapides</h3>
+              <p className="text-gray-600">Déploiement en quelques semaines</p>
+            </div>
           </div>
         </div>
       </section>

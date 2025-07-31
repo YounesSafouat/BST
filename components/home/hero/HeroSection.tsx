@@ -116,26 +116,26 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative w-full py-1 pt-2">
+      <div className="relative w-full py-8 pt-12 lg:py-16 lg:pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-2 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              className="space-y-2 order-2 lg:order-1"
+              className="space-y-6 order-2 lg:order-1"
             >
-              <div className="space-y-2">
+              <div className="space-y-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="flex items-center gap-2 mb-1"
+                  className="flex items-center gap-2 mb-2"
                 >
                   <Badge
                     variant="outline"
-                    className="border-gray-300 text-gray-600 px-2 py-0.5 text-xs bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="border-gray-300 text-gray-600 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
                     onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
                   >
                     {heroData.badge || 'Partenaire Silver Odoo'}
@@ -146,7 +146,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-900 leading-none tracking-tighter"
+                  className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-900 leading-tight tracking-tight"
                   style={{ lineHeight: '1.1' }}
                 >
                   {heroData.headline}
@@ -156,7 +156,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-lg"
+                  className="text-lg text-gray-600 leading-relaxed max-w-3xl"
                 >
                   {heroData.description}
                 </motion.p>
@@ -166,11 +166,11 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-2"
+                className="flex flex-col sm:flex-row gap-4"
               >
                 <Button
                   size="sm"
-                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-2 py-1 text-sm font-semibold group rounded-full w-full sm:w-auto"
+                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold group rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
                   onClick={() => scrollToSection('#contact')}
                 >
                   {heroData.ctaPrimary.text}
@@ -179,7 +179,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="px-2 py-1 text-sm font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto"
+                  className="px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
                   onClick={() => scrollToSection('#modules')}
                 >
                   {heroData.ctaSecondary.text}
@@ -195,8 +195,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               className="order-1 lg:order-2"
             >
               <div className="relative">
-                <div className="bg-white/90 backdrop-blur-sm p-1 rounded-lg shadow-md">
-                  <div className="relative aspect-[2/1] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-md overflow-hidden">
+                <div className="bg-white/90 backdrop-blur-sm p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
+                  <div className="relative aspect-[2/1] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg lg:rounded-xl overflow-hidden">
                     {/* Video element */}
                     <video
                       ref={videoRef}
@@ -211,21 +211,21 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     {/* Sound toggle button - only on larger screens */}
                     <button
                       onClick={toggleSound}
-                      className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
+                      className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white p-2 lg:p-3 rounded-full transition-all duration-200 hidden sm:flex items-center justify-center"
                     >
                       {isMuted ? (
-                        <VolumeX className="w-4 h-4" />
+                        <VolumeX className="w-5 h-5 lg:w-6 lg:h-6" />
                       ) : (
-                        <Volume2 className="w-4 h-4" />
+                        <Volume2 className="w-5 h-5 lg:w-6 lg:h-6" />
                       )}
                     </button>
                   </div>
 
                   {/* Small stats overlay - responsive positioning */}
-                  <div className="absolute -bottom-1 -right-1 bg-white rounded-sm shadow-sm p-1 border">
+                  <div className="absolute -bottom-2 -right-2 bg-white rounded-lg shadow-md p-2 lg:p-3 border">
                     <div className="text-center">
-                      <div className="text-xs font-bold text-[var(--color-main)]">3 ans</div>
-                      <div className="text-xs text-gray-600">d'expertise</div>
+                      <div className="text-sm lg:text-base font-bold text-[var(--color-main)]">3 ans</div>
+                      <div className="text-xs lg:text-sm text-gray-600">d'expertise</div>
                     </div>
                   </div>
                 </div>
@@ -236,7 +236,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="bg-white pt-8 sm:pt-12 md:pt-16">
+      <div className="bg-white pt-12 sm:pt-16 md:pt-20 lg:pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData.carousel?.companies}

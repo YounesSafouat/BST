@@ -23,9 +23,7 @@ import {
      Phone,
      Mail,
      BarChart3,
-     FileText,
-     Award,
-     Zap
+     FileText
 } from 'lucide-react';
 import HomeHeroSplit from '@/components/home/hero/HeroSection';
 import Image from 'next/image';
@@ -124,6 +122,7 @@ interface OdooData {
           subdescription?: string;
           modules?: string[];
           expertiseText?: string;
+          image?: string;
           features?: Array<{
                title: string;
                description: string;
@@ -387,15 +386,18 @@ export default function HomePage() {
 
      // Create base timeline and insert prominent apps at different positions
      const createTimelineWithProminent = (apps: any[], offset: number) => {
+          // Create a base timeline with all apps
           const timeline = [...apps];
 
-          // Insert prominent apps at different positions based on offset
-          prominentApps.forEach((prominentApp, index) => {
-               const insertPosition = (offset + index * 2) % timeline.length;
-               timeline.splice(insertPosition, 0, prominentApp);
-          });
+          // Create different arrangements by rotating the array based on offset
+          // This ensures no duplicates while creating variety
+          const rotatedTimeline: any[] = [];
+          for (let i = 0; i < timeline.length; i++) {
+               const index = (i + offset) % timeline.length;
+               rotatedTimeline.push(timeline[index]);
+          }
 
-          return timeline;
+          return rotatedTimeline;
      };
 
      const timeline1 = createTimelineWithProminent(appsWithIcons, 0);
@@ -589,8 +591,16 @@ export default function HomePage() {
                               {/* Left: Image with badge */}
                               <div className="relative w-full md:w-1/2 flex justify-center">
                                    <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg">
-                                        <Image src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg" alt="Notre équipe" width={600} height={350} className="object-cover w-full h-72 md:h-80" />
-
+                                        <Image
+                                             src={odooData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
+                                             alt="Notre équipe"
+                                             width={600}
+                                             height={350}
+                                             className="object-cover w-full h-72 md:h-80"
+                                             onError={(e) => {
+                                                  e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
+                                             }}
+                                        />
                                    </div>
                               </div>
                               {/* Right: Features */}
@@ -614,7 +624,6 @@ export default function HomePage() {
                                                   <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />
                                                   <div>
                                                        <div className="font-bold text-lg text-gray-900">Partenaire Silver Odoo</div>
-                                                       <div className="text-gray-500 text-sm">Certification officielle reconnaissant notre expertise</div>
                                                   </div>
                                              </div>
                                              <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
@@ -642,13 +651,7 @@ export default function HomePage() {
                                    )}
                               </div>
                          </div>
-                         {odooData?.partnership?.expertiseText && (
-                              <div className="mt-12 text-center">
-                                   <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                                        {odooData.partnership.expertiseText}
-                                   </p>
-                              </div>
-                         )}
+
                     </div>
                </section>
 
@@ -706,76 +709,6 @@ export default function HomePage() {
 
                {/* FAQ Section */}
                <FAQSection faqData={odooData?.faq} />
-
-               {/* Final CTA Section */}
-               <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden">
-                    {/* Background Elements */}
-                    <div className="absolute inset-0">
-                         <div className="absolute top-0 left-1/4 w-72 h-72 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
-                         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
-                    </div>
-
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                         <div className="text-center mb-12">
-                              <div className="inline-flex items-center px-4 py-2 rounded-full bg-[var(--color-secondary)]/10 text-[var(--color-secondary)] text-sm font-semibold mb-6">
-                                   <span className="w-2 h-2 bg-[var(--color-secondary)] rounded-full mr-2"></span>
-                                   TRANSFORMATION DIGITALE
-                              </div>
-                              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                                   {odooData?.finalCta?.headline || "Prêt à Transformer Votre Entreprise ?"}
-                              </h2>
-                              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
-                                   {odooData?.finalCta?.description || "Découvrez comment nos solutions peuvent vous aider à atteindre vos objectifs."}
-                              </p>
-                         </div>
-
-                         {/* CTA Buttons */}
-                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
-                              <Button
-                                   size="lg"
-                                   className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
-                                   onClick={() => scrollToSection('#contact')}
-                              >
-                                   {odooData?.finalCta?.ctaPrimary?.text || "Contacter un Expert"}
-                                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                              </Button>
-                              <Button
-                                   variant="outline"
-                                   size="lg"
-                                   className="border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 group"
-                                   onClick={() => scrollToSection('#modules')}
-                              >
-                                   {odooData?.finalCta?.ctaSecondary?.text || "Voir nos Services"}
-                                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                              </Button>
-                         </div>
-
-                         {/* Trust Indicators */}
-                         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                              <div className="text-center">
-                                   <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <Award className="w-8 h-8 text-[var(--color-secondary)]" />
-                                   </div>
-                                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Expertise Certifiée</h3>
-                                   <p className="text-gray-600">Partenaire officiel Odoo & HubSpot</p>
-                              </div>
-                              <div className="text-center">
-                                   <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <Users className="w-8 h-8 text-[var(--color-secondary)]" />
-                                   </div>
-                                   <h3 className="text-lg font-semibold text-gray-900 mb-2">+100 Clients Satisfaits</h3>
-                                   <p className="text-gray-600">Transformations réussies au Maroc</p>
-                              </div>
-                              <div className="text-center">
-                                   <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <Zap className="w-8 h-8 text-[var(--color-secondary)]" />
-                                   </div>
-                                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Résultats Rapides</h3>
-                                   <p className="text-gray-600">Déploiement en quelques semaines</p>
-                              </div>
-                         </div>
-                    </div>
-               </section>
 
                <style jsx>{`
         @keyframes scroll-up {

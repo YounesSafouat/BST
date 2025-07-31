@@ -169,7 +169,7 @@ export default function FooterDashboard() {
       const response = await fetch("/api/content?type=footer")
       if (response.ok) {
         const data = await response.json()
-        if (data.length > 0) {
+        if (data && data.length > 0 && data[0].content) {
           setFooterData(data[0].content)
         }
       }
@@ -178,8 +178,9 @@ export default function FooterDashboard() {
       const contactResponse = await fetch("/api/content?type=contact-info")
       if (contactResponse.ok) {
         const contactData = await contactResponse.json()
-        if (contactData.length > 0) {
-          const contactInfo = contactData[0].content
+        if (contactData && contactData.length > 0) {
+          const contactInfo = contactData[0].content || {}
+          const socialInfo = contactInfo.social || {}
           setFooterData(prev => ({
             ...prev,
             companyInfo: {
@@ -200,11 +201,11 @@ export default function FooterDashboard() {
               }
             },
             social: {
-              facebook: { icon: "Facebook", color: "#1877f2", url: contactInfo.social?.facebook || "" },
-              twitter: { icon: "Twitter", color: "#1da1f2", url: contactInfo.social?.twitter || "" },
-              linkedin: { icon: "Linkedin", color: "#0077b5", url: contactInfo.social?.linkedin || "" },
-              instagram: { icon: "Instagram", color: "#e1306c", url: contactInfo.social?.instagram || "" },
-              youtube: { icon: "Youtube", color: "#ff0000", url: contactInfo.social?.youtube || "" }
+              facebook: { icon: "Facebook", color: "#1877f2", url: socialInfo.facebook || "" },
+              twitter: { icon: "Twitter", color: "#1da1f2", url: socialInfo.twitter || "" },
+              linkedin: { icon: "Linkedin", color: "#0077b5", url: socialInfo.linkedin || "" },
+              instagram: { icon: "Instagram", color: "#e1306c", url: socialInfo.instagram || "" },
+              youtube: { icon: "Youtube", color: "#ff0000", url: socialInfo.youtube || "" }
             }
           }))
         }

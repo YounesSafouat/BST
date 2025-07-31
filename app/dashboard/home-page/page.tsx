@@ -103,6 +103,7 @@ interface HomePageData {
           subdescription?: string;
           modules?: string[];
           expertiseText?: string;
+          image?: string;
           features?: Array<{
                title: string;
                description: string;
@@ -1276,6 +1277,61 @@ export default function HomePageDashboard() {
                                              placeholder="Texte d'expertise"
                                              rows={3}
                                         />
+                                   </div>
+
+                                   <div>
+                                        <Label>Image de l'agence</Label>
+                                        <div className="flex items-center gap-4">
+                                             <Input
+                                                  value={homeData.partnership.image || ''}
+                                                  onChange={(e) => updateField('partnership.image', e.target.value)}
+                                                  placeholder="URL de l'image ou /placeholder.svg"
+                                             />
+                                             <input
+                                                  type="file"
+                                                  accept="image/*"
+                                                  onChange={async (e) => {
+                                                       const file = e.target.files?.[0];
+                                                       if (file) {
+                                                            try {
+                                                                 const formData = new FormData();
+                                                                 formData.append('file', file);
+                                                                 const response = await fetch('/api/upload', {
+                                                                      method: 'POST',
+                                                                      body: formData
+                                                                 });
+                                                                 if (response.ok) {
+                                                                      const data = await response.json();
+                                                                      updateField('partnership.image', data.url);
+                                                                 }
+                                                            } catch (error) {
+                                                                 console.error('Error uploading image:', error);
+                                                            }
+                                                       }
+                                                  }}
+                                                  className="hidden"
+                                                  id="partnership-image-upload"
+                                             />
+                                             <Button
+                                                  type="button"
+                                                  variant="outline"
+                                                  onClick={() => document.getElementById('partnership-image-upload')?.click()}
+                                             >
+                                                  Choisir une image
+                                             </Button>
+                                        </div>
+                                        {homeData.partnership.image && (
+                                             <div className="mt-2">
+                                                  <img
+                                                       src={homeData.partnership.image}
+                                                       alt="Aperçu de l'image"
+                                                       className="w-32 h-32 object-cover rounded-lg border"
+                                                       onError={(e) => {
+                                                            e.currentTarget.src = '/placeholder.svg';
+                                                       }}
+                                                  />
+                                             </div>
+                                        )}
                                    </div>
 
                                    {/* Partnership Features */}
