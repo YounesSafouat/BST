@@ -78,7 +78,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      }
 
      return (
-          <section id="pricing" className="py-20 bg-gray-50">
+          <section id="pricing" className="py-20 bg-[var(--color-main)]">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                          initial={{ opacity: 0, y: 20 }}
@@ -89,20 +89,13 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {pricingData?.headline || "Tarifs & Accompagnement"}
                          </div>
-                         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                         <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
                               {pricingData?.subheadline || "Un partenariat, pas seulement une prestation"}
                          </h2>
-                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                         <p className="text-lg text-white max-w-3xl mx-auto">
                               {pricingData?.description || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions."}
                          </p>
-                         {location?.countryCode && (
-                              <div className="mt-4">
-                                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-secondary)] text-white">
-                                        Région détectée: {getRegionFromCountry(location.countryCode) === 'morocco' ? 'Maroc' :
-                                             getRegionFromCountry(location.countryCode) === 'france' ? 'France' : 'International'}
-                                   </span>
-                              </div>
-                         )}
+
                     </motion.div>
 
                     {filteredPlans.length === 0 ? (
@@ -122,7 +115,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                         className="h-full"
                                    >
                                         <Card className={`h-full border-2 rounded-2xl transition-all duration-300 flex flex-col ${index === 1
-                                             ? 'border-[var(--color-main)] shadow-2xl bg-white scale-105'
+                                             ? 'border-[var(--color-secondary)] shadow-2xl bg-white scale-105'
                                              : 'border-transparent bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl'
                                              }`}>
                                              <CardHeader className="p-8 flex-shrink-0">
