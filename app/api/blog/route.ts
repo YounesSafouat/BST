@@ -4,12 +4,32 @@ import Content from '@/models/Content';
 
 export const dynamic = 'force-dynamic';
 
-// GET: Get all blog posts
+// GET: Get all blog posts or blog settings
 export async function GET(req: NextRequest) {
   try {
     console.log("Blog API: Starting blog posts fetch...")
     await connectDB();
     console.log("Blog API: Connected to database")
+
+    const { searchParams } = new URL(req.url);
+    const settings = searchParams.get('settings');
+
+    // If requesting settings, return blog page configuration
+    if (settings === 'true') {
+      const blogPageContent = await Content.findOne({ type: 'blog-page' });
+      if (blogPageContent) {
+        return NextResponse.json({
+          popularArticles: blogPageContent.content?.popularArticles || [],
+          categories: blogPageContent.content?.categories || [],
+          settings: blogPageContent.content?.settings || {}
+        });
+      }
+      return NextResponse.json({
+        popularArticles: [],
+        categories: [],
+        settings: {}
+      });
+    }
 
     // First try to get blog posts from blog-page content
     const blogPageContent = await Content.findOne({ type: 'blog-page' });

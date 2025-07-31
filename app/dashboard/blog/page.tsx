@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
 import { toast } from "@/components/ui/use-toast";
 import './mdeditor-black-text.css';
-import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, Star, MapPin } from "lucide-react";
+import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, Star, MapPin, Filter, Search, TrendingUp } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import Loader from '@/components/home/Loader';
 import { BlogPost } from "@/components/BlogPost";
@@ -31,6 +31,7 @@ interface BlogPost {
   author: string;
   authorRole: string;
   date: string;
+  scheduledDate?: string; // New field for scheduled publishing
   readTime: string;
   featured: boolean;
   published: boolean;
@@ -50,15 +51,40 @@ function emptyPost() {
     cover: "",
     author: "",
     authorRole: "",
-    date: "",
+    date: new Date().toISOString().split('T')[0],
+    scheduledDate: new Date().toISOString().slice(0, 16), // Default to current date and time
     readTime: "",
     featured: false,
-    published: true,
+    published: false,
     body: "",
     testimonials: [],
     similarPosts: [],
     targetRegions: ['france', 'morocco', 'international'],
   };
+}
+
+// Helper function to check if a blog is released
+function isBlogReleased(post: BlogPost): boolean {
+  if (!post.scheduledDate) return post.published;
+
+  const scheduledDate = new Date(post.scheduledDate);
+  const now = new Date();
+
+  return scheduledDate <= now && post.published;
+}
+
+// Helper function to format scheduled date
+function formatScheduledDate(dateString: string): string {
+  if (!dateString) return "Non programmé";
+
+  const date = new Date(dateString);
+  return date.toLocaleString('fr-FR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
 }
 
 export default function BlogAdminPage() {
@@ -70,6 +96,130 @@ export default function BlogAdminPage() {
   const [saving, setSaving] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewing, setPreviewing] = useState<BlogPost | null>(null);
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all"); // all, published, draft, scheduled
+  const [dateFilter, setDateFilter] = useState<string>("all"); // all, today, week, month, custom
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [featuredFilter, setFeaturedFilter] = useState<boolean | null>(null); // null = all, true = featured, false = not featured
+  const [regionFilter, setRegionFilter] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("date"); // date, title, author, scheduledDate
+  const [sortOrder, setSortOrder] = useState<string>("desc"); // asc, desc
+
+  // Helper function to get filtered and sorted posts
+  const getFilteredPosts = () => {
+    let filtered = [...posts];
+
+    // Search filter
+    if (searchTerm) {
+      filtered = filtered.filter(post =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Status filter
+    if (statusFilter !== "all") {
+      switch (statusFilter) {
+        case "published":
+          filtered = filtered.filter(post => isBlogReleased(post));
+          break;
+        case "draft":
+          filtered = filtered.filter(post => !post.published);
+          break;
+        case "scheduled":
+          filtered = filtered.filter(post => post.published && post.scheduledDate && !isBlogReleased(post));
+          break;
+      }
+    }
+
+    // Date filter
+    if (dateFilter !== "all") {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+      filtered = filtered.filter(post => {
+        const postDate = new Date(post.date);
+        switch (dateFilter) {
+          case "today":
+            return postDate >= today;
+          case "week":
+            return postDate >= weekAgo;
+          case "month":
+            return postDate >= monthAgo;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Category filter
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter(post => post.category === categoryFilter);
+    }
+
+    // Featured filter
+    if (featuredFilter !== null) {
+      filtered = filtered.filter(post => post.featured === featuredFilter);
+    }
+
+    // Region filter
+    if (regionFilter !== "all") {
+      filtered = filtered.filter(post =>
+        post.targetRegions && post.targetRegions.includes(regionFilter)
+      );
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      let aValue: any, bValue: any;
+
+      switch (sortBy) {
+        case "title":
+          aValue = a.title.toLowerCase();
+          bValue = b.title.toLowerCase();
+          break;
+        case "author":
+          aValue = a.author.toLowerCase();
+          bValue = b.author.toLowerCase();
+          break;
+        case "scheduledDate":
+          aValue = a.scheduledDate ? new Date(a.scheduledDate).getTime() : 0;
+          bValue = b.scheduledDate ? new Date(b.scheduledDate).getTime() : 0;
+          break;
+        case "date":
+        default:
+          aValue = new Date(a.date).getTime();
+          bValue = new Date(b.date).getTime();
+          break;
+      }
+
+      if (sortOrder === "asc") {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
+
+    return filtered;
+  };
+
+  // Get unique categories for filter dropdown
+  const getUniqueCategories = () => {
+    const categories = posts.map(post => post.category).filter(Boolean);
+    return [...new Set(categories)];
+  };
+
+  // Get unique regions for filter dropdown
+  const getUniqueRegions = () => {
+    const regions = posts.flatMap(post => post.targetRegions || []).filter(Boolean);
+    return [...new Set(regions)];
+  };
 
   // Fetch blog posts and testimonials for dropdowns
   useEffect(() => {
@@ -124,9 +274,11 @@ export default function BlogAdminPage() {
   // Start editing a post
   function editPost(idx: number) {
     console.log("Editing post at index:", idx);
-    console.log("Post data:", posts[idx]);
+    const filteredPosts = getFilteredPosts();
+    const postToEdit = filteredPosts[idx];
+    console.log("Post data:", postToEdit);
     setEditing(idx);
-    setForm(posts[idx]);
+    setForm(postToEdit);
     setIsModalOpen(true);
   }
 
@@ -184,7 +336,8 @@ export default function BlogAdminPage() {
         }
       } else {
         // Update existing blog post
-        const postToUpdate = posts[editing as number];
+        const filteredPosts = getFilteredPosts();
+        const postToUpdate = filteredPosts[editing as number];
         console.log("Updating blog post:", { postToUpdate, formData });
         console.log("Update URL:", `/api/blog?id=${postToUpdate._id}`);
 
@@ -201,9 +354,9 @@ export default function BlogAdminPage() {
             const updatedPost = await res.json();
             console.log("Blog post updated:", updatedPost);
 
-            // Update the posts array with the new data
-            const updatedPosts = posts.map((p, i) =>
-              i === editing ? { ...formData, _id: postToUpdate._id } : p
+            // Update the posts array with the new data by finding the post by ID
+            const updatedPosts = posts.map((p) =>
+              p._id === postToUpdate._id ? { ...formData, _id: postToUpdate._id } : p
             );
             setPosts(updatedPosts);
 
@@ -412,6 +565,20 @@ export default function BlogAdminPage() {
                       />
                       <Label htmlFor="featured">Article en Vedette</Label>
                     </div>
+                    <div>
+                      <Label htmlFor="scheduledDate">Date de Publication Programmé</Label>
+                      <Input
+                        id="scheduledDate"
+                        type="datetime-local"
+                        name="scheduledDate"
+                        value={form.scheduledDate || ''}
+                        onChange={handleChange}
+                        className="mt-1"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Laissez vide pour publier immédiatement. Si une date est définie, l'article ne sera visible qu'à partir de cette date.
+                      </p>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -541,105 +708,322 @@ export default function BlogAdminPage() {
         </div>
       )}
 
+      {/* Filters Section */}
+      <div className="mb-8">
+        <Card className="border-0 shadow-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="w-5 h-5" />
+              Filtres et Recherche
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Search Bar */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    placeholder="Rechercher par titre, extrait, auteur ou catégorie..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchTerm("");
+                  setStatusFilter("all");
+                  setDateFilter("all");
+                  setCategoryFilter("all");
+                  setFeaturedFilter(null);
+                  setRegionFilter("all");
+                  setSortBy("date");
+                  setSortOrder("desc");
+                }}
+                className="whitespace-nowrap"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Réinitialiser
+              </Button>
+            </div>
+
+            {/* Filter Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Status Filter */}
+              <div>
+                <Label className="text-sm font-medium">Statut</Label>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  aria-label="Filtrer par statut"
+                >
+                  <option value="all">Tous les statuts</option>
+                  <option value="published">Publiés</option>
+                  <option value="draft">Brouillons</option>
+                  <option value="scheduled">Programmés</option>
+                </select>
+              </div>
+
+              {/* Date Filter */}
+              <div>
+                <Label className="text-sm font-medium">Période</Label>
+                <select
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value)}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  aria-label="Filtrer par période"
+                >
+                  <option value="all">Toutes les dates</option>
+                  <option value="today">Aujourd'hui</option>
+                  <option value="week">Cette semaine</option>
+                  <option value="month">Ce mois</option>
+                </select>
+              </div>
+
+              {/* Category Filter */}
+              <div>
+                <Label className="text-sm font-medium">Catégorie</Label>
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  aria-label="Filtrer par catégorie"
+                >
+                  <option value="all">Toutes les catégories</option>
+                  {getUniqueCategories().map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Featured Filter */}
+              <div>
+                <Label className="text-sm font-medium">Vedette</Label>
+                <select
+                  value={featuredFilter === null ? "all" : featuredFilter.toString()}
+                  onChange={(e) => setFeaturedFilter(e.target.value === "all" ? null : e.target.value === "true")}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  aria-label="Filtrer par statut vedette"
+                >
+                  <option value="all">Tous les articles</option>
+                  <option value="true">Articles en vedette</option>
+                  <option value="false">Articles normaux</option>
+                </select>
+              </div>
+
+              {/* Region Filter */}
+              <div>
+                <Label className="text-sm font-medium">Région</Label>
+                <select
+                  value={regionFilter}
+                  onChange={(e) => setRegionFilter(e.target.value)}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  aria-label="Filtrer par région"
+                >
+                  <option value="all">Toutes les régions</option>
+                  {getUniqueRegions().map(region => (
+                    <option key={region} value={region}>
+                      {region === 'france' ? 'France' :
+                        region === 'morocco' ? 'Maroc' :
+                          region === 'international' ? 'International' : region}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sort Options */}
+              <div>
+                <Label className="text-sm font-medium">Trier par</Label>
+                <div className="flex gap-2 mt-1">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    aria-label="Trier par critère"
+                  >
+                    <option value="date">Date</option>
+                    <option value="title">Titre</option>
+                    <option value="author">Auteur</option>
+                    <option value="scheduledDate">Date programmée</option>
+                  </select>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                    className="px-3"
+                    aria-label={`Trier en ordre ${sortOrder === "asc" ? "décroissant" : "croissant"}`}
+                  >
+                    {sortOrder === "asc" ? "↑" : "↓"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Summary */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+              <div className="text-sm text-gray-600">
+                {getFilteredPosts().length} article{getFilteredPosts().length !== 1 ? 's' : ''} trouvé{getFilteredPosts().length !== 1 ? 's' : ''}
+                {searchTerm && ` pour "${searchTerm}"`}
+              </div>
+              <div className="text-sm text-gray-500">
+                Trié par {sortBy === 'date' ? 'date' :
+                  sortBy === 'title' ? 'titre' :
+                    sortBy === 'author' ? 'auteur' :
+                      'date programmée'} ({sortOrder === 'asc' ? 'croissant' : 'décroissant'})
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Blog Posts Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.length === 0 ? (
+        {getFilteredPosts().length === 0 ? (
           <div className="col-span-full text-center py-12">
             <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun article</h3>
-            <p className="text-gray-500">Commencez par créer votre premier article de blog.</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              {posts.length === 0 ? "Aucun article" : "Aucun article trouvé"}
+            </h3>
+            <p className="text-gray-500">
+              {posts.length === 0
+                ? "Commencez par créer votre premier article de blog."
+                : "Essayez de modifier vos critères de recherche."
+              }
+            </p>
           </div>
         ) : (
-          posts.map((post, idx) => (
-            <Card key={idx} className="p-5 flex flex-col justify-between hover:shadow-lg transition-all duration-300 min-h-[280px] max-w-full">
-              {/* Top Section: Icon, Title, Description */}
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-lg bg-blue-100">
-                    <FileText className="w-5 h-5 text-blue-600" />
+          getFilteredPosts().map((post, idx) => (
+            <Card key={idx} className="group relative overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white rounded-xl h-full flex flex-col">
+              {/* Card Header with Icon */}
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-3 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 group-hover:from-blue-100 group-hover:to-blue-200 transition-all duration-300">
+                      <FileText className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div className="flex flex-col min-w-0 flex-1">
+                      <h3 className="text-lg font-bold text-gray-900 truncate group-hover:text-blue-600 transition-colors duration-300">
+                        {post.title || "Sans titre"}
+                      </h3>
+                      <p className="text-sm text-gray-500 capitalize truncate">{post.category || "Non catégorisé"}</p>
+                    </div>
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <h3 className="text-base font-bold text-gray-800 uppercase tracking-wider truncate max-w-[220px]">
-                      {post.title || "Sans titre"}
-                    </h3>
-                    <p className="text-xs text-gray-500 capitalize truncate max-w-[220px]">{post.category || "Non catégorisé"}</p>
+                </div>
+
+                {/* Slug and Excerpt */}
+                <div className="space-y-2 mb-4">
+                  <p className="text-sm font-mono text-gray-400 truncate">
+                    /{post.slug || "slug-manquant"}
+                  </p>
+                  <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                    {post.excerpt || "Aucun extrait"}
+                  </p>
+                </div>
+
+                {/* Metadata */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <User className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span className="truncate">{post.author || "Auteur inconnu"}</span>
                   </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span>{post.date || "Date inconnue"}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <Clock className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                    <span>{post.readTime || "Temps inconnu"}</span>
+                  </div>
+                  {post.scheduledDate && (
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                      <Calendar className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                      <span className="text-blue-600 font-medium">
+                        Programmé: {formatScheduledDate(post.scheduledDate)}
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <p className="text-sm text-gray-600 truncate max-w-[220px]">
-                  /{post.slug || "slug-manquant"}
-                </p>
-                <p className="text-xs text-gray-500 truncate max-w-[220px]">
-                  {post.excerpt || "Aucun extrait"}
-                </p>
-              </div>
 
-              {/* Middle Section: Author & Date */}
-              <div className="flex flex-col gap-1 mt-2">
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <User className="w-3 h-3" />
-                  <span>{post.author || "Auteur inconnu"}</span>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <Calendar className="w-3 h-3" />
-                  <span>{post.date || "Date inconnue"}</span>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <Clock className="w-3 h-3" />
-                  <span>{post.readTime || "Temps inconnu"}</span>
-                </div>
-              </div>
-
-              {/* Bottom Section: Status & Actions */}
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mt-4">
-                <div className="flex items-center space-x-2">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${post.published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                {/* Status Tags */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {/* Release Status Badge */}
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${isBlogReleased(post)
+                    ? 'bg-green-100 text-green-700 border border-green-200'
+                    : post.published && post.scheduledDate
+                      ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                      : 'bg-gray-100 text-gray-600 border border-gray-200'
                     }`}>
-                    {post.published ? 'Publié' : 'Brouillon'}
+                    {isBlogReleased(post)
+                      ? 'Publié'
+                      : post.published && post.scheduledDate
+                        ? 'Programmé'
+                        : 'Brouillon'
+                    }
                   </span>
+
+                  {/* Published Status Badge */}
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 ${post.published
+                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                    : 'bg-gray-100 text-gray-600 border border-gray-200'
+                    }`}>
+                    {post.published ? 'Activé' : 'Désactivé'}
+                  </span>
+
                   {post.featured && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
                       <Star className="w-3 h-3 mr-1" />
                       Vedette
                     </span>
                   )}
                   {post.targetRegions && post.targetRegions.length > 0 && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 border border-purple-200">
                       <MapPin className="w-3 h-3 mr-1" />
                       {post.targetRegions.length === 3 ? 'Toutes' : post.targetRegions.join(', ')}
                     </span>
                   )}
                 </div>
-                <div className="flex flex-row gap-2">
+              </div>
+
+              {/* Action Buttons - Icon Only */}
+              <div className="px-6 pb-6 mt-auto">
+                <div className="flex items-center justify-end gap-2">
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => setPreviewing(post)}
-                    className="border-gray-300 hover:bg-gray-100 text-xs min-w-fit"
+                    className="h-10 w-10 p-0 rounded-lg hover:bg-gray-100 transition-all duration-200 group/btn"
+                    title="Prévisualiser"
                   >
-                    <Eye className="w-3 h-3 mr-1" />
-                    <span className="whitespace-nowrap">Prévisualiser</span>
+                    <Eye className="w-4 h-4 text-gray-600 group-hover/btn:text-blue-600 transition-colors duration-200" />
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => editPost(idx)}
-                    className="border-gray-300 hover:bg-gray-100 text-xs min-w-fit"
+                    className="h-10 w-10 p-0 rounded-lg hover:bg-gray-100 transition-all duration-200 group/btn"
+                    title="Modifier"
                   >
-                    <Pencil className="w-3 h-3 mr-1" />
-                    <span className="whitespace-nowrap">Modifier</span>
+                    <Pencil className="w-4 h-4 text-gray-600 group-hover/btn:text-blue-600 transition-colors duration-200" />
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => deletePost(idx)}
-                    className="border-red-300 hover:bg-red-100 text-red-600 text-xs min-w-fit"
+                    className="h-10 w-10 p-0 rounded-lg hover:bg-red-50 transition-all duration-200 group/btn"
                     disabled={saving}
+                    title="Supprimer"
                   >
-                    <Trash2 className="w-3 h-3 mr-1" />
-                    <span className="whitespace-nowrap">{saving ? "..." : "Supprimer"}</span>
+                    <Trash2 className="w-4 h-4 text-gray-600 group-hover/btn:text-red-600 transition-colors duration-200" />
                   </Button>
                 </div>
               </div>
+
+              {/* Hover Effect Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:to-blue-500/5 transition-all duration-300 pointer-events-none rounded-xl" />
             </Card>
           ))
         )}

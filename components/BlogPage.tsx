@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin } from "lucide-react"
+import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin, FileText } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { getUserLocation, getRegionFromCountry, shouldShowContent, type Region } from "@/lib/geolocation"
@@ -15,9 +15,20 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination"
 
+// Helper function to check if a blog is released
+function isBlogReleased(post: any): boolean {
+  if (!post.scheduledDate) return post.published;
+
+  const scheduledDate = new Date(post.scheduledDate);
+  const now = new Date();
+
+  return scheduledDate <= now && post.published;
+}
+
 export default function BlogPage() {
   // All hooks at the top!
   const [blogData, setBlogData] = useState<any>(null);
+  const [blogSettings, setBlogSettings] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
   const [loading, setLoading] = useState(true);
   const [scrollY, setScrollY] = useState(0);
@@ -73,6 +84,15 @@ export default function BlogPage() {
         const data = await res.json();
         console.log("Blog data received:", data);
         setBlogData({ content: { blogPosts: data } });
+
+        // Fetch blog settings for popular articles
+        const settingsUrl = baseUrl
+          ? `${baseUrl}/api/blog?settings=true`
+          : "/api/blog?settings=true";
+        const settingsRes = await fetch(settingsUrl);
+        const settingsData = await settingsRes.json();
+        console.log("Blog settings received:", settingsData);
+        setBlogSettings(settingsData);
       } catch (err) {
         console.error("Failed to fetch blog data", err);
       } finally {
@@ -99,7 +119,7 @@ export default function BlogPage() {
     if (!blogData) return;
 
     console.log("Blog data for filtering:", blogData);
-    let filtered = (blogData.content?.blogPosts || []).filter((post: any) => post.published === true);
+    let filtered = (blogData.content?.blogPosts || []).filter((post: any) => isBlogReleased(post));
     console.log("Posts after published filter:", filtered.length);
 
     // Filter by user region
@@ -156,6 +176,46 @@ export default function BlogPage() {
   // Extract categories and posts from dynamic data
   const blogCategories = blogData.content?.categories?.items?.map((cat: any) => ({ name: cat.name, count: undefined })) || [];
   const blogPosts = blogData.content?.blogPosts || [];
+
+  // Generate categories from actual blog posts
+  const generateCategoriesFromPosts = () => {
+    const categoryCounts: { [key: string]: number } = {};
+    blogPosts.forEach((post: any) => {
+      if (post.category) {
+        categoryCounts[post.category] = (categoryCounts[post.category] || 0) + 1;
+      }
+    });
+
+    return Object.entries(categoryCounts).map(([name, count]) => ({
+      name,
+      count,
+      color: getCategoryColor(name)
+    }));
+  };
+
+  // Get popular articles (for now, just the most recent 3, but this could be enhanced with view counts)
+  const getPopularArticles = () => {
+    // First, try to get CMS-selected popular articles from global settings
+    if (blogSettings && blogSettings.popularArticles && blogSettings.popularArticles.length > 0) {
+      // Get the actual post objects for the selected popular articles
+      const popularPostSlugs = [...new Set(blogSettings.popularArticles)]; // Remove duplicates
+      const selectedPopularArticles = popularPostSlugs
+        .map(slug => blogPosts.find((post: any) => post.slug === slug))
+        .filter(Boolean)
+        .slice(0, 3);
+
+      return selectedPopularArticles;
+    }
+
+    // Fallback to most recent articles
+    return blogPosts
+      .filter((post: any) => isBlogReleased(post))
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 3);
+  };
+
+  const actualCategories = generateCategoriesFromPosts();
+  const popularArticles = getPopularArticles();
 
   // Pagination logic
   const totalPages = Math.ceil(filteredPosts.length / pageSize);
@@ -293,7 +353,7 @@ export default function BlogPage() {
                   <h3 className="text-lg font-bold text-color-black">Catégories</h3>
                 </div>
                 <div className="space-y-2">
-                  {blogCategories.map((category: any) => (
+                  {actualCategories.map((category: any) => (
                     <button
                       key={category.name}
                       onClick={() => setSelectedCategory(category.name)}
@@ -322,21 +382,30 @@ export default function BlogPage() {
                   <h3 className="text-lg font-bold text-color-black">Articles Populaires</h3>
                 </div>
                 <div className="space-y-4">
-                  {blogPosts.slice(0, 3).map((post: any) => (
+                  {popularArticles.map((post: any) => (
                     <a
                       key={post.slug}
                       href={`/blog/${post.slug}`}
                       className="flex items-start gap-3 group hover:bg-gray-50 p-2 rounded-lg transition-colors"
                     >
-                      <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                        <img
-                          src={getImageUrl(post.image)}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
+                      <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+                        {post.image ? (
+                          <img
+                            src={getImageUrl(post.image)}
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            onError={(e) => {
+                              e.currentTarget.src = '/placeholder.svg';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                            <FileText className="w-6 h-6 text-gray-400" />
+                          </div>
+                        )}
                       </div>
-                      <div>
-                        <h4 className="font-medium text-color-gray group-hover:text-color-secondary transition-colors line-clamp-2">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-color-gray group-hover:text-color-secondary transition-colors line-clamp-2 text-sm">
                           {post.title}
                         </h4>
                         <div className="flex items-center gap-1 mt-2">
@@ -346,6 +415,11 @@ export default function BlogPage() {
                       </div>
                     </a>
                   ))}
+                  {popularArticles.length === 0 && (
+                    <div className="text-center py-4 text-sm text-gray-500">
+                      Aucun article populaire disponible
+                    </div>
+                  )}
                 </div>
               </div>
 
