@@ -51,7 +51,14 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
           console.log("Detected region:", region);
 
           if (!plan.targetRegions) return true;
-          return plan.targetRegions.includes(region) || plan.targetRegions.includes('international');
+          
+          // Show plans that match the user's region OR show international plans only if user is not from Morocco or France
+          if (region === 'morocco' || region === 'france') {
+               return plan.targetRegions.includes(region);
+          } else {
+               // For international users, show international plans
+               return plan.targetRegions.includes('international');
+          }
      }) || [];
 
      if (loading) {
@@ -88,6 +95,14 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
                               {pricingData?.description || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions."}
                          </p>
+                         {location?.countryCode && (
+                              <div className="mt-4">
+                                   <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-secondary)] text-white">
+                                        Région détectée: {getRegionFromCountry(location.countryCode) === 'morocco' ? 'Maroc' : 
+                                                         getRegionFromCountry(location.countryCode) === 'france' ? 'France' : 'International'}
+                                   </span>
+                              </div>
+                         )}
                     </motion.div>
 
                     {filteredPlans.length === 0 ? (
