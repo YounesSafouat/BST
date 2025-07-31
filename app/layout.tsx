@@ -4,6 +4,7 @@ import LayoutWrapper from '@/components/layout-wrapper'
 import { LoaderProvider, LoaderRouteListener } from '@/components/LoaderProvider'
 import StructuredData from '@/components/structured-data'
 import { ThemeProvider } from '@/components/theme-provider'
+import FaviconProvider from '@/components/FaviconProvider'
 
 export const metadata: Metadata = {
   title: {
@@ -94,6 +95,7 @@ export default function RootLayout({
         <StructuredData />
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
+        <FaviconProvider />
         <ThemeProvider>
           <LoaderProvider>
             <LoaderRouteListener />

@@ -51,7 +51,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
           console.log("Detected region:", region);
 
           if (!plan.targetRegions) return true;
-          
+
           // Show plans that match the user's region OR show international plans only if user is not from Morocco or France
           if (region === 'morocco' || region === 'france') {
                return plan.targetRegions.includes(region);
@@ -98,8 +98,8 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          {location?.countryCode && (
                               <div className="mt-4">
                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-secondary)] text-white">
-                                        Région détectée: {getRegionFromCountry(location.countryCode) === 'morocco' ? 'Maroc' : 
-                                                         getRegionFromCountry(location.countryCode) === 'france' ? 'France' : 'International'}
+                                        Région détectée: {getRegionFromCountry(location.countryCode) === 'morocco' ? 'Maroc' :
+                                             getRegionFromCountry(location.countryCode) === 'france' ? 'France' : 'International'}
                                    </span>
                               </div>
                          )}

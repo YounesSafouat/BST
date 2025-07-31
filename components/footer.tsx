@@ -163,6 +163,9 @@ export default function Footer() {
                   WhatsApp: '#25d366', // WhatsApp green color
                 };
                 const bgColor = network.color || colorMap[iconKey] || 'var(--color-main)';
+                
+                console.log(`Social icon debug - Key: ${key}, Icon: ${network.icon}, IconKey: ${iconKey}, Icon found: ${!!Icon}`);
+                
                 return (
                   <a
                     key={key}
