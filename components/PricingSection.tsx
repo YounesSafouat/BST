@@ -89,7 +89,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {pricingData?.headline || "Tarifs & Accompagnement"}
                          </div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
                               {pricingData?.subheadline || "Un partenariat, pas seulement une prestation"}
                          </h2>
                          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -126,10 +126,10 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                              : 'border-transparent bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl'
                                              }`}>
                                              <CardHeader className="p-8 flex-shrink-0">
-                                                  <h3 className="text-xl font-semibold text-[var(--color-main)] mb-2">{plan.name}</h3>
+                                                  <h3 className="text-xl font-extrabold text-[var(--color-main)] mb-2">{plan.name}</h3>
                                                   <p className="text-gray-600 text-sm mb-4 h-12 flex items-center">{plan.description}</p>
                                                   <div className="space-y-1">
-                                                       <div className="text-2xl font-semibold text-[var(--color-secondary)]">{plan.price}</div>
+                                                       <div className="text-2xl font-extrabold text-[var(--color-secondary)]">{plan.price}</div>
                                                        <div className="text-sm text-gray-500">{plan.estimation}</div>
                                                   </div>
                                              </CardHeader>

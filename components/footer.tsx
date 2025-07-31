@@ -152,8 +152,19 @@ export default function Footer() {
               {Object.entries(social).map(([key, value]) => {
                 if (!value || typeof value !== 'object' || !('url' in value && 'icon' in value && 'color' in value)) return null;
                 const network = value as { icon: string; color: string; url: string };
-                const iconKey = network.icon || key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
-                const Icon = IconMap[iconKey as keyof typeof IconMap];
+                let iconKey = network.icon || key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+                let Icon = IconMap[iconKey as keyof typeof IconMap];
+                
+                // Fallback for WhatsApp icon if not found
+                if (!Icon && (iconKey === 'WhatsApp' || key.toLowerCase() === 'whatsapp')) {
+                  Icon = IconMap['WhatsApp'];
+                  iconKey = 'WhatsApp';
+                }
+                
+                // Debug: Log all available icons and the one we're looking for
+                console.log(`Available icons:`, Object.keys(IconMap));
+                console.log(`Looking for icon: "${iconKey}"`);
+                console.log(`Icon found:`, !!Icon);
                 const colorMap: any = {
                   Facebook: 'var(--color-secondary)',
                   Twitter: 'var(--color-secondary)',
