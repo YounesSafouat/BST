@@ -109,6 +109,8 @@ export default function BlogAdminPage() {
 
   // Helper function to get filtered and sorted posts
   const getFilteredPosts = () => {
+    console.log("getFilteredPosts called with posts:", posts.length);
+    console.log("Filter values:", { searchTerm, statusFilter, dateFilter, categoryFilter, featuredFilter, regionFilter });
     let filtered = [...posts];
 
     // Search filter
@@ -206,6 +208,7 @@ export default function BlogAdminPage() {
       }
     });
 
+    console.log("Filtered posts result:", filtered.length);
     return filtered;
   };
 
@@ -228,6 +231,8 @@ export default function BlogAdminPage() {
       .then((res) => res.json())
       .then((blogPosts) => {
         console.log("Blog posts received:", blogPosts);
+        console.log("Blog posts count:", blogPosts?.length || 0);
+        console.log("First blog post:", blogPosts?.[0]);
         setPosts(blogPosts || []);
         setLoading(false);
       })
