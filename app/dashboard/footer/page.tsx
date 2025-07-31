@@ -284,13 +284,26 @@ export default function FooterDashboard() {
   const saveFooterData = async () => {
     setSaving(true)
     try {
+      // Clean the data before sending (remove temporary fields)
+      const cleanFooterData = {
+        newsletter: footerData.newsletter,
+        companyInfo: footerData.companyInfo,
+        quickLinks: footerData.quickLinks,
+        services: footerData.services,
+        social: footerData.social,
+        certifications: footerData.certifications,
+        legal: footerData.legal
+      }
+
+      console.log("Saving footer data:", cleanFooterData)
+
       const response = await fetch("/api/content?type=footer", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: footerData,
+          content: cleanFooterData,
           title: "Footer",
           description: "Pied de page du site",
           isActive: true,
@@ -299,12 +312,16 @@ export default function FooterDashboard() {
       })
 
       if (response.ok) {
+        const result = await response.json()
+        console.log("Save response:", result)
         toast({
           title: "Succès",
           description: "Contenu du footer mis à jour avec succès",
         })
       } else {
-        throw new Error("Failed to save footer data")
+        const errorText = await response.text()
+        console.error("Save failed:", response.status, errorText)
+        throw new Error(`Failed to save footer data: ${response.status} ${errorText}`)
       }
     } catch (error) {
       console.error("Error saving footer data:", error)

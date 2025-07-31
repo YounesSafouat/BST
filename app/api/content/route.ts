@@ -83,13 +83,19 @@ export async function POST(req: NextRequest) {
 // PUT: Update content by type
 export async function PUT(req: NextRequest) {
   try {
+    console.log("API: Starting PUT request...")
     await connectDB();
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
+    console.log("API: PUT request for type:", type)
+    
     if (!type) {
       return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
     }
+    
     const body = await req.json();
+    console.log("API: PUT request body:", body)
+    
     // Only allow updating the content field for safety
     const update: any = {};
     if (body.content) update['content'] = body.content;
@@ -97,17 +103,26 @@ export async function PUT(req: NextRequest) {
     if (body.description) update['description'] = body.description;
     if (body.metadata) update['metadata'] = body.metadata;
     if (typeof body.isActive === 'boolean') update['isActive'] = body.isActive;
+    
+    console.log("API: Update object:", update)
+    
     if (Object.keys(update).length === 0) {
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
     }
+    
     const updated = await Content.findOneAndUpdate(
       { type },
       { $set: update },
       { new: true }
     );
+    
+    console.log("API: Update result:", updated)
+    
     if (!updated) {
+      console.log("API: No document found to update for type:", type)
       return NextResponse.json({ error: 'Content not found' }, { status: 404 });
     }
+    
     return NextResponse.json(updated, {
       status: 200,
       headers: {
