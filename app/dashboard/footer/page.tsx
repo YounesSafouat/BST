@@ -181,12 +181,13 @@ export default function FooterDashboard() {
         console.log("Footer API response length:", data.length)
 
         if (data && data.length > 0) {
-          console.log("First item in footer response:", data[0])
-          console.log("First item content:", data[0].content)
+          // Find the actual footer document (filter by type)
+          const footerDocument = data.find(item => item.type === 'footer')
+          console.log("Footer document found:", footerDocument)
 
-          if (data[0].content) {
+          if (footerDocument && footerDocument.content) {
             // Directly set the footer data from API response
-            const apiData = data[0].content
+            const apiData = footerDocument.content
             console.log("Setting footer data:", apiData)
             console.log("API data keys:", Object.keys(apiData))
             console.log("API newsletter:", apiData.newsletter)
@@ -201,7 +202,7 @@ export default function FooterDashboard() {
               return newData
             })
           } else {
-            console.log("No content field in first item")
+            console.log("No footer document found or no content")
           }
         } else {
           console.log("No footer data found, using defaults")
@@ -218,45 +219,52 @@ export default function FooterDashboard() {
         console.log("Contact API response length:", contactData.length)
 
         if (contactData && contactData.length > 0) {
-          console.log("First contact item:", contactData[0])
-          const contactInfo = contactData[0].content || {}
-          const socialInfo = contactInfo.social || {}
-          console.log("Contact info:", contactInfo)
-          console.log("Social info:", socialInfo)
+          // Find the actual contact-info document
+          const contactDocument = contactData.find(item => item.type === 'contact-info')
+          console.log("Contact document found:", contactDocument)
 
-          setFooterData(prev => {
-            const newData = {
-              ...prev,
-              companyInfo: {
-                ...prev.companyInfo,
-                contact: {
-                  address: {
-                    icon: "MapPin",
-                    text: contactInfo.address || ""
-                  },
-                  phone: {
-                    icon: "Phone",
-                    text: contactInfo.phone || ""
-                  },
-                  email: {
-                    icon: "Mail",
-                    text: contactInfo.email || ""
+          if (contactDocument && contactDocument.content) {
+            const contactInfo = contactDocument.content
+            const socialInfo = contactInfo.social || {}
+            console.log("Contact info:", contactInfo)
+            console.log("Social info:", socialInfo)
+
+            setFooterData(prev => {
+              const newData = {
+                ...prev,
+                companyInfo: {
+                  ...prev.companyInfo,
+                  contact: {
+                    address: {
+                      icon: "MapPin",
+                      text: contactInfo.address || ""
+                    },
+                    phone: {
+                      icon: "Phone",
+                      text: contactInfo.phone || ""
+                    },
+                    email: {
+                      icon: "Mail",
+                      text: contactInfo.email || ""
+                    }
                   }
+                },
+                social: {
+                  ...prev.social,
+                  facebook: { icon: "Facebook", color: "#1877f2", url: socialInfo.facebook || "" },
+                  twitter: { icon: "Twitter", color: "#1da1f2", url: socialInfo.twitter || "" },
+                  linkedin: { icon: "Linkedin", color: "#0077b5", url: socialInfo.linkedin || "" },
+                  instagram: { icon: "Instagram", color: "#e1306c", url: socialInfo.instagram || "" },
+                  youtube: { icon: "Youtube", color: "#ff0000", url: socialInfo.youtube || "" },
+                  whatsapp: { icon: "MessageSquare", color: "#25d366", url: socialInfo.whatsapp || "" }
                 }
-              },
-              social: {
-                ...prev.social,
-                facebook: { icon: "Facebook", color: "#1877f2", url: socialInfo.facebook || "" },
-                twitter: { icon: "Twitter", color: "#1da1f2", url: socialInfo.twitter || "" },
-                linkedin: { icon: "Linkedin", color: "#0077b5", url: socialInfo.linkedin || "" },
-                instagram: { icon: "Instagram", color: "#e1306c", url: socialInfo.instagram || "" },
-                youtube: { icon: "Youtube", color: "#ff0000", url: socialInfo.youtube || "" },
-                whatsapp: { icon: "MessageSquare", color: "#25d366", url: socialInfo.whatsapp || "" }
               }
-            }
-            console.log("New footer data after contact merge:", newData)
-            return newData
-          })
+              console.log("New footer data after contact merge:", newData)
+              return newData
+            })
+          } else {
+            console.log("No contact document found or no content")
+          }
         }
       } else {
         console.error("Contact API response not ok:", contactResponse.status)
