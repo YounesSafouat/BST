@@ -48,7 +48,18 @@ export default function SettingsDashboard() {
         console.log("Settings API response:", data)
 
         if (data && data.content) {
-          setSettings(data.content)
+          // Merge with default values to ensure all fields exist
+          setSettings({
+            favicon: {
+              image: data.content.favicon?.image || "",
+              alt: data.content.favicon?.alt || "Site Favicon"
+            },
+            siteTitle: data.content.siteTitle || "",
+            siteDescription: data.content.siteDescription || "",
+            contactEmail: data.content.contactEmail || "",
+            contactPhone: data.content.contactPhone || "",
+            address: data.content.address || ""
+          })
         }
       } else {
         console.error("Settings API response not ok:", response.status)

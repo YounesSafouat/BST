@@ -22,6 +22,8 @@ export default function FaviconProvider() {
               link.setAttribute('alt', data.content.favicon.alt)
             }
             document.head.appendChild(link)
+          } else {
+            console.log('No favicon found in settings, using default')
           }
         }
       } catch (error) {
