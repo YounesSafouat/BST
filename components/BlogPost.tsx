@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   ArrowRight,
   ChevronRight,
-  Quote,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
@@ -33,18 +32,11 @@ type Post = {
   published?: boolean
   body?: string
   cover?: string
-  testimonials?: string[] // Array of testimonial IDs
+
   similarPosts?: string[] // Array of post slugs
 }
 
-// Testimonial type (you'll need to fetch this from your testimonials collection)
-type Testimonial = {
-  _id: string
-  author: string
-  role: string
-  text: string
-  photo?: string
-}
+
 
 // Helper to get the correct image URL
 const getImageUrl = (img: string) => {
@@ -57,7 +49,6 @@ export function BlogPost({ post }: { post: Post }) {
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [similarPosts, setSimilarPosts] = useState<Post[]>([])
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,34 +88,13 @@ export function BlogPost({ post }: { post: Post }) {
           setSimilarPosts(related);
         }
 
-        // Fetch testimonials from testimonials collection
-        if (post.testimonials && post.testimonials.length > 0) {
-          try {
-            const testimonialsRes = await fetch(`${baseUrl}/api/content?type=testimonial`);
-            const testimonialsData = await testimonialsRes.json();
-            // Map to flat structure for display
-            const mapped = testimonialsData
-              .filter((t: any) => post.testimonials!.includes(
-                typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString()
-              ))
-              .map((t: any) => ({
-                _id: typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString(),
-                author: t.content?.name || t.title || '',
-                role: t.content?.role || t.description || '',
-                text: t.content?.quote || t.content?.text || '',
-                photo: t.content?.avatar || t.content?.photo || '',
-              }));
-            setTestimonials(mapped);
-          } catch (error) {
-            console.error('Error fetching testimonials:', error);
-          }
-        }
+
       } catch (error) {
         console.error('Error fetching related data:', error);
       }
     };
     fetchData();
-  }, [post.slug, post.category, post.similarPosts, post.testimonials]);
+  }, [post.slug, post.category, post.similarPosts]);
 
   // Function to get category color
   const getCategoryColor = (categoryName: string) => {
@@ -238,41 +208,7 @@ export function BlogPost({ post }: { post: Post }) {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      {testimonials.length > 0 && (
-        <section className="py-16 px-6 lg:px-8 bg-gray-50">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-black mb-8">Témoignages</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {testimonials.map((testimonial, index) => (
-                <div key={testimonial._id} className="bg-white p-6 rounded-xl shadow-sm">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <Quote className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
-                      <div className="flex items-center gap-3">
-                        {testimonial.photo && (
-                          <img
-                            src={testimonial.photo}
-                            alt={testimonial.author}
-                            className="w-10 h-10 rounded-full object-cover"
-                          />
-                        )}
-                        <div>
-                          <div className="font-medium text-black">{testimonial.author}</div>
-                          <div className="text-sm text-gray-500">{testimonial.role}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+
 
       {/* Similar Articles */}
       {similarPosts.length > 0 && (

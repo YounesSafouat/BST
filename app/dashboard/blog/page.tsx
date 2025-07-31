@@ -36,7 +36,7 @@ interface BlogPost {
   featured: boolean;
   published: boolean;
   body: string;
-  testimonials?: string[];
+
   similarPosts?: string[];
   targetRegions?: string[];
 }
@@ -57,7 +57,7 @@ function emptyPost() {
     featured: false,
     published: false,
     body: "",
-    testimonials: [],
+
     similarPosts: [],
     targetRegions: ['france', 'morocco', 'international'],
   };
@@ -89,7 +89,7 @@ function formatScheduledDate(dateString: string): string {
 
 export default function BlogAdminPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [allTestimonials, setAllTestimonials] = useState<any[]>([]);
+
   const [editing, setEditing] = useState<number | "new" | null>(null);
   const [form, setForm] = useState<BlogPost>(emptyPost());
   const [loading, setLoading] = useState(false);
@@ -224,19 +224,16 @@ export default function BlogAdminPage() {
   // Fetch blog posts and testimonials for dropdowns
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      fetch("/api/blog").then((res) => res.json()),
-      fetch("/api/content?type=testimonial").then((res) => res.json()),
-    ])
-      .then(([blogPosts, testimonials]) => {
+    fetch("/api/blog")
+      .then((res) => res.json())
+      .then((blogPosts) => {
         console.log("Blog posts received:", blogPosts);
         setPosts(blogPosts || []);
-        setAllTestimonials(testimonials || []);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching blog data:", error);
-        toast({ title: "Erreur", description: "Impossible de charger les articles ou témoignages." });
+        toast({ title: "Erreur", description: "Impossible de charger les articles." });
         setLoading(false);
       });
   }, []);
@@ -306,7 +303,7 @@ export default function BlogAdminPage() {
         date: form.date || new Date().toISOString().split('T')[0], // Ensure date is set
         published: form.published !== undefined ? form.published : true,
         featured: form.featured !== undefined ? form.featured : false,
-        testimonials: form.testimonials || [],
+
         similarPosts: form.similarPosts || [],
         targetRegions: form.targetRegions || ['france', 'morocco', 'international'],
       };
@@ -414,11 +411,7 @@ export default function BlogAdminPage() {
     label: p.title,
     description: p.excerpt
   })), [posts]);
-  const testimonialOptions = useMemo(() => allTestimonials.map(t => ({
-    value: typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString(),
-    label: t.content?.name || t.title || (typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString()),
-    description: t.content?.role || t.description || '',
-  })), [allTestimonials]);
+
 
   // UI
   if (loading) {
@@ -651,17 +644,7 @@ export default function BlogAdminPage() {
                         emptyMessage="Aucun article similaire sélectionné"
                       />
                     </div>
-                    <div>
-                      <Label>Témoignages</Label>
-                      <MultiSelectDropdown
-                        options={testimonialOptions}
-                        selectedValues={form.testimonials || []}
-                        onSelectionChange={(values) => setForm(f => ({ ...f, testimonials: values }))}
-                        placeholder="Aucun témoignage disponible"
-                        addButtonText="Ajouter un témoignage"
-                        emptyMessage="Aucun témoignage sélectionné"
-                      />
-                    </div>
+
                   </CardContent>
                 </Card>
 
