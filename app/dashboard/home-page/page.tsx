@@ -872,6 +872,75 @@ export default function HomePageDashboard() {
                          </Card>
                     </TabsContent>
 
+                    <TabsContent value="trustMetrics" className="space-y-6">
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>Métriques de Confiance</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                   <div className="flex items-center justify-between">
+                                        <Label className="text-lg font-semibold">Statistiques</Label>
+                                        <Button
+                                             onClick={() => addArrayItem('trustMetrics', {
+                                                  number: 0,
+                                                  suffix: '+',
+                                                  label: 'Nouvelle métrique'
+                                             })}
+                                             size="sm"
+                                             className="flex items-center gap-2"
+                                        >
+                                             <Plus className="w-4 h-4" />
+                                             Ajouter une métrique
+                                        </Button>
+                                   </div>
+
+                                   {homeData.trustMetrics?.map((metric, index) => (
+                                        <Card key={index} className="p-4">
+                                             <div className="flex items-center justify-between mb-4">
+                                                  <h4 className="font-semibold">Métrique {index + 1}</h4>
+                                                  <Button
+                                                       onClick={() => removeArrayItem('trustMetrics', index)}
+                                                       variant="ghost"
+                                                       size="sm"
+                                                       className="text-red-600 hover:text-red-700"
+                                                  >
+                                                       <Trash2 className="w-4 h-4" />
+                                                  </Button>
+                                             </div>
+
+                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                  <div>
+                                                       <Label>Nombre</Label>
+                                                       <Input
+                                                            type="number"
+                                                            value={metric.number}
+                                                            onChange={(e) => updateArrayField('trustMetrics', index, 'number', parseInt(e.target.value) || 0)}
+                                                            placeholder="112"
+                                                       />
+                                                  </div>
+                                                  <div>
+                                                       <Label>Suffixe</Label>
+                                                       <Input
+                                                            value={metric.suffix}
+                                                            onChange={(e) => updateArrayField('trustMetrics', index, 'suffix', e.target.value)}
+                                                            placeholder="+"
+                                                       />
+                                                  </div>
+                                                  <div>
+                                                       <Label>Label</Label>
+                                                       <Input
+                                                            value={metric.label}
+                                                            onChange={(e) => updateArrayField('trustMetrics', index, 'label', e.target.value)}
+                                                            placeholder="entreprises nous font confiance"
+                                                       />
+                                                  </div>
+                                             </div>
+                                        </Card>
+                                   ))}
+                              </CardContent>
+                         </Card>
+                    </TabsContent>
+
                     <TabsContent value="platform" className="space-y-6">
                          <Card>
                               <CardHeader>
@@ -1424,6 +1493,15 @@ export default function HomePageDashboard() {
                                                   placeholder="Description"
                                              />
                                         </div>
+                                   </div>
+                                   <div>
+                                        <Label>Sous-description (texte avec statistiques)</Label>
+                                        <Textarea
+                                             value={homeData.contact?.subdescription || ''}
+                                             onChange={(e) => updateField('contact.subdescription', e.target.value)}
+                                             placeholder="Ex: +112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne."
+                                             rows={2}
+                                        />
                                    </div>
                                    <div>
                                         <Label>Description du formulaire</Label>
