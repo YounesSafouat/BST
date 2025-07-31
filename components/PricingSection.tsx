@@ -89,7 +89,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {pricingData?.headline || "Tarifs & Accompagnement"}
                          </div>
-                         <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
+                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
                               {pricingData?.subheadline || "Un partenariat, pas seulement une prestation"}
                          </h2>
                          <p className="text-lg text-white max-w-3xl mx-auto">
