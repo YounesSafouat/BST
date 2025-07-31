@@ -167,6 +167,11 @@ export default function FooterDashboard() {
     fetchFooterData()
   }, [])
 
+  // Debug: Log footerData changes
+  useEffect(() => {
+    console.log("Footer data updated:", footerData)
+  }, [footerData])
+
   const fetchFooterData = async () => {
     try {
       const response = await fetch("/api/content?type=footer")
@@ -175,51 +180,15 @@ export default function FooterDashboard() {
         console.log("Footer API response:", data)
 
         if (data && data.length > 0 && data[0].content) {
-          // Deep merge the API response with default structure to ensure all nested objects exist
+          // Directly set the footer data from API response
           const apiData = data[0].content
+          console.log("Setting footer data:", apiData)
           setFooterData(prev => ({
             ...prev,
-            ...apiData,
-            newsletter: {
-              ...prev.newsletter,
-              ...apiData.newsletter
-            },
-            companyInfo: {
-              ...prev.companyInfo,
-              ...apiData.companyInfo,
-              logo: {
-                ...prev.companyInfo.logo,
-                ...apiData.companyInfo?.logo
-              },
-              contact: {
-                ...prev.companyInfo.contact,
-                ...apiData.companyInfo?.contact
-              }
-            },
-            quickLinks: {
-              ...prev.quickLinks,
-              ...apiData.quickLinks
-            },
-            services: {
-              ...prev.services,
-              ...apiData.services
-            },
-            certifications: {
-              ...prev.certifications,
-              ...apiData.certifications
-            },
-            legal: {
-              ...prev.legal,
-              ...apiData.legal
-            },
-            social: {
-              ...prev.social,
-              ...apiData.social
-            }
+            ...apiData
           }))
         } else {
           console.log("No footer data found, using defaults")
-          // If no footer data exists, we'll keep the default structure
         }
       } else {
         console.error("Footer API response not ok:", response.status)
@@ -254,6 +223,7 @@ export default function FooterDashboard() {
               }
             },
             social: {
+              ...prev.social,
               facebook: { icon: "Facebook", color: "#1877f2", url: socialInfo.facebook || "" },
               twitter: { icon: "Twitter", color: "#1da1f2", url: socialInfo.twitter || "" },
               linkedin: { icon: "Linkedin", color: "#0077b5", url: socialInfo.linkedin || "" },
