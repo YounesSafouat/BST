@@ -170,7 +170,48 @@ export default function FooterDashboard() {
       if (response.ok) {
         const data = await response.json()
         if (data && data.length > 0 && data[0].content) {
-          setFooterData(data[0].content)
+          // Deep merge the API response with default structure to ensure all nested objects exist
+          const apiData = data[0].content
+          setFooterData(prev => ({
+            ...prev,
+            ...apiData,
+            newsletter: {
+              ...prev.newsletter,
+              ...apiData.newsletter
+            },
+            companyInfo: {
+              ...prev.companyInfo,
+              ...apiData.companyInfo,
+              logo: {
+                ...prev.companyInfo.logo,
+                ...apiData.companyInfo?.logo
+              },
+              contact: {
+                ...prev.companyInfo.contact,
+                ...apiData.companyInfo?.contact
+              }
+            },
+            quickLinks: {
+              ...prev.quickLinks,
+              ...apiData.quickLinks
+            },
+            services: {
+              ...prev.services,
+              ...apiData.services
+            },
+            certifications: {
+              ...prev.certifications,
+              ...apiData.certifications
+            },
+            legal: {
+              ...prev.legal,
+              ...apiData.legal
+            },
+            social: {
+              ...prev.social,
+              ...apiData.social
+            }
+          }))
         }
       }
 
@@ -337,7 +378,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Titre</Label>
               <Input
-                value={footerData.newsletter.title}
+                value={footerData.newsletter?.title || ''}
                 onChange={(e) => updateField('newsletter.title', e.target.value)}
                 placeholder="Titre de la newsletter"
               />
@@ -345,7 +386,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Description</Label>
               <Textarea
-                value={footerData.newsletter.description}
+                value={footerData.newsletter?.description || ''}
                 onChange={(e) => updateField('newsletter.description', e.target.value)}
                 placeholder="Description de la newsletter"
               />
@@ -353,7 +394,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Placeholder</Label>
               <Input
-                value={footerData.newsletter.placeholder}
+                value={footerData.newsletter?.placeholder || ''}
                 onChange={(e) => updateField('newsletter.placeholder', e.target.value)}
                 placeholder="Placeholder du champ email"
               />
@@ -361,7 +402,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Texte du bouton</Label>
               <Input
-                value={footerData.newsletter.buttonText}
+                value={footerData.newsletter?.buttonText || ''}
                 onChange={(e) => updateField('newsletter.buttonText', e.target.value)}
                 placeholder="Texte du bouton d'inscription"
               />
@@ -381,7 +422,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Logo (URL)</Label>
               <Input
-                value={footerData.companyInfo.logo.image}
+                value={footerData.companyInfo?.logo?.image || ''}
                 onChange={(e) => updateField('companyInfo.logo.image', e.target.value)}
                 placeholder="/bst.png"
               />
@@ -389,7 +430,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Alt du logo</Label>
               <Input
-                value={footerData.companyInfo.logo.alt}
+                value={footerData.companyInfo?.logo?.alt || ''}
                 onChange={(e) => updateField('companyInfo.logo.alt', e.target.value)}
                 placeholder="Nom de l'entreprise"
               />
@@ -397,7 +438,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Description</Label>
               <Textarea
-                value={footerData.companyInfo.description}
+                value={footerData.companyInfo?.description || ''}
                 onChange={(e) => updateField('companyInfo.description', e.target.value)}
                 placeholder="Description de l'entreprise"
               />
@@ -411,7 +452,7 @@ export default function FooterDashboard() {
                 <Label className="text-sm">Adresse</Label>
                 <div className="flex gap-2">
                   <Select
-                    value={footerData.companyInfo.contact.address.icon}
+                    value={footerData.companyInfo?.contact?.address?.icon || ''}
                     onValueChange={(value) => updateField('companyInfo.contact.address.icon', value)}
                   >
                     <SelectTrigger className="w-24">
@@ -429,7 +470,7 @@ export default function FooterDashboard() {
                     </SelectContent>
                   </Select>
                   <Input
-                    value={footerData.companyInfo.contact.address.text}
+                    value={footerData.companyInfo?.contact?.address?.text || ''}
                     onChange={(e) => updateField('companyInfo.contact.address.text', e.target.value)}
                     placeholder="Adresse"
                     className="flex-1"
@@ -441,7 +482,7 @@ export default function FooterDashboard() {
                 <Label className="text-sm">Téléphone</Label>
                 <div className="flex gap-2">
                   <Select
-                    value={footerData.companyInfo.contact.phone.icon}
+                    value={footerData.companyInfo?.contact?.phone?.icon || ''}
                     onValueChange={(value) => updateField('companyInfo.contact.phone.icon', value)}
                   >
                     <SelectTrigger className="w-24">
@@ -459,7 +500,7 @@ export default function FooterDashboard() {
                     </SelectContent>
                   </Select>
                   <Input
-                    value={footerData.companyInfo.contact.phone.text}
+                    value={footerData.companyInfo?.contact?.phone?.text || ''}
                     onChange={(e) => updateField('companyInfo.contact.phone.text', e.target.value)}
                     placeholder="Téléphone"
                     className="flex-1"
@@ -471,7 +512,7 @@ export default function FooterDashboard() {
                 <Label className="text-sm">Email</Label>
                 <div className="flex gap-2">
                   <Select
-                    value={footerData.companyInfo.contact.email.icon}
+                    value={footerData.companyInfo?.contact?.email?.icon || ''}
                     onValueChange={(value) => updateField('companyInfo.contact.email.icon', value)}
                   >
                     <SelectTrigger className="w-24">
@@ -489,7 +530,7 @@ export default function FooterDashboard() {
                     </SelectContent>
                   </Select>
                   <Input
-                    value={footerData.companyInfo.contact.email.text}
+                    value={footerData.companyInfo?.contact?.email?.text || ''}
                     onChange={(e) => updateField('companyInfo.contact.email.text', e.target.value)}
                     placeholder="Email"
                     className="flex-1"
@@ -512,7 +553,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Titre</Label>
               <Input
-                value={footerData.quickLinks.title}
+                value={footerData.quickLinks?.title || ''}
                 onChange={(e) => updateField('quickLinks.title', e.target.value)}
                 placeholder="Titre de la section"
               />
@@ -573,7 +614,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Titre</Label>
               <Input
-                value={footerData.services.title}
+                value={footerData.services?.title || ''}
                 onChange={(e) => updateField('services.title', e.target.value)}
                 placeholder="Titre de la section"
               />
@@ -748,7 +789,7 @@ export default function FooterDashboard() {
             <div>
               <Label>Titre</Label>
               <Input
-                value={footerData.certifications.title}
+                value={footerData.certifications?.title || ''}
                 onChange={(e) => updateField('certifications.title', e.target.value)}
                 placeholder="Titre de la section"
               />
