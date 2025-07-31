@@ -17,10 +17,11 @@ export async function GET(req: NextRequest) {
 
     const query: any = {};
     if (type) query.type = type;
-    console.log("API: Query:", query)
+    console.log("API: Query being executed:", JSON.stringify(query))
 
     const contents = await Content.find(query);
     console.log("API: Found content count:", contents.length)
+    console.log("API: Content types found:", contents.map(c => c.type))
     
     // Special logging for footer type
     if (type === 'footer') {
@@ -32,6 +33,11 @@ export async function GET(req: NextRequest) {
           newsletter: contents[0].content?.newsletter,
           companyInfo: contents[0].content?.companyInfo
         })
+      } else {
+        console.log("API: NO FOOTER DOCUMENT FOUND IN DATABASE")
+        // Let's see what types exist
+        const allContent = await Content.find({});
+        console.log("API: All content types in database:", allContent.map(c => c.type))
       }
     }
     
