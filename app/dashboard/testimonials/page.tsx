@@ -39,23 +39,24 @@ export default function TestimonialsPage() {
   // Fetch testimonials from API
   useEffect(() => {
     setLoading(true);
-    fetch("/api/content?type=testimonial")
+    fetch("/api/testimonials")
       .then((res) => res.json())
       .then((data) => {
-        // Map nested content fields to flat structure
+        // Map the testimonials data correctly
         const mapped = (data || []).map((t: any) => ({
-          _id: typeof t._id === 'object' && t._id.$oid ? t._id.$oid : t._id.toString(),
-          author: t.content?.name || t.title || '',
-          role: t.content?.role || t.description || '',
-          text: t.content?.quote || t.content?.text || '',
-          photo: t.content?.avatar || t.content?.photo || '',
+          _id: t._id,
+          author: t.author || '',
+          role: t.role || '',
+          text: t.text || '',
+          photo: t.photo || '',
           createdAt: t.createdAt,
           updatedAt: t.updatedAt,
         }));
         setTestimonials(mapped);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error('Error fetching testimonials:', error);
         toast({ title: "Erreur", description: "Impossible de charger les témoignages." });
         setLoading(false);
       });
@@ -65,7 +66,7 @@ export default function TestimonialsPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
-      }
+  }
 
   // Start editing a testimonial
   function editTestimonial(idx: number) {
@@ -91,7 +92,7 @@ export default function TestimonialsPage() {
   // Save (create or update) testimonial
   async function saveTestimonial() {
     setSaving(true);
-    
+
     try {
       if (editing === "new") {
         // Create new testimonial
@@ -100,7 +101,7 @@ export default function TestimonialsPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        
+
         if (res.ok) {
           const result = await res.json();
           setTestimonials([...testimonials, result.testimonial]);
@@ -118,7 +119,7 @@ export default function TestimonialsPage() {
             body: JSON.stringify(form),
           });
           if (res.ok) {
-            const updatedTestimonials = testimonials.map((t, i) => 
+            const updatedTestimonials = testimonials.map((t, i) =>
               i === editing ? { ...form, _id: testimonials[editing]._id } : t
             );
             setTestimonials(updatedTestimonials);
@@ -132,9 +133,9 @@ export default function TestimonialsPage() {
     } catch (error) {
       toast({ title: "Erreur", description: "Une erreur est survenue." });
     }
-    
-      setSaving(false);
-    }
+
+    setSaving(false);
+  }
 
   // Delete testimonial
   async function deleteTestimonial(idx: number) {
@@ -144,21 +145,21 @@ export default function TestimonialsPage() {
       if (typeof idx === "number") {
         const res = await fetch(`/api/testimonials/${testimonials[idx]._id}`, {
           method: "DELETE",
-      });
+        });
         if (res.ok) {
           const updatedTestimonials = testimonials.filter((_, i) => i !== idx);
           setTestimonials(updatedTestimonials);
           toast({ title: "Supprimé", description: "Témoignage supprimé." });
           cancelEdit();
-      } else {
+        } else {
           toast({ title: "Erreur", description: "Échec de la suppression." });
         }
       }
     } catch (error) {
       toast({ title: "Erreur", description: "Une erreur est survenue." });
     }
-      setSaving(false);
-    }
+    setSaving(false);
+  }
 
   // UI
   if (loading) {
@@ -193,30 +194,30 @@ export default function TestimonialsPage() {
                 <Card>
                   <CardHeader><CardTitle>Informations</CardTitle></CardHeader>
                   <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
                         <Label>Nom de l'auteur</Label>
                         <Input name="author" value={form.author} onChange={handleChange} />
-                </div>
-                <div>
+                      </div>
+                      <div>
                         <Label>Rôle/Fonction</Label>
                         <Input name="role" value={form.role} onChange={handleChange} placeholder="CEO, Consultant..." />
-                </div>
-              </div>
-              <div>
+                      </div>
+                    </div>
+                    <div>
                       <Label>Photo (URL)</Label>
                       <Input name="photo" value={form.photo} onChange={handleChange} placeholder="https://..." />
-              </div>
-              <div>
+                    </div>
+                    <div>
                       <Label>Témoignage</Label>
-                <Textarea
-                        name="text" 
-                        value={form.text} 
-                        onChange={handleChange} 
+                      <Textarea
+                        name="text"
+                        value={form.text}
+                        onChange={handleChange}
                         placeholder="Le témoignage..."
-                  rows={4}
-                />
-              </div>
+                        rows={4}
+                      />
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -224,20 +225,20 @@ export default function TestimonialsPage() {
 
             {/* Sticky Action Bar */}
             <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t mt-0 bg-white sticky bottom-0 z-20 px-4 pb-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="lg" 
-                className="min-w-[120px] text-base font-semibold" 
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                className="min-w-[120px] text-base font-semibold"
                 onClick={cancelEdit}
               >
                 Annuler
               </Button>
-              
-              <Button 
-                type="button" 
-                size="lg" 
-                className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg" 
+
+              <Button
+                type="button"
+                size="lg"
+                className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg"
                 onClick={saveTestimonial}
                 disabled={saving}
               >
@@ -276,12 +277,12 @@ export default function TestimonialsPage() {
                 <p className="text-sm text-gray-600 line-clamp-3 max-w-[220px]">
                   "{testimonial.text || "Aucun témoignage"}"
                 </p>
-            </div>
+              </div>
 
               {/* Bottom Section: Actions */}
               <div className="flex flex-row justify-end gap-2 mt-4">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => editTestimonial(idx)}
                   className="border-gray-300 hover:bg-gray-100 text-xs"
@@ -289,8 +290,8 @@ export default function TestimonialsPage() {
                   <Pencil className="w-3 h-3 mr-1" />
                   Modifier
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => deleteTestimonial(idx)}
                   className="border-red-300 hover:bg-red-100 text-red-600 text-xs"
@@ -301,8 +302,8 @@ export default function TestimonialsPage() {
               </div>
             </Card>
           ))
-              )}
-            </div>
+        )}
+      </div>
     </div>
   );
 } 
