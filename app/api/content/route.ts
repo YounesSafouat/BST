@@ -84,12 +84,18 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     console.log("API: Starting PUT request...")
+    console.log("API: Request URL:", req.url)
     await connectDB();
+    
     const { searchParams } = new URL(req.url);
+    console.log("API: All search params:", Object.fromEntries(searchParams.entries()))
+    
     const type = searchParams.get('type');
     console.log("API: PUT request for type:", type)
+    console.log("API: Type is null/undefined:", type === null || type === undefined)
     
     if (!type) {
+      console.log("API: Missing type parameter - returning 400")
       return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 });
     }
     
