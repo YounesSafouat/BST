@@ -174,38 +174,29 @@ export default function FooterDashboard() {
 
   const fetchFooterData = async () => {
     try {
-      const response = await fetch("/api/content?type=footer")
+      const response = await fetch("/api/content/footer")
       if (response.ok) {
         const data = await response.json()
         console.log("Footer API response:", data)
-        console.log("Footer API response length:", data.length)
 
-        if (data && data.length > 0) {
-          // Find the actual footer document (filter by type)
-          const footerDocument = data.find(item => item.type === 'footer')
-          console.log("Footer document found:", footerDocument)
+        if (data && data.content) {
+          // Directly set the footer data from API response
+          const apiData = data.content
+          console.log("Setting footer data:", apiData)
+          console.log("API data keys:", Object.keys(apiData))
+          console.log("API newsletter:", apiData.newsletter)
+          console.log("API companyInfo:", apiData.companyInfo)
 
-          if (footerDocument && footerDocument.content) {
-            // Directly set the footer data from API response
-            const apiData = footerDocument.content
-            console.log("Setting footer data:", apiData)
-            console.log("API data keys:", Object.keys(apiData))
-            console.log("API newsletter:", apiData.newsletter)
-            console.log("API companyInfo:", apiData.companyInfo)
-
-            setFooterData(prev => {
-              const newData = {
-                ...prev,
-                ...apiData
-              }
-              console.log("New footer data after merge:", newData)
-              return newData
-            })
-          } else {
-            console.log("No footer document found or no content")
-          }
+          setFooterData(prev => {
+            const newData = {
+              ...prev,
+              ...apiData
+            }
+            console.log("New footer data after merge:", newData)
+            return newData
+          })
         } else {
-          console.log("No footer data found, using defaults")
+          console.log("No footer document found or no content")
         }
       } else {
         console.error("Footer API response not ok:", response.status)
@@ -297,7 +288,7 @@ export default function FooterDashboard() {
 
       console.log("Saving footer data:", cleanFooterData)
 
-      const response = await fetch("/api/content?type=footer", {
+      const response = await fetch("/api/content/footer", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

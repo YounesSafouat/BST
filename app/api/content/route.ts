@@ -4,7 +4,7 @@ import Content from '@/models/Content';
 
 export const dynamic = 'force-dynamic';
 
-// GET: List or filter content
+// GET: Get content by type or all content
 export async function GET(req: NextRequest) {
   try {
     console.log("API: Starting content fetch...")
