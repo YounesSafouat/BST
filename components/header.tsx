@@ -33,10 +33,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex justify-between items-center py-2">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
-            <img src="BSTLogo.svg" alt="BlackSwan" />
+            <img src="BSTLogo.svg" alt="BlackSwan" className="h-8" />
           </div>
 
           {/* Desktop Navigation */}
@@ -57,22 +57,22 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             <Button
               variant="ghost"
               size="sm"
-              className="gap-2 text-gray-700 hover:text-[var(--color-main)]"
+              className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2"
               onClick={() => window.open('tel:+212783699603')}
             >
-              <Phone className="w-4 h-4" />
+              <Phone className="w-3 h-3" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className="gap-2 text-gray-700 hover:text-[var(--odoo-accent)]"
+              className="gap-1 text-gray-700 hover:text-[var(--odoo-accent)] h-8 px-2"
               onClick={() => window.open('https://wa.me/212783699603', '_blank')}
             >
-              <MessageCircle className="w-4 h-4" />
+              <MessageCircle className="w-3 h-3" />
             </Button>
             <Button
               size="sm"
-              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] gap-2 rounded-full px-4 text-sm"
+              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] gap-1 rounded-full px-3 text-xs h-8"
               onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
             >
               Prendre RDV
