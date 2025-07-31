@@ -1,6 +1,6 @@
 "use client"
 
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
@@ -11,6 +11,7 @@ const IconMap = {
   Twitter,
   Linkedin,
   Instagram,
+  MessageSquare,
   Mail,
   Phone,
   MapPin
@@ -152,6 +153,7 @@ export default function Footer() {
                   Linkedin: 'var(--color-secondary)',
                   Instagram: 'var(--color-secondary)',
                   Youtube: 'var(--color-secondary)',
+                  MessageSquare: '#25d366', // WhatsApp green color
                 };
                 const bgColor = network.color || colorMap[iconKey] || 'var(--color-main)';
                 return (
