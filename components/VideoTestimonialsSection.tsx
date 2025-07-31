@@ -127,8 +127,8 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      };
 
      return (
-          <section className="py-20 bg-white">
-               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <section className="min-h-screen bg-white flex items-center">
+               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="text-center mb-12">
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {headline}
