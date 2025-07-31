@@ -346,7 +346,7 @@ export default function BlogAdminPage() {
         console.log("ID length:", postToUpdate._id?.length);
 
         try {
-          const res = await fetch(`/api/blog?id=${postToUpdate._id}`, {
+          const res = await fetch(`/api/blog?id=${encodeURIComponent(postToUpdate._id)}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData),
@@ -389,8 +389,8 @@ export default function BlogAdminPage() {
     const postToDelete = posts[idx];
     console.log("Deleting blog post:", postToDelete);
     setSaving(true);
-    try {
-      const res = await fetch(`/api/blog?id=${postToDelete._id}`, {
+          try {
+        const res = await fetch(`/api/blog?id=${encodeURIComponent(postToDelete._id)}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

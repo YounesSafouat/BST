@@ -140,8 +140,10 @@ export async function PUT(req: NextRequest) {
     console.log("Blog API: PUT request received");
     await connectDB();
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
-    console.log("Blog API: ID from params:", id);
+    const encodedId = searchParams.get('id');
+    const id = encodedId ? decodeURIComponent(encodedId) : null;
+    console.log("Blog API: Encoded ID from params:", encodedId);
+    console.log("Blog API: Decoded ID:", id);
     console.log("Blog API: ID length:", id?.length);
     console.log("Blog API: Full URL:", req.url);
     
@@ -238,7 +240,8 @@ export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
+    const encodedId = searchParams.get('id');
+    const id = encodedId ? decodeURIComponent(encodedId) : null;
     if (!id) {
       return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
     }
