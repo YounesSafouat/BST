@@ -197,12 +197,9 @@ export default function BlogPage() {
       <section className="relative pt-48 md:pt-56 pb-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gray-50 border border-gray-200 mb-8">
-              <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
-              <span className="text-sm font-medium text-color-gray tracking-wide">NOTRE BLOG</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-color-black mb-6">
-              Découvrez Nos <span className="text-color-main">Articles</span>
+            <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE BLOG</div>
+            <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+              Découvrez Nos <span className="text-[var(--color-main)]">Articles</span>
             </h1>
             <p className="text-xl text-color-gray max-w-3xl mx-auto leading-relaxed">
               Guides pratiques, études de cas et insights sur Odoo ERP, HubSpot CRM et la transformation digitale.

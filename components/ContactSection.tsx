@@ -199,7 +199,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          className="text-center mb-16"
                     >
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{data.headline}</div>
-                         <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">{data.description}</h2>
+                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">{data.description}</h2>
                          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{data.subdescription}</p>
                     </motion.div>
 
