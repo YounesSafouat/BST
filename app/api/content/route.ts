@@ -20,7 +20,22 @@ export async function GET(req: NextRequest) {
     console.log("API: Query:", query)
 
     const contents = await Content.find(query);
-    console.log("API: Found content:", contents)
+    console.log("API: Found content count:", contents.length)
+    
+    // Special logging for footer type
+    if (type === 'footer') {
+      console.log("API: Footer content found:", contents.length > 0 ? "YES" : "NO")
+      if (contents.length > 0) {
+        console.log("API: Footer content structure:", {
+          hasContent: !!contents[0].content,
+          contentKeys: contents[0].content ? Object.keys(contents[0].content) : [],
+          newsletter: contents[0].content?.newsletter,
+          companyInfo: contents[0].content?.companyInfo
+        })
+      }
+    }
+    
+    console.log("API: Found content details:", JSON.stringify(contents, null, 2))
 
     return NextResponse.json(contents, {
       headers: {
