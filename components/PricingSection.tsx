@@ -124,6 +124,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                                   <div className="space-y-1">
                                                        <div className="text-2xl font-extrabold text-[var(--color-secondary)]">{plan.price}</div>
                                                        <div className="text-sm text-gray-500">{plan.estimation}</div>
+                                                       <div className="text-xs text-gray-400 italic">* Prix hors taxes</div>
                                                   </div>
                                              </CardHeader>
 
@@ -158,6 +159,19 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                               ))}
                          </div>
                     )}
+                    
+                    {/* Tax notice */}
+                    <motion.div
+                         initial={{ opacity: 0, y: 20 }}
+                         whileInView={{ opacity: 1, y: 0 }}
+                         viewport={{ once: true }}
+                         transition={{ delay: 0.5 }}
+                         className="text-center mt-12"
+                    >
+                         <p className="text-sm text-white/80 italic">
+                              * Tous les prix affichés sont hors taxes (HT). La TVA applicable sera ajoutée selon la réglementation en vigueur.
+                         </p>
+                    </motion.div>
                </div>
           </section>
      );
