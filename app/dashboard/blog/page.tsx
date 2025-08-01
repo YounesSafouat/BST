@@ -344,6 +344,7 @@ export default function BlogAdminPage() {
         console.log("Update URL:", `/api/blog?id=${postToUpdate._id}`);
         console.log("Full ID being sent:", postToUpdate._id);
         console.log("ID length:", postToUpdate._id?.length);
+        console.log("Encoded ID:", encodeURIComponent(postToUpdate._id || ''));
 
         try {
           const res = await fetch(`/api/blog?id=${encodeURIComponent(postToUpdate._id || '')}`, {

@@ -52,6 +52,8 @@ export async function GET(req: NextRequest) {
         _index: index
       }));
       console.log("Blog API: Returning blog posts with IDs:", blogPostsWithId.length);
+      console.log("Blog API: Sample blog post ID:", blogPostsWithId[0]?._id);
+      console.log("Blog API: Blog page ID:", blogPageContent._id);
       return NextResponse.json(blogPostsWithId, {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -146,6 +148,7 @@ export async function PUT(req: NextRequest) {
     console.log("Blog API: Decoded ID:", id);
     console.log("Blog API: ID length:", id?.length);
     console.log("Blog API: Full URL:", req.url);
+    console.log("Blog API: Search params:", Object.fromEntries(searchParams.entries()));
     
     if (!id) {
       console.log("Blog API: Missing id parameter");
