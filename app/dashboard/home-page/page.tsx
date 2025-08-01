@@ -55,6 +55,7 @@ interface HomePageData {
                     url?: string;
                }>;
                speed?: number;
+               text?: string; // Text to display above the carousel
           };
      };
      trustMetrics: Array<{
@@ -756,6 +757,21 @@ export default function HomePageDashboard() {
                                              </div>
                                         </div>
 
+                                        {/* Text above carousel */}
+                                        <div>
+                                             <Label>Texte au-dessus du carousel</Label>
+                                             <Textarea
+                                                  value={homeData.hero.carousel?.text || ''}
+                                                  onChange={(e) => updateField('hero.carousel.text', e.target.value)}
+                                                  placeholder="Ex: +112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne."
+                                                  title="Texte au-dessus du carousel"
+                                                  className="h-20"
+                                             />
+                                             <p className="text-xs text-gray-500 mt-1">
+                                                  Ce texte apparaîtra au-dessus du carousel des logos d'entreprises
+                                             </p>
+                                        </div>
+
                                         {(homeData.hero.carousel?.companies || []).map((company, index) => (
                                              <Card key={index} className="p-4">
                                                   <div className="flex items-center justify-between mb-4">
@@ -1381,6 +1397,7 @@ export default function HomePageDashboard() {
                                                   }}
                                                   className="hidden"
                                                   id="partnership-image-upload"
+                                                  title="Choisir une image pour l'agence"
                                              />
                                              <Button
                                                   type="button"

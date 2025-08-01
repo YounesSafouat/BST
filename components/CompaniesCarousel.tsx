@@ -31,11 +31,18 @@ interface Company {
 interface CompaniesCarouselProps {
      companies?: Company[];
      speed?: number; // Animation duration in seconds
+     text?: string; // Text to display above the carousel
 }
 
-export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1 }: CompaniesCarouselProps) {
+export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1, text }: CompaniesCarouselProps) {
      return (
           <div className="relative overflow-hidden py-4 w-full">
+               {/* Text above carousel */}
+               {text && (
+                    <div className="text-center mb-6">
+                         <p className="text-gray-600 text-lg font-medium">{text}</p>
+                    </div>
+               )}
                <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent"></div>
                <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent"></div>
 

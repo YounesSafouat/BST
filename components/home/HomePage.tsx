@@ -76,6 +76,7 @@ interface OdooData {
                     url?: string;
                }>;
                speed?: number;
+               text?: string; // Text to display above the carousel
           };
      };
      trustMetrics: Array<{
