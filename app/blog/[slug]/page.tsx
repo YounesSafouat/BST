@@ -14,7 +14,7 @@ function getBaseUrl() {
 export async function generateStaticParams() {
   try {
     const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
     
     if (!res.ok) {
       console.warn("Failed to fetch blog data for static params, returning empty array");
@@ -22,8 +22,7 @@ export async function generateStaticParams() {
     }
     
     const data = await res.json();
-    const blogData = Array.isArray(data) ? data[0] : data;
-    const posts = blogData?.content?.blogPosts || [];
+    const posts = Array.isArray(data) ? data : [];
     return posts.map((post: any) => ({ slug: post.slug }));
   } catch (error) {
     console.warn("Error fetching blog data for static params:", error);
@@ -35,7 +34,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
     const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
     
     if (!res.ok) {
       return {
@@ -45,8 +44,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     }
     
     const data = await res.json();
-    const blogData = Array.isArray(data) ? data[0] : data;
-    const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug);
+    const posts = Array.isArray(data) ? data : [];
+    const post = posts.find((p: any) => p.slug === params.slug);
 
     if (!post) {
       return {
@@ -78,15 +77,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function Page({ params }: { params: { slug: string } }) {
   try {
     const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/content?type=blog-page`, { cache: "no-store" });
+    const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
     
     if (!res.ok) {
       return <div className="text-center py-12">Erreur lors du chargement de l'article</div>;
     }
     
     const data = await res.json();
-    const blogData = Array.isArray(data) ? data[0] : data;
-    const post = blogData?.content?.blogPosts?.find((p: any) => p.slug === params.slug && p.published);
+    const posts = Array.isArray(data) ? data : [];
+    const post = posts.find((p: any) => p.slug === params.slug && p.published);
 
     if (!post) {
       return <div className="text-center py-12">Article non trouvé</div>;

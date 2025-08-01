@@ -68,11 +68,10 @@ export function BlogPost({ post }: { post: Post }) {
     const fetchData = async () => {
       try {
         const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
-        const apiUrl = baseUrl ? `${baseUrl}/api/content?type=blog-page` : "/api/content?type=blog-page";
+        const apiUrl = baseUrl ? `${baseUrl}/api/blog` : "/api/blog";
         const res = await fetch(apiUrl);
         const data = await res.json();
-        const blogData = Array.isArray(data) ? data[0] : data;
-        const allPosts: Post[] = blogData?.content?.blogPosts || [];
+        const allPosts: Post[] = Array.isArray(data) ? data : [];
 
         // Get similar posts using the similarPosts array from the post
         if (post.similarPosts && post.similarPosts.length > 0) {

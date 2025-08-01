@@ -25,10 +25,10 @@ export default function ClientPage({ slug }: { slug: string }) {
   useEffect(() => {
     const fetchPost = async () => {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-      const res = await fetch(`${baseUrl}/api/content?type=blog-page`)
+      const res = await fetch(`${baseUrl}/api/blog`)
       const data = await res.json()
-      const blogData = Array.isArray(data) ? data[0] : data
-      const found = blogData?.content?.blogPosts?.find((p: any) => p.slug === slug)
+      const posts = Array.isArray(data) ? data : []
+      const found = posts.find((p: any) => p.slug === slug)
       setPost(found || null)
       setLoading(false)
     }
