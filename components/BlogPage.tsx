@@ -14,6 +14,7 @@ import {
   PaginationNext,
   PaginationEllipsis,
 } from "@/components/ui/pagination"
+import Loader from "./home/Loader"
 
 // Helper function to check if a blog is released
 function isBlogReleased(post: any): boolean {
@@ -162,7 +163,7 @@ export default function BlogPage() {
     }
   };
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return <Loader />;
   if (!blogData) return <div>Erreur de chargement du blog.</div>;
 
   // Extract categories and posts from dynamic data

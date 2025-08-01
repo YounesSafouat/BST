@@ -265,13 +265,15 @@ export default function HomePage() {
      const fetchTestimonials = async () => {
           try {
                const timestamp = Date.now();
+               console.log('Fetching testimonials from /api/testimonials...');
                const response = await fetch(`/api/testimonials?t=${timestamp}`, {
                     cache: 'no-store'
                });
                if (response.ok) {
                     const data = await response.json();
+                    console.log('Raw testimonials data:', data);
                     // Map the testimonials data to match the expected format
-                    setAvailableTestimonials(data.map((item: any) => ({
+                    const mappedTestimonials = data.map((item: any) => ({
                          _id: item._id,
                          name: item.author || '',
                          role: item.role || '',
@@ -279,7 +281,11 @@ export default function HomePage() {
                          result: '',
                          avatar: item.photo || '',
                          company: ''
-                    })));
+                    }));
+                    console.log('Mapped testimonials:', mappedTestimonials);
+                    setAvailableTestimonials(mappedTestimonials);
+               } else {
+                    console.error('Failed to fetch testimonials, status:', response.status);
                }
           } catch (error) {
                console.error('Error fetching testimonials:', error);
@@ -308,16 +314,7 @@ export default function HomePage() {
                <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
                          <Loader />
-                         <p className="mt-4 text-gray-600">Chargement des données Odoo...</p>
-                         <button
-                              onClick={() => {
-                                   console.log('Manual refresh triggered');
-                                   fetchOdooData();
-                              }}
-                              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                         >
-                              Actualiser manuellement
-                         </button>
+
                     </div>
                </div>
           );
@@ -680,6 +677,11 @@ export default function HomePage() {
                                    </p>
                               </div>
                               <div className="flex flex-col md:flex-row justify-center items-stretch gap-8">
+                                   {(() => {
+                                        console.log('odooData.testimonials:', odooData.testimonials);
+                                        console.log('availableTestimonials:', availableTestimonials);
+                                        return null;
+                                   })()}
                                    {odooData.testimonials.map((testimonialId: string, index: number) => {
                                         const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                                         if (!testimonial) return null;
