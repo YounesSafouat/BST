@@ -262,7 +262,11 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ error: 'Blog page not found' }, { status: 404 });
       }
       
-      // Remove the specific blog post from the array using proper MongoDB update
+      console.log("Blog API: Current blog posts array length:", blogPage.content.blogPosts.length);
+      console.log("Blog API: Blog post to delete at index:", index);
+      console.log("Blog API: Blog post to delete:", blogPage.content.blogPosts[index]);
+      
+      // Remove the specific blog post from the array using the index
       const result = await Content.findByIdAndUpdate(
         blogPageId,
         { $pull: { 'content.blogPosts': blogPage.content.blogPosts[index] } },

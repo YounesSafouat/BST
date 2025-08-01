@@ -338,13 +338,10 @@ export default function BlogAdminPage() {
         }
       } else {
         // Update existing blog post
-        const filteredPosts = getFilteredPosts();
-        const postToUpdate = filteredPosts[editing as number];
+        const postToUpdate = posts[editing as number];
         console.log("Updating blog post:", { postToUpdate, formData });
-        console.log("Update URL:", `/api/blog?id=${postToUpdate._id}`);
         console.log("Full ID being sent:", postToUpdate._id);
         console.log("ID length:", postToUpdate._id?.length);
-        console.log("Encoded ID:", encodeURIComponent(postToUpdate._id || ''));
 
         try {
           const res = await fetch(`/api/blog`, {
@@ -404,7 +401,8 @@ export default function BlogAdminPage() {
       if (res.ok) {
         const result = await res.json();
         console.log("Blog post deleted:", result);
-        const updatedPosts = posts.filter((_, i) => i !== idx);
+        // Remove the post by ID instead of index
+        const updatedPosts = posts.filter((post) => post._id !== postToDelete._id);
         setPosts(updatedPosts);
         toast({ title: "Supprimé", description: "Article supprimé." });
       } else {
