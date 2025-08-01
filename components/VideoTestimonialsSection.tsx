@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Volume2, Pause, VolumeX } from 'lucide-react';
+import { Play, Volume2, Pause, VolumeX, X, Maximize2 } from 'lucide-react';
 
 interface VideoTestimonial {
      id: string;
@@ -12,6 +12,7 @@ interface VideoTestimonial {
      backgroundColor: string;
      textColor: string;
      videoUrl?: string;
+     thumbnailUrl?: string; // New field for thumbnail
 }
 
 interface VideoTestimonialsData {
@@ -31,7 +32,9 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      const [progress, setProgress] = useState<{ [key: string]: number }>({});
      const [currentTime, setCurrentTime] = useState<{ [key: string]: number }>({});
      const [duration, setDuration] = useState<{ [key: string]: number }>({});
+     const [fullscreenVideo, setFullscreenVideo] = useState<string | null>(null);
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
+     const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
 
      // Fallback data if no data is provided
      const fallbackTestimonials: VideoTestimonial[] = [
@@ -120,6 +123,31 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           }
      };
 
+     const openFullscreen = (videoId: string) => {
+          setFullscreenVideo(videoId);
+          // Copy current video state to fullscreen
+          const video = videoRefs.current[videoId];
+          if (video && fullscreenVideoRef.current) {
+               fullscreenVideoRef.current.currentTime = video.currentTime;
+               fullscreenVideoRef.current.muted = video.muted;
+               if (playingVideos[videoId]) {
+                    fullscreenVideoRef.current.play();
+               }
+          }
+     };
+
+     const closeFullscreen = () => {
+          // Save current state back to original video
+          if (fullscreenVideo && fullscreenVideoRef.current) {
+               const video = videoRefs.current[fullscreenVideo];
+               if (video) {
+                    video.currentTime = fullscreenVideoRef.current.currentTime;
+                    video.muted = fullscreenVideoRef.current.muted;
+               }
+          }
+          setFullscreenVideo(null);
+     };
+
      const formatTime = (seconds: number) => {
           const mins = Math.floor(seconds / 60);
           const secs = Math.floor(seconds % 60);
@@ -141,20 +169,21 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                          </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
                          {testimonials.map((testimonial) => (
                               <div
                                    key={testimonial.id}
                                    className={`relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer ${testimonial.backgroundColor}`}
                               >
-                                   {/* Video Content */}
-                                   <div className="aspect-video relative">
+                                   {/* Video Content - Made bigger */}
+                                   <div className="aspect-[16/10] relative">
                                         {testimonial.videoUrl ? (
                                              // Actual video with controls
                                              <div className="w-full h-full relative group">
                                                   <video
                                                        ref={(el) => { videoRefs.current[testimonial.id] = el; }}
                                                        src={testimonial.videoUrl}
+                                                       poster={testimonial.thumbnailUrl} // Use thumbnail as poster
                                                        className="w-full h-full object-cover"
                                                        onTimeUpdate={() => handleTimeUpdate(testimonial.id)}
                                                        onLoadedMetadata={() => handleLoadedMetadata(testimonial.id)}
@@ -174,6 +203,16 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                             ) : (
                                                                  <Play className="w-8 h-8 text-gray-800 ml-1" />
                                                             )}
+                                                       </button>
+
+                                                       {/* Fullscreen Button */}
+                                                       <button
+                                                            onClick={() => openFullscreen(testimonial.id)}
+                                                            className="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                                                            title="Plein écran"
+                                                            aria-label="Ouvrir la vidéo en plein écran"
+                                                       >
+                                                            <Maximize2 className="w-5 h-5 text-white" />
                                                        </button>
                                                   </div>
 
@@ -211,24 +250,77 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                         ) : (
                                              // Placeholder design when no video URL
                                              <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                                                  <div className="text-center">
-                                                       <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                            <Play className="w-8 h-8 text-white" />
+                                                  {testimonial.thumbnailUrl ? (
+                                                       // Show thumbnail if available
+                                                       <div className="w-full h-full relative">
+                                                            <img 
+                                                                 src={testimonial.thumbnailUrl} 
+                                                                 alt={testimonial.company}
+                                                                 className="w-full h-full object-cover"
+                                                            />
+                                                            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                                 <div className="text-center">
+                                                                      <div className="w-20 h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                                           <Play className="w-8 h-8 text-gray-800 ml-1" />
+                                                                      </div>
+                                                                      <p className="text-white text-lg font-medium">
+                                                                           {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                                      </p>
+                                                                 </div>
+                                                            </div>
                                                        </div>
-                                                       <p className="text-white text-lg font-medium">
-                                                            {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
-                                                       </p>
-                                                  </div>
+                                                  ) : (
+                                                       // Default placeholder
+                                                       <div className="text-center">
+                                                            <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                                 <Play className="w-8 h-8 text-white" />
+                                                            </div>
+                                                            <p className="text-white text-lg font-medium">
+                                                                 {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                            </p>
+                                                       </div>
+                                                  )}
                                              </div>
                                         )}
                                    </div>
 
-                                   {/* No white card - just the placeholder design */}
+                                   {/* Company Info */}
+                                   <div className="p-4 bg-white">
+                                        <h3 className="text-lg font-semibold text-gray-900">{testimonial.company}</h3>
+                                        {testimonial.tagline && (
+                                             <p className="text-sm text-gray-600 mt-1">{testimonial.tagline}</p>
+                                        )}
+                                   </div>
                               </div>
                          ))}
                     </div>
 
+                    {/* Fullscreen Modal */}
+                    {fullscreenVideo && (
+                         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+                              <div className="relative w-full max-w-6xl">
+                                   {/* Close Button */}
+                                   <button
+                                        onClick={closeFullscreen}
+                                        className="absolute top-4 right-4 z-10 w-12 h-12 bg-black bg-opacity-50 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all duration-300"
+                                        title="Fermer"
+                                        aria-label="Fermer la vidéo plein écran"
+                                   >
+                                        <X className="w-6 h-6 text-white" />
+                                   </button>
 
+                                   {/* Video */}
+                                   <video
+                                        ref={fullscreenVideoRef}
+                                        src={testimonials.find(t => t.id === fullscreenVideo)?.videoUrl}
+                                        poster={testimonials.find(t => t.id === fullscreenVideo)?.thumbnailUrl}
+                                        className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                                        controls
+                                        autoPlay
+                                   />
+                              </div>
+                         </div>
+                    )}
                </div>
           </section>
      );

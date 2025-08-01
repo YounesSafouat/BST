@@ -129,6 +129,7 @@ interface HomePageData {
                backgroundColor: string;
                textColor: string;
                videoUrl?: string;
+               thumbnailUrl?: string;
           }>;
      };
      faq?: {
@@ -1904,7 +1905,8 @@ export default function HomePageDashboard() {
                                                        duration: '02:00',
                                                        backgroundColor: 'bg-gray-800',
                                                        textColor: 'text-white',
-                                                       videoUrl: ''
+                                                       videoUrl: '',
+                                                       thumbnailUrl: ''
                                                   })}
                                                   size="sm"
                                                   className="flex items-center gap-2"
@@ -2016,6 +2018,19 @@ export default function HomePageDashboard() {
                                                        <p className="text-xs text-gray-500 mt-1">
                                                             Vous pouvez utiliser une URL (YouTube, Vimeo) ou télécharger un fichier vidéo
                                                        </p>
+
+                                                       {/* Thumbnail URL */}
+                                                       <div className="mt-4">
+                                                            <Label>URL de la miniature (optionnel)</Label>
+                                                            <Input
+                                                                 value={video.thumbnailUrl || ''}
+                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'thumbnailUrl', e.target.value)}
+                                                                 placeholder="URL de l'image miniature (recommandé: 1280x720)"
+                                                            />
+                                                            <p className="text-xs text-gray-500 mt-1">
+                                                                 URL d'une image qui sera affichée avant la lecture de la vidéo
+                                                            </p>
+                                                       </div>
 
                                                        {/* Video Preview */}
                                                        {video.videoUrl && (
