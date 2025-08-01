@@ -536,10 +536,8 @@ export default function BlogPage() {
               size="lg"
               className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
               onClick={() => {
-                const contactSection = document.querySelector('#contact');
-                if (contactSection) {
-                  contactSection.scrollIntoView({ behavior: 'smooth' });
-                }
+                // Navigate to home page and scroll to contact section
+                window.location.href = '/#contact';
               }}
             >
               Démarrer maintenant
@@ -550,10 +548,8 @@ export default function BlogPage() {
               size="lg"
               className="border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 group"
               onClick={() => {
-                const modulesSection = document.querySelector('#modules');
-                if (modulesSection) {
-                  modulesSection.scrollIntoView({ behavior: 'smooth' });
-                }
+                // Navigate to home page and scroll to modules section
+                window.location.href = '/#modules';
               }}
             >
               Voir nos réalisations
