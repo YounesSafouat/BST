@@ -178,9 +178,9 @@ export default function SettingsDashboard() {
               </div>
               {settings.favicon?.image && (
                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                  <img 
-                    src={settings.favicon.image} 
-                    alt={settings.favicon.alt || "Favicon preview"} 
+                  <img
+                    src={settings.favicon.image}
+                    alt={settings.favicon.alt || "Favicon preview"}
                     className="w-8 h-8"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none'
