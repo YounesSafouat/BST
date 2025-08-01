@@ -347,10 +347,13 @@ export default function BlogAdminPage() {
         console.log("Encoded ID:", encodeURIComponent(postToUpdate._id || ''));
 
         try {
-          const res = await fetch(`/api/blog?id=${encodeURIComponent(postToUpdate._id || '')}`, {
+          const res = await fetch(`/api/blog`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({
+              ...formData,
+              _id: postToUpdate._id
+            }),
           });
           console.log("Update response status:", res.status);
           console.log("Update response headers:", res.headers);
@@ -390,10 +393,13 @@ export default function BlogAdminPage() {
     const postToDelete = posts[idx];
     console.log("Deleting blog post:", postToDelete);
     setSaving(true);
-                  try {
-          const res = await fetch(`/api/blog?id=${encodeURIComponent(postToDelete._id || '')}`, {
+    try {
+      const res = await fetch(`/api/blog`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          _id: postToDelete._id
+        }),
       });
       if (res.ok) {
         const result = await res.json();

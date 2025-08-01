@@ -141,22 +141,21 @@ export async function PUT(req: NextRequest) {
   try {
     console.log("Blog API: PUT request received");
     await connectDB();
-    const { searchParams } = new URL(req.url);
-    const encodedId = searchParams.get('id');
-    const id = encodedId ? decodeURIComponent(encodedId) : null;
-    console.log("Blog API: Encoded ID from params:", encodedId);
-    console.log("Blog API: Decoded ID:", id);
+    
+    const body = await req.json();
+    console.log("Blog API: Request body:", body);
+    
+    const id = body._id;
+    console.log("Blog API: ID from body:", id);
     console.log("Blog API: ID length:", id?.length);
-    console.log("Blog API: Full URL:", req.url);
-    console.log("Blog API: Search params:", Object.fromEntries(searchParams.entries()));
     
     if (!id) {
       console.log("Blog API: Missing id parameter");
       return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
     }
     
-    const body = await req.json();
-    console.log("Blog API: Request body:", body);
+    // Remove _id from body to avoid conflicts
+    const { _id, ...updateData } = body;
     
     // Check if this is a blog post from blog-page (has _blogPageId)
     if (id.includes('_') && !id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -164,7 +163,7 @@ export async function PUT(req: NextRequest) {
       const [blogPageId, indexStr] = id.split('_');
       const index = parseInt(indexStr);
       
-      console.log("Blog API: Updating blog post in blog-page:", { blogPageId, index, body });
+      console.log("Blog API: Updating blog post in blog-page:", { blogPageId, index, updateData });
       
       const blogPage = await Content.findById(blogPageId);
       console.log("Blog API: Found blog page:", blogPage ? "Yes" : "No");
@@ -179,7 +178,7 @@ export async function PUT(req: NextRequest) {
       // Update the specific blog post in the array using proper MongoDB update
       const result = await Content.findByIdAndUpdate(
         blogPageId,
-        { $set: { [`content.blogPosts.${index}`]: body } },
+        { $set: { [`content.blogPosts.${index}`]: updateData } },
         { new: true }
       );
       
@@ -191,7 +190,7 @@ export async function PUT(req: NextRequest) {
       }
       
       const response = { 
-        ...body, 
+        ...updateData, 
         _id: id, 
         _blogPageId: blogPageId, 
         _index: index 
@@ -208,11 +207,11 @@ export async function PUT(req: NextRequest) {
       });
     } else {
       // This is an individual blog post
-      console.log("Blog API: Updating individual blog post:", { id, body });
+      console.log("Blog API: Updating individual blog post:", { id, updateData });
       
       const updated = await Content.findByIdAndUpdate(
         id,
-        { $set: { content: body } },
+        { $set: { content: updateData } },
         { new: true }
       );
       
@@ -242,9 +241,10 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
-    const { searchParams } = new URL(req.url);
-    const encodedId = searchParams.get('id');
-    const id = encodedId ? decodeURIComponent(encodedId) : null;
+    
+    const body = await req.json();
+    const id = body._id;
+    
     if (!id) {
       return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
     }
