@@ -127,10 +127,19 @@ function HubSpotPage() {
   const fetchTestimonials = async () => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-      const response = await fetch(`${baseUrl}/api/content?type=testimonial`);
+      const response = await fetch(`${baseUrl}/api/testimonials`);
       if (response.ok) {
         const data = await response.json();
-        setAvailableTestimonials(data.map((item: any) => ({ ...item.content, _id: item._id })));
+        // Map the testimonials data to match the expected format
+        setAvailableTestimonials(data.map((item: any) => ({
+          _id: item._id,
+          name: item.author || '',
+          role: item.role || '',
+          quote: item.text || '',
+          result: '',
+          avatar: item.photo || '',
+          company: ''
+        })));
       }
     } catch (error) {
       console.error('Error fetching testimonials:', error);

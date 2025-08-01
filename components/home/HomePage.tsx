@@ -265,12 +265,21 @@ export default function HomePage() {
      const fetchTestimonials = async () => {
           try {
                const timestamp = Date.now();
-               const response = await fetch(`/api/content?type=testimonial&t=${timestamp}`, {
+               const response = await fetch(`/api/testimonials?t=${timestamp}`, {
                     cache: 'no-store'
                });
                if (response.ok) {
                     const data = await response.json();
-                    setAvailableTestimonials(data.map((item: any) => ({ ...item.content, _id: item._id })));
+                    // Map the testimonials data to match the expected format
+                    setAvailableTestimonials(data.map((item: any) => ({
+                         _id: item._id,
+                         name: item.author || '',
+                         role: item.role || '',
+                         quote: item.text || '',
+                         result: '',
+                         avatar: item.photo || '',
+                         company: ''
+                    })));
                }
           } catch (error) {
                console.error('Error fetching testimonials:', error);

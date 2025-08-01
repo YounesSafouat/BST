@@ -1128,17 +1128,17 @@ function SuccessForm({ data, onChange }: { data: ContentSection; onChange: (data
     useEffect(() => {
         async function fetchTestimonials() {
             try {
-                const res = await fetch('/api/content?type=testimonial');
+                const res = await fetch('/api/testimonials');
                 const testimonialsData = await res.json();
-                // Map the testimonials from the content structure
+                // Map the testimonials from the dedicated testimonials collection
                 const mapped = testimonialsData.map((item: any) => ({
-                    _id: typeof item._id === 'object' && item._id.$oid ? item._id.$oid : item._id.toString(),
-                    name: item.content?.name || item.title || '',
-                    role: item.content?.role || item.description || '',
-                    quote: item.content?.quote || item.content?.text || '',
-                    avatar: item.content?.avatar || item.content?.photo || '',
-                    result: item.content?.result || '',
-                    company: item.content?.company || '',
+                    _id: item._id,
+                    name: item.author || '',
+                    role: item.role || '',
+                    quote: item.text || '',
+                    avatar: item.photo || '',
+                    result: '',
+                    company: '',
                 }));
                 setAllTestimonials(mapped);
             } catch (e) {

@@ -248,18 +248,18 @@ export default function HomePageDashboard() {
 
      const fetchAvailableTestimonials = async () => {
           try {
-               const response = await fetch('/api/content?type=testimonial');
+               const response = await fetch('/api/testimonials');
                if (response.ok) {
                     const data = await response.json();
-                    // Map the data structure to match our interface
+                    // Map the testimonials data to match the expected format
                     const mapped = data.map((item: any) => ({
-                         _id: typeof item._id === 'object' && item._id.$oid ? item._id.$oid : item._id.toString(),
-                         author: item.content?.name || item.title || '',
-                         role: item.content?.role || item.description || '',
-                         text: item.content?.quote || item.content?.text || '',
-                         photo: item.content?.avatar || item.content?.photo || '',
-                         company: item.content?.company || '',
-                         result: item.content?.result || '',
+                         _id: item._id,
+                         author: item.author || '',
+                         role: item.role || '',
+                         text: item.text || '',
+                         photo: item.photo || '',
+                         company: '',
+                         result: '',
                     }));
                     setAvailableTestimonials(mapped);
                } else {
