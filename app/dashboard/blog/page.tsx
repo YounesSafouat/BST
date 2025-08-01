@@ -90,7 +90,7 @@ function formatScheduledDate(dateString: string): string {
 export default function BlogAdminPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
 
-  const [editing, setEditing] = useState<number | "new" | null>(null);
+  const [editing, setEditing] = useState<string | "new" | null>(null);
   const [form, setForm] = useState<BlogPost>(emptyPost());
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -279,7 +279,7 @@ export default function BlogAdminPage() {
     const filteredPosts = getFilteredPosts();
     const postToEdit = filteredPosts[idx];
     console.log("Post data:", postToEdit);
-    setEditing(idx);
+    setEditing(postToEdit._id); // Store the ID instead of index
     setForm(postToEdit);
     setIsModalOpen(true);
   }
@@ -338,7 +338,12 @@ export default function BlogAdminPage() {
         }
       } else {
         // Update existing blog post
-        const postToUpdate = posts[editing as number];
+        const postToUpdate = posts.find(p => p._id === editing);
+        if (!postToUpdate) {
+          console.error("Post not found for ID:", editing);
+          toast({ title: "Erreur", description: "Article non trouvé." });
+          return;
+        }
         console.log("Updating blog post:", { postToUpdate, formData });
         console.log("Full ID being sent:", postToUpdate._id);
         console.log("ID length:", postToUpdate._id?.length);
@@ -387,7 +392,8 @@ export default function BlogAdminPage() {
   // Delete post
   async function deletePost(idx: number) {
     if (!window.confirm("Supprimer cet article ?")) return;
-    const postToDelete = posts[idx];
+    const filteredPosts = getFilteredPosts();
+    const postToDelete = filteredPosts[idx];
     console.log("Deleting blog post:", postToDelete);
     setSaving(true);
     try {
