@@ -33,6 +33,11 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      const [currentTime, setCurrentTime] = useState<{ [key: string]: number }>({});
      const [duration, setDuration] = useState<{ [key: string]: number }>({});
      const [fullscreenVideo, setFullscreenVideo] = useState<string | null>(null);
+     const [fullscreenState, setFullscreenState] = useState<{
+          wasPlaying: boolean;
+          currentTime: number;
+          wasMuted: boolean;
+     } | null>(null);
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -112,6 +117,21 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           }
      };
 
+     const handleFullscreenLoadedMetadata = () => {
+          if (fullscreenVideoRef.current && fullscreenState) {
+               fullscreenVideoRef.current.currentTime = fullscreenState.currentTime;
+               fullscreenVideoRef.current.muted = fullscreenState.wasMuted;
+
+               // If it was playing, start playing in fullscreen
+               if (fullscreenState.wasPlaying) {
+                    fullscreenVideoRef.current.play();
+               }
+
+               // Clear the state
+               setFullscreenState(null);
+          }
+     };
+
      const handleProgressClick = (videoId: string, event: React.MouseEvent<HTMLDivElement>) => {
           const video = videoRefs.current[videoId];
           if (video) {
@@ -124,15 +144,30 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      };
 
      const openFullscreen = (videoId: string) => {
-          setFullscreenVideo(videoId);
-          // Copy current video state to fullscreen
           const video = videoRefs.current[videoId];
-          if (video && fullscreenVideoRef.current) {
-               fullscreenVideoRef.current.currentTime = video.currentTime;
-               fullscreenVideoRef.current.muted = video.muted;
-               if (playingVideos[videoId]) {
-                    fullscreenVideoRef.current.play();
-               }
+          if (video) {
+               // Store current state
+               const wasPlaying = playingVideos[videoId];
+               const currentTime = video.currentTime;
+               const wasMuted = video.muted;
+
+               // Store state for when fullscreen video loads
+               setFullscreenState({
+                    wasPlaying,
+                    currentTime,
+                    wasMuted
+               });
+
+               // First, completely stop the original video
+               video.pause();
+               video.src = ''; // Clear the source to stop any background audio
+               setPlayingVideos(prev => ({
+                    ...prev,
+                    [videoId]: false
+               }));
+
+               // Set fullscreen video
+               setFullscreenVideo(videoId);
           }
      };
 
@@ -141,11 +176,39 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           if (fullscreenVideo && fullscreenVideoRef.current) {
                const video = videoRefs.current[fullscreenVideo];
                if (video) {
-                    video.currentTime = fullscreenVideoRef.current.currentTime;
-                    video.muted = fullscreenVideoRef.current.muted;
+                    const fullscreenCurrentTime = fullscreenVideoRef.current.currentTime;
+                    const fullscreenMuted = fullscreenVideoRef.current.muted;
+                    const wasPlaying = !fullscreenVideoRef.current.paused;
+
+                    // Pause fullscreen video
+                    fullscreenVideoRef.current.pause();
+
+                    // Restore original video source and state
+                    const testimonial = testimonials.find(t => t.id === fullscreenVideo);
+                    if (testimonial?.videoUrl) {
+                         video.src = testimonial.videoUrl;
+                         video.currentTime = fullscreenCurrentTime;
+                         video.muted = fullscreenMuted;
+
+                         // If fullscreen was playing, continue playing in original
+                         if (wasPlaying) {
+                              video.play();
+                              setPlayingVideos(prev => ({
+                                   ...prev,
+                                   [fullscreenVideo]: true
+                              }));
+                         }
+                    }
                }
           }
           setFullscreenVideo(null);
+     };
+
+     const handleOverlayClick = (e: React.MouseEvent) => {
+          // Only close if clicking on the overlay itself, not the video container
+          if (e.target === e.currentTarget) {
+               closeFullscreen();
+          }
      };
 
      const formatTime = (seconds: number) => {
@@ -253,8 +316,8 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                   {testimonial.thumbnailUrl ? (
                                                        // Show thumbnail if available
                                                        <div className="w-full h-full relative">
-                                                            <img 
-                                                                 src={testimonial.thumbnailUrl} 
+                                                            <img
+                                                                 src={testimonial.thumbnailUrl}
                                                                  alt={testimonial.company}
                                                                  className="w-full h-full object-cover"
                                                             />
@@ -297,7 +360,10 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
 
                     {/* Fullscreen Modal */}
                     {fullscreenVideo && (
-                         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4">
+                         <div
+                              className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 p-4"
+                              onClick={handleOverlayClick}
+                         >
                               <div className="relative w-full max-w-6xl">
                                    {/* Close Button */}
                                    <button
@@ -316,7 +382,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                         poster={testimonials.find(t => t.id === fullscreenVideo)?.thumbnailUrl}
                                         className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
                                         controls
-                                        autoPlay
+                                        onLoadedMetadata={handleFullscreenLoadedMetadata}
                                    />
                               </div>
                          </div>
