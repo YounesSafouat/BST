@@ -199,8 +199,7 @@ export default function HomePageDashboard() {
                     if (!data.hero.carousel) {
                          data.hero.carousel = {
                               companies: [],
-                              speed: 20,
-                              text: "+112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne."
+                              speed: 20
                          };
                     }
 
