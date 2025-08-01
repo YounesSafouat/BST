@@ -16,6 +16,8 @@ import {
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 
 // Define the post type with all new fields
 type Post = {
@@ -198,10 +200,108 @@ export function BlogPost({ post }: { post: Post }) {
       {/* Article Content */}
       <section className="pb-16 px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          <div className="prose prose-lg max-w-none">
-            <p className="lead">{post.excerpt}</p>
+          <div className="blog-content">
+            <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">{post.excerpt}</p>
             {post.body && (
-              <ReactMarkdown>{post.body}</ReactMarkdown>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  h1: ({ children }) => (
+                    <h1 className="text-3xl font-bold text-black mb-6 mt-8 leading-tight">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-2xl font-bold text-black mb-5 mt-7 leading-tight">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-xl font-bold text-black mb-4 mt-6 leading-tight">{children}</h3>
+                  ),
+                  h4: ({ children }) => (
+                    <h4 className="text-lg font-bold text-black mb-3 mt-5 leading-tight">{children}</h4>
+                  ),
+                  p: ({ children }) => (
+                    <p className="text-base text-gray-700 leading-7 mb-6">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside text-gray-700 leading-7 mb-6 space-y-2">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal list-inside text-gray-700 leading-7 mb-6 space-y-2">{children}</ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="text-base text-gray-700 leading-7">{children}</li>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-[var(--color-secondary)] pl-6 py-4 my-8 bg-gray-50 rounded-r-lg">
+                      <p className="text-lg text-gray-700 italic leading-7">{children}</p>
+                    </blockquote>
+                  ),
+                  code: ({ children, className }) => {
+                    const isInline = !className;
+                    return isInline ? (
+                      <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">{children}</code>
+                    ) : (
+                      <code className="block bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-6">{children}</code>
+                    );
+                  },
+                  pre: ({ children }) => (
+                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-6 mb-6">{children}</pre>
+                  ),
+                  table: ({ children }) => (
+                    <div className="overflow-x-auto my-8">
+                      <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+                        {children}
+                      </table>
+                    </div>
+                  ),
+                  thead: ({ children }) => (
+                    <thead className="bg-gray-100">{children}</thead>
+                  ),
+                  tbody: ({ children }) => (
+                    <tbody className="bg-white">{children}</tbody>
+                  ),
+                  tr: ({ children }) => (
+                    <tr className="border-b border-gray-300 last:border-b-0">{children}</tr>
+                  ),
+                  th: ({ children }) => (
+                    <th className="px-4 py-3 text-left font-bold text-gray-900 border-r border-gray-300 last:border-r-0">{children}</th>
+                  ),
+                  td: ({ children }) => (
+                    <td className="px-4 py-3 text-gray-700 border-r border-gray-300 last:border-r-0">{children}</td>
+                  ),
+                  img: ({ src, alt }) => (
+                    <div className="my-8">
+                      <img 
+                        src={src} 
+                        alt={alt || 'Blog image'} 
+                        className="w-full h-auto rounded-lg shadow-lg max-w-full"
+                        loading="lazy"
+                      />
+                      {alt && (
+                        <p className="text-sm text-gray-500 text-center mt-2 italic">{alt}</p>
+                      )}
+                    </div>
+                  ),
+                  a: ({ href, children }) => (
+                    <a 
+                      href={href} 
+                      className="text-[var(--color-secondary)] hover:text-[var(--color-main)] underline transition-colors duration-200"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  strong: ({ children }) => (
+                    <strong className="font-bold text-black">{children}</strong>
+                  ),
+                  em: ({ children }) => (
+                    <em className="italic text-gray-800">{children}</em>
+                  ),
+                }}
+              >
+                {post.body}
+              </ReactMarkdown>
             )}
           </div>
         </div>
