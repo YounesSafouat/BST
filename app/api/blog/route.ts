@@ -54,6 +54,7 @@ export async function GET(req: NextRequest) {
       console.log("Blog API: Returning blog posts with IDs:", blogPostsWithId.length);
       console.log("Blog API: Sample blog post ID:", blogPostsWithId[0]?._id);
       console.log("Blog API: Blog page ID:", blogPageContent._id);
+      console.log("Blog API: All post IDs:", blogPostsWithId.map(p => ({ id: p._id, title: p.title })));
       return NextResponse.json(blogPostsWithId, {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -269,8 +270,14 @@ export async function DELETE(req: NextRequest) {
       // Remove the specific blog post from the array using the index
       const result = await Content.findByIdAndUpdate(
         blogPageId,
-        { $pull: { 'content.blogPosts': blogPage.content.blogPosts[index] } },
+        { $unset: { [`content.blogPosts.${index}`]: 1 } },
         { new: true }
+      );
+      
+      // Then clean up the array by removing null values
+      await Content.findByIdAndUpdate(
+        blogPageId,
+        { $pull: { 'content.blogPosts': null } }
       );
       
       if (!result) {

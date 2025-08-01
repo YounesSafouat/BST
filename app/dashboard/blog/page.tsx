@@ -283,7 +283,7 @@ export default function BlogAdminPage() {
     console.log("Post data:", postToEdit);
     console.log("Post ID being stored:", postToEdit._id);
     console.log("Post ID type:", typeof postToEdit._id);
-    setEditing(postToEdit._id); // Store the ID instead of index
+    setEditing(postToEdit._id || null); // Store the ID instead of index
     setForm(postToEdit);
     setIsModalOpen(true);
   }
