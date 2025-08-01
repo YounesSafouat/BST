@@ -233,6 +233,8 @@ export default function BlogAdminPage() {
         console.log("Blog posts received:", blogPosts);
         console.log("Blog posts count:", blogPosts?.length || 0);
         console.log("First blog post:", blogPosts?.[0]);
+        console.log("Environment:", process.env.NODE_ENV);
+        console.log("All posts with IDs:", blogPosts?.map(p => ({ id: p._id, title: p.title })));
         setPosts(blogPosts || []);
         setLoading(false);
       })
@@ -279,6 +281,8 @@ export default function BlogAdminPage() {
     const filteredPosts = getFilteredPosts();
     const postToEdit = filteredPosts[idx];
     console.log("Post data:", postToEdit);
+    console.log("Post ID being stored:", postToEdit._id);
+    console.log("Post ID type:", typeof postToEdit._id);
     setEditing(postToEdit._id); // Store the ID instead of index
     setForm(postToEdit);
     setIsModalOpen(true);
@@ -338,9 +342,12 @@ export default function BlogAdminPage() {
         }
       } else {
         // Update existing blog post
+        console.log("Looking for post with ID:", editing);
+        console.log("Available posts:", posts.map(p => ({ id: p._id, title: p.title })));
         const postToUpdate = posts.find(p => p._id === editing);
         if (!postToUpdate) {
           console.error("Post not found for ID:", editing);
+          console.error("Available IDs:", posts.map(p => p._id));
           toast({ title: "Erreur", description: "Article non trouvé." });
           return;
         }
