@@ -247,7 +247,6 @@ export default function HomePage() {
                console.log('Response status:', response.status);
                if (response.ok) {
                     const data = await response.json();
-                    console.log('Fetched Odoo data:', data);
                     if (data && typeof data === 'object') {
                          setOdooData(data);
                     } else {
@@ -314,6 +313,8 @@ export default function HomePage() {
                </div>
           );
      }
+
+
 
      const AnimatedCounter = ({ target, suffix, duration = 2500 }: { target: number, suffix: string, duration?: number }) => {
           const [count, setCount] = useState(0);

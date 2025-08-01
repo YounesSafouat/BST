@@ -3,24 +3,6 @@
 import React from 'react';
 import Image from 'next/image';
 
-// Default companies data (fallback)
-const defaultCompanies = [
-     { name: "FitnessPark", logo: "/ref/fitnespark-vectorized-white-3.svg" },
-     { name: "IDC Pharma", logo: "/ref/idc_pharma-horizontal-white-vector.svg" },
-     { name: "Yamaha Motors", logo: "/ref/yamaha_motors-horizontal-white-vector.svg" },
-     { name: "Malt", logo: "/ref/malt-horizontal-white-vector.svg" },
-     { name: "Optisam", logo: "/ref/optisam-horizontal-white-vector.svg" },
-     { name: "Essem", logo: "/ref/essem-1-2.svg" },
-     { name: "Jeanne d'Arc", logo: "/ref/jeannedarc-vectorized.svg" },
-     { name: "Allisone", logo: "/ref/allisone-vectorized-white.svg" },
-     { name: "Aicrafters", logo: "/ref/aicrafters-vectorized-white.svg" },
-     { name: "Barthener", logo: "/ref/barthener-vectorized-white.svg" },
-     { name: "Beks", logo: "/ref/beks-vectorized-white.svg" },
-     { name: "Call Center Group", logo: "/ref/callcenter_group-vectorized-white.svg" },
-     { name: "Chabi Chic", logo: "/ref/chabi-chic-vectorized-white.svg" },
-     { name: "ICAT", logo: "/ref/icat-vectorized-white.svg" },
-     { name: "Titre Français", logo: "/ref/titre-francais-vectorized-white.svg" },
-];
 
 interface Company {
      name: string;
@@ -34,11 +16,10 @@ interface CompaniesCarouselProps {
      text?: string; // Text to display above the carousel
 }
 
+const defaultCompanies: Company[] = [];
+
 export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1, text }: CompaniesCarouselProps) {
-     console.log("CompaniesCarousel text prop:", text); // Debug log
-     console.log("CompaniesCarousel text type:", typeof text); // Debug log
-     console.log("CompaniesCarousel text length:", text?.length); // Debug log
-     
+
      return (
           <div className="relative overflow-hidden py-4 w-full">
                {/* Text above carousel - only show if text is provided from CMS */}

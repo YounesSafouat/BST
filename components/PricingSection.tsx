@@ -78,7 +78,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      }
 
      return (
-          <section id="pricing" className="py-20 bg-[var(--color-main)]">
+          <section id="pricing" className="min-h-screen flex items-center bg-[var(--color-main)]">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                          initial={{ opacity: 0, y: 20 }}
@@ -116,7 +116,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                    >
                                         <Card className={`h-full border-2 rounded-2xl transition-all duration-300 flex flex-col ${index === 1
                                              ? 'border-[var(--color-secondary)] shadow-2xl bg-white scale-105'
-                                             : 'border-transparent bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl'
+                                             : 'border-transparent bg-white backdrop-blur-sm shadow-lg hover:shadow-xl'
                                              }`}>
                                              <CardHeader className="p-8 flex-shrink-0">
                                                   <h3 className="text-xl font-extrabold text-[var(--color-main)] mb-2">{plan.name}</h3>

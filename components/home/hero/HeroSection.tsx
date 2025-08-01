@@ -39,6 +39,7 @@ interface HeroData {
       url?: string;
     }>;
     speed?: number;
+    text?: string; // Text to display above the carousel
   };
 }
 
@@ -100,6 +101,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       setIsMuted(!isMuted);
     }
   };
+
+
 
   const getIconComponent = (iconName: string) => {
     const iconMap: { [key: string]: React.ReactNode } = {
@@ -241,6 +244,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
           <CompaniesCarousel
             companies={heroData.carousel?.companies}
             speed={heroData.carousel?.speed}
+            text={heroData.carousel?.text}
           />
         </div>
       </div>
