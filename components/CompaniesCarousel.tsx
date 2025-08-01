@@ -35,12 +35,17 @@ interface CompaniesCarouselProps {
 }
 
 export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1, text }: CompaniesCarouselProps) {
+     console.log("CompaniesCarousel text prop:", text); // Debug log
+     
+     // Default text if none provided
+     const displayText = text || "+112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne.";
+     
      return (
           <div className="relative overflow-hidden py-4 w-full">
                {/* Text above carousel */}
-               {text && (
+               {displayText && displayText.trim() !== '' && (
                     <div className="text-center mb-6">
-                         <p className="text-gray-600 text-lg font-medium">{text}</p>
+                         <p className="text-gray-600 text-lg font-medium">{displayText}</p>
                     </div>
                )}
                <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent"></div>
