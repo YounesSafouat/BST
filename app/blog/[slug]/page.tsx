@@ -80,7 +80,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
     const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
     
     if (!res.ok) {
-      return <div className="text-center py-12">Erreur lors du chargement de l'article</div>;
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Erreur lors du chargement de l'article</h1>
+            <p className="text-gray-600">Veuillez réessayer plus tard.</p>
+          </div>
+        </div>
+      );
     }
     
     const data = await res.json();
@@ -88,12 +95,33 @@ export default async function Page({ params }: { params: { slug: string } }) {
     const post = posts.find((p: any) => p.slug === params.slug && p.published);
 
     if (!post) {
-      return <div className="text-center py-12">Article non trouvé</div>;
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Article non trouvé</h1>
+            <p className="text-gray-600">Cet article n'existe pas ou a été déplacé.</p>
+            <a href="/blog" className="text-[var(--color-secondary)] hover:underline mt-4 inline-block">
+              Retour au blog
+            </a>
+          </div>
+        </div>
+      );
     }
 
-    return <BlogPost post={post} />;
+    return (
+      <div className="min-h-screen bg-white">
+        <BlogPost post={post} />
+      </div>
+    );
   } catch (error) {
     console.error("Error loading blog post:", error);
-    return <div className="text-center py-12">Erreur lors du chargement de l'article</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Erreur lors du chargement de l'article</h1>
+          <p className="text-gray-600">Veuillez réessayer plus tard.</p>
+        </div>
+      </div>
+    );
   }
 }

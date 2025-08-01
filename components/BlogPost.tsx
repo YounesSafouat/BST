@@ -126,7 +126,7 @@ export function BlogPost({ post }: { post: Post }) {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="relative pt-48 md:pt-56 pb-20 px-6 lg:px-8">
+      <section className="relative pt-20 md:pt-24 pb-20 px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center gap-2 text-sm text-gray-500">
