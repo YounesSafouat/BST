@@ -346,14 +346,6 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                              </div>
                                         )}
                                    </div>
-
-                                   {/* Company Info */}
-                                   <div className="p-4 bg-white">
-                                        <h3 className="text-lg font-semibold text-gray-900">{testimonial.company}</h3>
-                                        {testimonial.tagline && (
-                                             <p className="text-sm text-gray-600 mt-1">{testimonial.tagline}</p>
-                                        )}
-                                   </div>
                               </div>
                          ))}
                     </div>

@@ -32,6 +32,7 @@ interface HeroData {
   companyName?: string;
   badge?: string;
   emphasis?: string;
+  expertiseBadgeUrl?: string; // URL of the expertise badge image
   carousel?: {
     companies: Array<{
       name: string;
@@ -102,8 +103,6 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
     }
   };
 
-
-
   const getIconComponent = (iconName: string) => {
     const iconMap: { [key: string]: React.ReactNode } = {
       ArrowRight: <ArrowRight className="w-5 h-5" />,
@@ -155,14 +154,18 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   {heroData.headline}
                 </motion.h1>
 
-                <motion.p
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                   className="text-lg text-gray-600 leading-relaxed max-w-3xl"
-                >
-                  {heroData.description}
-                </motion.p>
+                  dangerouslySetInnerHTML={{
+                    __html: heroData.description
+                      .replace(/&lt;/g, '<')
+                      .replace(/&gt;/g, '>')
+                      .replace(/&amp;/g, '&')
+                  }}
+                />
               </div>
 
               <motion.div
@@ -199,7 +202,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
             >
               <div className="relative">
                 <div className="bg-white/90 backdrop-blur-sm p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
-                  <div className="relative aspect-[2/1] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg lg:rounded-xl overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg lg:rounded-xl overflow-hidden">
                     {/* Video element */}
                     <video
                       ref={videoRef}
@@ -224,12 +227,24 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     </button>
                   </div>
 
-                  {/* Small stats overlay - responsive positioning */}
+                  {/* Expertise Badge overlay - responsive positioning */}
                   <div className="absolute -bottom-2 -right-2 bg-white rounded-lg shadow-md p-2 lg:p-3 border">
-                    <div className="text-center">
-                      <div className="text-sm lg:text-base font-bold text-[var(--color-main)]">3 ans</div>
-                      <div className="text-xs lg:text-sm text-gray-600">d'expertise</div>
-                    </div>
+                    {heroData.expertiseBadgeUrl ? (
+                      <img
+                        src={heroData.expertiseBadgeUrl}
+                        alt="Expertise badge"
+                        className="w-50 h-20 lg:w-50 lg:h-30 object-contain"
+                        onError={(e) => {
+                          console.error('Badge image failed to load:', heroData.expertiseBadgeUrl);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div className="text-center">
+                        <div className="text-sm lg:text-base font-bold text-[var(--color-main)]">3 ans</div>
+                        <div className="text-xs lg:text-sm text-gray-600">d'expertise</div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -248,8 +263,6 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
           />
         </div>
       </div>
-
-
     </section>
   );
 }

@@ -48,6 +48,7 @@ interface HomePageData {
                suffix: string;
                label: string;
           }>;
+          expertiseBadgeUrl?: string; // URL of the expertise badge image
           carousel?: {
                companies: Array<{
                     name: string;
@@ -726,6 +727,19 @@ export default function HomePageDashboard() {
                                                   placeholder="Texte du bouton secondaire"
                                              />
                                         </div>
+                                   </div>
+
+                                   {/* Expertise Badge */}
+                                   <div>
+                                        <Label>URL du badge d'expertise</Label>
+                                        <Input
+                                             value={homeData.hero.expertiseBadgeUrl || ''}
+                                             onChange={(e) => updateField('hero.expertiseBadgeUrl', e.target.value)}
+                                             placeholder="https://example.com/badge.png"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                             Remplace le texte "3 ans d'expertise" par une image. Entrez l'URL de l'image du badge.
+                                        </p>
                                    </div>
 
                                    {/* Carousel Management */}

@@ -35,6 +35,7 @@ import StatsSection from '../StatsSection';
 import CompaniesCarousel from '../CompaniesCarousel';
 import VideoTestimonialsSection from '../VideoTestimonialsSection';
 import FAQSection from '../FAQSection';
+import OdooCertificationSection from '../OdooCertificationSection';
 import { Button } from '@/components/ui/button';
 
 interface Testimonial {
@@ -69,6 +70,7 @@ interface OdooData {
                suffix: string;
                label: string;
           }>;
+          expertiseBadgeUrl?: string; // URL of the expertise badge image
           carousel?: {
                companies: Array<{
                     name: string;
@@ -436,6 +438,7 @@ export default function HomePage() {
                {/* Hero Section - Proper flex layout */}
                <div className="h-[95vh] flex flex-col justify-center pt-20">
                     <HomeHeroSplit heroData={odooData?.hero} isPreview={false} />
+
                </div>
 
                {/* Vertical Timeline Carousels */}
@@ -578,6 +581,9 @@ export default function HomePage() {
 
                {/* Video Testimonials Section */}
                <VideoTestimonialsSection videoTestimonialsData={odooData?.videoTestimonials} />
+
+               {/* Odoo Certification Section */}
+               <OdooCertificationSection />
 
                {/* Tarifs & Accompagnement Section */}
                <section id="pricing">
