@@ -4,6 +4,7 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "luc
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
+import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -25,8 +26,47 @@ const IconMap = {
 }
 
 export default function Footer() {
-  const [footerContent, setFooterContent] = useState<any>(null)
+  const [location, setLocation] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [contactData, setContactData] = useState<any>(null);
+  const [footerContent, setFooterContent] = useState<any>(null);
 
+  // Detect location using the same logic as pricing section
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        const userLocation = await getUserLocation();
+        setLocation(userLocation);
+      } catch (error) {
+        console.error("Error detecting location for footer:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    detectLocation();
+  }, []);
+
+  // Fetch regional contact data
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        const response = await fetch('/api/content/settings');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.content?.regionalContact) {
+            setContactData(data.content.regionalContact);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching contact data for footer:', error);
+      }
+    };
+
+    fetchContactData();
+  }, []);
+
+  // Fetch footer content
   useEffect(() => {
     fetch("/api/content?type=footer")
       .then(res => res.json())
@@ -54,6 +94,32 @@ export default function Footer() {
     certifications = { badges: [] },
     legal = { links: [] }
   } = footerContent;
+
+  // Get regional contact info
+  const getRegionalContactInfo = () => {
+    if (!location || !contactData) {
+      return null;
+    }
+
+    const region = getRegionFromCountry(location.countryCode);
+
+    let selectedData;
+    switch (region) {
+      case 'france':
+        selectedData = contactData.france;
+        break;
+      case 'morocco':
+        selectedData = contactData.morocco;
+        break;
+      default:
+        selectedData = contactData.other;
+        break;
+    }
+
+    return selectedData;
+  };
+
+  const regionalContact = getRegionalContactInfo();
 
   const handleNewsletterSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 2000))
@@ -115,15 +181,50 @@ export default function Footer() {
             </div>
             <p className="text-gray-400 mb-6 text-sm">{companyInfo?.description || "Votre partenaire digital de confiance"}</p>
             <div className="space-y-3">
-              {companyInfo?.contact && Object.entries(companyInfo.contact).map(([key, value]: [string, any]) => {
-                const Icon = IconMap[value.icon as keyof typeof IconMap];
-                return (
-                  <div key={key} className="flex items-center gap-3 text-sm text-gray-300">
-                    {Icon && <Icon className="w-5 h-5 text-[var(--color-secondary)]" />}
-                    <span>{value.text}</span>
-                  </div>
-                );
-              })}
+              {regionalContact ? (
+                <>
+                  {regionalContact.phone && (
+                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                      <Phone className="w-5 h-5 text-[var(--color-secondary)]" />
+                      <a href={`tel:${regionalContact.phone}`} className="hover:text-white transition-colors">
+                        {regionalContact.phone}
+                      </a>
+                    </div>
+                  )}
+                  {regionalContact.email && (
+                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                      <Mail className="w-5 h-5 text-[var(--color-secondary)]" />
+                      <a href={`mailto:${regionalContact.email}`} className="hover:text-white transition-colors">
+                        {regionalContact.email}
+                      </a>
+                    </div>
+                  )}
+                  {regionalContact.whatsapp && (
+                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                      <WhatsAppIcon className="w-5 h-5 text-[var(--color-secondary)]" />
+                      <a
+                        href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-white transition-colors"
+                      >
+                        {regionalContact.whatsapp}
+                      </a>
+                    </div>
+                  )}
+                  {regionalContact.address && (
+                    <div className="flex items-center gap-3 text-sm text-gray-300">
+                      <MapPin className="w-5 h-5 text-[var(--color-secondary)]" />
+                      <span>{regionalContact.address}</span>
+                    </div>
+                  )}
+                </>
+              ) : (
+                // Show loading or message if no regional data available
+                <div className="text-sm text-gray-400">
+                  Informations de contact en cours de configuration...
+                </div>
+              )}
             </div>
           </div>
 
@@ -154,17 +255,13 @@ export default function Footer() {
                 const network = value as { icon: string; color: string; url: string };
                 let iconKey = network.icon || key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
                 let Icon = IconMap[iconKey as keyof typeof IconMap];
-                
+
                 // Fallback for WhatsApp icon if not found
                 if (!Icon && (iconKey === 'WhatsApp' || key.toLowerCase() === 'whatsapp')) {
                   Icon = IconMap['WhatsApp'];
                   iconKey = 'WhatsApp';
                 }
-                
-                // Debug: Log all available icons and the one we're looking for
-                console.log(`Available icons:`, Object.keys(IconMap));
-                console.log(`Looking for icon: "${iconKey}"`);
-                console.log(`Icon found:`, !!Icon);
+
                 const colorMap: any = {
                   Facebook: 'var(--color-secondary)',
                   Twitter: 'var(--color-secondary)',
@@ -174,8 +271,6 @@ export default function Footer() {
                   WhatsApp: '#25d366', // WhatsApp green color
                 };
                 const bgColor = network.color || colorMap[iconKey] || 'var(--color-main)';
-
-                console.log(`Social icon debug - Key: ${key}, Icon: ${network.icon}, IconKey: ${iconKey}, Icon found: ${!!Icon}`);
 
                 return (
                   <a

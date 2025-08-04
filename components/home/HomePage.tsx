@@ -692,7 +692,7 @@ export default function HomePage() {
                                         const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                                         if (!testimonial) return null;
                                         return (
-                                             <div key={index} className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-none w-full max-w-md mx-auto">
+                                             <div key={index} className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-lg border border-gray-200 w-full max-w-md mx-auto">
                                                   {/* Stars */}
                                                   <div className="flex items-center mb-4">
                                                        {[...Array(5)].map((_, i) => (

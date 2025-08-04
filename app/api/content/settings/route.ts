@@ -4,70 +4,63 @@ import Content from '@/models/Content';
 
 export const dynamic = 'force-dynamic';
 
-// GET: Get site settings
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     await connectDB();
-    const content = await Content.findOne({ type: 'settings' });
     
-    if (!content) {
-      return NextResponse.json({ error: 'Settings not found' }, { status: 404 });
-    }
+    // Get settings document using the Content model
+    const settings = await Content.findOne({ type: 'settings' });
     
-    return NextResponse.json(content, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
+    return NextResponse.json({
+      success: true,
+      content: settings?.content || {}
     });
-  } catch (error: any) {
-    console.error('API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch settings' },
+      { status: 500 }
+    );
   }
 }
 
-// PUT: Update site settings
-export async function PUT(req: NextRequest) {
+export async function PUT(request: NextRequest) {
   try {
-    console.log("API: Starting PUT request for settings...")
     await connectDB();
-    
-    const body = await req.json();
-    console.log("API: PUT request body:", body)
-    
-    // Only allow updating the content field for safety
-    const update: any = {};
-    if (body.content) update['content'] = body.content;
-    if (body.title) update['title'] = body.title;
-    if (body.description) update['description'] = body.description;
-    if (body.metadata) update['metadata'] = body.metadata;
-    if (typeof body.isActive === 'boolean') update['isActive'] = body.isActive;
-    
-    console.log("API: Update object:", update)
-    
-    if (Object.keys(update).length === 0) {
-      return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
-    }
-    
-    const updated = await Content.findOneAndUpdate(
+    const body = await request.json();
+
+    console.log('Settings update request:', body);
+
+    // Update or create settings using the Content model
+    const settings = await Content.findOneAndUpdate(
       { type: 'settings' },
-      { $set: update },
-      { new: true, upsert: true }
-    );
-    
-    console.log("API: Update result:", updated)
-    
-    return NextResponse.json(updated, {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      {
+        type: 'settings',
+        title: body.title || 'Site Settings',
+        description: body.description || 'Paramètres globaux du site',
+        content: body.content,
+        isActive: true,
+        metadata: body.metadata || { order: 1 },
+        updatedAt: new Date()
       },
+      {
+        new: true,
+        upsert: true
+      }
+    );
+
+    console.log('Settings saved:', settings);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Settings updated successfully',
+      result: settings
     });
-  } catch (error: any) {
-    console.error('API Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error) {
+    console.error('Error updating settings:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to update settings' },
+      { status: 500 }
+    );
   }
 } 

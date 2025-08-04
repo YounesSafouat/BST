@@ -16,6 +16,28 @@ interface SiteSettings {
   };
   siteTitle?: string;
   siteDescription?: string;
+  // Regional contact information
+  regionalContact?: {
+    france: {
+      phone: string;
+      email: string;
+      address: string;
+      whatsapp?: string;
+    };
+    morocco: {
+      phone: string;
+      email: string;
+      address: string;
+      whatsapp?: string;
+    };
+    other: {
+      phone: string;
+      email: string;
+      address: string;
+      whatsapp?: string;
+    };
+  };
+  // Legacy fields for backward compatibility
   contactEmail?: string;
   contactPhone?: string;
   address?: string;
@@ -31,7 +53,12 @@ export default function SettingsDashboard() {
     siteDescription: "",
     contactEmail: "",
     contactPhone: "",
-    address: ""
+    address: "",
+    regionalContact: {
+      france: { phone: "", email: "", address: "", whatsapp: "" },
+      morocco: { phone: "", email: "", address: "", whatsapp: "" },
+      other: { phone: "", email: "", address: "", whatsapp: "" }
+    }
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -58,7 +85,12 @@ export default function SettingsDashboard() {
             siteDescription: data.content.siteDescription || "",
             contactEmail: data.content.contactEmail || "",
             contactPhone: data.content.contactPhone || "",
-            address: data.content.address || ""
+            address: data.content.address || "",
+            regionalContact: data.content.regionalContact || {
+              france: { phone: "", email: "", address: "", whatsapp: "" },
+              morocco: { phone: "", email: "", address: "", whatsapp: "" },
+              other: { phone: "", email: "", address: "", whatsapp: "" }
+            }
           })
         }
       } else {
@@ -221,43 +253,154 @@ export default function SettingsDashboard() {
             </CardContent>
           </Card>
 
-          {/* Contact Information */}
+          {/* Regional Contact Information */}
           <Card>
             <CardHeader>
-              <CardTitle>Informations de Contact</CardTitle>
+              <CardTitle>Informations de Contact Régionales</CardTitle>
+              <p className="text-sm text-gray-600">
+                Configurez les informations de contact selon la région de vos visiteurs
+              </p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="contact-email">Email de contact</Label>
-                  <Input
-                    id="contact-email"
-                    type="email"
-                    placeholder="contact@blackswantechnology.fr"
-                    value={settings.contactEmail || ""}
-                    onChange={(e) => updateField('contactEmail', e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="contact-phone">Téléphone</Label>
-                  <Input
-                    id="contact-phone"
-                    type="tel"
-                    placeholder="+212 7 83 69 96 03"
-                    value={settings.contactPhone || ""}
-                    onChange={(e) => updateField('contactPhone', e.target.value)}
-                  />
+            <CardContent className="space-y-8">
+              {/* France */}
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">🇫🇷 France</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="france-phone">Téléphone</Label>
+                    <Input
+                      id="france-phone"
+                      type="tel"
+                      placeholder="+33 1 23 45 67 89"
+                      value={settings.regionalContact?.france?.phone || ""}
+                      onChange={(e) => updateField('regionalContact.france.phone', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="france-email">Email</Label>
+                    <Input
+                      id="france-email"
+                      type="email"
+                      placeholder="contact@blackswantechnology.fr"
+                      value={settings.regionalContact?.france?.email || ""}
+                      onChange={(e) => updateField('regionalContact.france.email', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="france-whatsapp">WhatsApp</Label>
+                    <Input
+                      id="france-whatsapp"
+                      type="tel"
+                      placeholder="+33 6 12 34 56 78"
+                      value={settings.regionalContact?.france?.whatsapp || ""}
+                      onChange={(e) => updateField('regionalContact.france.whatsapp', e.target.value)}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="france-address">Adresse</Label>
+                    <Input
+                      id="france-address"
+                      type="text"
+                      placeholder="123 Rue de la Paix, 75001 Paris, France"
+                      value={settings.regionalContact?.france?.address || ""}
+                      onChange={(e) => updateField('regionalContact.france.address', e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-              <div>
-                <Label htmlFor="address">Adresse</Label>
-                <Input
-                  id="address"
-                  type="text"
-                  placeholder="202 Boulevard Brahim Roudani, Casablanca, Maroc 20000"
-                  value={settings.address || ""}
-                  onChange={(e) => updateField('address', e.target.value)}
-                />
+
+              {/* Morocco */}
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">🇲🇦 Maroc</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="morocco-phone">Téléphone</Label>
+                    <Input
+                      id="morocco-phone"
+                      type="tel"
+                      placeholder="+212 7 83 69 96 03"
+                      value={settings.regionalContact?.morocco?.phone || ""}
+                      onChange={(e) => updateField('regionalContact.morocco.phone', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="morocco-email">Email</Label>
+                    <Input
+                      id="morocco-email"
+                      type="email"
+                      placeholder="contact@blackswantechnology.ma"
+                      value={settings.regionalContact?.morocco?.email || ""}
+                      onChange={(e) => updateField('regionalContact.morocco.email', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="morocco-whatsapp">WhatsApp</Label>
+                    <Input
+                      id="morocco-whatsapp"
+                      type="tel"
+                      placeholder="+212 7 83 69 96 03"
+                      value={settings.regionalContact?.morocco?.whatsapp || ""}
+                      onChange={(e) => updateField('regionalContact.morocco.whatsapp', e.target.value)}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="morocco-address">Adresse</Label>
+                    <Input
+                      id="morocco-address"
+                      type="text"
+                      placeholder="123 Boulevard Mohammed V, Casablanca, Maroc"
+                      value={settings.regionalContact?.morocco?.address || ""}
+                      onChange={(e) => updateField('regionalContact.morocco.address', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Other Countries */}
+              <div className="border-l-4 border-gray-500 pl-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">🌍 Autres Pays</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="other-phone">Téléphone</Label>
+                    <Input
+                      id="other-phone"
+                      type="tel"
+                      placeholder="+1 234 567 8900"
+                      value={settings.regionalContact?.other?.phone || ""}
+                      onChange={(e) => updateField('regionalContact.other.phone', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="other-email">Email</Label>
+                    <Input
+                      id="other-email"
+                      type="email"
+                      placeholder="contact@blackswantechnology.com"
+                      value={settings.regionalContact?.other?.email || ""}
+                      onChange={(e) => updateField('regionalContact.other.email', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="other-whatsapp">WhatsApp</Label>
+                    <Input
+                      id="other-whatsapp"
+                      type="tel"
+                      placeholder="+1 234 567 8900"
+                      value={settings.regionalContact?.other?.whatsapp || ""}
+                      onChange={(e) => updateField('regionalContact.other.whatsapp', e.target.value)}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label htmlFor="other-address">Adresse</Label>
+                    <Input
+                      id="other-address"
+                      type="text"
+                      placeholder="123 Business Street, City, Country"
+                      value={settings.regionalContact?.other?.address || ""}
+                      onChange={(e) => updateField('regionalContact.other.address', e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

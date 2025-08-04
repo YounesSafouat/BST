@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Phone, Mail, Calendar, CheckCircle, Award, Zap, Shield } from "lucide-react";
+import RegionalContactInfo from "./RegionalContactInfo";
 
 interface ContactData {
      headline: string;
@@ -76,8 +77,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                description: "Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement."
           },
           contactInfo: {
-               phone: "+212 78 36 99 603",
-               email: "contact@blackswantechnology.fr"
+               phone: "",
+               email: ""
           },
           guarantee: "Réponse garantie sous 4h en journée • Échange sans engagement"
      };
@@ -358,16 +359,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                                         <div className="pt-6 border-t border-white/20">
                                              <h4 className="font-semibold mb-4">Contact direct</h4>
-                                             <div className="space-y-3">
-                                                  <a href={`tel:${data.contactInfo.phone}`} className="flex items-center gap-3 group hover:text-white/80 transition-colors">
-                                                       <Phone className="w-5 h-5" />
-                                                       <span>{data.contactInfo.phone}</span>
-                                                  </a>
-                                                  <a href={`mailto:${data.contactInfo.email}`} className="flex items-center gap-3 group hover:text-white/80 transition-colors">
-                                                       <Mail className="w-5 h-5" />
-                                                       <span>{data.contactInfo.email}</span>
-                                                  </a>
-                                             </div>
+                                             <RegionalContactInfo className="text-white" />
                                         </div>
                                    </div>
                               </div>

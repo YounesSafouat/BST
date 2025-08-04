@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+"use client"
+
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, Menu, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -12,6 +15,74 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoaded: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [location, setLocation] = useState<any>(null);
+  const [contactData, setContactData] = useState<any>(null);
+  const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
+
+  // Detect location using the same logic as other components
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        console.log("Detecting location for header...");
+        const userLocation = await getUserLocation();
+        console.log("User location detected for header:", userLocation);
+        setLocation(userLocation);
+      } catch (error) {
+        console.error("Error detecting location for header:", error);
+      }
+    };
+
+    detectLocation();
+  }, []);
+
+  // Fetch regional contact data
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        console.log('Fetching contact data for header...');
+        const response = await fetch('/api/content/settings');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Contact data response for header:', data);
+          if (data.success && data.content?.regionalContact) {
+            setContactData(data.content.regionalContact);
+          } else {
+            console.log('No regional contact data found in CMS for header');
+          }
+        } else {
+          console.error('Failed to fetch contact data for header:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching contact data for header:', error);
+      }
+    };
+
+    fetchContactData();
+  }, []);
+
+  // Update WhatsApp number based on detected region
+  useEffect(() => {
+    if (location && contactData) {
+      const region = getRegionFromCountry(location.countryCode);
+      console.log('Detected region for header:', region, 'from country code:', location.countryCode);
+
+      let number: string | null = null;
+      switch (region) {
+        case 'france':
+          number = contactData.france?.whatsapp || null;
+          break;
+        case 'morocco':
+          number = contactData.morocco?.whatsapp || null;
+          break;
+        default:
+          number = contactData.other?.whatsapp || null;
+          break;
+      }
+
+      console.log('Setting WhatsApp number for header:', number);
+      setWhatsappNumber(number);
+    }
+  }, [location, contactData]);
 
   const isScrolled = scrollY > 50;
 
@@ -73,7 +144,8 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               variant="ghost"
               size="sm"
               className="gap-1 bg-green-500 hover:bg-green-600 text-white h-10 px-3 transition-all duration-300 hover:scale-110 rounded-full"
-              onClick={() => window.open('https://wa.me/212783699603', '_blank')}
+              onClick={() => whatsappNumber && window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, '')}`, '_blank')}
+              disabled={!whatsappNumber}
             >
               <WhatsAppIcon className="w-4 h-4" />
             </Button>
