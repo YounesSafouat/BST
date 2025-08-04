@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface FAQItem {
      question: string;
@@ -113,20 +114,25 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                          <p className="text-gray-600 mb-4">
                               Vous ne trouvez pas la réponse à votre question ?
                          </p>
-                         <button
-                              onClick={() => {
-                                   const contactSection = document.getElementById('contact');
-                                   if (contactSection) {
-                                        contactSection.scrollIntoView({ behavior: 'smooth' });
-                                   }
-                              }}
-                              className="inline-flex items-center px-6 py-3 bg-[var(--color-secondary)] text-white font-semibold rounded-lg hover:bg-[var(--color-secondary)]/90 transition-colors duration-300"
+                         <motion.div
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
                          >
-                              Contactez-nous
-                              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                              </svg>
-                         </button>
+                              <button
+                                   onClick={() => {
+                                        const contactSection = document.getElementById('contact');
+                                        if (contactSection) {
+                                             contactSection.scrollIntoView({ behavior: 'smooth' });
+                                        }
+                                   }}
+                                   aria-label="Contactez-nous"
+                                   className="inline-flex items-center gap-2 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] hover:from-[var(--color-secondary)] hover:to-[var(--color-main)] text-white font-semibold rounded-full px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
+                              >
+                                   <span>Contactez-nous</span>
+                                   <ArrowRight className="w-5 h-5 group-hover:animate-pulse" />
+                                   <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                              </button>
+                         </motion.div>
                     </div>
                </div>
           </section>
