@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
 import CasClient from "../../cas-client"
+import PageVisibilityGuard from '@/components/PageVisibilityGuard';
 
 export const dynamic = "force-dynamic";
 
@@ -10,5 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Page() {
-  return <CasClient />
+  return (
+    <PageVisibilityGuard pageName="casClient">
+      <CasClient />
+    </PageVisibilityGuard>
+  );
 }

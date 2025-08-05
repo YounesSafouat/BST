@@ -2,15 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { 
-  Shield, 
+import {
+  Shield,
   Check,
-  CheckCircle, 
-  Award, 
-  Users, 
-  Target, 
-  TrendingUp, 
-  Calendar, 
+  CheckCircle,
+  Award,
+  Users,
+  Target,
+  TrendingUp,
+  Calendar,
   ArrowRight,
   Star,
   Zap,
@@ -30,6 +30,7 @@ import {
   Mail
 } from 'lucide-react';
 import Loader from '@/components/home/Loader';
+import PageVisibilityGuard from '@/components/PageVisibilityGuard';
 
 interface Testimonial {
   _id: string;
@@ -85,7 +86,7 @@ interface HubSpotData {
   };
 }
 
-function HubSpotPage() {
+function HubSpotPageContent() {
   const [activeTab, setActiveTab] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -96,11 +97,11 @@ function HubSpotPage() {
   useEffect(() => {
     const timer = setTimeout(() => setStatsVisible(true), 800);
     const loadTimer = setTimeout(() => setIsLoaded(true), 100);
-    
+
     // Fetch HubSpot data
     fetchHubSpotData();
     fetchTestimonials();
-    
+
     return () => {
       clearTimeout(timer);
       clearTimeout(loadTimer);
@@ -148,7 +149,7 @@ function HubSpotPage() {
 
   if (!hubspotData) {
     return (
-      <Loader/>
+      <Loader />
     );
   }
 
@@ -157,20 +158,20 @@ function HubSpotPage() {
 
     useEffect(() => {
       if (!statsVisible) return;
-      
+
       let startTime: number | undefined;
       const animate = (currentTime: number) => {
         if (!startTime) startTime = currentTime;
         const progress = Math.min((currentTime - startTime) / duration, 1);
-        
+
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         setCount(Math.floor(easeOutQuart * target));
-        
+
         if (progress < 1) {
           requestAnimationFrame(animate);
         }
       };
-      
+
       requestAnimationFrame(animate);
     }, [target, duration, statsVisible]);
 
@@ -198,12 +199,12 @@ function HubSpotPage() {
   const renderAvatar = (testimonialId: string) => {
     const testimonial = availableTestimonials.find(t => t._id === testimonialId);
     if (!testimonial) return null;
-    
+
     // Check if avatar is a URL (starts with http or /)
     if (testimonial.avatar && (testimonial.avatar.startsWith('http') || testimonial.avatar.startsWith('/'))) {
       return (
-        <Image 
-          src={testimonial.avatar} 
+        <Image
+          src={testimonial.avatar}
           alt={testimonial.name}
           width={40}
           height={40}
@@ -237,7 +238,7 @@ function HubSpotPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-10 md:mt-[15em]">
           <div className="text-center">
-            
+
             {/* Main Headline */}
             <h1 className={`text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight transform transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               <span className="inline-flex items-center justify-center flex-wrap gap-x-4 gap-y-2">
@@ -378,10 +379,10 @@ function HubSpotPage() {
         </div>
       </section>
 
-     {/* HubSpot Certifications */}
-     <section className="py-16 bg-gradient-to-r from-[var(--color-main)] via-[var(--color-main)] to-[var(--color-main)] relative overflow-hidden">
+      {/* HubSpot Certifications */}
+      <section className="py-16 bg-gradient-to-r from-[var(--color-main)] via-[var(--color-main)] to-[var(--color-main)] relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.1%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
             {hubspotData.partnership.headline}
@@ -400,53 +401,59 @@ function HubSpotPage() {
             ))}
           </div>
         </div>
-      </section>       
+      </section>
 
       {/* Testimonials */}
       {hubspotData.testimonials.length > 0 && (
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-              Approuvé par les <span className="text-[var(--color-main)]">Leaders</span>
-            </h2>
-            <p className="text-lg text-gray-600">
-              Découvrez comment nous avons aidé des entreprises à transformer leur business avec HubSpot
-            </p>
-          </div>
+        <section className="py-16 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
+                Approuvé par les <span className="text-[var(--color-main)]">Leaders</span>
+              </h2>
+              <p className="text-lg text-gray-600">
+                Découvrez comment nous avons aidé des entreprises à transformer leur business avec HubSpot
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               {hubspotData.testimonials.map((testimonialId, index) => {
                 const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                 if (!testimonial) return null;
-                
+
                 return (
-              <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <Quote className="w-10 h-10 text-[var(--color-main)] mb-5 group-hover:animate-pulse" />
-                <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
-                  "{testimonial.quote}"
-                </blockquote>
-                <div className="flex items-center space-x-4">
+                  <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+                    <Quote className="w-10 h-10 text-[var(--color-main)] mb-5 group-hover:animate-pulse" />
+                    <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
+                      "{testimonial.quote}"
+                    </blockquote>
+                    <div className="flex items-center space-x-4">
                       {renderAvatar(testimonialId)}
-                  <div>
+                      <div>
                         <div className="font-bold text-gray-900">{testimonial.name}</div>
-                    <div className="text-gray-600">{testimonial.role}</div>
+                        <div className="text-gray-600">{testimonial.role}</div>
                         {testimonial.result && (
                           <div className="text-[var(--color-main)] font-semibold">{testimonial.result}</div>
                         )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
                 );
               })}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       )}
 
-     
+
     </div>
   );
 }
 
-export default HubSpotPage;
+export default function HubSpotPage() {
+  return (
+    <PageVisibilityGuard pageName="hubspot">
+      <HubSpotPageContent />
+    </PageVisibilityGuard>
+  );
+}

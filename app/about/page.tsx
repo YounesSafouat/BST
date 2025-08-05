@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
 import AboutPageClient from './AboutPageClient';
+import PageVisibilityGuard from '@/components/PageVisibilityGuard';
 
 export const dynamic = "force-dynamic";
 
@@ -10,5 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function AboutPage() {
-  return <AboutPageClient />;
+  return (
+    <PageVisibilityGuard pageName="about">
+      <AboutPageClient />
+    </PageVisibilityGuard>
+  );
 }

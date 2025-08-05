@@ -205,11 +205,6 @@ export default function BlogPage() {
             <p className="text-xl text-color-gray max-w-3xl mx-auto leading-relaxed">
               Guides pratiques, études de cas et insights sur Odoo ERP, HubSpot CRM et la transformation digitale.
             </p>
-            {!locationLoading && (
-              <div className="mt-4 text-sm text-color-gray">
-                Contenu affiché pour : <span className="font-semibold text-color-main">{getRegionDisplayName(userRegion)}</span>
-              </div>
-            )}
           </div>
 
           {/* Search Section */}
@@ -226,17 +221,7 @@ export default function BlogPage() {
             </div>
           </div>
 
-          {/* Location Indicator */}
-          {!locationLoading && (
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border">
-                <MapPin className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600">
-                  Articles affichés pour : <span className="font-semibold text-[var(--color-secondary)]">{getRegionDisplayName(userRegion)}</span>
-                </span>
-              </div>
-            </div>
-          )}
+
         </div>
       </section>
 

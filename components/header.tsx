@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Calendar, Menu, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import { usePageVisibility } from '@/hooks/usePageVisibility';
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -18,6 +19,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const [location, setLocation] = useState<any>(null);
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
+  const { isPageVisible } = usePageVisibility();
 
   // Detect location using the same logic as other components
   useEffect(() => {

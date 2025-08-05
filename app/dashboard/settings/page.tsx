@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Switch } from "@/components/ui/switch"
 import { Save } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import Loader from '@/components/home/Loader';
@@ -37,6 +38,15 @@ interface SiteSettings {
       whatsapp?: string;
     };
   };
+  // Page visibility settings
+  pageVisibility?: {
+    home: boolean;
+    blog: boolean;
+    hubspot: boolean;
+    about: boolean;
+    casClient: boolean;
+    contact: boolean;
+  };
   // Legacy fields for backward compatibility
   contactEmail?: string;
   contactPhone?: string;
@@ -58,6 +68,14 @@ export default function SettingsDashboard() {
       france: { phone: "", email: "", address: "", whatsapp: "" },
       morocco: { phone: "", email: "", address: "", whatsapp: "" },
       other: { phone: "", email: "", address: "", whatsapp: "" }
+    },
+    pageVisibility: {
+      home: true,
+      blog: true,
+      hubspot: true,
+      about: true,
+      casClient: true,
+      contact: true
     }
   })
   const [loading, setLoading] = useState(true)
@@ -90,6 +108,14 @@ export default function SettingsDashboard() {
               france: { phone: "", email: "", address: "", whatsapp: "" },
               morocco: { phone: "", email: "", address: "", whatsapp: "" },
               other: { phone: "", email: "", address: "", whatsapp: "" }
+            },
+            pageVisibility: data.content.pageVisibility || {
+              home: true,
+              blog: true,
+              hubspot: true,
+              about: true,
+              casClient: true,
+              contact: true
             }
           })
         }
@@ -401,6 +427,98 @@ export default function SettingsDashboard() {
                     />
                   </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Page Visibility Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Visibilité des Pages</CardTitle>
+              <p className="text-sm text-gray-600">
+                Activez ou désactivez l'accès aux différentes pages du site
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Home Page */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">🏠 Page d'accueil</h4>
+                    <p className="text-sm text-gray-500">Page principale du site</p>
+                  </div>
+                  <Switch
+                    checked={settings.pageVisibility?.home ?? true}
+                    onCheckedChange={(checked) => updateField('pageVisibility.home', checked)}
+                  />
+                </div>
+
+                {/* Blog Page */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">📝 Blog</h4>
+                    <p className="text-sm text-gray-500">Articles et actualités</p>
+                  </div>
+                  <Switch
+                    checked={settings.pageVisibility?.blog ?? true}
+                    onCheckedChange={(checked) => updateField('pageVisibility.blog', checked)}
+                  />
+                </div>
+
+                {/* HubSpot Page */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">🚀 HubSpot</h4>
+                    <p className="text-sm text-gray-500">Page dédiée HubSpot</p>
+                  </div>
+                  <Switch
+                    checked={settings.pageVisibility?.hubspot ?? true}
+                    onCheckedChange={(checked) => updateField('pageVisibility.hubspot', checked)}
+                  />
+                </div>
+
+                {/* About Page */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">ℹ️ À propos</h4>
+                    <p className="text-sm text-gray-500">Informations sur l'entreprise</p>
+                  </div>
+                  <Switch
+                    checked={settings.pageVisibility?.about ?? true}
+                    onCheckedChange={(checked) => updateField('pageVisibility.about', checked)}
+                  />
+                </div>
+
+                {/* Cas Client Page */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">💼 Cas clients</h4>
+                    <p className="text-sm text-gray-500">Études de cas et témoignages</p>
+                  </div>
+                  <Switch
+                    checked={settings.pageVisibility?.casClient ?? true}
+                    onCheckedChange={(checked) => updateField('pageVisibility.casClient', checked)}
+                  />
+                </div>
+
+                {/* Contact Page */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">📞 Contact</h4>
+                    <p className="text-sm text-gray-500">Formulaire de contact</p>
+                  </div>
+                  <Switch
+                    checked={settings.pageVisibility?.contact ?? true}
+                    onCheckedChange={(checked) => updateField('pageVisibility.contact', checked)}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>Note :</strong> Les pages désactivées ne seront pas accessibles aux visiteurs.
+                  La page d'accueil ne peut pas être désactivée car elle est essentielle au fonctionnement du site.
+                </p>
               </div>
             </CardContent>
           </Card>
