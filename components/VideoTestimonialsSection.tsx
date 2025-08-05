@@ -41,6 +41,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
      const sectionRef = useRef<HTMLElement>(null);
+     const eventHandlersRef = useRef<Map<string, { play: () => void; pause: () => void }>>(new Map());
 
      // Fallback data if no data is provided
      const fallbackTestimonials: VideoTestimonial[] = [
@@ -111,18 +112,53 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           };
      }, [testimonials, playingVideos]);
 
+     // Add event listeners to sync video state with React state
+     useEffect(() => {
+          const handlePlay = (videoId: string) => {
+               setPlayingVideos(prev => ({ ...prev, [videoId]: true }));
+          };
+
+          const handlePause = (videoId: string) => {
+               setPlayingVideos(prev => ({ ...prev, [videoId]: false }));
+          };
+
+          // Add event listeners to all videos
+          testimonials.forEach((testimonial) => {
+               const video = videoRefs.current[testimonial.id];
+               if (video) {
+                    const playHandler = () => handlePlay(testimonial.id);
+                    const pauseHandler = () => handlePause(testimonial.id);
+                    
+                    video.addEventListener('play', playHandler);
+                    video.addEventListener('pause', pauseHandler);
+                    
+                    // Store handlers in Map for cleanup
+                    eventHandlersRef.current.set(testimonial.id, { play: playHandler, pause: pauseHandler });
+               }
+          });
+
+          // Cleanup event listeners
+          return () => {
+               testimonials.forEach((testimonial) => {
+                    const video = videoRefs.current[testimonial.id];
+                    const handlers = eventHandlersRef.current.get(testimonial.id);
+                    if (video && handlers) {
+                         video.removeEventListener('play', handlers.play);
+                         video.removeEventListener('pause', handlers.pause);
+                         eventHandlersRef.current.delete(testimonial.id);
+                    }
+               });
+          };
+     }, [testimonials]);
+
      const togglePlay = (videoId: string) => {
           const video = videoRefs.current[videoId];
           if (video) {
-               if (playingVideos[videoId]) {
-                    video.pause();
-               } else {
+               if (video.paused) {
                     video.play();
+               } else {
+                    video.pause();
                }
-               setPlayingVideos(prev => ({
-                    ...prev,
-                    [videoId]: !prev[videoId]
-               }));
           }
      };
 
