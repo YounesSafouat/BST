@@ -24,4 +24,4 @@ Allow: /sitemap.xml
 Crawl-delay: 1
 
 # Sitemap location
-Sitemap: https://blackswantech.com/sitemap.xml 
+Sitemap: https://agence-blackswan.com/sitemap.xml 

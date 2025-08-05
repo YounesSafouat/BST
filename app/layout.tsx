@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   },
   description: 'Expert Odoo ERP et HubSpot CRM au Maroc. Implémentation, intégration et formation. Partenaire Platinum HubSpot et Partenaire Officiel Odoo. Solutions sur mesure pour entreprises marocaines.',
   keywords: [
+    'agence blackswan maroc',
+    'agence blackswan technology maroc',
+    'agence digitale maroc',
+    'agence odoo maroc',
+    'agence hubspot maroc',
     'Odoo ERP Maroc',
     'HubSpot CRM Maroc',
     'Intégration Odoo',
@@ -37,7 +42,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://agence-blackswan.com"),
   alternates: {
     canonical: '/',
   },

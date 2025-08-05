@@ -17,7 +17,7 @@ export default function robots(): MetadataRoute.Robots {
         '/dev/',
       ],
     },
-    sitemap: 'https://blackswantech.com/sitemap.xml',
-    host: 'https://blackswantech.com',
+    sitemap: 'https://agence-blackswan.com/sitemap.xml',
+          host: 'https://agence-blackswan.com',
   }
 } 

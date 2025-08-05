@@ -31,7 +31,7 @@ export default function EnhancedStructuredData() {
                "@type": "Organization",
                "name": "BlackSwan Technology",
                "alternateName": "BlackSwan Tech",
-               "url": "https://blackswantech.com",
+                               "url": "https://agence-blackswan.com",
                "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg",
                "description": "Partenaire Officiel Odoo et Platinum HubSpot au Maroc. Experts en transformation digitale, implémentation et intégration ERP/CRM.",
                "foundingDate": "2022",
