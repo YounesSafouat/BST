@@ -78,15 +78,20 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                               const firstVideo = videoRefs.current[firstVideoId];
                               
                               if (firstVideo && firstVideo.src && !playingVideos[firstVideoId]) {
-                                   // Set muted to true for autoplay (browser requirement)
-                                   firstVideo.muted = true;
-                                   setMutedVideos(prev => ({ ...prev, [firstVideoId]: true }));
-                                   
-                                   // Play the video
+                                   // Try to play with sound first, fallback to muted if needed
                                    firstVideo.play().then(() => {
                                         setPlayingVideos(prev => ({ ...prev, [firstVideoId]: true }));
+                                        setMutedVideos(prev => ({ ...prev, [firstVideoId]: false }));
                                    }).catch((error) => {
-                                        console.log('Autoplay prevented:', error);
+                                        console.log('Autoplay with sound prevented, trying muted:', error);
+                                        // Fallback: try muted autoplay
+                                        firstVideo.muted = true;
+                                        firstVideo.play().then(() => {
+                                             setPlayingVideos(prev => ({ ...prev, [firstVideoId]: true }));
+                                             setMutedVideos(prev => ({ ...prev, [firstVideoId]: true }));
+                                        }).catch((mutedError) => {
+                                             console.log('Autoplay prevented even with muted:', mutedError);
+                                        });
                                    });
                               }
                          }
