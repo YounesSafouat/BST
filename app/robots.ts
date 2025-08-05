@@ -5,8 +5,19 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/dashboard/', '/auth/', '/api/'],
+      disallow: [
+        '/dashboard/',
+        '/api/',
+        '/_next/',
+        '/admin/',
+        '/private/',
+        '/*.json$',
+        '/*.xml$',
+        '/temp/',
+        '/dev/',
+      ],
     },
-    sitemap: process.env.NEXT_PUBLIC_BASE_URL + '/sitemap.xml',
+    sitemap: 'https://blackswantech.com/sitemap.xml',
+    host: 'https://blackswantech.com',
   }
 } 
