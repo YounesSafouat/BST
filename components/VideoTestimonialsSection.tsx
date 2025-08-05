@@ -40,6 +40,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      } | null>(null);
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
+     const sectionRef = useRef<HTMLElement>(null);
 
      // Fallback data if no data is provided
      const fallbackTestimonials: VideoTestimonial[] = [
@@ -66,6 +67,44 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      const headline = videoTestimonialsData?.headline || 'NOS DERNIERS PROJETS';
      const description = videoTestimonialsData?.description || 'Témoignages clients';
      const subdescription = videoTestimonialsData?.subdescription || 'Découvrez comment nos clients ont transformé leur entreprise avec Odoo';
+
+     // Auto-play first video when section enters viewport
+     useEffect(() => {
+          const observer = new IntersectionObserver(
+               (entries) => {
+                    entries.forEach((entry) => {
+                         if (entry.isIntersecting && testimonials.length > 0) {
+                              const firstVideoId = testimonials[0].id;
+                              const firstVideo = videoRefs.current[firstVideoId];
+                              
+                              if (firstVideo && firstVideo.src && !playingVideos[firstVideoId]) {
+                                   // Set muted to true for autoplay (browser requirement)
+                                   firstVideo.muted = true;
+                                   setMutedVideos(prev => ({ ...prev, [firstVideoId]: true }));
+                                   
+                                   // Play the video
+                                   firstVideo.play().then(() => {
+                                        setPlayingVideos(prev => ({ ...prev, [firstVideoId]: true }));
+                                   }).catch((error) => {
+                                        console.log('Autoplay prevented:', error);
+                                   });
+                              }
+                         }
+                    });
+               },
+               { threshold: 0.3 } // Trigger when 30% of section is visible
+          );
+
+          if (sectionRef.current) {
+               observer.observe(sectionRef.current);
+          }
+
+          return () => {
+               if (sectionRef.current) {
+                    observer.unobserve(sectionRef.current);
+               }
+          };
+     }, [testimonials, playingVideos]);
 
      const togglePlay = (videoId: string) => {
           const video = videoRefs.current[videoId];
@@ -218,7 +257,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      };
 
      return (
-          <section className="min-h-screen bg-white flex items-center">
+          <section className="min-h-screen bg-white flex items-center" ref={sectionRef}>
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="text-center mb-12">
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
