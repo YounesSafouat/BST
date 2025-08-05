@@ -415,7 +415,7 @@ export function BlogPost({ post }: { post: Post }) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">Share Modal</h3>
+                <h3 className="text-xl font-bold text-gray-900">Partager cet article</h3>
                 <button
                   onClick={() => setShowSharePopup(false)}
                   aria-label="Fermer le popup de partage"
@@ -428,7 +428,7 @@ export function BlogPost({ post }: { post: Post }) {
               <div className="space-y-6">
                 {/* Share via social media */}
                 <div>
-                  <p className="text-sm text-gray-600 mb-4">Share this link via</p>
+                  <p className="text-sm text-gray-600 mb-4">Partager via</p>
                   <div className="flex items-center gap-3">
                     {/* WhatsApp */}
                     <button
@@ -454,7 +454,7 @@ export function BlogPost({ post }: { post: Post }) {
 
                 {/* Copy link section */}
                 <div>
-                  <p className="text-sm text-gray-600 mb-3">Or copy link</p>
+                  <p className="text-sm text-gray-600 mb-3">Ou copier le lien</p>
                   <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
                     <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -470,7 +470,7 @@ export function BlogPost({ post }: { post: Post }) {
                       onClick={copyLink}
                       className="px-4 py-2 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white text-sm font-medium rounded-lg transition-colors"
                     >
-                      {copied ? 'Copied!' : 'Copy'}
+                      {copied ? 'Copié !' : 'Copier'}
                     </button>
                   </div>
                 </div>
