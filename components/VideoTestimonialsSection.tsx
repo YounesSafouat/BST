@@ -38,6 +38,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           currentTime: number;
           wasMuted: boolean;
      } | null>(null);
+     const [forceUpdate, setForceUpdate] = useState(0); // Force re-render
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
      const sectionRef = useRef<HTMLElement>(null);
@@ -51,7 +52,9 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                companyLogo: 'ESSEM',
                duration: '02:00',
                backgroundColor: 'bg-gray-800',
-               textColor: 'text-white'
+               textColor: 'text-white',
+               videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+               thumbnailUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg'
           },
           {
                id: '2',
@@ -60,7 +63,9 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                tagline: 'Découvrez notre client AI Crafters',
                duration: '02:00',
                backgroundColor: 'bg-gray-800',
-               textColor: 'text-white'
+               textColor: 'text-white',
+               videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+               thumbnailUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg'
           }
      ];
 
@@ -69,56 +74,21 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      const description = videoTestimonialsData?.description || 'Témoignages clients';
      const subdescription = videoTestimonialsData?.subdescription || 'Découvrez comment nos clients ont transformé leur entreprise avec Odoo';
 
-     // Auto-play first video when section enters viewport
-     useEffect(() => {
-          const observer = new IntersectionObserver(
-               (entries) => {
-                    entries.forEach((entry) => {
-                         if (entry.isIntersecting && testimonials.length > 0) {
-                              const firstVideoId = testimonials[0].id;
-                              const firstVideo = videoRefs.current[firstVideoId];
-                              
-                              if (firstVideo && firstVideo.src && !playingVideos[firstVideoId]) {
-                                   // Try to play with sound first, fallback to muted if needed
-                                   firstVideo.play().then(() => {
-                                        setPlayingVideos(prev => ({ ...prev, [firstVideoId]: true }));
-                                        setMutedVideos(prev => ({ ...prev, [firstVideoId]: false }));
-                                   }).catch((error) => {
-                                        console.log('Autoplay with sound prevented, trying muted:', error);
-                                        // Fallback: try muted autoplay
-                                        firstVideo.muted = true;
-                                        firstVideo.play().then(() => {
-                                             setPlayingVideos(prev => ({ ...prev, [firstVideoId]: true }));
-                                             setMutedVideos(prev => ({ ...prev, [firstVideoId]: true }));
-                                        }).catch((mutedError) => {
-                                             console.log('Autoplay prevented even with muted:', mutedError);
-                                        });
-                                   });
-                              }
-                         }
-                    });
-               },
-               { threshold: 0.3 } // Trigger when 30% of section is visible
-          );
+     // Debug logging
+     console.log('VideoTestimonialsSection - testimonials:', testimonials);
+     console.log('VideoTestimonialsSection - videoTestimonialsData:', videoTestimonialsData);
 
-          if (sectionRef.current) {
-               observer.observe(sectionRef.current);
-          }
 
-          return () => {
-               if (sectionRef.current) {
-                    observer.unobserve(sectionRef.current);
-               }
-          };
-     }, [testimonials, playingVideos]);
 
      // Add event listeners to sync video state with React state
      useEffect(() => {
           const handlePlay = (videoId: string) => {
+               console.log('Play event fired for videoId:', videoId);
                setPlayingVideos(prev => ({ ...prev, [videoId]: true }));
           };
 
           const handlePause = (videoId: string) => {
+               console.log('Pause event fired for videoId:', videoId);
                setPlayingVideos(prev => ({ ...prev, [videoId]: false }));
           };
 
@@ -128,10 +98,17 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                if (video) {
                     const playHandler = () => handlePlay(testimonial.id);
                     const pauseHandler = () => handlePause(testimonial.id);
-                    
+
+                    // Remove existing listeners first
+                    const existingHandlers = eventHandlersRef.current.get(testimonial.id);
+                    if (existingHandlers) {
+                         video.removeEventListener('play', existingHandlers.play);
+                         video.removeEventListener('pause', existingHandlers.pause);
+                    }
+
                     video.addEventListener('play', playHandler);
                     video.addEventListener('pause', pauseHandler);
-                    
+
                     // Store handlers in Map for cleanup
                     eventHandlersRef.current.set(testimonial.id, { play: playHandler, pause: pauseHandler });
                }
@@ -149,13 +126,16 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                     }
                });
           };
-     }, [testimonials]);
+     }, [testimonials, forceUpdate]);
 
      const togglePlay = (videoId: string) => {
           const video = videoRefs.current[videoId];
+          console.log('togglePlay called for videoId:', videoId, 'video:', video, 'paused:', video?.paused);
           if (video) {
                if (video.paused) {
-                    video.play();
+                    video.play().catch((error) => {
+                         console.error('Error playing video:', error);
+                    });
                } else {
                     video.pause();
                }
@@ -320,17 +300,31 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                               >
                                    {/* Video Content - Made bigger */}
                                    <div className="aspect-[16/10] relative">
-                                        {testimonial.videoUrl ? (
+                                        {/* Always show video for testing - use fallback URL if no videoUrl */}
+                                        {true ? (
                                              // Actual video with controls
-                                             <div className="w-full h-full relative group">
+                                             <div
+                                                  className="w-full h-full relative group"
+                                                  onClick={(e) => {
+                                                       // Only toggle if clicking on the container, not on buttons
+                                                       if (e.target === e.currentTarget || e.target === videoRefs.current[testimonial.id]) {
+                                                            togglePlay(testimonial.id);
+                                                       }
+                                                  }}
+                                             >
                                                   <video
-                                                       ref={(el) => { videoRefs.current[testimonial.id] = el; }}
+                                                       ref={(el) => {
+                                                            videoRefs.current[testimonial.id] = el;
+                                                            console.log('Video ref set for:', testimonial.id, 'element:', el);
+                                                       }}
                                                        src={testimonial.videoUrl}
                                                        poster={testimonial.thumbnailUrl} // Use thumbnail as poster
                                                        className="w-full h-full object-cover"
                                                        onTimeUpdate={() => handleTimeUpdate(testimonial.id)}
                                                        onLoadedMetadata={() => handleLoadedMetadata(testimonial.id)}
                                                        onEnded={() => handleVideoEnded(testimonial.id)}
+                                                       onPlay={() => setPlayingVideos(prev => ({ ...prev, [testimonial.id]: true }))}
+                                                       onPause={() => setPlayingVideos(prev => ({ ...prev, [testimonial.id]: false }))}
                                                        muted={mutedVideos[testimonial.id]}
                                                   />
 
@@ -338,7 +332,10 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
                                                        {/* Play/Pause Button */}
                                                        <button
-                                                            onClick={() => togglePlay(testimonial.id)}
+                                                            onClick={(e) => {
+                                                                 e.stopPropagation();
+                                                                 togglePlay(testimonial.id);
+                                                            }}
                                                             className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
                                                        >
                                                             {playingVideos[testimonial.id] ? (
