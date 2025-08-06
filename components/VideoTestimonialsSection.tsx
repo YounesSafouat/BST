@@ -74,21 +74,17 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      const description = videoTestimonialsData?.description || 'Témoignages clients';
      const subdescription = videoTestimonialsData?.subdescription || 'Découvrez comment nos clients ont transformé leur entreprise avec Odoo';
 
-     // Debug logging
-     console.log('VideoTestimonialsSection - testimonials:', testimonials);
-     console.log('VideoTestimonialsSection - videoTestimonialsData:', videoTestimonialsData);
+
 
 
 
      // Add event listeners to sync video state with React state
      useEffect(() => {
           const handlePlay = (videoId: string) => {
-               console.log('Play event fired for videoId:', videoId);
                setPlayingVideos(prev => ({ ...prev, [videoId]: true }));
           };
 
           const handlePause = (videoId: string) => {
-               console.log('Pause event fired for videoId:', videoId);
                setPlayingVideos(prev => ({ ...prev, [videoId]: false }));
           };
 
@@ -130,7 +126,6 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
 
      const togglePlay = (videoId: string) => {
           const video = videoRefs.current[videoId];
-          console.log('togglePlay called for videoId:', videoId, 'video:', video, 'paused:', video?.paused);
           if (video) {
                if (video.paused) {
                     video.play().catch((error) => {
@@ -315,7 +310,6 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                   <video
                                                        ref={(el) => {
                                                             videoRefs.current[testimonial.id] = el;
-                                                            console.log('Video ref set for:', testimonial.id, 'element:', el);
                                                        }}
                                                        src={testimonial.videoUrl}
                                                        poster={testimonial.thumbnailUrl} // Use thumbnail as poster

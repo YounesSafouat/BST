@@ -22,34 +22,28 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const { isPageVisible } = usePageVisibility();
 
   // Detect location using the same logic as other components
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        console.log("Detecting location for header...");
-        const userLocation = await getUserLocation();
-        console.log("User location detected for header:", userLocation);
-        setLocation(userLocation);
-      } catch (error) {
-        console.error("Error detecting location for header:", error);
-      }
-    };
+       useEffect(() => {
+          const detectLocation = async () => {
+               try {
+                    const userLocation = await getUserLocation();
+                    setLocation(userLocation);
+               } catch (error) {
+                    console.error("Error detecting location for header:", error);
+               }
+          };
 
-    detectLocation();
-  }, []);
+          detectLocation();
+     }, []);
 
   // Fetch regional contact data
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        console.log('Fetching contact data for header...');
         const response = await fetch('/api/content/settings');
         if (response.ok) {
           const data = await response.json();
-          console.log('Contact data response for header:', data);
           if (data.success && data.content?.regionalContact) {
             setContactData(data.content.regionalContact);
-          } else {
-            console.log('No regional contact data found in CMS for header');
           }
         } else {
           console.error('Failed to fetch contact data for header:', response.status);
@@ -66,7 +60,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   useEffect(() => {
     if (location && contactData) {
       const region = getRegionFromCountry(location.countryCode);
-      console.log('Detected region for header:', region, 'from country code:', location.countryCode);
 
       let number: string | null = null;
       switch (region) {
@@ -80,8 +73,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           number = contactData.other?.whatsapp || null;
           break;
       }
-
-      console.log('Setting WhatsApp number for header:', number);
       setWhatsappNumber(number);
     }
   }, [location, contactData]);

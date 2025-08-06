@@ -90,12 +90,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           setIsSubmitting(true);
           setSubmitError('');
 
-          console.log('Form submission started');
-          console.log('Environment check:', {
-               NODE_ENV: process.env.NODE_ENV,
-               NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-               window_location: typeof window !== 'undefined' ? window.location.origin : 'server-side'
-          });
+
 
           try {
                // Prepare the data for submission
@@ -128,7 +123,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                               },
                               body: JSON.stringify(submissionData),
                          });
-                         console.log('Using test endpoint as fallback');
+
                     } catch (testError) {
                          console.error('Test endpoint also failed:', testError);
                          throw fetchError;
@@ -137,7 +132,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                if (response.ok) {
                     const result = await response.json();
-                    console.log('Contact form submitted successfully:', result);
+
                     setIsSubmitted(true);
 
                     // Reset form after successful submission

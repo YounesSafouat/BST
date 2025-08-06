@@ -240,7 +240,6 @@ export default function HomePage() {
           try {
                const timestamp = Date.now();
                const random = Math.random();
-               console.log('Fetching Odoo data with timestamp:', timestamp, 'random:', random);
                const response = await fetch(`/api/content/odoo?t=${timestamp}&r=${random}`, {
                     cache: 'no-store',
                     headers: {
@@ -249,7 +248,6 @@ export default function HomePage() {
                          'Expires': '0'
                     }
                });
-               console.log('Response status:', response.status);
                if (response.ok) {
                     const data = await response.json();
                     if (data && typeof data === 'object') {
@@ -270,13 +268,11 @@ export default function HomePage() {
      const fetchTestimonials = async () => {
           try {
                const timestamp = Date.now();
-               console.log('Fetching testimonials from /api/testimonials...');
                const response = await fetch(`/api/testimonials?t=${timestamp}`, {
                     cache: 'no-store'
                });
                if (response.ok) {
                     const data = await response.json();
-                    console.log('Raw testimonials data:', data);
                     // Map the testimonials data to match the expected format
                     const mappedTestimonials = data.map((item: any) => ({
                          _id: item._id,
@@ -287,7 +283,6 @@ export default function HomePage() {
                          avatar: item.photo || '',
                          company: ''
                     }));
-                    console.log('Mapped testimonials:', mappedTestimonials);
                     setAvailableTestimonials(mappedTestimonials);
                } else {
                     console.error('Failed to fetch testimonials, status:', response.status);
@@ -598,10 +593,7 @@ export default function HomePage() {
                     </section>
 
                     {/* Video Testimonials Section */}
-                    {(() => {
-                         console.log('HomePage - odooData?.videoTestimonials:', odooData?.videoTestimonials);
-                         return null;
-                    })()}
+
                     <VideoTestimonialsSection videoTestimonialsData={odooData?.videoTestimonials} />
 
                     {/* Odoo Certification Section */}
@@ -716,12 +708,7 @@ export default function HomePage() {
                                              </button>
                                         )}
 
-                                        <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 flex-1">
-                                             {(() => {
-                                                  console.log('odooData.testimonials:', odooData.testimonials);
-                                                  console.log('availableTestimonials:', availableTestimonials);
-                                                  return null;
-                                             })()}
+                                                                                      <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 flex-1">
                                              {odooData.testimonials
                                                   .slice(currentTestimonialIndex, currentTestimonialIndex + 3)
                                                   .map((testimonialId: string, index: number) => {

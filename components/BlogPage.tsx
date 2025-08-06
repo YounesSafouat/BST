@@ -43,24 +43,10 @@ export default function BlogPage() {
   useEffect(() => {
     const detectUserLocation = async () => {
       try {
-        // Log device information for debugging
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        console.log('Blog Page - Device detection:', {
-          userAgent: navigator.userAgent,
-          isMobile: isMobile,
-          platform: navigator.platform,
-          language: navigator.language,
-          screenSize: `${window.screen.width}x${window.screen.height}`,
-          viewport: `${window.innerWidth}x${window.innerHeight}`
-        });
-
         const location = await getUserLocation();
         if (location) {
           const region = getRegionFromCountry(location.countryCode);
           setUserRegion(region);
-          console.log('Blog Page - User location detected:', location, 'Region:', region);
-        } else {
-          console.log('Blog Page - No location detected, using default region');
         }
       } catch (error) {
         console.error('Blog Page - Error detecting user location:', error);
@@ -79,10 +65,8 @@ export default function BlogPage() {
         const apiUrl = baseUrl
           ? `${baseUrl}/api/blog`
           : "/api/blog";
-        console.log("Fetching blog data from:", apiUrl);
         const res = await fetch(apiUrl);
         const data = await res.json();
-        console.log("Blog data received:", data);
         setBlogData({ content: { blogPosts: data } });
 
 
@@ -111,13 +95,10 @@ export default function BlogPage() {
   useEffect(() => {
     if (!blogData) return;
 
-    console.log("Blog data for filtering:", blogData);
     let filtered = (blogData.content?.blogPosts || []).filter((post: any) => isBlogReleased(post));
-    console.log("Posts after published filter:", filtered.length);
 
     // Filter by user region
     filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
-    console.log("Posts after region filter:", filtered.length, "for region:", userRegion);
 
     // Filter by search term
     if (searchTerm) {

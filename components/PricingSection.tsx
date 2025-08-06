@@ -29,9 +29,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      useEffect(() => {
           const detectLocation = async () => {
                try {
-                    console.log("Detecting location for pricing section...");
                     const userLocation = await getUserLocation();
-                    console.log("User location detected:", userLocation);
                     setLocation(userLocation);
                } catch (error) {
                     console.error("Error detecting location:", error);
@@ -48,7 +46,6 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
           if (!location || !location.countryCode) return true;
 
           const region = getRegionFromCountry(location.countryCode);
-          console.log("Detected region:", region);
 
           if (!plan.targetRegions) return true;
 
