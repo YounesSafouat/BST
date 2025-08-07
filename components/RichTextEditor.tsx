@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Bold, Italic, List, ListOrdered, Quote, Link, Image as ImageIcon, Code, Heading1, Heading2, Heading3, AlignLeft, AlignCenter, AlignRight, Eye, EyeOff } from 'lucide-react';
+import { Bold, Italic, List, ListOrdered, Quote, Link, Image as ImageIcon, Code, Heading1, Heading2, Heading3, AlignLeft, AlignCenter, AlignRight, Eye, EyeOff, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 interface RichTextEditorProps {
   value: string;
@@ -22,6 +23,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const insertText = (before: string, after: string = '', placeholder: string = '') => {
     const textarea = textareaRef.current;
@@ -62,6 +64,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }, 0);
   };
 
+  const insertHTML = () => {
+    const html = prompt('Entrez votre code HTML:');
+    if (html) {
+      insertAtCursor(html);
+    }
+  };
+
   const toolbarButtons = [
     { icon: Bold, action: () => insertText('**', '**', 'texte en gras'), title: 'Gras' },
     { icon: Italic, action: () => insertText('*', '*', 'texte en italique'), title: 'Italique' },
@@ -100,8 +109,31 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     insertAtCursor(table);
   };
 
+  const toggleFullScreen = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
+  // Handle fullscreen styles
+  useEffect(() => {
+    if (isFullScreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isFullScreen]);
+
+  const editorContainerClass = isFullScreen 
+    ? 'fixed inset-0 z-50 bg-white' 
+    : 'border border-gray-300 rounded-lg overflow-hidden';
+
+  const editorHeight = isFullScreen ? 'calc(100vh - 80px)' : height;
+
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
+    <div className={editorContainerClass}>
       {/* Toolbar */}
       <div className="bg-gray-50 border-b border-gray-300 p-2 flex flex-wrap gap-1 items-center">
         <div className="flex gap-1">
@@ -161,9 +193,28 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           >
             Tableau
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={insertHTML}
+            className="h-8 px-2 hover:bg-gray-200"
+            title="Insérer du HTML"
+          >
+            HTML
+          </Button>
         </div>
 
-        <div className="ml-auto">
+        <div className="ml-auto flex gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleFullScreen}
+            className="h-8 px-2 hover:bg-gray-200"
+            title={isFullScreen ? "Quitter le plein écran" : "Plein écran"}
+          >
+            {isFullScreen ? <Minimize2 className="w-4 h-4 mr-1" /> : <Maximize2 className="w-4 h-4 mr-1" />}
+            {isFullScreen ? "Réduire" : "Plein écran"}
+          </Button>
           <Button
             variant="ghost"
             size="sm"
@@ -178,7 +229,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       </div>
 
       {/* Editor/Preview */}
-      <div className="flex">
+      <div className="flex" style={{ height: editorHeight }}>
         {/* Markdown Editor */}
         <div className={`${showPreview ? 'w-1/2' : 'w-full'} border-r border-gray-300`}>
           <textarea
@@ -191,15 +242,93 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             className={`w-full p-4 outline-none resize-none ${
               isFocused ? 'bg-white' : 'bg-gray-50'
             }`}
-            style={{ minHeight: height }}
+            style={{ height: '100%' }}
           />
         </div>
 
         {/* Preview */}
         {showPreview && (
-          <div className="w-1/2 p-4 bg-white overflow-y-auto" style={{ minHeight: height }}>
+          <div className="w-1/2 p-4 bg-white overflow-y-auto">
             <div className="prose prose-sm max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={{
+                  img: ({ src, alt, ...props }) => (
+                    <img 
+                      src={src} 
+                      alt={alt} 
+                      {...props}
+                      style={{ 
+                        maxWidth: '100%', 
+                        height: 'auto',
+                        borderRadius: '8px',
+                        margin: '1rem 0'
+                      }} 
+                    />
+                  ),
+                  div: ({ children, ...props }) => (
+                    <div {...props} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      margin: '2rem 0',
+                      ...props.style 
+                    }}>
+                      {children}
+                    </div>
+                  ),
+                  p: ({ children, ...props }) => (
+                    <p {...props} style={{ margin: '1rem 0' }}>
+                      {children}
+                    </p>
+                  ),
+                  ul: ({ children, ...props }) => (
+                    <ul {...props} style={{ margin: '1rem 0', paddingLeft: '2rem' }}>
+                      {children}
+                    </ul>
+                  ),
+                  li: ({ children, ...props }) => (
+                    <li {...props} style={{ margin: '0.5rem 0' }}>
+                      {children}
+                    </li>
+                  ),
+                  strong: ({ children, ...props }) => (
+                    <strong {...props} style={{ fontWeight: 'bold' }}>
+                      {children}
+                    </strong>
+                  ),
+                  h1: ({ children, ...props }) => (
+                    <h1 {...props} style={{ 
+                      fontSize: '2rem', 
+                      fontWeight: 'bold', 
+                      margin: '2rem 0 1rem 0',
+                      color: '#1f2937'
+                    }}>
+                      {children}
+                    </h1>
+                  ),
+                  h2: ({ children, ...props }) => (
+                    <h2 {...props} style={{ 
+                      fontSize: '1.5rem', 
+                      fontWeight: 'bold', 
+                      margin: '1.5rem 0 1rem 0',
+                      color: '#374151'
+                    }}>
+                      {children}
+                    </h2>
+                  ),
+                  h3: ({ children, ...props }) => (
+                    <h3 {...props} style={{ 
+                      fontSize: '1.25rem', 
+                      fontWeight: 'bold', 
+                      margin: '1rem 0 0.5rem 0',
+                      color: '#4b5563'
+                    }}>
+                      {children}
+                    </h3>
+                  ),
+                }}
+              >
                 {value || '*Aucun contenu à prévisualiser*'}
               </ReactMarkdown>
             </div>

@@ -17,6 +17,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -237,6 +238,7 @@ export function BlogPost({ post }: { post: Post }) {
             {post.body && (
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
                 components={{
                   h1: ({ children }) => (
                     <h1 className="text-3xl font-bold text-black mb-6 mt-8 leading-tight">{children}</h1>
