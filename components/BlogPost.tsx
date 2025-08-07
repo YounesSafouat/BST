@@ -49,6 +49,155 @@ const getImageUrl = (img: string) => {
   return img;
 };
 
+// Custom component to render blog content with proper HTML styling
+const BlogContent = ({ content }: { content: string }) => {
+  const [htmlContent, setHtmlContent] = useState('');
+
+  useEffect(() => {
+    // Convert markdown to HTML using ReactMarkdown
+    const tempDiv = document.createElement('div');
+    const ReactMarkdownComponent = ReactMarkdown;
+    
+    // We'll use a simple approach - render markdown to HTML string
+    const markdownToHtml = async () => {
+      try {
+        // For now, let's use a simpler approach with dangerouslySetInnerHTML
+        // but with proper CSS to handle the styling
+        setHtmlContent(content);
+      } catch (error) {
+        console.error('Error converting markdown:', error);
+        setHtmlContent(content);
+      }
+    };
+    
+    markdownToHtml();
+  }, [content]);
+
+  return (
+    <>
+      <style jsx>{`
+        .blog-content {
+          line-height: 1.7;
+          color: #374151;
+        }
+        .blog-content h1 {
+          font-size: 2rem;
+          font-weight: bold;
+          color: #111827;
+          margin: 2rem 0 1rem 0;
+          line-height: 1.2;
+        }
+        .blog-content h2 {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: #374151;
+          margin: 1.5rem 0 1rem 0;
+          line-height: 1.3;
+        }
+        .blog-content h3 {
+          font-size: 1.25rem;
+          font-weight: bold;
+          color: #4b5563;
+          margin: 1rem 0 0.5rem 0;
+          line-height: 1.4;
+        }
+        .blog-content p {
+          margin: 1rem 0;
+          line-height: 1.7;
+        }
+        .blog-content ul, .blog-content ol {
+          margin: 1rem 0;
+          padding-left: 2rem;
+        }
+        .blog-content li {
+          margin: 0.5rem 0;
+        }
+        .blog-content strong {
+          font-weight: bold;
+          color: #111827;
+        }
+        .blog-content em {
+          font-style: italic;
+          color: #4b5563;
+        }
+        .blog-content img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+          margin: 1rem 0;
+        }
+        .blog-content a {
+          color: #2563eb;
+          text-decoration: underline;
+        }
+        .blog-content a:hover {
+          color: #1d4ed8;
+        }
+        .blog-content blockquote {
+          border-left: 4px solid #3b82f6;
+          padding-left: 1rem;
+          margin: 1rem 0;
+          font-style: italic;
+          background-color: #f9fafb;
+          padding: 1rem;
+          border-radius: 0 8px 8px 0;
+        }
+        .blog-content code {
+          background-color: #f3f4f6;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 0.875rem;
+        }
+        .blog-content pre {
+          background-color: #1f2937;
+          color: #f9fafb;
+          padding: 1rem;
+          border-radius: 8px;
+          overflow-x: auto;
+          margin: 1rem 0;
+        }
+        .blog-content pre code {
+          background: none;
+          padding: 0;
+          color: inherit;
+        }
+        .blog-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1rem 0;
+          border: 1px solid #d1d5db;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .blog-content th {
+          background-color: #f9fafb;
+          padding: 0.75rem;
+          text-align: left;
+          font-weight: bold;
+          border-right: 1px solid #d1d5db;
+        }
+        .blog-content td {
+          padding: 0.75rem;
+          border-right: 1px solid #d1d5db;
+          border-bottom: 1px solid #d1d5db;
+        }
+        .blog-content tr:last-child td {
+          border-bottom: none;
+        }
+        .blog-content th:last-child,
+        .blog-content td:last-child {
+          border-right: none;
+        }
+      `}</style>
+      <div 
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: htmlContent }}
+      />
+    </>
+  );
+};
+
 export function BlogPost({ post }: { post: Post }) {
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -236,140 +385,7 @@ export function BlogPost({ post }: { post: Post }) {
           <div className="blog-content">
             <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">{post.excerpt}</p>
             {post.body && (
-              <div className="prose prose-lg max-w-none">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw]}
-                  components={{
-                  h1: ({ children }) => (
-                    <h1 className="text-3xl font-bold text-black mb-6 mt-8 leading-tight">{children}</h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-2xl font-bold text-black mb-5 mt-7 leading-tight">{children}</h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 className="text-xl font-bold text-black mb-4 mt-6 leading-tight">{children}</h3>
-                  ),
-                  h4: ({ children }) => (
-                    <h4 className="text-lg font-bold text-black mb-3 mt-5 leading-tight">{children}</h4>
-                  ),
-                  p: ({ children }) => (
-                    <p className="text-base text-gray-700 leading-7 mb-6">{children}</p>
-                  ),
-                  ul: ({ children }) => (
-                    <ul className="list-disc list-inside text-gray-700 leading-7 mb-6 space-y-2">{children}</ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="list-decimal list-inside text-gray-700 leading-7 mb-6 space-y-2">{children}</ol>
-                  ),
-                  li: ({ children }) => (
-                    <li className="text-base text-gray-700 leading-7">{children}</li>
-                  ),
-                  blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-[var(--color-secondary)] pl-6 py-4 my-8 bg-gray-50 rounded-r-lg">
-                      <p className="text-lg text-gray-700 italic leading-7">{children}</p>
-                    </blockquote>
-                  ),
-                  code: ({ children, className }) => {
-                    const isInline = !className;
-                    return isInline ? (
-                      <code className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono">{children}</code>
-                    ) : (
-                      <code className="block bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-6">{children}</code>
-                    );
-                  },
-                  pre: ({ children }) => (
-                    <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-6 mb-6">{children}</pre>
-                  ),
-                  table: ({ children }) => (
-                    <div className="overflow-x-auto my-8">
-                      <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
-                        {children}
-                      </table>
-                    </div>
-                  ),
-                  thead: ({ children }) => (
-                    <thead className="bg-gray-100">{children}</thead>
-                  ),
-                  tbody: ({ children }) => (
-                    <tbody className="bg-white">{children}</tbody>
-                  ),
-                  tr: ({ children }) => (
-                    <tr className="border-b border-gray-300 last:border-b-0">{children}</tr>
-                  ),
-                  th: ({ children }) => (
-                    <th className="px-4 py-3 text-left font-bold text-gray-900 border-r border-gray-300 last:border-r-0">{children}</th>
-                  ),
-                  td: ({ children }) => (
-                    <td className="px-4 py-3 text-gray-700 border-r border-gray-300 last:border-r-0">{children}</td>
-                  ),
-                  img: ({ src, alt, ...props }) => {
-                    // Extract width from style attribute if present
-                    let width: number | null = null;
-                    let marginRight: string | null = null;
-                    let borderRadius: string | null = null;
-                    
-                    if (props.style) {
-                      const styleStr = typeof props.style === 'string' ? props.style : JSON.stringify(props.style);
-                      const widthMatch = styleStr.match(/width:\s*(\d+)px/);
-                      const marginRightMatch = styleStr.match(/margin-right:\s*([^;]+)/);
-                      const borderRadiusMatch = styleStr.match(/border-radius:\s*([^;]+)/);
-                      
-                      if (widthMatch) {
-                        width = parseInt(widthMatch[1]);
-                      }
-                      if (marginRightMatch) {
-                        marginRight = marginRightMatch[1];
-                      }
-                      if (borderRadiusMatch) {
-                        borderRadius = borderRadiusMatch[1];
-                      }
-                    }
-                    
-                    const finalStyle = {
-                      width: width ? `${width}px` : 'auto',
-                      maxWidth: '100%',
-                      height: 'auto',
-                      marginRight: marginRight || undefined,
-                      borderRadius: borderRadius || '8px'
-                    };
-                    
-                    return (
-                      <div className="my-8">
-                        <img
-                          src={src}
-                          alt={alt || 'Blog image'}
-                          className="rounded-lg shadow-lg"
-                          style={finalStyle}
-                          loading="lazy"
-                        />
-                        {alt && (
-                          <p className="text-sm text-gray-500 text-center mt-2 italic">{alt}</p>
-                        )}
-                      </div>
-                    );
-                  },
-                  a: ({ href, children }) => (
-                    <a
-                      href={href}
-                      className="text-[var(--color-secondary)] hover:text-[var(--color-main)] underline transition-colors duration-200"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {children}
-                    </a>
-                  ),
-                  strong: ({ children }) => (
-                    <strong className="font-bold text-black">{children}</strong>
-                  ),
-                  em: ({ children }) => (
-                    <em className="italic text-gray-800">{children}</em>
-                  ),
-                }}
-              >
-                {post.body}
-              </ReactMarkdown>
-            </div>
+              <BlogContent content={post.body} />
             )}
           </div>
         </div>
