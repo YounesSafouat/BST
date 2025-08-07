@@ -302,19 +302,31 @@ export function BlogPost({ post }: { post: Post }) {
                   td: ({ children }) => (
                     <td className="px-4 py-3 text-gray-700 border-r border-gray-300 last:border-r-0">{children}</td>
                   ),
-                  img: ({ src, alt }) => (
-                    <div className="my-8">
-                      <img
-                        src={src}
-                        alt={alt || 'Blog image'}
-                        className="w-full h-auto rounded-lg shadow-lg max-w-full"
-                        loading="lazy"
-                      />
-                      {alt && (
-                        <p className="text-sm text-gray-500 text-center mt-2 italic">{alt}</p>
-                      )}
-                    </div>
-                  ),
+                  img: ({ src, alt, ...props }) => {
+                    // Extract width from style attribute if present
+                    const styleMatch = props.style?.toString().match(/width:\s*(\d+)px/);
+                    const width = styleMatch ? parseInt(styleMatch[1]) : null;
+                    
+                    return (
+                      <div className="my-8">
+                        <img
+                          src={src}
+                          alt={alt || 'Blog image'}
+                          {...props}
+                          className="rounded-lg shadow-lg"
+                          style={{
+                            width: width ? `${Math.min(width, 500)}px` : 'auto',
+                            maxWidth: '100%',
+                            height: 'auto'
+                          }}
+                          loading="lazy"
+                        />
+                        {alt && (
+                          <p className="text-sm text-gray-500 text-center mt-2 italic">{alt}</p>
+                        )}
+                      </div>
+                    );
+                  },
                   a: ({ href, children }) => (
                     <a
                       href={href}
