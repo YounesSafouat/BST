@@ -22,6 +22,7 @@ interface PricingSectionProps {
      };
 }
 
+/* SECTION: Pricing Section - PricingSection */
 export default function PricingSection({ pricingData }: PricingSectionProps) {
      const [location, setLocation] = useState<any>(null);
      const [loading, setLoading] = useState(true);
@@ -41,7 +42,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
           detectLocation();
      }, []);
 
-     // Filter plans based on user location
+
      const filteredPlans = pricingData?.plans?.filter(plan => {
           if (!location || !location.countryCode) return true;
 

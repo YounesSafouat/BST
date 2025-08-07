@@ -12,6 +12,7 @@ interface OdooCertificationSectionProps {
      className?: string;
 }
 
+/* SECTION: Odoo Certification - OdooCertificationSection */
 export default function OdooCertificationSection({
      title = "Certifications Odoo",
      subtitle = "Expertise reconnue",
@@ -21,7 +22,7 @@ export default function OdooCertificationSection({
      return (
           <section className={`py-24 bg-white relative ${className}`}>
                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                    {/* Header */}
+
                     <div className="text-center mb-12">
                          <motion.div
                               initial={{ opacity: 0, y: 20 }}
@@ -49,7 +50,7 @@ export default function OdooCertificationSection({
                          </motion.p>
                     </div>
 
-                    {/* Main Certification Display */}
+
                     <motion.div
                          initial={{ opacity: 0, y: 40 }}
                          whileInView={{ opacity: 1, y: 0 }}
@@ -58,7 +59,7 @@ export default function OdooCertificationSection({
                     >
                          <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-12 border border-gray-100">
                               <div className="grid lg:grid-cols-2 gap-12 items-center">
-                                   {/* Left: Badge */}
+
                                    <div className="flex justify-center lg:justify-start">
                                         <div className="relative">
                                              <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-2xl blur-2xl opacity-20"></div>
@@ -72,7 +73,7 @@ export default function OdooCertificationSection({
                                         </div>
                                    </div>
 
-                                   {/* Right: Content */}
+
                                    <div className="text-center lg:text-left">
                                         <h3 className="text-3xl font-semibold text-gray-900 mb-4">
                                              Odoo Silver Partner
@@ -81,7 +82,7 @@ export default function OdooCertificationSection({
                                              Certification officielle pour l'implémentation et la formation Odoo
                                         </p>
 
-                                        {/* Certificate */}
+
                                         <div className="flex justify-center lg:justify-start">
                                              <Image
                                                   src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo%20certificate.svg"

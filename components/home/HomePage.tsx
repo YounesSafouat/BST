@@ -72,7 +72,7 @@ interface OdooData {
                suffix: string;
                label: string;
           }>;
-          expertiseBadgeUrl?: string; // URL of the expertise badge image
+          expertiseBadgeUrl?: string;
           carousel?: {
                companies: Array<{
                     name: string;
@@ -80,7 +80,7 @@ interface OdooData {
                     url?: string;
                }>;
                speed?: number;
-               text?: string; // Text to display above the carousel
+               text?: string;
           };
      };
      trustMetrics: Array<{
@@ -450,13 +450,13 @@ export default function HomePage() {
      return (
           <>
                <div className="min-h-screen bg-white overflow-hidden">
-                    {/* Hero Section - Proper flex layout */}
+                    {/* SECTION 1: Hero Section - HomePage */}
                     <div className="h-[95vh] flex flex-col justify-center pt-20">
                          <HomeHeroSplit heroData={odooData?.hero} isPreview={false} />
 
                     </div>
 
-                    {/* Vertical Timeline Carousels */}
+                    {/* SECTION 2: Platform Modules Timeline - HomePage */}
                     <section className="py-12 bg-white overflow-hidden" id="modules">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
@@ -475,9 +475,9 @@ export default function HomePage() {
                                    </p>
                               </div>
 
-                              {/* Three Vertical Timelines */}
+                              {/* Timeline 1 - Scrolling Up */}
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[600px] relative">
-                                   {/* Timeline 1 - Scrolling Up */}
+
                                    <div className="relative overflow-hidden rounded-2xl timeline-container">
                                         <div className="flex flex-col space-y-6 animate-scroll-up">
                                              {[...timeline1, ...timeline1].map((app, index) => (
@@ -491,7 +491,6 @@ export default function HomePage() {
                                                                  alt={app.title}
                                                                  className="w-12 h-12 object-contain"
                                                                  onError={(e) => {
-                                                                      // Hide the entire card if icon fails to load
                                                                       e.currentTarget.closest('.timeline-card')?.remove();
                                                                  }}
                                                             />
@@ -513,7 +512,7 @@ export default function HomePage() {
                                         </div>
                                    </div>
 
-                                   {/* Timeline 2 - Scrolling Down */}
+
                                    <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
                                         <div className="flex flex-col space-y-6 animate-scroll-down">
                                              {[...timeline2, ...timeline2].map((app, index) => (
@@ -527,7 +526,6 @@ export default function HomePage() {
                                                                  alt={app.title}
                                                                  className="w-12 h-12 object-contain"
                                                                  onError={(e) => {
-                                                                      // Hide the entire card if icon fails to load
                                                                       e.currentTarget.closest('.timeline-card')?.remove();
                                                                  }}
                                                             />
@@ -549,7 +547,7 @@ export default function HomePage() {
                                         </div>
                                    </div>
 
-                                   {/* Timeline 3 - Scrolling Up (Slower) */}
+
                                    <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
                                         <div className="flex flex-col space-y-6 animate-scroll-up-slow">
                                              {[...timeline3, ...timeline3].map((app, index) => (
@@ -563,7 +561,6 @@ export default function HomePage() {
                                                                  alt={app.title}
                                                                  className="w-12 h-12 object-contain"
                                                                  onError={(e) => {
-                                                                      // Hide the entire card if icon fails to load
                                                                       e.currentTarget.closest('.timeline-card')?.remove();
                                                                  }}
                                                             />
@@ -585,25 +582,25 @@ export default function HomePage() {
                                         </div>
                                    </div>
 
-                                   {/* Gradient Overlays for smooth infinite effect */}
+
                                    <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none"></div>
                                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none"></div>
                               </div>
                          </div>
                     </section>
 
-                    {/* Video Testimonials Section */}
+                    {/* SECTION 3: Video Testimonials - HomePage */}
 
                     <VideoTestimonialsSection videoTestimonialsData={odooData?.videoTestimonials} />
 
-                    {/* Odoo Certification Section */}
+                    {/* SECTION 4: Odoo Certification - HomePage */}
                     <OdooCertificationSection />
 
-                    {/* Tarifs & Accompagnement Section */}
+                    {/* SECTION 5: Pricing Section - HomePage */}
                     <section id="pricing">
                          <PricingSection pricingData={odooData?.pricing} />
                     </section>
-                    {/* Notre Agence Section */}
+                    {/* SECTION 6: Our Agency - HomePage */}
                     <section className="py-20 bg-white" id="team">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
@@ -616,7 +613,7 @@ export default function HomePage() {
                                    </p>
                               </div>
                               <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
-                                   {/* Left: Image with badge */}
+
                                    <div className="relative w-full md:w-1/2 flex justify-center">
                                         <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg">
                                              <Image
@@ -631,7 +628,7 @@ export default function HomePage() {
                                              />
                                         </div>
                                    </div>
-                                   {/* Right: Features */}
+
                                    <div className="w-full md:w-1/2 flex flex-col gap-6">
                                         {odooData?.partnership?.features ? (
                                              odooData.partnership.features.map((feature: any, index: number) => (
@@ -683,7 +680,7 @@ export default function HomePage() {
                          </div>
                     </section>
 
-                    {/* Testimonials */}
+                    {/* SECTION 7: Testimonials - HomePage */}
                     {odooData && odooData.testimonials && odooData.testimonials.length > 0 && (
                          <section className="py-20 bg-white" id="testimonials">
                               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -697,7 +694,7 @@ export default function HomePage() {
                                         </p>
                                    </div>
                                    <div className="flex items-center gap-4">
-                                        {/* Navigation Arrows - Only show if more than 3 testimonials */}
+
                                         {odooData.testimonials.length > 3 && (
                                              <button
                                                   onClick={prevTestimonial}
@@ -708,7 +705,7 @@ export default function HomePage() {
                                              </button>
                                         )}
 
-                                                                                      <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 flex-1">
+                                        <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 flex-1">
                                              {odooData.testimonials
                                                   .slice(currentTestimonialIndex, currentTestimonialIndex + 3)
                                                   .map((testimonialId: string, index: number) => {
@@ -751,7 +748,7 @@ export default function HomePage() {
                                                   })}
                                         </div>
 
-                                        {/* Right Navigation Arrow - Only show if more than 3 testimonials */}
+
                                         {odooData.testimonials.length > 3 && (
                                              <button
                                                   onClick={nextTestimonial}
@@ -763,7 +760,7 @@ export default function HomePage() {
                                         )}
                                    </div>
 
-                                   {/* Dots indicator - Only show if more than 3 testimonials */}
+
                                    {odooData.testimonials.length > 3 && (
                                         <div className="flex justify-center mt-8 space-x-3">
                                              {Array.from({ length: Math.ceil(odooData.testimonials.length / 3) }).map((_, index) => (
@@ -783,10 +780,10 @@ export default function HomePage() {
                          </section>
                     )}
 
-                    {/* Contact card */}
+                    {/* SECTION 8: Contact Section - HomePage */}
                     <ContactSection contactData={odooData?.contact} />
 
-                    {/* FAQ Section */}
+                    {/* SECTION 9: FAQ Section - HomePage */}
                     <FAQSection faqData={odooData?.faq} />
 
                     <style jsx>{`

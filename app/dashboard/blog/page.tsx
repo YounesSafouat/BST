@@ -8,16 +8,13 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
 import { toast } from "@/components/ui/use-toast";
-import './mdeditor-black-text.css';
-import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, Star, MapPin, Filter, Search, TrendingUp } from "lucide-react";
+import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, Star, MapPin, Filter, Search, TrendingUp, Bold, Italic, List, ListOrdered, Quote, Link, Image as ImageIcon, Code, Heading1, Heading2, Heading3 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import Loader from '@/components/home/Loader';
 import { BlogPost } from "@/components/BlogPost";
 
-// @ts-ignore-next-line: no types for @uiw/react-md-editor
-const MDEditor: any = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
-// @ts-ignore-next-line: no types for @uiw/react-markdown-preview
-const MarkdownPreview: any = dynamic(() => import("@uiw/react-markdown-preview"), { ssr: false });
+// Rich Text Editor Component
+const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), { ssr: false });
 
 // Updated BlogPost interface with all new fields
 interface BlogPost {
@@ -677,12 +674,11 @@ export default function BlogAdminPage() {
                 <Card>
                   <CardHeader><CardTitle>Contenu</CardTitle></CardHeader>
                   <CardContent>
-                    <MDEditor
+                    <RichTextEditor
                       value={form.body}
                       onChange={(value: string) => setForm(f => ({ ...f, body: value || "" }))}
                       height={400}
-                      textareaProps={{ style: { color: '#000', background: '#fff', caretColor: '#000' } }}
-                      preview="edit"
+                      placeholder="Commencez à écrire votre contenu d'article ici..."
                     />
                   </CardContent>
                 </Card>
@@ -1036,14 +1032,7 @@ export default function BlogAdminPage() {
           ))
         )}
       </div>
-      {/* Force markdown editor textarea color */}
-      <style jsx global>{`
-        .w-md-editor-text-input {
-          color: #000 !important;
-          background: #fff !important;
-          caret-color: #000 !important;
-        }
-      `}</style>
+
     </div>
   );
 } 

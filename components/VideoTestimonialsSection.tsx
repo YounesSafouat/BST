@@ -12,7 +12,7 @@ interface VideoTestimonial {
      backgroundColor: string;
      textColor: string;
      videoUrl?: string;
-     thumbnailUrl?: string; // New field for thumbnail
+     thumbnailUrl?: string;
 }
 
 interface VideoTestimonialsData {
@@ -26,6 +26,7 @@ interface VideoTestimonialsSectionProps {
      videoTestimonialsData?: VideoTestimonialsData;
 }
 
+/* SECTION: Video Testimonials - VideoTestimonialsSection */
 const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSectionProps) => {
      const [playingVideos, setPlayingVideos] = useState<{ [key: string]: boolean }>({});
      const [mutedVideos, setMutedVideos] = useState<{ [key: string]: boolean }>({});
@@ -38,13 +39,13 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           currentTime: number;
           wasMuted: boolean;
      } | null>(null);
-     const [forceUpdate, setForceUpdate] = useState(0); // Force re-render
+     const [forceUpdate, setForceUpdate] = useState(0);
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
      const sectionRef = useRef<HTMLElement>(null);
      const eventHandlersRef = useRef<Map<string, { play: () => void; pause: () => void }>>(new Map());
 
-     // Fallback data if no data is provided
+
      const fallbackTestimonials: VideoTestimonial[] = [
           {
                id: '1',
@@ -78,7 +79,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
 
 
 
-     // Add event listeners to sync video state with React state
+
      useEffect(() => {
           const handlePlay = (videoId: string) => {
                setPlayingVideos(prev => ({ ...prev, [videoId]: true }));
@@ -95,7 +96,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                     const playHandler = () => handlePlay(testimonial.id);
                     const pauseHandler = () => handlePause(testimonial.id);
 
-                    // Remove existing listeners first
+
                     const existingHandlers = eventHandlersRef.current.get(testimonial.id);
                     if (existingHandlers) {
                          video.removeEventListener('play', existingHandlers.play);
@@ -105,12 +106,12 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                     video.addEventListener('play', playHandler);
                     video.addEventListener('pause', pauseHandler);
 
-                    // Store handlers in Map for cleanup
+
                     eventHandlersRef.current.set(testimonial.id, { play: playHandler, pause: pauseHandler });
                }
           });
 
-          // Cleanup event listeners
+
           return () => {
                testimonials.forEach((testimonial) => {
                     const video = videoRefs.current[testimonial.id];
