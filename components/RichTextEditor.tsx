@@ -253,26 +253,37 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                                         remarkPlugins={[remarkGfm]}
                                         rehypePlugins={[rehypeRaw]}
                                         components={{
-                                                                                           img: ({ src, alt, ...props }) => {
-                                                   // Extract width from style attribute if present
-                                                   const styleMatch = props.style?.toString().match(/width:\s*(\d+)px/);
-                                                   const width = styleMatch ? parseInt(styleMatch[1]) : null;
-                                                   
-                                                   return (
-                                                        <img
-                                                             src={src}
-                                                             alt={alt}
-                                                             {...props}
-                                                             style={{
-                                                                  width: width ? `${Math.min(width, 500)}px` : 'auto',
-                                                                  maxWidth: '100%',
-                                                                  height: 'auto',
-                                                                  borderRadius: '8px',
-                                                                  margin: '1rem 0'
-                                                             }}
-                                                        />
-                                                   );
-                                              },
+                                             img: ({ src, alt, ...props }) => {
+                                                  // Extract width from style attribute if present
+                                                  let width: number | null = null;
+                                                  if (props.style) {
+                                                       const styleStr = typeof props.style === 'string' ? props.style : JSON.stringify(props.style);
+                                                       const widthMatch = styleStr.match(/width:\s*(\d+)px/);
+                                                       if (widthMatch) {
+                                                            width = parseInt(widthMatch[1]);
+                                                       }
+                                                  }
+
+                                                  // Preserve original style attributes
+                                                  const originalStyle = props.style || {};
+                                                  const finalStyle = {
+                                                       ...originalStyle,
+                                                       width: width ? `${width}px` : 'auto',
+                                                       maxWidth: '100%',
+                                                       height: 'auto',
+                                                       borderRadius: '8px',
+                                                       margin: '1rem 0'
+                                                  };
+
+                                                  return (
+                                                       <img
+                                                            src={src}
+                                                            alt={alt}
+                                                            {...props}
+                                                            style={finalStyle}
+                                                       />
+                                                  );
+                                             },
                                              div: ({ children, ...props }) => (
                                                   <div {...props} style={{
                                                        display: 'flex',

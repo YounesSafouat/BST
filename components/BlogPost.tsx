@@ -303,9 +303,45 @@ export function BlogPost({ post }: { post: Post }) {
                     <td className="px-4 py-3 text-gray-700 border-r border-gray-300 last:border-r-0">{children}</td>
                   ),
                   img: ({ src, alt, ...props }) => {
+                    // Debug: log the props to see what we're getting
+                    console.log('Image props:', props);
+                    
                     // Extract width from style attribute if present
-                    const styleMatch = props.style?.toString().match(/width:\s*(\d+)px/);
-                    const width = styleMatch ? parseInt(styleMatch[1]) : null;
+                    let width: number | null = null;
+                    let marginRight: string | null = null;
+                    let borderRadius: string | null = null;
+                    
+                    if (props.style) {
+                      const styleStr = typeof props.style === 'string' ? props.style : JSON.stringify(props.style);
+                      console.log('Style string:', styleStr);
+                      const widthMatch = styleStr.match(/width:\s*(\d+)px/);
+                      const marginRightMatch = styleStr.match(/margin-right:\s*([^;]+)/);
+                      const borderRadiusMatch = styleStr.match(/border-radius:\s*([^;]+)/);
+                      
+                      if (widthMatch) {
+                        width = parseInt(widthMatch[1]);
+                        console.log('Found width:', width);
+                      }
+                      if (marginRightMatch) {
+                        marginRight = marginRightMatch[1];
+                      }
+                      if (borderRadiusMatch) {
+                        borderRadius = borderRadiusMatch[1];
+                      }
+                    }
+                    
+                    // Preserve original style attributes
+                    const originalStyle = props.style || {};
+                    const finalStyle = {
+                      ...originalStyle,
+                      width: width ? `${width}px` : 'auto',
+                      maxWidth: '100%',
+                      height: 'auto',
+                      marginRight: marginRight || undefined,
+                      borderRadius: borderRadius || '8px'
+                    };
+                    
+                    console.log('Final style:', finalStyle);
                     
                     return (
                       <div className="my-8">
@@ -314,11 +350,7 @@ export function BlogPost({ post }: { post: Post }) {
                           alt={alt || 'Blog image'}
                           {...props}
                           className="rounded-lg shadow-lg"
-                          style={{
-                            width: width ? `${Math.min(width, 500)}px` : 'auto',
-                            maxWidth: '100%',
-                            height: 'auto'
-                          }}
+                          style={finalStyle}
                           loading="lazy"
                         />
                         {alt && (
