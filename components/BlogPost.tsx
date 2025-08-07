@@ -15,9 +15,6 @@ import {
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
 
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -51,59 +48,6 @@ const getImageUrl = (img: string) => {
 
 // Custom component to render blog content with proper HTML styling
 const BlogContent = ({ content }: { content: string }) => {
-  const [htmlContent, setHtmlContent] = useState('');
-
-  useEffect(() => {
-    // Convert markdown to HTML using ReactMarkdown
-    const convertMarkdownToHtml = async () => {
-      try {
-        // Create a temporary component to render markdown to HTML
-        const ReactMarkdownComponent = ReactMarkdown;
-        
-        // We'll use a different approach - render the markdown component and capture its HTML
-        const tempDiv = document.createElement('div');
-        
-        // For now, let's use a simple regex-based approach to handle basic markdown
-        let html = content;
-        
-        // Convert markdown headers
-        html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-        html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-        html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-        
-        // Convert bold text
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        
-        // Convert italic text
-        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        
-        // Convert links
-        html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-        
-        // Convert unordered lists
-        html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
-        
-        // Convert ordered lists
-        html = html.replace(/^\d+\. (.*$)/gim, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>)/g, '<ol>$1</ol>');
-        
-        // Convert paragraphs (lines that don't start with HTML tags)
-        html = html.replace(/^([^<].+)$/gim, '<p>$1</p>');
-        
-        // Clean up empty paragraphs
-        html = html.replace(/<p><\/p>/g, '');
-        
-        setHtmlContent(html);
-      } catch (error) {
-        console.error('Error converting markdown:', error);
-        setHtmlContent(content);
-      }
-    };
-    
-    convertMarkdownToHtml();
-  }, [content]);
-
   return (
     <>
       <style jsx>{`
@@ -221,9 +165,9 @@ const BlogContent = ({ content }: { content: string }) => {
           border-right: none;
         }
       `}</style>
-      <div 
+      <div
         className="blog-content"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
     </>
   );
