@@ -210,33 +210,33 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                         </div>
 
                                         {!isSubmitted ? (
-                                             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-                                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                             <form onSubmit={handleSubmit} className="space-y-6">
+                                                  <div className="space-y-4">
                                                        <div>
-                                                            <Label htmlFor="name" className="text-sm font-medium text-gray-700">Prénom & Nom *</Label>
+                                                            <Label htmlFor="name" className="text-sm font-medium text-gray-700 mb-2 block">Prénom & Nom *</Label>
                                                             <Input
                                                                  id="name"
                                                                  value={formData.name}
                                                                  onChange={(e) => handleInputChange('name', e.target.value)}
                                                                  placeholder="John Dupont"
                                                                  required
-                                                                 className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+                                                                 className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
                                                             />
                                                        </div>
                                                        <div>
-                                                            <Label htmlFor="company" className="text-sm font-medium text-gray-700">Entreprise *</Label>
+                                                            <Label htmlFor="company" className="text-sm font-medium text-gray-700 mb-2 block">Entreprise *</Label>
                                                             <Input
                                                                  id="company"
                                                                  value={formData.company}
                                                                  onChange={(e) => handleInputChange('company', e.target.value)}
                                                                  placeholder="Ma Super Entreprise"
                                                                  required
-                                                                 className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+                                                                 className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
                                                             />
                                                        </div>
                                                   </div>
                                                   <div>
-                                                       <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email *</Label>
+                                                       <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2 block">Email *</Label>
                                                        <Input
                                                             id="email"
                                                             type="email"
@@ -244,34 +244,34 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                             onChange={(e) => handleInputChange('email', e.target.value)}
                                                             placeholder="john@monentreprise.com"
                                                             required
-                                                            className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+                                                            className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
                                                        />
                                                   </div>
                                                   <div>
-                                                       <Label htmlFor="phone" className="text-sm font-medium text-gray-700">Téléphone</Label>
+                                                       <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-2 block">Téléphone</Label>
                                                        <Input
                                                             id="phone"
                                                             value={formData.phone}
                                                             onChange={(e) => handleInputChange('phone', e.target.value)}
                                                             placeholder="01 23 45 67 89"
-                                                            className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+                                                            className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
                                                        />
                                                   </div>
                                                   <div>
-                                                       <Label htmlFor="message" className="text-sm font-medium text-gray-700">Votre vision</Label>
+                                                       <Label htmlFor="message" className="text-sm font-medium text-gray-700 mb-2 block">Votre vision</Label>
                                                        <Textarea
                                                             id="message"
                                                             value={formData.message}
                                                             onChange={(e) => handleInputChange('message', e.target.value)}
                                                             placeholder="Décrivez-nous vos ambitions : gains de temps, automatisation, croissance... Nous sommes là pour vous accompagner !"
                                                             rows={4}
-                                                            className="mt-1 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)]"
+                                                            className="w-full px-4 py-3 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base resize-none"
                                                        />
                                                   </div>
                                                   <Button
                                                        type="submit"
                                                        disabled={isSubmitting}
-                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full group disabled:opacity-50"
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] h-14 text-base font-semibold rounded-full group disabled:opacity-50"
                                                   >
                                                        {isSubmitting ? (
                                                             <>
