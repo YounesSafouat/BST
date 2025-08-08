@@ -118,7 +118,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative w-full py-4 pt-2 lg:py-6 lg:pt-4">
+      <div className="relative w-full py-2 pt-0 lg:py-4 lg:pt-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             {/* Left Content */}

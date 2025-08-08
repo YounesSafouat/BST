@@ -91,6 +91,7 @@ interface OdooData {
      platformSection: {
           headline: string;
           subheadline: string;
+          description?: string;
           apps: Array<{
                icon: string;
                title: string;
@@ -460,18 +461,18 @@ export default function HomePage() {
                     <section className="py-12 bg-white overflow-hidden" id="modules">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">PLATEFORME TOUT-EN-UN</div>
+                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{odooData?.platformSection?.headline || 'PLATEFORME TOUT-EN-UN'}</div>
                                    <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                        {odooData?.platformSection?.headline ? (
+                                        {odooData?.platformSection?.subheadline ? (
                                              <>
-                                                  {odooData.platformSection.headline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{odooData.platformSection.headline.split(' ').slice(1).join(' ')}</span>
+                                                  {odooData.platformSection.subheadline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{odooData.platformSection.subheadline.split(' ').slice(1).join(' ')}</span>
                                              </>
                                         ) : (
                                              'PLATEFORME TOUT-EN-UN'
                                         )}
                                    </h2>
                                    <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                                        {odooData?.platformSection?.subheadline || 'Une plateforme complète pour tous vos besoins'}
+                                        {odooData?.platformSection?.description || 'Une plateforme complète pour tous vos besoins'}
                                    </p>
                               </div>
 

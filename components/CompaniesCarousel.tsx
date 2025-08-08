@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 
 
@@ -19,6 +19,7 @@ interface CompaniesCarouselProps {
 const defaultCompanies: Company[] = [];
 
 export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1, text }: CompaniesCarouselProps) {
+     const [isHovered, setIsHovered] = useState(false);
 
      return (
           <div className="relative overflow-hidden py-4 w-full">
@@ -31,11 +32,23 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent"></div>
                <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent"></div>
 
-               <div className="flex animate-scroll" style={{ animation: `scroll ${speed}s linear infinite`, width: `${companies.length * 374}px` }}>
+               <div
+                    className="flex animate-scroll"
+                    style={{
+                         animation: `scroll ${speed}s linear infinite`,
+                         animationPlayState: isHovered ? 'paused' : 'running',
+                         width: `${companies.length * 374}px`
+                    }}
+               >
                     {/* First set */}
                     <div className="flex space-x-8 sm:space-x-12 md:space-x-16 whitespace-nowrap flex-shrink-0" style={{ width: `${companies.length * 187}px` }}>
                          {companies.map((company, index) => (
-                              <div key={`first-${index}`} className="flex items-center justify-center min-w-[80px] sm:min-w-[100px] md:min-w-[120px] h-10 sm:h-12 w-[80px] sm:w-[100px] md:w-[120px] flex-shrink-0">
+                              <div
+                                   key={`first-${index}`}
+                                   className="flex items-center justify-center min-w-[80px] sm:min-w-[100px] md:min-w-[120px] h-10 sm:h-12 w-[80px] sm:w-[100px] md:w-[120px] flex-shrink-0"
+                                   onMouseEnter={() => setIsHovered(true)}
+                                   onMouseLeave={() => setIsHovered(false)}
+                              >
                                    {company.logo ? (
                                         <div className="w-[80px] sm:w-[100px] md:w-[120px] h-[30px] sm:h-[35px] md:h-[40px] flex items-center justify-center">
                                              <Image
@@ -56,7 +69,12 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                     {/* Second set - exact duplicate */}
                     <div className="flex space-x-8 sm:space-x-12 md:space-x-16 whitespace-nowrap flex-shrink-0" style={{ width: `${companies.length * 187}px` }}>
                          {companies.map((company, index) => (
-                              <div key={`second-${index}`} className="flex items-center justify-center min-w-[80px] sm:min-w-[100px] md:min-w-[120px] h-10 sm:h-12 w-[80px] sm:w-[100px] md:w-[120px] flex-shrink-0">
+                              <div
+                                   key={`second-${index}`}
+                                   className="flex items-center justify-center min-w-[80px] sm:min-w-[100px] md:min-w-[120px] h-10 sm:h-12 w-[80px] sm:w-[100px] md:w-[120px] flex-shrink-0"
+                                   onMouseEnter={() => setIsHovered(true)}
+                                   onMouseLeave={() => setIsHovered(false)}
+                              >
                                    {company.logo ? (
                                         <div className="w-[80px] sm:w-[100px] md:w-[120px] h-[30px] sm:h-[35px] md:h-[40px] flex items-center justify-center">
                                              <Image
