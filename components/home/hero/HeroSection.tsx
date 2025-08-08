@@ -200,18 +200,17 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="order-1 lg:order-2"
             >
-              <div className="relative">
+              <div className="relative mx-4 sm:mx-6 lg:mx-0">
                 {/* Top Left Badge - Intégration Odoo (outside container) */}
-                <div className="absolute -top-2 -left-2 bg-gray-800/60 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-600/30 px-4 py-3 flex items-center min-w-[2px] hover:bg-gray-800/80 transition-all duration-300 hover:shadow-2xl hover:scale-105 z-10">
+                <div className="absolute -top-2 -left-2 sm:-top-3 sm:-left-3 lg:-top-4 lg:-left-4 bg-gray-800/60 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-600/30 px-3 py-2 sm:px-4 sm:py-3 lg:px-4 lg:py-3 flex items-center min-w-[140px] sm:min-w-[160px] lg:min-w-[180px] hover:bg-gray-800/80 transition-all duration-300 hover:shadow-2xl hover:scale-105 z-10">
                   <div className="flex items-baseline gap-2">
-                    <span className="text-sm font-semibold text-white tracking-wide">Intégration</span>
+                    <span className="text-sm sm:text-base font-semibold text-white tracking-wide">Intégration</span>
                     <img
                       src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo-logo.png"
                       alt="Odoo Logo"
-                      className="w-12 h-auto"
+                      className="w-8 h-auto sm:w-10 lg:w-12"
                     />
                   </div>
-
                 </div>
 
                 <div className="bg-white/90 backdrop-blur-sm p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
@@ -227,10 +226,6 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                       playsInline
                     />
 
-
-
-
-
                     {/* Sound toggle button - only on larger screens */}
                     <button
                       onClick={toggleSound}
@@ -245,12 +240,12 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   </div>
 
                   {/* Expertise Badge overlay - responsive positioning */}
-                  <div className="absolute -bottom-10 -right-10 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2 lg:p-3 hover:bg-white/95 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                  <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2 sm:p-3 lg:p-3 hover:bg-white/95 transition-all duration-300 hover:shadow-2xl hover:scale-105">
                     {heroData.expertiseBadgeUrl ? (
                       <img
                         src={heroData.expertiseBadgeUrl}
                         alt="Expertise badge"
-                        className="w-50 h-20 lg:w-50 lg:h-30 object-contain"
+                        className="w-16 h-12 sm:w-24 sm:h-18 w-50 h-20 lg:w-50 lg:h-30 object-contain"
                         onError={(e) => {
                           console.error('Badge image failed to load:', heroData.expertiseBadgeUrl);
                           e.currentTarget.style.display = 'none';
@@ -258,8 +253,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                       />
                     ) : (
                       <div className="text-center">
-                        <div className="text-sm lg:text-base font-bold text-[var(--color-main)]">3 ans</div>
-                        <div className="text-xs lg:text-sm text-gray-600">d'expertise</div>
+                        <div className="text-sm sm:text-base lg:text-lg font-bold text-[var(--color-main)]">3 ans</div>
+                        <div className="text-xs sm:text-sm text-gray-600">d'expertise</div>
                       </div>
                     )}
                   </div>

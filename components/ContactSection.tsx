@@ -186,32 +186,32 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      ];
 
      return (
-          <section id="contact" className="py-20 bg-[var(--odoo-purple-light)]">
+          <section id="contact" className="py-12 sm:py-16 lg:py-20 bg-[var(--odoo-purple-light)]">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                          initial={{ opacity: 0, y: 20 }}
                          whileInView={{ opacity: 1, y: 0 }}
                          viewport={{ once: true }}
-                         className="text-center mb-16"
+                         className="text-center mb-12 sm:mb-16"
                     >
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{data.headline}</div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">{data.description}</h2>
-                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">{data.subdescription}</p>
+                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-4">{data.description}</h2>
+                         <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">{data.subdescription}</p>
                     </motion.div>
 
                     <div className="max-w-6xl mx-auto">
                          <Card className="border-none shadow-2xl bg-white rounded-2xl overflow-hidden">
                               <div className="grid lg:grid-cols-2">
                                    {/* Form Side */}
-                                   <div className="p-8 md:p-12">
-                                        <div className="mb-8">
-                                             <h3 className="text-2xl font-bold text-gray-900 mb-3">{data.formTitle}</h3>
-                                             <p className="text-gray-600">{data.formDescription}</p>
+                                   <div className="p-6 sm:p-8 md:p-12">
+                                        <div className="mb-6 sm:mb-8">
+                                             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{data.formTitle}</h3>
+                                             <p className="text-sm sm:text-base text-gray-600">{data.formDescription}</p>
                                         </div>
 
                                         {!isSubmitted ? (
-                                             <form onSubmit={handleSubmit} className="space-y-5">
-                                                  <div className="grid grid-cols-2 gap-4">
+                                             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                        <div>
                                                             <Label htmlFor="name" className="text-sm font-medium text-gray-700">Prénom & Nom *</Label>
                                                             <Input
@@ -271,7 +271,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                   <Button
                                                        type="submit"
                                                        disabled={isSubmitting}
-                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] py-4 text-lg font-semibold rounded-full group disabled:opacity-50"
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full group disabled:opacity-50"
                                                   >
                                                        {isSubmitting ? (
                                                             <>
@@ -317,9 +317,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                    </div>
 
                                    {/* Benefits Side */}
-                                   <div className="bg-[var(--color-main)] p-8 md:p-12 text-white">
-                                        <h3 className="text-2xl font-bold mb-8">Ce qui vous attend :</h3>
-                                        <div className="space-y-6 mb-8">
+                                   <div className="bg-[var(--color-main)] p-6 sm:p-8 md:p-12 text-white">
+                                        <h3 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8">Ce qui vous attend :</h3>
+                                        <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
                                              {data.benefits.map((benefit, index) => (
                                                   <motion.div
                                                        key={index}
@@ -327,33 +327,33 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                        whileInView={{ opacity: 1, x: 0 }}
                                                        viewport={{ once: true }}
                                                        transition={{ delay: index * 0.1 }}
-                                                       className="flex gap-4"
+                                                       className="flex gap-3 sm:gap-4"
                                                   >
                                                        <div className="flex-shrink-0">
-                                                            {benefit.icon === 'Award' && <Award className="w-6 h-6 text-[var(--color-secondary)]" />}
-                                                            {benefit.icon === 'Zap' && <Zap className="w-6 h-6 text-[var(--color-secondary)]" />}
-                                                            {benefit.icon === 'Shield' && <Shield className="w-6 h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Award' && <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Zap' && <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Shield' && <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary)]" />}
                                                        </div>
                                                        <div>
-                                                            <h4 className="font-semibold mb-1">{benefit.title}</h4>
-                                                            <p className="text-purple-100 text-sm leading-relaxed">{benefit.description}</p>
+                                                            <h4 className="font-semibold mb-1 text-sm sm:text-base">{benefit.title}</h4>
+                                                            <p className="text-purple-100 text-xs sm:text-sm leading-relaxed">{benefit.description}</p>
                                                        </div>
                                                   </motion.div>
                                              ))}
                                         </div>
 
-                                        <div className="bg-white/10 rounded-xl p-6 mb-8">
-                                             <h4 className="font-semibold mb-3 flex items-center gap-2">
-                                                  <CheckCircle className="w-5 h-5 text-[var(--color-secondary)]" />
+                                        <div className="bg-white/10 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+                                             <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
+                                                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
                                                   {data.consultation.title}
                                              </h4>
-                                             <p className="text-purple-100 text-sm mb-4">
+                                             <p className="text-purple-100 text-xs sm:text-sm mb-4">
                                                   {data.consultation.description}
                                              </p>
                                         </div>
 
-                                        <div className="pt-6 border-t border-white/20">
-                                             <h4 className="font-semibold mb-4">Contact direct</h4>
+                                        <div className="pt-4 sm:pt-6 border-t border-white/20">
+                                             <h4 className="font-semibold mb-4 text-sm sm:text-base">Contact direct</h4>
                                              <RegionalContactInfo className="text-white" />
                                         </div>
                                    </div>
