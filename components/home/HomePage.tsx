@@ -213,6 +213,7 @@ export default function HomePage() {
      const clientsPerPage = 3;
      const [mounted, setMounted] = useState(false);
      const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+     const [animationDirection, setAnimationDirection] = useState<'next' | 'prev'>('next');
 
      useEffect(() => {
           setMounted(true);
@@ -422,17 +423,21 @@ export default function HomePage() {
 
      const nextTestimonial = () => {
           if (odooData && odooData.testimonials) {
-               setCurrentTestimonialIndex((prev) =>
-                    (prev + 3) >= odooData.testimonials.length ? 0 : prev + 3
-               );
+               setCurrentTestimonialIndex((prev) => {
+                    const nextIndex = prev + 1;
+                    // If we reach the end, loop back to the beginning
+                    return nextIndex >= odooData.testimonials.length ? 0 : nextIndex;
+               });
           }
      };
 
      const prevTestimonial = () => {
           if (odooData && odooData.testimonials) {
-               setCurrentTestimonialIndex((prev) =>
-                    prev === 0 ? Math.max(0, odooData.testimonials.length - 3) : prev - 3
-               );
+               setCurrentTestimonialIndex((prev) => {
+                    const prevIndex = prev - 1;
+                    // If we go below 0, loop to the end
+                    return prevIndex < 0 ? odooData.testimonials.length - 1 : prevIndex;
+               });
           }
      };
 
@@ -613,18 +618,24 @@ export default function HomePage() {
                               </div>
                               <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
 
-                                   <div className="relative w-full md:w-1/2 flex justify-center">
-                                        <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg">
-                                             <Image
-                                                  src={odooData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
-                                                  alt="Notre équipe"
-                                                  width={600}
-                                                  height={350}
-                                                  className="object-cover w-full h-72 md:h-80"
-                                                  onError={(e) => {
-                                                       e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
-                                                  }}
-                                             />
+                                   <div className="relative w-full md:w-1/2 flex justify-center group">
+                                        <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg transform transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:-rotate-1">
+                                             <div className="relative overflow-hidden">
+                                                  <Image
+                                                       src={odooData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
+                                                       alt="Notre équipe"
+                                                       width={600}
+                                                       height={350}
+                                                       className="object-cover w-full h-72 md:h-80 transition-transform duration-700 group-hover:scale-110"
+                                                       onError={(e) => {
+                                                            e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
+                                                       }}
+                                                  />
+                                                  {/* Gradient overlay on hover */}
+                                                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                                  {/* Subtle border glow */}
+                                                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-[var(--color-secondary)]/30 transition-all duration-500"></div>
+                                             </div>
                                         </div>
                                    </div>
 
@@ -694,29 +705,30 @@ export default function HomePage() {
                                    </div>
                                    <div className="flex items-center gap-4">
 
-                                        {odooData.testimonials.length > 3 && (
-                                             <button
-                                                  onClick={prevTestimonial}
-                                                  className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
-                                                  aria-label="Témoignages précédents"
-                                             >
-                                                  <ChevronLeft className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:-translate-x-1" />
-                                             </button>
-                                        )}
+                                        <button
+                                             onClick={prevTestimonial}
+                                             className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
+                                             aria-label="Témoignages précédents"
+                                        >
+                                             <ChevronLeft className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:-translate-x-1" />
+                                        </button>
 
                                         <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 flex-1">
-                                             {odooData.testimonials
-                                                  .slice(currentTestimonialIndex, currentTestimonialIndex + 3)
-                                                  .map((testimonialId: string, index: number) => {
+                                             {/* Desktop: Show 3 testimonials */}
+                                             <div className="hidden md:flex gap-8 flex-1 justify-center overflow-hidden">
+                                                  {[0, 1, 2].map((offset) => {
+                                                       const testimonialIndex = (currentTestimonialIndex + offset) % odooData.testimonials.length;
+                                                       const testimonialId = odooData.testimonials[testimonialIndex];
                                                        const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                                                        if (!testimonial) return null;
+
                                                        return (
                                                             <div
-                                                                 key={`${testimonialId}-${currentTestimonialIndex}`}
-                                                                 className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-lg border border-gray-200 w-full max-w-md mx-auto transform transition-all duration-500 ease-in-out hover:shadow-xl hover:-translate-y-2"
+                                                                 key={`desktop-${testimonialId}-${currentTestimonialIndex}-${offset}`}
+                                                                 className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-lg border border-gray-200 w-full max-w-md transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
                                                                  style={{
-                                                                      animationDelay: `${index * 100}ms`,
-                                                                      animation: 'slideInUp 0.6s ease-out forwards'
+                                                                      animation: animationDirection === 'next' ? 'slideInFromRight 0.7s ease-out forwards' : 'slideInFromLeft 0.7s ease-out forwards',
+                                                                      perspective: '1000px'
                                                                  }}
                                                             >
                                                                  {/* Stars */}
@@ -745,36 +757,61 @@ export default function HomePage() {
                                                             </div>
                                                        );
                                                   })}
+                                             </div>
+
+                                             {/* Mobile: Show 1 testimonial */}
+                                             <div className="md:hidden flex justify-center overflow-hidden">
+                                                  {(() => {
+                                                       const testimonialId = odooData.testimonials[currentTestimonialIndex];
+                                                       const testimonial = availableTestimonials.find(t => t._id === testimonialId);
+                                                       if (!testimonial) return null;
+
+                                                       return (
+                                                            <div
+                                                                 key={`mobile-${testimonialId}-${currentTestimonialIndex}`}
+                                                                 className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-lg border border-gray-200 w-full max-w-md mx-auto transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
+                                                                 style={{
+                                                                      animation: animationDirection === 'next' ? 'slideInFromRight 0.7s ease-out forwards' : 'slideInFromLeft 0.7s ease-out forwards',
+                                                                      perspective: '1000px'
+                                                                 }}
+                                                            >
+                                                                 {/* Stars */}
+                                                                 <div className="flex items-center mb-4">
+                                                                      {[...Array(5)].map((_, i) => (
+                                                                           <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
+                                                                      ))}
+                                                                 </div>
+                                                                 {/* Quote */}
+                                                                 <blockquote className="italic text-gray-900 mb-6">"{testimonial.quote}"</blockquote>
+                                                                 <div className="border-t border-gray-100 my-4"></div>
+                                                                 {/* Author */}
+                                                                 <div className="flex items-center gap-4 mt-2">
+                                                                      {renderAvatar(testimonialId)}
+                                                                      <div className="flex-1">
+                                                                           <div className="flex items-center gap-2">
+                                                                                <div className="font-bold text-gray-900">{testimonial.name}</div>
+                                                                                <div className="text-sm text-gray-500">•</div>
+                                                                                <div className="text-sm text-gray-500">{testimonial.role}</div>
+                                                                           </div>
+                                                                           {testimonial.company && (
+                                                                                <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1">{testimonial.company}</div>
+                                                                           )}
+                                                                      </div>
+                                                                 </div>
+                                                            </div>
+                                                       );
+                                                  })()}
+                                             </div>
                                         </div>
 
-
-                                        {odooData.testimonials.length > 3 && (
-                                             <button
-                                                  onClick={nextTestimonial}
-                                                  className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
-                                                  aria-label="Témoignages suivants"
-                                             >
-                                                  <ChevronRight className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:translate-x-1" />
-                                             </button>
-                                        )}
+                                        <button
+                                             onClick={nextTestimonial}
+                                             className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
+                                             aria-label="Témoignages suivants"
+                                        >
+                                             <ChevronRight className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:translate-x-1" />
+                                        </button>
                                    </div>
-
-
-                                   {odooData.testimonials.length > 3 && (
-                                        <div className="flex justify-center mt-8 space-x-3">
-                                             {Array.from({ length: Math.ceil(odooData.testimonials.length / 3) }).map((_, index) => (
-                                                  <button
-                                                       key={index}
-                                                       onClick={() => setCurrentTestimonialIndex(index * 3)}
-                                                       className={`w-4 h-4 rounded-full transition-all duration-500 ease-in-out transform hover:scale-125 ${Math.floor(currentTestimonialIndex / 3) === index
-                                                            ? 'bg-[var(--color-secondary)] scale-125 shadow-lg'
-                                                            : 'bg-gray-300 hover:bg-gray-400 hover:scale-110'
-                                                            }`}
-                                                       aria-label={`Aller à la page ${index + 1}`}
-                                                  />
-                                             ))}
-                                        </div>
-                                   )}
                               </div>
                          </section>
                     )}
@@ -810,6 +847,28 @@ export default function HomePage() {
           }
           100% {
             transform: translateY(-50%);
+          }
+        }
+
+        @keyframes slideInRight {
+          0% {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideInLeft {
+          0% {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
           }
         }
 
