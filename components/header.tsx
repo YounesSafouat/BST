@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, Menu, X, Sparkles } from "lucide-react";
+import { Phone, Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
@@ -22,18 +22,18 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const { isPageVisible } = usePageVisibility();
 
   // Detect location using the same logic as other components
-       useEffect(() => {
-          const detectLocation = async () => {
-               try {
-                    const userLocation = await getUserLocation();
-                    setLocation(userLocation);
-               } catch (error) {
-                    console.error("Error detecting location for header:", error);
-               }
-          };
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        const userLocation = await getUserLocation();
+        setLocation(userLocation);
+      } catch (error) {
+        console.error("Error detecting location for header:", error);
+      }
+    };
 
-          detectLocation();
-     }, []);
+    detectLocation();
+  }, []);
 
   // Fetch regional contact data
   useEffect(() => {
@@ -148,13 +148,11 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             >
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] hover:from-[var(--color-secondary)] hover:to-[var(--color-main)] gap-2 rounded-full px-5 text-sm h-11 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full"
                 onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
               >
-                <Sparkles className="w-4 h-4 group-hover:animate-pulse" />
                 <span className="font-semibold">Prendre RDV</span>
-                <Calendar className="w-4 h-4" />
-                <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                <ArrowRight className="w-4 h-4" />
               </Button>
             </motion.div>
           </div>
@@ -196,13 +194,11 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                   whileTap={{ scale: 0.98 }}
                 >
                   <Button
-                    className="bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] hover:from-[var(--color-secondary)] hover:to-[var(--color-main)] gap-2 justify-center shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
+                    className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full w-full"
                     onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
                   >
-                    <Sparkles className="w-4 h-4 group-hover:animate-pulse" />
                     <span className="font-semibold">Prendre RDV</span>
-                    <Calendar className="w-4 h-4" />
-                    <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <ArrowRight className="w-4 h-4" />
                   </Button>
                 </motion.div>
               </div>

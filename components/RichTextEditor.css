@@ -1,0 +1,149 @@
+/* RichTextEditor Styles for Monaco Editor */
+
+/* Monaco Editor Customization */
+.monaco-editor {
+  border-radius: 0 !important;
+}
+
+/* Ensure good contrast for light theme */
+.monaco-editor .monaco-editor-background {
+  background-color: #ffffff !important;
+}
+
+.monaco-editor .margin {
+  background-color: #f8f9fa !important;
+}
+
+/* Improve text readability */
+.monaco-editor .monaco-editor-background,
+.monaco-editor .inputarea {
+  background-color: #ffffff !important;
+}
+
+/* Better line highlighting */
+.monaco-editor .current-line {
+  background-color: #f0f8ff !important;
+  border: none !important;
+}
+
+/* Improve selection visibility */
+.monaco-editor .selected-text {
+  background-color: #add6ff !important;
+}
+
+/* Better scrollbar styling */
+.monaco-editor .scrollbar .slider {
+  background-color: #c1c1c1 !important;
+  border-radius: 6px !important;
+}
+
+.monaco-editor .scrollbar .slider:hover {
+  background-color: #a8a8a8 !important;
+}
+
+/* Toolbar button states */
+.toolbar-button-prettier {
+  color: #3b82f6 !important;
+}
+
+.toolbar-button-prettier:hover {
+  background-color: #dbeafe !important;
+}
+
+.toolbar-button-validate {
+  color: #059669 !important;
+}
+
+.toolbar-button-validate:hover {
+  background-color: #d1fae5 !important;
+}
+
+.toolbar-button-quick-fix {
+  color: #dc2626 !important;
+}
+
+.toolbar-button-quick-fix:hover {
+  background-color: #fee2e2 !important;
+}
+
+.toolbar-button-force-format {
+  color: #f59e0b !important;
+}
+
+.toolbar-button-force-format:hover {
+  background-color: #fef3c7 !important;
+}
+
+/* Fullscreen mode adjustments */
+.fullscreen-editor {
+  background-color: #ffffff;
+}
+
+/* Preview styling */
+.preview-content {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+.preview-content h1,
+.preview-content h2,
+.preview-content h3,
+.preview-content h4,
+.preview-content h5,
+.preview-content h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.preview-content p {
+  margin-bottom: 1em;
+}
+
+.preview-content ul,
+.preview-content ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.preview-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1em;
+  margin: 1em 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.preview-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.preview-content a {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.preview-content a:hover {
+  color: #1d4ed8;
+}
+
+/* Custom scrollbar for preview */
+.preview-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preview-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.preview-scroll::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.preview-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

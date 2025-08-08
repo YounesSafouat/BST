@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Users, Play, Volume2, VolumeX } from 'lucide-react';
+import { ArrowRight, Users, Play, Volume2, VolumeX, Clock } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
@@ -118,7 +118,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
       <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative w-full py-4 pt-6 lg:py-8 lg:pt-10">
+      <div className="relative w-full py-4 pt-2 lg:py-6 lg:pt-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             {/* Left Content */}
@@ -137,7 +137,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 >
                   <Badge
                     variant="outline"
-                    className="border-gray-300 text-gray-600 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="border-gray-300 text-gray-600 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-[var(--color-secondary)] hover:text-white hover:border-[var(--color-secondary)] transition-all duration-300 shadow-md hover:shadow-lg"
                     onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
                   >
                     {heroData.badge || 'Partenaire Silver Odoo'}
@@ -201,8 +201,21 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               className="order-1 lg:order-2"
             >
               <div className="relative">
+                {/* Top Left Badge - Intégration Odoo (outside container) */}
+                <div className="absolute -top-2 -left-2 bg-gray-800/60 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-600/30 px-4 py-3 flex items-center min-w-[2px] hover:bg-gray-800/80 transition-all duration-300 hover:shadow-2xl hover:scale-105 z-10">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-sm font-semibold text-white tracking-wide">Intégration</span>
+                    <img
+                      src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo-logo.png"
+                      alt="Odoo Logo"
+                      className="w-12 h-auto"
+                    />
+                  </div>
+
+                </div>
+
                 <div className="bg-white/90 backdrop-blur-sm p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
-                  <div className="relative aspect-[4/3] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg lg:rounded-xl overflow-hidden">
+                  <div className="relative aspect-[16/9] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg lg:rounded-xl overflow-hidden">
                     {/* Video element */}
                     <video
                       ref={videoRef}
@@ -213,6 +226,10 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                       className="w-full h-full object-cover"
                       playsInline
                     />
+
+
+
+
 
                     {/* Sound toggle button - only on larger screens */}
                     <button
@@ -228,7 +245,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   </div>
 
                   {/* Expertise Badge overlay - responsive positioning */}
-                  <div className="absolute -bottom-2 -right-2 bg-white rounded-lg shadow-md p-2 lg:p-3 border">
+                  <div className="absolute -bottom-10 -right-10 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2 lg:p-3 hover:bg-white/95 transition-all duration-300 hover:shadow-2xl hover:scale-105">
                     {heroData.expertiseBadgeUrl ? (
                       <img
                         src={heroData.expertiseBadgeUrl}
