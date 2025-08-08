@@ -5,6 +5,7 @@ import { LoaderProvider, LoaderRouteListener } from '@/components/LoaderProvider
 import StructuredData from '@/components/structured-data'
 import { ThemeProvider } from '@/components/theme-provider'
 import FaviconProvider from '@/components/FaviconProvider'
+import SnippetsProvider from '@/components/SnippetsProvider'
 
 export const metadata: Metadata = {
   title: {
@@ -109,6 +110,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <FaviconProvider />
+        <SnippetsProvider />
         <ThemeProvider>
           <LoaderProvider>
             <LoaderRouteListener />
