@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
+import { Textarea } from "@/components/ui/textarea"
 import { Save } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import Loader from '@/components/home/Loader';
@@ -46,6 +47,12 @@ interface SiteSettings {
     about: boolean;
     casClient: boolean;
     contact: boolean;
+  };
+  // Snippets for tracking and analytics
+  snippets?: {
+    headSnippets?: string;
+    bodyStartSnippets?: string;
+    bodyEndSnippets?: string;
   };
   // Legacy fields for backward compatibility
   contactEmail?: string;
@@ -182,6 +189,9 @@ export default function SettingsDashboard() {
       let current = newSettings
 
       for (let i = 0; i < keys.length - 1; i++) {
+        if (!current[keys[i]]) {
+          current[keys[i]] = {}
+        }
         current = current[keys[i]]
       }
 
@@ -519,6 +529,117 @@ export default function SettingsDashboard() {
                   <strong>Note :</strong> Les pages désactivées ne seront pas accessibles aux visiteurs.
                   La page d'accueil ne peut pas être désactivée car elle est essentielle au fonctionnement du site.
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Snippets Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>📊 Snippets de Suivi et Analytics</CardTitle>
+              <p className="text-sm text-gray-600">
+                Ajoutez des scripts de suivi comme Google Analytics, Facebook Pixel, etc.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Head Snippets */}
+              <div className="space-y-2">
+                <Label htmlFor="head-snippets">
+                  <div className="flex items-center gap-2">
+                    <span>📄 Scripts dans le &lt;head&gt;</span>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Recommandé pour Google Analytics</span>
+                  </div>
+                </Label>
+                <Textarea
+                  id="head-snippets"
+                  placeholder={`<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>`}
+                  value={settings.snippets?.headSnippets || ""}
+                  onChange={(e) => updateField('snippets.headSnippets', e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                <p className="text-xs text-gray-500">
+                  Ces scripts seront injectés dans la balise &lt;head&gt; de toutes les pages
+                </p>
+              </div>
+
+              {/* Body Start Snippets */}
+              <div className="space-y-2">
+                <Label htmlFor="body-start-snippets">
+                  <div className="flex items-center gap-2">
+                    <span>🚀 Scripts au début du &lt;body&gt;</span>
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Pour les scripts prioritaires</span>
+                  </div>
+                </Label>
+                <Textarea
+                  id="body-start-snippets"
+                  placeholder={`<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');
+  fbq('track', 'PageView');
+</script>`}
+                  value={settings.snippets?.bodyStartSnippets || ""}
+                  onChange={(e) => updateField('snippets.bodyStartSnippets', e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                <p className="text-xs text-gray-500">
+                  Ces scripts seront injectés au début de la balise &lt;body&gt;
+                </p>
+              </div>
+
+              {/* Body End Snippets */}
+              <div className="space-y-2">
+                <Label htmlFor="body-end-snippets">
+                  <div className="flex items-center gap-2">
+                    <span>📈 Scripts à la fin du &lt;body&gt;</span>
+                    <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Pour les scripts non-critiques</span>
+                  </div>
+                </Label>
+                <Textarea
+                  id="body-end-snippets"
+                  placeholder={`<!-- Hotjar Tracking Code -->
+<script>
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:YOUR_HOTJAR_ID,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>`}
+                  value={settings.snippets?.bodyEndSnippets || ""}
+                  onChange={(e) => updateField('snippets.bodyEndSnippets', e.target.value)}
+                  className="min-h-[200px] font-mono text-sm"
+                />
+                <p className="text-xs text-gray-500">
+                  Ces scripts seront injectés à la fin de la balise &lt;body&gt;
+                </p>
+              </div>
+
+              {/* Help Section */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-semibold text-blue-900 mb-2">💡 Aide pour les snippets</h4>
+                <div className="text-sm text-blue-800 space-y-2">
+                  <p><strong>Google Analytics 4:</strong> Utilisez la section "Scripts dans le head"</p>
+                  <p><strong>Facebook Pixel:</strong> Utilisez la section "Scripts au début du body"</p>
+                  <p><strong>Hotjar, Crazy Egg:</strong> Utilisez la section "Scripts à la fin du body"</p>
+                  <p><strong>Important:</strong> Remplacez les identifiants (G-XXXXXXXXXX, YOUR_PIXEL_ID, etc.) par vos vrais identifiants</p>
+                </div>
               </div>
             </CardContent>
           </Card>

@@ -28,6 +28,7 @@ import {
   ChevronDown,
   ChevronUp,
   Home,
+  Code,
 } from "lucide-react";
 
 // Grouped menu items
@@ -141,6 +142,12 @@ const menuGroups = [
         href: "/dashboard/settings",
         icon: SettingsIcon,
         color: "from-gray-200 to-gray-100 text-gray-700",
+      },
+      {
+        title: "Snippets",
+        href: "/dashboard/settings#snippets",
+        icon: Code,
+        color: "from-blue-200 to-blue-100 text-blue-700",
       },
     ]
   },

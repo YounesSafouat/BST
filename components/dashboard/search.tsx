@@ -93,6 +93,13 @@ export function SearchDialog() {
       description: "Manage system settings",
       url: "/dashboard/settings",
       category: "Administration"
+    },
+    {
+      id: "snippets",
+      title: "Snippets",
+      description: "Manage tracking and analytics scripts",
+      url: "/dashboard/settings#snippets",
+      category: "Marketing"
     }
   ]
 
