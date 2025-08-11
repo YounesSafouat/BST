@@ -29,45 +29,73 @@ export default function SnippetsProvider() {
           fetchSnippets()
      }, [])
 
-     useEffect(() => {
-          if (snippets.headSnippets && typeof document !== 'undefined') {
-               // Remove existing head snippets
-               const existingScripts = document.querySelectorAll('script[data-snippet="head"]')
-               existingScripts.forEach(script => script.remove())
+     const injectHTMLSnippets = (htmlContent: string, type: 'head' | 'body-start' | 'body-end') => {
+          if (typeof document === 'undefined') return
 
-               // Create and inject new script
-               const script = document.createElement('script')
-               script.innerHTML = snippets.headSnippets
-               script.setAttribute('data-snippet', 'head')
-               document.head.appendChild(script)
+          // Remove existing snippets of this type
+          const existingScripts = document.querySelectorAll(`script[data-snippet="${type}"]`)
+          existingScripts.forEach(script => script.remove())
+
+          // Create a temporary div to parse the HTML
+          const tempDiv = document.createElement('div')
+          tempDiv.innerHTML = htmlContent
+
+          // Extract all script tags and other elements
+          const elements = Array.from(tempDiv.children)
+
+          elements.forEach((element, index) => {
+               if (element.tagName === 'SCRIPT') {
+                    // For script tags, create a new script element
+                    const script = document.createElement('script')
+                    script.setAttribute('data-snippet', `${type}-${index}`)
+
+                    // Copy all attributes from the original script
+                    Array.from(element.attributes).forEach(attr => {
+                         script.setAttribute(attr.name, attr.value)
+                    })
+
+                    // Copy the content
+                    script.innerHTML = element.innerHTML
+
+                    // Inject based on type
+                    if (type === 'head') {
+                         document.head.appendChild(script)
+                    } else if (type === 'body-start') {
+                         document.body.insertBefore(script, document.body.firstChild)
+                    } else {
+                         document.body.appendChild(script)
+                    }
+               } else {
+                    // For non-script elements, clone and inject them
+                    const clonedElement = element.cloneNode(true) as Element
+                    clonedElement.setAttribute('data-snippet', `${type}-${index}`)
+
+                    if (type === 'head') {
+                         document.head.appendChild(clonedElement)
+                    } else if (type === 'body-start') {
+                         document.body.insertBefore(clonedElement, document.body.firstChild)
+                    } else {
+                         document.body.appendChild(clonedElement)
+                    }
+               }
+          })
+     }
+
+     useEffect(() => {
+          if (snippets.headSnippets) {
+               injectHTMLSnippets(snippets.headSnippets, 'head')
           }
      }, [snippets.headSnippets])
 
      useEffect(() => {
-          if (snippets.bodyStartSnippets && typeof document !== 'undefined') {
-               // Remove existing body start snippets
-               const existingScripts = document.querySelectorAll('script[data-snippet="body-start"]')
-               existingScripts.forEach(script => script.remove())
-
-               // Create and inject new script
-               const script = document.createElement('script')
-               script.innerHTML = snippets.bodyStartSnippets
-               script.setAttribute('data-snippet', 'body-start')
-               document.body.insertBefore(script, document.body.firstChild)
+          if (snippets.bodyStartSnippets) {
+               injectHTMLSnippets(snippets.bodyStartSnippets, 'body-start')
           }
      }, [snippets.bodyStartSnippets])
 
      useEffect(() => {
-          if (snippets.bodyEndSnippets && typeof document !== 'undefined') {
-               // Remove existing body end snippets
-               const existingScripts = document.querySelectorAll('script[data-snippet="body-end"]')
-               existingScripts.forEach(script => script.remove())
-
-               // Create and inject new script
-               const script = document.createElement('script')
-               script.innerHTML = snippets.bodyEndSnippets
-               script.setAttribute('data-snippet', 'body-end')
-               document.body.appendChild(script)
+          if (snippets.bodyEndSnippets) {
+               injectHTMLSnippets(snippets.bodyEndSnippets, 'body-end')
           }
      }, [snippets.bodyEndSnippets])
 
