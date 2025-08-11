@@ -36,6 +36,7 @@ import ContactSection from '../ContactSection';
 import StatsSection from '../StatsSection';
 import CompaniesCarousel from '../CompaniesCarousel';
 import VideoTestimonialsSection from '../VideoTestimonialsSection';
+import ServicesSection from '../ServicesSection';
 import FAQSection from '../FAQSection';
 import OdooCertificationSection from '../OdooCertificationSection';
 import { Button } from '@/components/ui/button';
@@ -50,7 +51,7 @@ interface Testimonial {
      company?: string;
 }
 
-interface OdooData {
+interface HomePageData {
      type: string;
      title: string;
      hero: {
@@ -103,10 +104,12 @@ interface OdooData {
      services: {
           headline: string;
           subheadline: string;
-          capabilities: Array<{
+          description: string;
+          services: Array<{
                icon: string;
                title: string;
                description: string;
+               image: string;
           }>;
      };
      pricing: {
@@ -206,7 +209,7 @@ export default function HomePage() {
      const [isLoaded, setIsLoaded] = useState(false);
      const [isLoading, setIsLoading] = useState(false);
      const [loadingType, setLoadingType] = useState<string>('');
-     const [odooData, setOdooData] = useState<OdooData | null>(null);
+     const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
      const [availableTestimonials, setAvailableTestimonials] = useState<Testimonial[]>([]);
      const [clientCases, setClientCases] = useState<any[]>([]);
      const [clientCarouselPage, setClientCarouselPage] = useState(0);
@@ -225,9 +228,9 @@ export default function HomePage() {
           const timer = setTimeout(() => setStatsVisible(true), 800);
           const loadTimer = setTimeout(() => setIsLoaded(true), 100);
 
-          // Fetch Odoo data with a small delay to ensure proper initialization
+          // Fetch home page data with a small delay to ensure proper initialization
           setTimeout(() => {
-               fetchOdooData();
+               fetchHomePageData();
                fetchTestimonials();
                fetchClientCases();
           }, 100);
@@ -238,7 +241,7 @@ export default function HomePage() {
           };
      }, [mounted]);
 
-     const fetchOdooData = async () => {
+     const fetchHomePageData = async () => {
           try {
                const timestamp = Date.now();
                const random = Math.random();
@@ -253,17 +256,17 @@ export default function HomePage() {
                if (response.ok) {
                     const data = await response.json();
                     if (data && typeof data === 'object') {
-                         setOdooData(data);
+                         setHomePageData(data);
                     } else {
                          console.error('Invalid data format:', data);
                     }
                } else {
-                    console.error('Failed to fetch Odoo data:', response.status);
+                    console.error('Failed to fetch home page data:', response.status);
                     const errorText = await response.text();
                     console.error('Error response:', errorText);
                }
           } catch (error) {
-               console.error('Error fetching Odoo data:', error);
+               console.error('Error fetching home page data:', error);
           }
      };
 
@@ -311,7 +314,7 @@ export default function HomePage() {
           }
      };
 
-     if (!odooData) {
+     if (!homePageData) {
           return (
                <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
@@ -381,7 +384,7 @@ export default function HomePage() {
 
      // Split apps into 3 columns for timelines with priority for most demanded modules
      // Get existing apps from data and filter out modules without icons
-     const existingApps = odooData?.platformSection?.apps || [];
+     const existingApps = homePageData?.platformSection?.apps || [];
      const appsWithIcons = existingApps.filter(app =>
           app.icon &&
           app.icon.trim() !== '' &&
@@ -422,27 +425,27 @@ export default function HomePage() {
      };
 
      const nextTestimonial = () => {
-          if (odooData && odooData.testimonials) {
+          if (homePageData && homePageData.testimonials) {
                setCurrentTestimonialIndex((prev) => {
                     const nextIndex = prev + 1;
                     // If we reach the end, loop back to the beginning
-                    return nextIndex >= odooData.testimonials.length ? 0 : nextIndex;
+                    return nextIndex >= homePageData.testimonials.length ? 0 : nextIndex;
                });
           }
      };
 
      const prevTestimonial = () => {
-          if (odooData && odooData.testimonials) {
+          if (homePageData && homePageData.testimonials) {
                setCurrentTestimonialIndex((prev) => {
                     const prevIndex = prev - 1;
                     // If we go below 0, loop to the end
-                    return prevIndex < 0 ? odooData.testimonials.length - 1 : prevIndex;
+                    return prevIndex < 0 ? homePageData.testimonials.length - 1 : prevIndex;
                });
           }
      };
 
-     // Add safety check for odooData
-     if (!odooData) {
+     // Add safety check for homePageData
+     if (!homePageData) {
           return (
                <div className="min-h-screen bg-white flex items-center justify-center">
                     <div className="text-center">
@@ -458,7 +461,7 @@ export default function HomePage() {
                <div className="min-h-screen bg-white overflow-hidden">
                     {/* SECTION 1: Hero Section - HomePage */}
                     <div className="h-[95vh] flex flex-col justify-center pt-20">
-                         <HomeHeroSplit heroData={odooData?.hero} isPreview={false} />
+                         <HomeHeroSplit heroData={homePageData?.hero} isPreview={false} />
 
                     </div>
 
@@ -466,16 +469,16 @@ export default function HomePage() {
                     <section className="py-12 bg-white overflow-hidden" id="modules">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{odooData?.platformSection?.headline}</div>
+                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{homePageData?.platformSection?.headline}</div>
                                    <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                        {odooData?.platformSection?.subheadline && (
+                                        {homePageData?.platformSection?.subheadline && (
                                              <>
-                                                  {odooData.platformSection.subheadline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{odooData.platformSection.subheadline.split(' ').slice(1).join(' ')}</span>
+                                                  {homePageData.platformSection.subheadline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{homePageData.platformSection.subheadline.split(' ').slice(1).join(' ')}</span>
                                              </>
                                         )}
                                    </h2>
                                    <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                                        {odooData?.platformSection?.description}
+                                        {homePageData?.platformSection?.description}
                                    </p>
                               </div>
 
@@ -595,25 +598,28 @@ export default function HomePage() {
 
                     {/* SECTION 3: Video Testimonials - HomePage */}
 
-                    <VideoTestimonialsSection videoTestimonialsData={odooData?.videoTestimonials} />
+                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
 
-                    {/* SECTION 4: Odoo Certification - HomePage */}
+                    {/* SECTION 4: Services Section - HomePage */}
+                    <ServicesSection servicesData={homePageData?.services} />
+
+                    {/* SECTION 5: Odoo Certification - HomePage */}
                     <OdooCertificationSection />
 
-                    {/* SECTION 5: Pricing Section - HomePage */}
+                    {/* SECTION 6: Pricing Section - HomePage */}
                     <section id="pricing">
-                         <PricingSection pricingData={odooData?.pricing} />
+                         <PricingSection pricingData={homePageData?.pricing} />
                     </section>
-                    {/* SECTION 6: Our Agency - HomePage */}
+                    {/* SECTION 7: Our Agency - HomePage */}
                     <section className="py-20 bg-white" id="team">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
                                    <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">Blackswan technology </div>
                                    <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                        {odooData?.partnership?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
+                                        {homePageData?.partnership?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
                                    </h2>
                                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                        {odooData?.partnership?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
+                                        {homePageData?.partnership?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
                                    </p>
                               </div>
                               <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
@@ -622,7 +628,7 @@ export default function HomePage() {
                                         <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg transform transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:-rotate-1">
                                              <div className="relative overflow-hidden">
                                                   <Image
-                                                       src={odooData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
+                                                       src={homePageData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
                                                        alt="Notre équipe"
                                                        width={600}
                                                        height={350}
@@ -640,8 +646,8 @@ export default function HomePage() {
                                    </div>
 
                                    <div className="w-full md:w-1/2 flex flex-col gap-6">
-                                        {odooData?.partnership?.features ? (
-                                             odooData.partnership.features.map((feature: any, index: number) => (
+                                        {homePageData?.partnership?.features ? (
+                                             homePageData.partnership.features.map((feature: any, index: number) => (
                                                   <div key={index} className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
                                                        {feature.icon === 'BadgeCheck' && <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />}
                                                        {feature.icon === 'Users' && <Users className="w-8 h-8 text-[var(--color-secondary)]" />}
@@ -690,17 +696,17 @@ export default function HomePage() {
                          </div>
                     </section>
 
-                    {/* SECTION 7: Testimonials - HomePage */}
-                    {odooData && odooData.testimonials && odooData.testimonials.length > 0 && (
+                    {/* SECTION 8: Testimonials - HomePage */}
+                    {homePageData && homePageData.testimonials && homePageData.testimonials.length > 0 && (
                          <section className="py-20 bg-white" id="testimonials">
                               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                                    <div className="text-center mb-12">
                                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
                                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                             {odooData?.testimonialsSection?.description || 'Nos clients témoignent'}
+                                             {homePageData?.testimonialsSection?.description || 'Nos clients témoignent'}
                                         </h2>
                                         <p className="text-lg text-gray-600">
-                                             {odooData?.testimonialsSection?.subdescription || 'Découvrez pourquoi nos clients nous recommandent'}
+                                             {homePageData?.testimonialsSection?.subdescription || 'Découvrez pourquoi nos clients nous recommandent'}
                                         </p>
                                    </div>
 
@@ -732,8 +738,8 @@ export default function HomePage() {
                                              {/* Desktop: Show 3 testimonials */}
                                              <div className="hidden md:grid grid-cols-3 gap-6 lg:gap-8">
                                                   {[0, 1, 2].map((offset) => {
-                                                       const testimonialIndex = (currentTestimonialIndex + offset) % odooData.testimonials.length;
-                                                       const testimonialId = odooData.testimonials[testimonialIndex];
+                                                       const testimonialIndex = (currentTestimonialIndex + offset) % homePageData.testimonials.length;
+                                                       const testimonialId = homePageData.testimonials[testimonialIndex];
                                                        const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                                                        if (!testimonial) return null;
 
@@ -776,7 +782,7 @@ export default function HomePage() {
                                              {/* Mobile: Show 1 testimonial */}
                                              <div className="md:hidden">
                                                   {(() => {
-                                                       const testimonialId = odooData.testimonials[currentTestimonialIndex];
+                                                       const testimonialId = homePageData.testimonials[currentTestimonialIndex];
                                                        const testimonial = availableTestimonials.find(t => t._id === testimonialId);
                                                        if (!testimonial) return null;
 
@@ -821,11 +827,11 @@ export default function HomePage() {
                          </section>
                     )}
 
-                    {/* SECTION 8: Contact Section - HomePage */}
-                    <ContactSection contactData={odooData?.contact} />
+                    {/* SECTION 9: Contact Section - HomePage */}
+                    <ContactSection contactData={homePageData?.contact} />
 
-                    {/* SECTION 9: FAQ Section - HomePage */}
-                    <FAQSection faqData={odooData?.faq} />
+                    {/* SECTION 10: FAQ Section - HomePage */}
+                    <FAQSection faqData={homePageData?.faq} />
 
                     <style jsx>{`
         @keyframes scroll-up {

@@ -354,4 +354,4 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
   );
 }
 
-export default HeroSection;
+export default HeroSection; 

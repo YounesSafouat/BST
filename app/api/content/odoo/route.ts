@@ -9,11 +9,11 @@ export async function GET() {
     await connectDB();
     
     // Récupérer les données de la page Home
-    const homeData = await Content.findOne({ type: 'home-page' });
+    const homeData = await Content.findOne({ type: 'odoo' });
     
     if (!homeData) {
       return NextResponse.json(
-        { error: "Données Home non trouvées" },
+        { error: "Données Odoo non trouvées" },
         { status: 404 }
       );
     }
@@ -23,7 +23,7 @@ export async function GET() {
     const serializedData = JSON.parse(JSON.stringify(homeData.content));
     return NextResponse.json(serializedData);
   } catch (error) {
-    console.error('Erreur lors de la récupération des données Home:', error);
+    console.error('Erreur lors de la récupération des données Odoo:', error);
     return NextResponse.json(
       { error: "Erreur serveur" },
       { status: 500 }
@@ -36,11 +36,11 @@ export async function PUT(req: Request) {
     await connectDB();
     const body = await req.json();
 
-    // Mettre à jour ou créer les données Home
+    // Mettre à jour ou créer les données Odoo
     const homeData = await Content.findOneAndUpdate(
-      { type: 'home-page' },
+      { type: 'odoo' },
       { 
-        type: 'home-page',
+        type: 'odoo',
         content: body,
         updatedAt: new Date()
       },
@@ -52,7 +52,7 @@ export async function PUT(req: Request) {
 
     return NextResponse.json(homeData);
   } catch (error) {
-    console.error('Erreur lors de la mise à jour des données Home:', error);
+    console.error('Erreur lors de la mise à jour des données Odoo:', error);
     return NextResponse.json(
       { error: "Erreur serveur" },
       { status: 500 }

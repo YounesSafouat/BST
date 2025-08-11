@@ -79,10 +79,12 @@ interface HomePageData {
      services: {
           headline: string;
           subheadline: string;
-          capabilities: Array<{
+          description: string;
+          services: Array<{
                icon: string;
                title: string;
                description: string;
+               image: string;
           }>;
      };
      pricing: {
@@ -201,6 +203,53 @@ export default function HomePageDashboard() {
                          data.hero.carousel = {
                               companies: [],
                               speed: 20
+                         };
+                    }
+
+                    // Initialize services data if it doesn't exist
+                    if (!data.services) {
+                         data.services = {
+                              headline: "NOS SERVICES",
+                              subheadline: "De l'audit à la mise en production, nous vous accompagnons à chaque étape",
+                              description: "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.",
+                              services: [
+                                   {
+                                        icon: "Settings",
+                                        title: "Implémentation",
+                                        description: "Nous déployons Odoo sur mesure en l'adaptant à vos processus. Migration de données sécurisée et mise en production sans friction.",
+                                        image: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80&fit=crop"
+                                   },
+                                   {
+                                        icon: "Link2",
+                                        title: "Intégration",
+                                        description: "Connectez Odoo à votre écosystème existant (CRM, e-commerce, outils métier) pour une synchronisation temps réel et des processus unifiés.",
+                                        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80&fit=crop"
+                                   },
+                                   {
+                                        icon: "GraduationCap",
+                                        title: "Formation",
+                                        description: "Nous formons vos équipes via des sessions personnalisées pour garantir une adoption rapide et une maîtrise parfaite de votre nouvel environnement Odoo.",
+                                        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80&fit=crop"
+                                   },
+                                   {
+                                        icon: "Headphones",
+                                        title: "Support & Maintenance",
+                                        description: "Bénéficiez d'une assistance technique réactive et d'une maintenance préventive pour garantir la performance et la pérennité de votre système.",
+                                        image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80&fit=crop"
+                                   },
+                                   {
+                                        icon: "SearchCheck",
+                                        title: "Audit & Optimisation",
+                                        description: "Nos experts analysent vos processus actuels pour identifier les goulots d'étranglement et définir un plan d'action pour maximiser votre ROI.",
+                                        image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop"
+                                   },
+                                   {
+                                        icon: "Lightbulb",
+                                        title: "Conseil Stratégique",
+                                        description: "Nous vous accompagnons dans la définition de votre feuille de route digitale pour faire de la technologie un véritable levier de croissance.",
+                                        image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=80&fit=crop"
+                                   }
+                              ]
                          };
                     }
 
@@ -326,12 +375,20 @@ export default function HomePageDashboard() {
           const newData = { ...homeData };
           let current: any = newData;
 
-          for (let i = 0; i < keys.length; i++) {
+          // Navigate to the parent object
+          for (let i = 0; i < keys.length - 1; i++) {
+               if (!current[keys[i]]) {
+                    return; // Path doesn't exist, nothing to update
+               }
                current = current[keys[i]];
           }
 
-          current[index] = { ...current[index], [field]: value };
-          setHomeData(newData);
+          // Ensure the array exists and update the field
+          const lastKey = keys[keys.length - 1];
+          if (current[lastKey] && Array.isArray(current[lastKey]) && current[lastKey][index]) {
+               current[lastKey][index] = { ...current[lastKey][index], [field]: value };
+               setHomeData(newData);
+          }
      };
 
      const addArrayItem = (path: string, defaultItem: any) => {
@@ -341,11 +398,21 @@ export default function HomePageDashboard() {
           const newData = { ...homeData };
           let current: any = newData;
 
-          for (let i = 0; i < keys.length; i++) {
+          // Navigate to the parent object
+          for (let i = 0; i < keys.length - 1; i++) {
+               if (!current[keys[i]]) {
+                    current[keys[i]] = {};
+               }
                current = current[keys[i]];
           }
 
-          current.push(defaultItem);
+          // Ensure the array exists
+          const lastKey = keys[keys.length - 1];
+          if (!current[lastKey]) {
+               current[lastKey] = [];
+          }
+
+          current[lastKey].push(defaultItem);
           setHomeData(newData);
      };
 
@@ -356,12 +423,20 @@ export default function HomePageDashboard() {
           const newData = { ...homeData };
           let current: any = newData;
 
-          for (let i = 0; i < keys.length; i++) {
+          // Navigate to the parent object
+          for (let i = 0; i < keys.length - 1; i++) {
+               if (!current[keys[i]]) {
+                    return; // Path doesn't exist, nothing to remove
+               }
                current = current[keys[i]];
           }
 
-          current.splice(index, 1);
-          setHomeData(newData);
+          // Ensure the array exists and remove the item
+          const lastKey = keys[keys.length - 1];
+          if (current[lastKey] && Array.isArray(current[lastKey])) {
+               current[lastKey].splice(index, 1);
+               setHomeData(newData);
+          }
      };
 
      const addArrayStringItem = (path: string, defaultValue: string) => {
@@ -601,9 +676,10 @@ export default function HomePageDashboard() {
                </div>
 
                <Tabs defaultValue="hero" className="space-y-6">
-                    <TabsList className="grid w-full grid-cols-9">
+                    <TabsList className="grid w-full grid-cols-10">
                          <TabsTrigger value="hero">Hero</TabsTrigger>
                          <TabsTrigger value="platform">Plateforme</TabsTrigger>
+                         <TabsTrigger value="services">Services</TabsTrigger>
                          <TabsTrigger value="pricing">Tarifs</TabsTrigger>
                          <TabsTrigger value="partnership">Agence</TabsTrigger>
                          <TabsTrigger value="contact">Contact</TabsTrigger>
@@ -1122,6 +1198,143 @@ export default function HomePageDashboard() {
                                                                  </Button>
                                                             </div>
                                                        ))}
+                                                  </div>
+                                             </Card>
+                                        ))}
+                                   </div>
+                              </CardContent>
+                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="services" className="space-y-6">
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>Section Services</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                             <Label>Titre</Label>
+                                             <Input
+                                                  value={homeData.services.headline}
+                                                  onChange={(e) => updateField('services.headline', e.target.value)}
+                                                  placeholder="Titre de la section services"
+                                             />
+                                        </div>
+                                        <div>
+                                             <Label>Sous-titre</Label>
+                                             <Input
+                                                  value={homeData.services.subheadline}
+                                                  onChange={(e) => updateField('services.subheadline', e.target.value)}
+                                                  placeholder="Sous-titre"
+                                             />
+                                        </div>
+                                   </div>
+                                   <div>
+                                        <Label>Description</Label>
+                                        <Textarea
+                                             value={homeData.services.description || ''}
+                                             onChange={(e) => updateField('services.description', e.target.value)}
+                                             placeholder="Description"
+                                             rows={3}
+                                        />
+                                   </div>
+
+                                   {/* Services */}
+                                   <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                             <Label className="text-lg font-semibold">Services</Label>
+                                             <Button
+                                                  onClick={() => addArrayItem('services.services', {
+                                                       icon: 'Settings',
+                                                       title: 'Nouveau service',
+                                                       description: 'Description du service',
+                                                       image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80&fit=crop'
+                                                  })}
+                                                  size="sm"
+                                                  className="flex items-center gap-2"
+                                             >
+                                                  <Plus className="w-4 h-4" />
+                                                  Ajouter un service
+                                             </Button>
+                                        </div>
+
+                                        {homeData.services.services?.map((service, index) => (
+                                             <Card key={index} className="p-4">
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <h4 className="font-semibold">Service {index + 1}</h4>
+                                                       <Button
+                                                            onClick={() => removeArrayItem('services.services', index)}
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-red-600 hover:text-red-700"
+                                                       >
+                                                            <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label>Icône</Label>
+                                                            <Select
+                                                                 value={service.icon}
+                                                                 onValueChange={(value) => updateArrayField('services.services', index, 'icon', value)}
+                                                            >
+                                                                 <SelectTrigger>
+                                                                      <SelectValue placeholder="Choisir une icône" />
+                                                                 </SelectTrigger>
+                                                                 <SelectContent>
+                                                                      <SelectItem value="Settings">Settings</SelectItem>
+                                                                      <SelectItem value="Link2">Link2</SelectItem>
+                                                                      <SelectItem value="GraduationCap">GraduationCap</SelectItem>
+                                                                      <SelectItem value="Headphones">Headphones</SelectItem>
+                                                                      <SelectItem value="SearchCheck">SearchCheck</SelectItem>
+                                                                      <SelectItem value="Lightbulb">Lightbulb</SelectItem>
+                                                                 </SelectContent>
+                                                            </Select>
+                                                       </div>
+                                                       <div>
+                                                            <Label>Titre</Label>
+                                                            <Input
+                                                                 value={service.title}
+                                                                 onChange={(e) => updateArrayField('services.services', index, 'title', e.target.value)}
+                                                                 placeholder="Titre du service"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <Label>Description</Label>
+                                                       <Textarea
+                                                            value={service.description}
+                                                            onChange={(e) => updateArrayField('services.services', index, 'description', e.target.value)}
+                                                            placeholder="Description du service"
+                                                            rows={3}
+                                                       />
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <Label>Image de fond</Label>
+                                                       <Input
+                                                            value={service.image}
+                                                            onChange={(e) => updateArrayField('services.services', index, 'image', e.target.value)}
+                                                            placeholder="URL de l'image de fond"
+                                                       />
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            URL de l'image qui sera affichée en arrière-plan du service
+                                                       </p>
+                                                       {service.image && (
+                                                            <div className="mt-2">
+                                                                 <img
+                                                                      src={service.image}
+                                                                      alt="Aperçu de l'image"
+                                                                      className="w-32 h-32 object-cover rounded-lg border"
+                                                                      onError={(e) => {
+                                                                           e.currentTarget.style.display = 'none';
+                                                                      }}
+                                                                 />
+                                                            </div>
+                                                       )}
                                                   </div>
                                              </Card>
                                         ))}

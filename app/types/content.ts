@@ -14,6 +14,22 @@ export interface TestimonialsContent {
   description: string; 
   testimonials: Testimonial[]; 
 }
+
+// Services Section Types
+export interface Service {
+  icon: string;
+  title: string;
+  description: string;
+  image: string;
+}
+
+export interface ServicesData {
+  headline: string;
+  subheadline: string;
+  description: string;
+  services: Service[];
+}
+
 export interface Action { label: string; icon: string; }
 export interface Location { icon: string; title: string; subtitle: string; }
 export interface CTAContent { intro?: string; actions?: Action[]; locations?: Location[]; }
@@ -53,7 +69,7 @@ export interface ContactContent {
   cards: ContactCard[];
 }
 
-export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | CTAContent | ContactContent | Record<string, unknown>;
+export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | ServicesData | CTAContent | ContactContent | Record<string, unknown>;
 
 export interface ContentSection {
   _id: string;
