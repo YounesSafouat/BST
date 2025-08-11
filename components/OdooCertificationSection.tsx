@@ -60,16 +60,14 @@ export default function OdooCertificationSection({
                          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-sm hover:shadow-md transition-shadow">
                               <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-                                   {/* Left Side - Just the Silver Badge */}
+                                   {/* Left Side - Certificate Image */}
                                    <div className="flex justify-center lg:justify-start">
-                                        <div className="relative">
-                                             <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-2xl blur-2xl opacity-20"></div>
+                                        <div className="relative w-full h-80 lg:h-96">
                                              <Image
-                                                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/silver-badge-odoo.png"
-                                                  alt="Odoo Silver Partner Badge"
-                                                  width={280}
-                                                  height={280}
-                                                  className="relative w-56 h-56 md:w-64 md:h-64 object-contain"
+                                                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png"
+                                                  alt="Odoo Certification Certificate"
+                                                  fill
+                                                  className="object-cover rounded-tl-2xl rounded-bl-2xl"
                                              />
                                         </div>
                                    </div>
@@ -120,35 +118,6 @@ export default function OdooCertificationSection({
                                         </div>
                                    </div>
                               </div>
-                         </div>
-                    </motion.div>
-
-                    {/* Stats Section */}
-                    <motion.div
-                         initial={{ opacity: 0, y: 40 }}
-                         whileInView={{ opacity: 1, y: 0 }}
-                         transition={{ duration: 0.8, delay: 0.5 }}
-                    >
-                         <div className="grid md:grid-cols-3 gap-6">
-                              {[
-                                   { value: "3 ans", label: "d'expertise Odoo", icon: Award },
-                                   { value: "99%", label: "Satisfaction client", icon: CheckCircle },
-                                   { value: "100%", label: "Équipe certifiée", icon: Shield }
-                              ].map((stat, index) => (
-                                   <motion.div
-                                        key={index}
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        className="text-center p-6 bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm hover:shadow-md transition-shadow"
-                                   >
-                                        <div className="w-12 h-12 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                             <stat.icon className="w-6 h-6 text-[var(--color-secondary)]" />
-                                        </div>
-                                        <div className="text-3xl font-bold text-[var(--color-secondary)] mb-2">{stat.value}</div>
-                                        <div className="text-gray-700 font-medium">{stat.label}</div>
-                                   </motion.div>
-                              ))}
                          </div>
                     </motion.div>
                </div>
