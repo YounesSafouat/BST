@@ -171,37 +171,37 @@ export default function Footer() {
         </div>
 
         {/* secondary Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12 mb-12 sm:mb-16">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-3 mb-6">
+            <div className="flex items-center space-x-3 mb-4 sm:mb-6">
               <div className="relative">
-                <img src={companyInfo?.logo?.image || "/bst.png"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="h-16 w-auto" />
+                <img src={companyInfo?.logo?.image || "/bst.png"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="h-12 sm:h-16 w-auto" />
               </div>
             </div>
-            <p className="text-gray-400 mb-6 text-sm">{companyInfo?.description || "Votre partenaire digital de confiance"}</p>
-            <div className="space-y-3">
+            <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">{companyInfo?.description || "Votre partenaire digital de confiance"}</p>
+            <div className="space-y-2 sm:space-y-3">
               {regionalContact ? (
                 <>
                   {regionalContact.phone && (
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <Phone className="w-5 h-5 text-[var(--color-secondary)]" />
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                      <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
                       <a href={`tel:${regionalContact.phone}`} className="hover:text-white transition-colors">
                         {regionalContact.phone}
                       </a>
                     </div>
                   )}
                   {regionalContact.email && (
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <Mail className="w-5 h-5 text-[var(--color-secondary)]" />
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
                       <a href={`mailto:${regionalContact.email}`} className="hover:text-white transition-colors">
                         {regionalContact.email}
                       </a>
                     </div>
                   )}
                   {regionalContact.whatsapp && (
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <WhatsAppIcon className="w-5 h-5 text-[var(--color-secondary)]" />
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                      <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
                       <a
                         href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
                         target="_blank"
@@ -213,15 +213,15 @@ export default function Footer() {
                     </div>
                   )}
                   {regionalContact.address && (
-                    <div className="flex items-center gap-3 text-sm text-gray-300">
-                      <MapPin className="w-5 h-5 text-[var(--color-secondary)]" />
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
+                      <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
                       <span>{regionalContact.address}</span>
                     </div>
                   )}
                 </>
               ) : (
                 // Show loading or message if no regional data available
-                <div className="text-sm text-gray-400">
+                <div className="text-xs sm:text-sm text-gray-400">
                   Informations de contact en cours de configuration...
                 </div>
               )}
@@ -230,15 +230,15 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-bold mb-6">{quickLinks?.title || "Liens rapides"}</h4>
-            <ul className="space-y-3">
+            <h4 className="text-base sm:text-lg font-bold mb-4 sm:mb-6">{quickLinks?.title || "Liens rapides"}</h4>
+            <ul className="space-y-2 sm:space-y-3">
               {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
                   <button
                     onClick={() => handleLinkClick(link.url)}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-sm w-full text-left"
+                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-xs sm:text-sm w-full text-left"
                   >
-                    <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
+                    <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
                     {link.text}
                   </button>
                 </li>
@@ -248,8 +248,8 @@ export default function Footer() {
 
           {/* Social Media */}
           <div>
-            <h4 className="text-lg font-bold mb-6">{"Suivez-nous"}</h4>
-            <div className="flex gap-4 mb-8">
+            <h4 className="text-base sm:text-lg font-bold mb-4 sm:mb-6">{"Suivez-nous"}</h4>
+            <div className="flex gap-3 sm:gap-4 mb-6 sm:mb-8">
               {Object.entries(social).map(([key, value]) => {
                 if (!value || typeof value !== 'object' || !('url' in value && 'icon' in value && 'color' in value)) return null;
                 const network = value as { icon: string; color: string; url: string };
@@ -278,19 +278,19 @@ export default function Footer() {
                     href={network.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity duration-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity duration-200"
                     style={{ backgroundColor: bgColor }}
                   >
-                    {Icon && <Icon className="w-5 h-5 text-white" />}
+                    {Icon && <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                   </a>
                 );
               })}
             </div>
 
-            <h4 className="text-lg font-bold mb-4">{certifications?.title || 'Certifications'}</h4>
-            <div className="flex flex-wrap gap-3">
+            <h4 className="text-base sm:text-lg font-bold mb-3 sm:mb-4">{certifications?.title || 'Certifications'}</h4>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {certifications?.badges && Array.isArray(certifications.badges) && certifications.badges.map((cert: string, index: number) => (
-                <span key={index} className="bg-gray-800 text-xs text-gray-300 px-3 py-1.5 rounded-full">
+                <span key={index} className="bg-gray-800 text-xs text-gray-300 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full">
                   {cert}
                 </span>
               ))}
@@ -299,11 +299,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between">
-          <p className="text-gray-500 text-sm mb-4 md:mb-0">{legal?.copyright || "© 2024 Black Swan Technology. Tous droits réservés."}</p>
-          <div className="flex gap-6">
+        <div className="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between">
+          <p className="text-gray-500 text-xs sm:text-sm mb-4 md:mb-0">{legal?.copyright || "© 2024 Black Swan Technology. Tous droits réservés."}</p>
+          <div className="flex gap-4 sm:gap-6">
             {legal?.links && Array.isArray(legal.links) && legal.links.map((link: any, index: number) => (
-              <a key={index} href={link.url} className="text-gray-500 hover:text-white text-sm transition-colors duration-200">
+              <a key={index} href={link.url} className="text-gray-500 hover:text-white text-xs sm:text-sm transition-colors duration-200">
                 {link.text}
               </a>
             ))}

@@ -276,23 +276,23 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
      return (
           <section className="min-h-screen bg-white flex items-center" ref={sectionRef}>
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                    <div className="text-center mb-12">
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
+                    <div className="text-center mb-8 sm:mb-12">
+                         <div className="uppercase tracking-widest text-xs sm:text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {headline}
                          </div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-3 sm:mb-4">
                               {description}
                          </h2>
-                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                         <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                               {subdescription}
                          </p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-6xl mx-auto">
                          {testimonials.map((testimonial) => (
                               <div
                                    key={testimonial.id}
-                                   className={`relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer ${testimonial.backgroundColor}`}
+                                   className={`relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer ${testimonial.backgroundColor}`}
                               >
                                    {/* Video Content - Made bigger */}
                                    <div className="aspect-[16/10] relative">
@@ -331,28 +331,28 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                                  e.stopPropagation();
                                                                  togglePlay(testimonial.id);
                                                             }}
-                                                            className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
+                                                            className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
                                                        >
                                                             {playingVideos[testimonial.id] ? (
-                                                                 <Pause className="w-8 h-8 text-gray-800" />
+                                                                 <Pause className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800" />
                                                             ) : (
-                                                                 <Play className="w-8 h-8 text-gray-800 ml-1" />
+                                                                 <Play className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800 ml-0.5 sm:ml-1" />
                                                             )}
                                                        </button>
 
                                                        {/* Fullscreen Button */}
                                                        <button
                                                             onClick={() => openFullscreen(testimonial.id)}
-                                                            className="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                                                            className="absolute top-2 sm:top-4 right-2 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-black bg-opacity-50 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all duration-300 opacity-0 group-hover:opacity-100"
                                                             title="Plein écran"
                                                             aria-label="Ouvrir la vidéo en plein écran"
                                                        >
-                                                            <Maximize2 className="w-5 h-5 text-white" />
+                                                            <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                                        </button>
                                                   </div>
 
                                                   {/* Bottom Controls */}
-                                                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3 sm:p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                        {/* Progress Bar */}
                                                        <div
                                                             className="w-full h-1 bg-gray-600 rounded-full cursor-pointer mb-2"
@@ -364,7 +364,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                             />
                                                        </div>
 
-                                                       <div className="flex items-center justify-between text-white text-sm">
+                                                       <div className="flex items-center justify-between text-white text-xs sm:text-sm">
                                                             <span>{formatTime(currentTime[testimonial.id] || 0)}</span>
                                                             <div className="flex items-center gap-2">
                                                                  <button
@@ -372,9 +372,9 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                                       className="hover:bg-white hover:bg-opacity-20 p-1 rounded"
                                                                  >
                                                                       {mutedVideos[testimonial.id] ? (
-                                                                           <VolumeX className="w-4 h-4" />
+                                                                           <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" />
                                                                       ) : (
-                                                                           <Volume2 className="w-4 h-4" />
+                                                                           <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
                                                                       )}
                                                                  </button>
                                                                  <span>{formatTime(duration[testimonial.id] || 0)}</span>
@@ -395,10 +395,10 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                             />
                                                             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
                                                                  <div className="text-center">
-                                                                      <div className="w-20 h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                                           <Play className="w-8 h-8 text-gray-800 ml-1" />
+                                                                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                                                                           <Play className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800 ml-0.5 sm:ml-1" />
                                                                       </div>
-                                                                      <p className="text-white text-lg font-medium">
+                                                                      <p className="text-white text-sm sm:text-lg font-medium">
                                                                            {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
                                                                       </p>
                                                                  </div>
@@ -407,10 +407,10 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                   ) : (
                                                        // Default placeholder
                                                        <div className="text-center">
-                                                            <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                                 <Play className="w-8 h-8 text-white" />
+                                                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                                                                 <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                                                             </div>
-                                                            <p className="text-white text-lg font-medium">
+                                                            <p className="text-white text-sm sm:text-lg font-medium">
                                                                  {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
                                                             </p>
                                                        </div>

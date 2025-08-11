@@ -65,21 +65,21 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
      };
 
      return (
-          <section className="py-20 bg-white">
+          <section className="py-12 sm:py-16 md:py-20 bg-white">
                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
+                    <div className="text-center mb-8 sm:mb-12">
+                         <div className="uppercase tracking-widest text-xs sm:text-sm text-[var(--color-secondary)] font-semibold mb-2">
                               {headline}
                          </div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-3 sm:mb-4">
                               {description}
                          </h2>
-                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                         <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                               {subdescription}
                          </p>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                          {faqs.map((faq, index) => (
                               <div
                                    key={index}
@@ -87,21 +87,21 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                               >
                                    <button
                                         onClick={() => toggleItem(index)}
-                                        className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
+                                        className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left bg-white hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
                                    >
-                                        <span className="font-semibold text-gray-900 pr-4">
+                                        <span className="font-semibold text-gray-900 pr-2 sm:pr-4 text-sm sm:text-base">
                                              {faq.question}
                                         </span>
                                         {openItems.includes(index) ? (
-                                             <ChevronUp className="w-5 h-5 text-[var(--color-secondary)] flex-shrink-0" />
+                                             <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)] flex-shrink-0" />
                                         ) : (
-                                             <ChevronDown className="w-5 h-5 text-[var(--color-secondary)] flex-shrink-0" />
+                                             <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)] flex-shrink-0" />
                                         )}
                                    </button>
 
                                    {openItems.includes(index) && (
-                                        <div className="px-6 pb-4 bg-gray-50">
-                                             <p className="text-gray-700 leading-relaxed">
+                                        <div className="px-4 sm:px-6 pb-3 sm:pb-4 bg-gray-50">
+                                             <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
                                                   {faq.answer}
                                              </p>
                                         </div>
@@ -110,8 +110,8 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                          ))}
                     </div>
 
-                    <div className="text-center mt-12">
-                         <p className="text-gray-600 mb-4">
+                    <div className="text-center mt-8 sm:mt-12">
+                         <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
                               Vous ne trouvez pas la réponse à votre question ?
                          </p>
                          <motion.div
@@ -126,10 +126,10 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                                         }
                                    }}
                                    aria-label="Contactez-nous"
-                                   className="inline-flex items-center gap-2 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] hover:from-[var(--color-secondary)] hover:to-[var(--color-main)] text-white font-semibold rounded-full px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
+                                   className="inline-flex items-center gap-2 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] hover:from-[var(--color-secondary)] hover:to-[var(--color-main)] text-white font-semibold rounded-full px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
                               >
                                    <span>Contactez-nous</span>
-                                   <ArrowRight className="w-5 h-5 group-hover:animate-pulse" />
+                                   <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:animate-pulse" />
                                    <div className="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                               </button>
                          </motion.div>

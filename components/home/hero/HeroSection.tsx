@@ -113,14 +113,87 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
   };
 
   return (
-    <section id="hero" className="relative overflow-hidden">
-      {/* Background blur elements - responsive positioning */}
-      <div className="absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
-      <div className="absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
+    <section id="hero" className="relative overflow-hidden" style={{ marginTop: '-2rem', paddingTop: '0' }}>
+      {/* Background blur elements - hidden on mobile, visible on desktop */}
+      <div className="hidden lg:block absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
+      <div className="hidden lg:block absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
 
-      <div className="relative w-full py-2 pt-0 lg:py-4 lg:pt-2">
+      <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2" style={{ marginTop: '0', paddingTop: '0' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+          {/* Mobile Layout - Single Column */}
+          <div className="lg:hidden space-y-6 pt-0 mt-0 -mt-4" style={{ marginTop: '0', paddingTop: '0' }}>
+            {/* 1. Header First */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-2xl md:text-3xl font-semibold text-gray-900 leading-tight tracking-tight text-left mt-0 pt-0"
+              style={{ lineHeight: '1.1', marginTop: '0', paddingTop: '0' }}
+            >
+              {heroData.headline}
+            </motion.h1>
+
+            {/* 2. Video Second */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="w-full"
+            >
+              <div className="relative mx-2 sm:mx-4">
+                <div className="bg-white/90 backdrop-blur-sm p-2 rounded-xl shadow-lg">
+                  <div className="relative aspect-[16/9] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg overflow-hidden">
+                    {/* Video element */}
+                    <video
+                      ref={videoRef}
+                      src={heroData.videoUrl}
+                      muted
+                      autoPlay
+                      loop
+                      className="w-full h-full object-cover"
+                      playsInline
+                    />
+
+                    {/* Expertise Badge - completely hidden on mobile */}
+                    <div className="absolute -bottom-4 -right-4 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2" style={{ display: 'none' }}>
+                      <div className="text-center">
+                        <div className="text-sm font-bold text-[var(--color-main)]">3 ans</div>
+                        <div className="text-xs text-gray-600">d'expertise</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* 3. CTA Buttons - Side by Side */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex gap-2 justify-center px-2"
+            >
+              <Button
+                size="sm"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-3 py-2 text-sm font-semibold rounded-full flex-1 h-9"
+                onClick={() => scrollToSection('#contact')}
+              >
+                {heroData.ctaPrimary.text}
+                {getIconComponent(heroData.ctaPrimary.icon)}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="px-3 py-2 text-sm font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full flex-1 h-9"
+                onClick={() => scrollToSection('#modules')}
+              >
+                {heroData.ctaSecondary.text}
+              </Button>
+            </motion.div>
+          </div>
+
+          {/* Desktop Layout - Two Columns (unchanged) */}
+          <div className="hidden lg:grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
             {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -227,13 +300,13 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     </button>
                   </div>
 
-                  {/* Expertise Badge overlay - responsive positioning */}
-                  <div className="absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2 sm:p-3 lg:p-3 hover:bg-white/95 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                  {/* Expertise Badge overlay - hidden on mobile, visible on desktop */}
+                  <div className="hidden lg:block absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2 sm:p-3 lg:p-3 hover:bg-white/95 transition-all duration-300 hover:shadow-2xl hover:scale-105">
                     {heroData.expertiseBadgeUrl ? (
                       <img
                         src={heroData.expertiseBadgeUrl}
                         alt="Expertise badge"
-                        className="w-16 h-12 sm:w-24 sm:h-18 w-50 h-20 lg:w-50 lg:h-30 object-contain"
+                        className="w-50 h-20 lg:w-50 lg:h-30 object-contain"
                         onError={(e) => {
                           console.error('Badge image failed to load:', heroData.expertiseBadgeUrl);
                           e.currentTarget.style.display = 'none';
@@ -254,7 +327,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="bg-white pt-12 sm:pt-16 md:pt-20 lg:pt-24">
+      <div className="hidden lg:block bg-white pt-12 sm:pt-16 md:pt-20 lg:pt-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData.carousel?.companies}
@@ -267,4 +340,4 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
   );
 }
 
-export default HeroSection; 
+export default HeroSection;

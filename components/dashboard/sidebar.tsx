@@ -149,6 +149,12 @@ const menuGroups = [
         icon: Code,
         color: "from-blue-200 to-blue-100 text-blue-700",
       },
+      {
+        title: "Test Snippets",
+        href: "/test-snippets",
+        icon: Code,
+        color: "from-purple-200 to-purple-100 text-purple-700",
+      },
     ]
   },
 ];

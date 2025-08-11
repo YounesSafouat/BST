@@ -608,7 +608,7 @@ export default function HomePage() {
                     <section className="py-20 bg-white" id="team">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                               <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">NOTRE AGENCE</div>
+                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">Blackswan technology </div>
                                    <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
                                         {odooData?.partnership?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
                                    </h2>

@@ -201,17 +201,17 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                     <div className="max-w-6xl mx-auto">
                          <Card className="border-none shadow-2xl bg-white rounded-2xl overflow-hidden">
-                              <div className="grid lg:grid-cols-2">
+                              <div className="grid grid-cols-1 lg:grid-cols-2">
                                    {/* Form Side */}
-                                   <div className="p-6 sm:p-8 md:p-12">
-                                        <div className="mb-6 sm:mb-8">
-                                             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">{data.formTitle}</h3>
+                                   <div className="p-4 sm:p-6 md:p-8 lg:p-12">
+                                        <div className="mb-4 sm:mb-6 md:mb-8">
+                                             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">{data.formTitle}</h3>
                                              <p className="text-sm sm:text-base text-gray-600">{data.formDescription}</p>
                                         </div>
 
                                         {!isSubmitted ? (
-                                             <form onSubmit={handleSubmit} className="space-y-6">
-                                                  <div className="space-y-4">
+                                             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                                                  <div className="space-y-3 sm:space-y-4">
                                                        <div>
                                                             <Label htmlFor="name" className="text-sm font-medium text-gray-700 mb-2 block">Prénom & Nom *</Label>
                                                             <Input
@@ -220,7 +220,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                  onChange={(e) => handleInputChange('name', e.target.value)}
                                                                  placeholder="John Dupont"
                                                                  required
-                                                                 className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
+                                                                 className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
                                                             />
                                                        </div>
                                                        <div>
@@ -231,7 +231,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                  onChange={(e) => handleInputChange('company', e.target.value)}
                                                                  placeholder="Ma Super Entreprise"
                                                                  required
-                                                                 className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
+                                                                 className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
                                                             />
                                                        </div>
                                                   </div>
@@ -244,7 +244,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                             onChange={(e) => handleInputChange('email', e.target.value)}
                                                             placeholder="john@monentreprise.com"
                                                             required
-                                                            className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
+                                                            className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
                                                        />
                                                   </div>
                                                   <div>
@@ -254,7 +254,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                             value={formData.phone}
                                                             onChange={(e) => handleInputChange('phone', e.target.value)}
                                                             placeholder="01 23 45 67 89"
-                                                            className="w-full h-12 px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base"
+                                                            className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
                                                        />
                                                   </div>
                                                   <div>
@@ -265,22 +265,22 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                             onChange={(e) => handleInputChange('message', e.target.value)}
                                                             placeholder="Décrivez-nous vos ambitions : gains de temps, automatisation, croissance... Nous sommes là pour vous accompagner !"
                                                             rows={4}
-                                                            className="w-full px-4 py-3 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-base resize-none"
+                                                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base resize-none"
                                                        />
                                                   </div>
                                                   <Button
                                                        type="submit"
                                                        disabled={isSubmitting}
-                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] h-14 text-base font-semibold rounded-full group disabled:opacity-50"
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] h-12 sm:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50"
                                                   >
                                                        {isSubmitting ? (
                                                             <>
-                                                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                                                 <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2"></div>
                                                                  Envoi en cours...
                                                             </>
                                                        ) : (
                                                             <>
-                                                                 <Calendar className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                                                                 <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-12 transition-transform" />
                                                                  Commencer ma transformation
                                                             </>
                                                        )}
@@ -300,16 +300,16 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                              <motion.div
                                                   initial={{ opacity: 0, scale: 0.8 }}
                                                   animate={{ opacity: 1, scale: 1 }}
-                                                  className="text-center py-8"
+                                                  className="text-center py-6 sm:py-8"
                                              >
-                                                  <CheckCircle className="w-16 h-16 text-[var(--color-secondary)] mx-auto mb-4" />
-                                                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                                  <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 text-[var(--color-secondary)] mx-auto mb-3 sm:mb-4" />
+                                                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                                                        🚀 C'est parti !
                                                   </h3>
-                                                  <p className="text-gray-600 mb-4">
+                                                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">
                                                        Votre demande a été enregistrée avec succès dans notre CRM.
                                                   </p>
-                                                  <p className="text-gray-600">
+                                                  <p className="text-sm sm:text-base text-gray-600">
                                                        Un de nos experts Odoo vous recontacte dans les 4h pour échanger sur votre projet.
                                                   </p>
                                              </motion.div>
@@ -317,9 +317,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                    </div>
 
                                    {/* Benefits Side */}
-                                   <div className="bg-[var(--color-main)] p-6 sm:p-8 md:p-12 text-white">
-                                        <h3 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8">Ce qui vous attend :</h3>
-                                        <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                                   <div className="bg-[var(--color-main)] p-4 sm:p-6 md:p-8 lg:p-12 text-white">
+                                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 md:mb-8">Ce qui vous attend :</h3>
+                                        <div className="space-y-3 sm:space-y-4 md:space-y-6 mb-4 sm:mb-6 md:mb-8">
                                              {data.benefits.map((benefit, index) => (
                                                   <motion.div
                                                        key={index}
@@ -327,12 +327,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                        whileInView={{ opacity: 1, x: 0 }}
                                                        viewport={{ once: true }}
                                                        transition={{ delay: index * 0.1 }}
-                                                       className="flex gap-3 sm:gap-4"
+                                                       className="flex gap-2 sm:gap-3 md:gap-4"
                                                   >
                                                        <div className="flex-shrink-0">
-                                                            {benefit.icon === 'Award' && <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary)]" />}
-                                                            {benefit.icon === 'Zap' && <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary)]" />}
-                                                            {benefit.icon === 'Shield' && <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Award' && <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Zap' && <Zap className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[var(--color-secondary)]" />}
+                                                            {benefit.icon === 'Shield' && <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[var(--color-secondary)]" />}
                                                        </div>
                                                        <div>
                                                             <h4 className="font-semibold mb-1 text-sm sm:text-base">{benefit.title}</h4>
@@ -342,18 +342,18 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                              ))}
                                         </div>
 
-                                        <div className="bg-white/10 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
-                                             <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
-                                                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
+                                        <div className="bg-white/10 rounded-xl p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 md:mb-8">
+                                             <h4 className="font-semibold mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
+                                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[var(--color-secondary)]" />
                                                   {data.consultation.title}
                                              </h4>
-                                             <p className="text-purple-100 text-xs sm:text-sm mb-4">
+                                             <p className="text-purple-100 text-xs sm:text-sm mb-3 sm:mb-4">
                                                   {data.consultation.description}
                                              </p>
                                         </div>
 
-                                        <div className="pt-4 sm:pt-6 border-t border-white/20">
-                                             <h4 className="font-semibold mb-4 text-sm sm:text-base">Contact direct</h4>
+                                        <div className="pt-3 sm:pt-4 md:pt-6 border-t border-white/20">
+                                             <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Contact direct</h4>
                                              <RegionalContactInfo className="text-white" />
                                         </div>
                                    </div>

@@ -76,33 +76,33 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
      }
 
      return (
-          <section id="pricing" className="min-h-screen flex items-center bg-[var(--color-main)] py-16 md:py-20">
+          <section id="pricing" className="min-h-screen flex items-center bg-[var(--color-main)] py-12 sm:py-16 md:py-20">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                          initial={{ opacity: 0, y: 20 }}
                          whileInView={{ opacity: 1, y: 0 }}
                          viewport={{ once: true }}
-                         className="text-center mb-12 md:mb-16"
+                         className="text-center mb-8 sm:mb-12 md:mb-16"
                     >
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-3 md:mb-2">
+                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2 md:mb-3">
                               {pricingData?.headline || "Tarifs & Accompagnement"}
                          </div>
-                         <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-4 px-4">
+                         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 sm:mb-4 px-4">
                               {pricingData?.subheadline || "Un partenariat, pas seulement une prestation"}
                          </h2>
-                         <p className="text-base md:text-lg text-white max-w-3xl mx-auto px-4">
+                         <p className="text-sm sm:text-base md:text-lg text-white max-w-3xl mx-auto px-4">
                               {pricingData?.description || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions."}
                          </p>
 
                     </motion.div>
 
                     {filteredPlans.length === 0 ? (
-                         <div className="text-center py-12">
-                              <p className="text-gray-600 text-lg">Aucun tarif disponible pour votre région.</p>
+                         <div className="text-center py-8 sm:py-12">
+                              <p className="text-gray-600 text-base sm:text-lg">Aucun tarif disponible pour votre région.</p>
                               <p className="text-sm text-gray-500 mt-2">Détecté: {location?.countryCode || 'Non détecté'}</p>
                          </div>
                     ) : (
-                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-4xl md:max-w-none mx-auto">
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-4xl md:max-w-none mx-auto">
                               {filteredPlans.map((plan, index) => (
                                    <motion.div
                                         key={index}
@@ -112,32 +112,32 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                         transition={{ delay: index * 0.1 }}
                                         className="h-full"
                                    >
-                                        <Card className={`h-full border-2 rounded-2xl transition-all duration-300 flex flex-col ${index === 1
-                                             ? 'border-[var(--color-secondary)] shadow-2xl bg-white md:scale-105'
+                                        <Card className={`h-full border-2 rounded-xl sm:rounded-2xl transition-all duration-300 flex flex-col ${index === 1
+                                             ? 'border-[var(--color-secondary)] shadow-xl sm:shadow-2xl bg-white md:scale-105'
                                              : 'border-transparent bg-white backdrop-blur-sm shadow-lg hover:shadow-xl'
                                              }`}>
-                                             <CardHeader className="p-4 md:p-6 lg:p-8 flex-shrink-0">
-                                                  <h3 className="text-lg md:text-xl font-extrabold text-[var(--color-main)] mb-2">{plan.name}</h3>
-                                                  <p className="text-gray-600 text-sm mb-4 min-h-[3rem] md:h-12 flex items-center">{plan.description}</p>
+                                             <CardHeader className="p-3 sm:p-4 md:p-6 lg:p-8 flex-shrink-0">
+                                                  <h3 className="text-base sm:text-lg md:text-xl font-extrabold text-[var(--color-main)] mb-2">{plan.name}</h3>
+                                                  <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 min-h-[2.5rem] sm:min-h-[3rem] md:h-12 flex items-center">{plan.description}</p>
                                                   <div className="space-y-1">
-                                                       <div className="text-xl md:text-2xl font-extrabold text-[var(--color-secondary)]">{plan.price}</div>
-                                                       <div className="text-sm text-gray-500">{plan.estimation}</div>
+                                                       <div className="text-lg sm:text-xl md:text-2xl font-extrabold text-[var(--color-secondary)]">{plan.price}</div>
+                                                       <div className="text-xs sm:text-sm text-gray-500">{plan.estimation}</div>
                                                        <div className="text-xs text-gray-400 italic">* Prix hors taxes</div>
                                                   </div>
                                              </CardHeader>
 
-                                             <CardContent className="p-4 md:p-6 lg:p-8 pt-0 flex-grow flex flex-col">
-                                                  <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 flex-grow">
+                                             <CardContent className="p-3 sm:p-4 md:p-6 lg:p-8 pt-0 flex-grow flex flex-col">
+                                                  <ul className="space-y-2 sm:space-y-3 md:space-y-4 mb-4 sm:mb-6 md:mb-8 flex-grow">
                                                        {plan.features?.map((feature: string, idx: number) => (
-                                                            <li key={idx} className="flex items-start gap-3">
-                                                                 <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-[var(--color-main)] mt-0.5 flex-shrink-0" />
-                                                                 <span className="text-gray-700 text-sm">{feature}</span>
+                                                            <li key={idx} className="flex items-start gap-2 sm:gap-3">
+                                                                 <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[var(--color-main)] mt-0.5 flex-shrink-0" />
+                                                                 <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
                                                             </li>
                                                        ))}
                                                   </ul>
 
                                                   <Button
-                                                       className={`w-full py-2 md:py-3 font-semibold group rounded-full text-sm md:text-base ${index === 1
+                                                       className={`w-full py-2 sm:py-2.5 md:py-3 font-semibold group rounded-full text-xs sm:text-sm md:text-base ${index === 1
                                                             ? 'bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white'
                                                             : 'bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white'
                                                             }`}
@@ -149,7 +149,7 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                                        }}
                                                   >
                                                        {plan.cta}
-                                                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                       <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                                                   </Button>
                                              </CardContent>
                                         </Card>
@@ -164,9 +164,9 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          whileInView={{ opacity: 1, y: 0 }}
                          viewport={{ once: true }}
                          transition={{ delay: 0.5 }}
-                         className="text-center mt-8 md:mt-12 px-4"
+                         className="text-center mt-6 sm:mt-8 md:mt-12 px-4"
                     >
-                         <p className="text-sm text-white/80 italic">
+                         <p className="text-xs sm:text-sm text-white/80 italic">
                               * Tous les prix affichés sont hors taxes (HT). La TVA applicable sera ajoutée selon la réglementation en vigueur.
                          </p>
                     </motion.div>

@@ -83,6 +83,11 @@ export default function SettingsDashboard() {
       about: true,
       casClient: true,
       contact: true
+    },
+    snippets: {
+      headSnippets: "",
+      bodyStartSnippets: "",
+      bodyEndSnippets: ""
     }
   })
   const [loading, setLoading] = useState(true)
@@ -123,6 +128,11 @@ export default function SettingsDashboard() {
               about: true,
               casClient: true,
               contact: true
+            },
+            snippets: data.content.snippets || {
+              headSnippets: "",
+              bodyStartSnippets: "",
+              bodyEndSnippets: ""
             }
           })
         }
@@ -161,6 +171,15 @@ export default function SettingsDashboard() {
       if (response.ok) {
         const result = await response.json()
         console.log("Save response:", result)
+
+        // Try to refresh snippets immediately after saving
+        if (typeof window !== 'undefined' && (window as any).refreshSnippets) {
+          setTimeout(() => {
+            (window as any).refreshSnippets()
+            console.log("Snippets refreshed after save")
+          }, 1000) // Wait 1 second for the save to propagate
+        }
+
         toast({
           title: "Succès",
           description: "Paramètres mis à jour avec succès",
@@ -631,21 +650,64 @@ export default function SettingsDashboard() {
                 </p>
               </div>
 
-              {/* Help Section */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-semibold text-blue-900 mb-2">💡 Aide pour les snippets</h4>
-                <div className="text-sm text-blue-800 space-y-2">
-                  <p><strong>Google Analytics 4:</strong> Utilisez la section "Scripts dans le head"</p>
-                  <p><strong>Facebook Pixel:</strong> Utilisez la section "Scripts au début du body"</p>
-                  <p><strong>Hotjar, Crazy Egg:</strong> Utilisez la section "Scripts à la fin du body"</p>
-                  <p><strong>Important:</strong> Remplacez les identifiants (G-XXXXXXXXXX, YOUR_PIXEL_ID, etc.) par vos vrais identifiants</p>
+              {/* Snippet Preview Section */}
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-3">👁️ Aperçu des snippets actifs</h4>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-sm font-medium text-gray-700">📄 Head Snippets:</span>
+                    <div className="mt-1 p-2 bg-white border rounded text-xs font-mono max-h-20 overflow-y-auto">
+                      {settings.snippets?.headSnippets ? (
+                        <pre className="whitespace-pre-wrap">{settings.snippets.headSnippets}</pre>
+                      ) : (
+                        <span className="text-gray-400">Aucun snippet configuré</span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-700">🚀 Body Start Snippets:</span>
+                    <div className="mt-1 p-2 bg-white border rounded text-xs font-mono max-h-20 overflow-y-auto">
+                      {settings.snippets?.bodyStartSnippets ? (
+                        <pre className="whitespace-pre-wrap">{settings.snippets.bodyStartSnippets}</pre>
+                      ) : (
+                        <span className="text-gray-400">Aucun snippet configuré</span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-700">📈 Body End Snippets:</span>
+                    <div className="mt-1 p-2 bg-white border rounded text-xs font-mono max-h-20 overflow-y-auto">
+                      {settings.snippets?.bodyEndSnippets ? (
+                        <pre className="whitespace-pre-wrap">{settings.snippets.bodyEndSnippets}</pre>
+                      ) : (
+                        <span className="text-gray-400">Aucun snippet configuré</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
+
+
             </CardContent>
           </Card>
 
           {/* Save Button */}
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-4">
+            <Button
+              onClick={() => {
+                if (typeof window !== 'undefined' && (window as any).refreshSnippets) {
+                  (window as any).refreshSnippets()
+                  toast({
+                    title: "Actualisation",
+                    description: "Snippets actualisés sur la page",
+                  })
+                }
+              }}
+              variant="outline"
+              className="border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white"
+            >
+              🔄 Actualiser les snippets
+            </Button>
             <Button
               onClick={saveSettings}
               disabled={saving}
