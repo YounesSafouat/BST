@@ -11,7 +11,7 @@ const contactSubmissionSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: false,
+    required: true,
   },
   company: {
     type: String,
@@ -19,7 +19,7 @@ const contactSubmissionSchema = new mongoose.Schema({
   },
   message: {
     type: String,
-    required: true,
+    required: false,
   },
   status: {
     type: String,

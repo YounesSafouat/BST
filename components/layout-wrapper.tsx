@@ -7,6 +7,7 @@ import MobileHeader from "@/components/MobileHeader"
 import Footer from "@/components/footer"
 import { ThemeProvider } from '@/components/theme-provider'
 import { usePageAnalytics } from '@/hooks/use-analytics'
+import { Toaster } from '@/components/ui/toaster'
 
 export default function LayoutWrapper({
   children,
@@ -51,6 +52,7 @@ export default function LayoutWrapper({
       </main>
       {!isDashboard && !isAuth && !isMaintenance && !isPreview && <Footer />}
       {/* BottomNavigation removed as requested */}
+      <Toaster />
     </ThemeProvider>
   )
 } 

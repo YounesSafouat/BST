@@ -167,6 +167,19 @@ export default function MobileHeader() {
             className="bg-white border-t"
           >
             <div className="px-4 py-6 space-y-4">
+              {/* Prendre RDV Button - Prominent at top */}
+              <div className="pb-4 border-b border-gray-200">
+                <Button
+                  onClick={() => {
+                    scrollToSection('#contact');
+                    trackButtonClick('mobile_header_rdv_button');
+                  }}
+                  className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-105"
+                >
+                  Prendre RDV
+                </Button>
+              </div>
+
               {/* Navigation Items */}
               {navigation.map((item) => (
                 <button

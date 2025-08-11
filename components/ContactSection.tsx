@@ -8,6 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Phone, Mail, Calendar, CheckCircle, Award, Zap, Shield } from "lucide-react";
 import RegionalContactInfo from "./RegionalContactInfo";
+import { useToast } from "@/hooks/use-toast";
+import CountryCodeSelector from "./CountryCodeSelector";
+
+interface Country {
+     code: string;
+     name: string;
+     dialCode: string;
+     flag: string;
+}
 
 interface ContactData {
      headline: string;
@@ -41,12 +50,19 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           email: '',
           company: '',
           phone: '',
-          message: '',
-          needs: ''
+          message: ''
      });
+     const [selectedCountry, setSelectedCountry] = useState<Country>({
+          code: 'MA',
+          name: 'Maroc',
+          dialCode: '+212',
+          flag: '🇲🇦'
+     });
+     const [errors, setErrors] = useState<{ [key: string]: string }>({});
      const [isSubmitted, setIsSubmitted] = useState(false);
      const [isSubmitting, setIsSubmitting] = useState(false);
      const [submitError, setSubmitError] = useState('');
+     const { toast } = useToast();
 
      // Fallback data if no data is provided
      const fallbackContactData: ContactData = {
@@ -85,17 +101,246 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
      const data = contactData || fallbackContactData;
 
+     const validateForm = () => {
+          const newErrors: { [key: string]: string } = {};
+
+          if (!formData.name.trim()) {
+               newErrors.name = 'Le nom est requis';
+          } else if (formData.name.trim().length < 2) {
+               newErrors.name = 'Le nom doit contenir au moins 2 caractères';
+          }
+
+          if (!formData.email.trim()) {
+               newErrors.email = 'L\'email est requis';
+          } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+               newErrors.email = 'Veuillez entrer un email valide (ex: john@example.com)';
+          } else if (formData.email.length > 254) {
+               newErrors.email = 'L\'email est trop long (maximum 254 caractères)';
+          } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+               newErrors.email = 'Format d\'email invalide. Utilisez des caractères alphanumériques, points, tirets et underscores';
+          } else if (formData.email.includes('..') || formData.email.includes('@@')) {
+               newErrors.email = 'L\'email contient des caractères invalides consécutifs';
+          }
+
+          if (!formData.phone.trim()) {
+               newErrors.phone = 'Le téléphone est requis';
+          } else {
+               // Remove country code and spaces for validation
+               const phoneWithoutCountry = formData.phone.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+
+               // Specific validation for Morocco (9 digits)
+               if (selectedCountry.code === 'MA') {
+                    if (phoneWithoutCountry.length !== 9) {
+                         newErrors.phone = 'Le numéro de téléphone marocain doit contenir exactement 9 chiffres';
+                    } else if (!/^[0-9]+$/.test(phoneWithoutCountry)) {
+                         newErrors.phone = 'Le numéro de téléphone ne peut contenir que des chiffres';
+                    }
+               } else {
+                    // General validation for other countries
+                    if (phoneWithoutCountry.length < 8) {
+                         newErrors.phone = 'Le numéro de téléphone doit contenir au moins 8 chiffres';
+                    } else if (phoneWithoutCountry.length > 15) {
+                         newErrors.phone = 'Le numéro de téléphone est trop long';
+                    } else if (!/^[0-9\s\-\(\)]+$/.test(phoneWithoutCountry)) {
+                         newErrors.phone = 'Le numéro de téléphone ne peut contenir que des chiffres, espaces, tirets et parenthèses';
+                    }
+               }
+          }
+
+          setErrors(newErrors);
+          return Object.keys(newErrors).length === 0;
+     };
+
+     const isPhoneValid = (phoneNumber: string) => {
+          if (!phoneNumber.trim()) return false;
+
+          // Remove country code and spaces for validation
+          const phoneWithoutCountry = phoneNumber.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+
+          // Specific validation for Morocco (9 digits)
+          if (selectedCountry.code === 'MA') {
+               return phoneWithoutCountry.length === 9 && /^[0-9]+$/.test(phoneWithoutCountry);
+          }
+
+          // General validation for other countries (8-15 digits)
+          return phoneWithoutCountry.length >= 8 &&
+               phoneWithoutCountry.length <= 15 &&
+               /^[0-9\s\-\(\)]+$/.test(phoneWithoutCountry);
+     };
+
+     const isFormValid = () => {
+          return formData.name.trim().length >= 2 &&
+               /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+               formData.email.length <= 254 &&
+               /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email) &&
+               !formData.email.includes('..') &&
+               !formData.email.includes('@@') &&
+               isPhoneValid(formData.phone);
+     };
+
+     const handleCountryChange = (country: Country) => {
+          setSelectedCountry(country);
+
+          // Re-validate phone number with new country code
+          if (formData.phone.trim()) {
+               if (!isPhoneValid(formData.phone)) {
+                    const phoneWithoutCountry = formData.phone.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+                    let errorMessage = 'Le numéro de téléphone est invalide';
+
+                    if (selectedCountry.code === 'MA') {
+                         if (phoneWithoutCountry.length !== 9) {
+                              errorMessage = 'Le numéro de téléphone marocain doit contenir exactement 9 chiffres';
+                         } else {
+                              errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres';
+                         }
+                    } else {
+                         if (phoneWithoutCountry.length < 8) {
+                              errorMessage = 'Le numéro de téléphone doit contenir au moins 8 chiffres';
+                         } else if (phoneWithoutCountry.length > 15) {
+                              errorMessage = 'Le numéro de téléphone est trop long';
+                         } else {
+                              errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres, espaces, tirets et parenthèses';
+                         }
+                    }
+
+                    setErrors(prev => ({
+                         ...prev,
+                         phone: errorMessage
+                    }));
+               } else {
+                    setErrors(prev => ({
+                         ...prev,
+                         phone: ''
+                    }));
+               }
+          }
+     };
+
+     const formatPhoneNumber = (value: string) => {
+          // Remove country code if it's already there
+          let phoneNumber = value;
+          if (phoneNumber.startsWith(selectedCountry.dialCode)) {
+               phoneNumber = phoneNumber.substring(selectedCountry.dialCode.length);
+          }
+
+          // Remove all non-digit characters
+          const digits = phoneNumber.replace(/\D/g, '');
+
+          // Format based on length
+          if (digits.length <= 2) {
+               return digits;
+          } else if (digits.length <= 4) {
+               return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+          } else if (digits.length <= 6) {
+               return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4)}`;
+          } else if (digits.length <= 8) {
+               return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6)}`;
+          } else {
+               return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 8)} ${digits.slice(8)}`;
+          }
+     };
+
+     const handlePhoneChange = (value: string) => {
+          const formatted = formatPhoneNumber(value);
+          const fullNumber = selectedCountry.dialCode + ' ' + formatted;
+          handleInputChange('phone', fullNumber);
+
+          // Real-time validation for phone
+          if (fullNumber.trim()) {
+               if (!isPhoneValid(fullNumber)) {
+                    const phoneWithoutCountry = fullNumber.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+                    let errorMessage = 'Le numéro de téléphone est invalide';
+
+                    if (selectedCountry.code === 'MA') {
+                         if (phoneWithoutCountry.length !== 9) {
+                              errorMessage = 'Le numéro de téléphone marocain doit contenir exactement 9 chiffres';
+                         } else {
+                              errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres';
+                         }
+                    } else {
+                         if (phoneWithoutCountry.length < 8) {
+                              errorMessage = 'Le numéro de téléphone doit contenir au moins 8 chiffres';
+                         } else if (phoneWithoutCountry.length > 15) {
+                              errorMessage = 'Le numéro de téléphone est trop long';
+                         } else {
+                              errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres, espaces, tirets et parenthèses';
+                         }
+                    }
+
+                    setErrors(prev => ({
+                         ...prev,
+                         phone: errorMessage
+                    }));
+               } else {
+                    setErrors(prev => ({
+                         ...prev,
+                         phone: ''
+                    }));
+               }
+          } else {
+               setErrors(prev => ({
+                    ...prev,
+                    phone: ''
+               }));
+          }
+     };
+
      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
+
+          // Re-validate all fields before submission
+          if (!validateForm()) {
+               toast({
+                    variant: "destructive",
+                    title: "Erreur de validation",
+                    description: "Veuillez corriger les erreurs dans le formulaire.",
+               });
+               return;
+          }
+
+          // Double-check phone validation right before submission
+          if (!isPhoneValid(formData.phone)) {
+               const phoneWithoutCountry = formData.phone.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+               let errorMessage = 'Le numéro de téléphone est invalide';
+
+               if (selectedCountry.code === 'MA') {
+                    if (phoneWithoutCountry.length !== 9) {
+                         errorMessage = 'Le numéro de téléphone marocain doit contenir exactement 9 chiffres';
+                    } else {
+                         errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres';
+                    }
+               } else {
+                    if (phoneWithoutCountry.length < 8) {
+                         errorMessage = 'Le numéro de téléphone doit contenir au moins 8 chiffres';
+                    } else if (phoneWithoutCountry.length > 15) {
+                         errorMessage = 'Le numéro de téléphone est trop long';
+                    } else {
+                         errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres, espaces, tirets et parenthèses';
+                    }
+               }
+
+               setErrors(prev => ({
+                    ...prev,
+                    phone: errorMessage
+               }));
+               toast({
+                    variant: "destructive",
+                    title: "Erreur de validation",
+                    description: "Veuillez corriger le numéro de téléphone.",
+               });
+               return;
+          }
+
           setIsSubmitting(true);
           setSubmitError('');
-
-
 
           try {
                // Prepare the data for submission
                const submissionData = {
                     ...formData,
+                    phone: formData.phone, // Already includes country code
+                    countryCode: selectedCountry.code,
+                    countryName: selectedCountry.name,
                     // Add source information for tracking
                     source: 'odoo_page_contact',
                     page: 'odoo',
@@ -135,6 +380,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                     setIsSubmitted(true);
 
+                    // Show success toast
+                    toast({
+                         title: "Message envoyé !",
+                         description: "Nous vous recontacterons dans les 4h pour échanger sur votre projet.",
+                    });
+
                     // Reset form after successful submission
                     setTimeout(() => {
                          setIsSubmitted(false);
@@ -143,18 +394,39 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                               email: '',
                               company: '',
                               phone: '',
-                              message: '',
-                              needs: ''
+                              message: ''
+                         });
+                         setErrors({});
+                         // Reset to Morocco as default
+                         setSelectedCountry({
+                              code: 'MA',
+                              name: 'Maroc',
+                              dialCode: '+212',
+                              flag: '🇲🇦'
                          });
                     }, 5000);
                } else {
                     const errorData = await response.json();
                     console.error('Form submission failed:', errorData);
-                    setSubmitError(`Erreur serveur: ${errorData.error || 'Une erreur s\'est produite. Veuillez réessayer.'}`);
+                    const errorMessage = errorData.error || 'Une erreur s\'est produite. Veuillez réessayer.';
+                    setSubmitError(errorMessage);
+
+                    toast({
+                         variant: "destructive",
+                         title: "Erreur d'envoi",
+                         description: errorMessage,
+                    });
                }
           } catch (error) {
                console.error('Error submitting form:', error);
-               setSubmitError('Une erreur s\'est produite. Veuillez réessayer.');
+               const errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
+               setSubmitError(errorMessage);
+
+               toast({
+                    variant: "destructive",
+                    title: "Erreur de connexion",
+                    description: errorMessage,
+               });
           } finally {
                setIsSubmitting(false);
           }
@@ -165,6 +437,14 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                ...prev,
                [field]: value
           }));
+
+          // Clear error when user starts typing
+          if (errors[field]) {
+               setErrors(prev => ({
+                    ...prev,
+                    [field]: ''
+               }));
+          }
      };
 
      const benefits = [
@@ -219,18 +499,20 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                  value={formData.name}
                                                                  onChange={(e) => handleInputChange('name', e.target.value)}
                                                                  placeholder="John Dupont"
-                                                                 required
-                                                                 className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
+                                                                 className={`w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                                                                      }`}
                                                             />
+                                                            {errors.name && (
+                                                                 <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                                                            )}
                                                        </div>
                                                        <div>
-                                                            <Label htmlFor="company" className="text-sm font-medium text-gray-700 mb-2 block">Entreprise *</Label>
+                                                            <Label htmlFor="company" className="text-sm font-medium text-gray-700 mb-2 block">Entreprise</Label>
                                                             <Input
                                                                  id="company"
                                                                  value={formData.company}
                                                                  onChange={(e) => handleInputChange('company', e.target.value)}
                                                                  placeholder="Ma Super Entreprise"
-                                                                 required
                                                                  className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
                                                             />
                                                        </div>
@@ -243,22 +525,46 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                             value={formData.email}
                                                             onChange={(e) => handleInputChange('email', e.target.value)}
                                                             placeholder="john@monentreprise.com"
-                                                            required
-                                                            className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
+                                                            className={`w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : formData.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) ? 'border-green-500 focus:border-green-500 focus:ring-green-500' : ''}`}
                                                        />
+                                                       {errors.email && (
+                                                            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                                                       )}
+                                                       {formData.email && !errors.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+                                                            <p className="text-green-600 text-xs mt-1 flex items-center gap-1">
+                                                                 ✓ Format d'email valide
+                                                            </p>
+                                                       )}
                                                   </div>
                                                   <div>
-                                                       <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-2 block">Téléphone</Label>
-                                                       <Input
-                                                            id="phone"
-                                                            value={formData.phone}
-                                                            onChange={(e) => handleInputChange('phone', e.target.value)}
-                                                            placeholder="01 23 45 67 89"
-                                                            className="w-full h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base"
-                                                       />
+                                                       <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-2 block">Téléphone *</Label>
+                                                       <div className="flex">
+                                                            <CountryCodeSelector
+                                                                 selectedCountry={selectedCountry}
+                                                                 onCountryChange={handleCountryChange}
+                                                            />
+                                                            <Input
+                                                                 id="phone"
+                                                                 value={formData.phone}
+                                                                 onChange={(e) => handlePhoneChange(e.target.value)}
+                                                                 placeholder="6 12 34 56 78"
+                                                                 className={`flex-1 rounded-l-none border-l-0 h-11 sm:h-12 px-3 sm:px-4 border-gray-300 focus:border-[var(--color-main)] focus:ring-[var(--color-main)] text-sm sm:text-base ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                                                            />
+                                                       </div>
+                                                       {errors.phone && (
+                                                            <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                                                       )}
+                                                       {formData.phone && !errors.phone && isPhoneValid(formData.phone) && (
+                                                            <p className="text-green-600 text-xs mt-1 flex items-center gap-1">
+                                                                 ✓ Format de téléphone valide
+                                                            </p>
+                                                       )}
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            Format: {selectedCountry.dialCode} 6 12 34 56 78
+                                                       </p>
                                                   </div>
                                                   <div>
-                                                       <Label htmlFor="message" className="text-sm font-medium text-gray-700 mb-2 block">Votre vision</Label>
+                                                       <Label htmlFor="message" className="text-sm font-medium text-gray-700 mb-2 block">Votre vision (optionnel)</Label>
                                                        <Textarea
                                                             id="message"
                                                             value={formData.message}
@@ -270,8 +576,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                   </div>
                                                   <Button
                                                        type="submit"
-                                                       disabled={isSubmitting}
-                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] h-12 sm:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50"
+                                                       disabled={isSubmitting || !isFormValid()}
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)] h-12 sm:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50 disabled:cursor-not-allowed"
                                                   >
                                                        {isSubmitting ? (
                                                             <>

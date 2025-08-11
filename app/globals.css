@@ -616,6 +616,18 @@ html {
 }
 
 /* Companies Carousel Animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+/* Apple-style Scroll Animations */
+
+/* Companies Carousel Animation */
 .companies-scroll {
   width: 100%;
   overflow: hidden;

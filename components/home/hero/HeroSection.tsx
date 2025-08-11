@@ -122,7 +122,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
           <div className="lg:hidden space-y-6 pt-0 mt-0 -mt-4" style={{ marginTop: '0', paddingTop: '0' }}>
-            {/* 1. Header First */}
+            {/* 1. Headline First */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -133,11 +133,25 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               {heroData.headline}
             </motion.h1>
 
-            {/* 2. Video Second */}
+            {/* 2. Description Second */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-base text-gray-600 leading-relaxed"
+              dangerouslySetInnerHTML={{
+                __html: heroData.description
+                  .replace(/&lt;/g, '<')
+                  .replace(/&gt;/g, '>')
+                  .replace(/&amp;/g, '&')
+              }}
+            />
+
+            {/* 3. Video Third */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
               className="w-full"
             >
               <div className="relative mx-2 sm:mx-4">
@@ -166,21 +180,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               </div>
             </motion.div>
 
-            {/* Description - Now displayed under the video */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-base text-gray-600 leading-relaxed"
-              dangerouslySetInnerHTML={{
-                __html: heroData.description
-                  .replace(/&lt;/g, '<')
-                  .replace(/&gt;/g, '>')
-                  .replace(/&amp;/g, '&')
-              }}
-            />
-
-            {/* 3. CTA Buttons - Side by Side */}
+            {/* 4. CTA Buttons Fourth */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -203,6 +203,22 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               >
                 {heroData.ctaSecondary.text}
               </Button>
+            </motion.div>
+
+            {/* 5. Reference Bar Fifth - Mobile Companies Carousel */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="bg-white pt-4"
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <CompaniesCarousel
+                  companies={heroData.carousel?.companies}
+                  speed={40}
+                  text={heroData.carousel?.text}
+                />
+              </div>
             </motion.div>
           </div>
 
@@ -341,7 +357,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="hidden lg:block bg-white pt-12 sm:pt-16 md:pt-20 lg:pt-24">
+      <div className="hidden lg:block bg-white pt-8 sm:pt-10 md:pt-12 lg:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData.carousel?.companies}

@@ -33,7 +33,23 @@ export async function POST(req: Request) {
     if (!contactData.email) {
       console.log('Validation failed: Email is required')
       return NextResponse.json(
-        { error: "Email is required" },
+        { error: "Email est requis" },
+        { status: 400 }
+      )
+    }
+    
+    if (!contactData.firstname || !contactData.lastname) {
+      console.log('Validation failed: Name is required')
+      return NextResponse.json(
+        { error: "Le nom est requis" },
+        { status: 400 }
+      )
+    }
+    
+    if (!contactData.phone) {
+      console.log('Validation failed: Phone is required')
+      return NextResponse.json(
+        { error: "Le téléphone est requis" },
         { status: 400 }
       )
     }
