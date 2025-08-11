@@ -87,6 +87,18 @@ interface HomePageData {
                image: string;
           }>;
      };
+     certification: {
+          headline: string;
+          subheadline: string;
+          description: string;
+          partnerTitle: string;
+          partnerDescription: string;
+          features: Array<{
+               title: string;
+               description: string;
+               icon: string;
+          }>;
+     };
      pricing: {
           headline: string;
           subheadline: string;
@@ -248,6 +260,39 @@ export default function HomePageDashboard() {
                                         title: "Conseil Stratégique",
                                         description: "Nous vous accompagnons dans la définition de votre feuille de route digitale pour faire de la technologie un véritable levier de croissance.",
                                         image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=80&fit=crop"
+                                   }
+                              ]
+                         };
+                    }
+
+                    // Initialize certification data if it doesn't exist
+                    if (!data.certification) {
+                         data.certification = {
+                              headline: "Certifications Odoo",
+                              subheadline: "EXPERTISE RECONNUE",
+                              description: "Notre expertise certifiée sur les dernières versions d'Odoo vous garantit des implémentations de qualité professionnelle.",
+                              partnerTitle: "Odoo Silver Partner",
+                              partnerDescription: "Certification officielle pour l'implémentation et la formation Odoo. Notre statut de partenaire Silver confirme notre expertise reconnue et notre engagement envers l'excellence.",
+                              features: [
+                                   {
+                                        title: "Certification officielle",
+                                        description: "Reconnue par Odoo SA",
+                                        icon: "CheckCircle"
+                                   },
+                                   {
+                                        title: "Équipe certifiée",
+                                        description: "Consultants experts",
+                                        icon: "Users"
+                                   },
+                                   {
+                                        title: "Support premium",
+                                        description: "Accès prioritaire",
+                                        icon: "Shield"
+                                   },
+                                   {
+                                        title: "Garantie qualité",
+                                        description: "Standards Odoo",
+                                        icon: "Award"
                                    }
                               ]
                          };
@@ -680,6 +725,7 @@ export default function HomePageDashboard() {
                          <TabsTrigger value="hero">Hero</TabsTrigger>
                          <TabsTrigger value="platform">Plateforme</TabsTrigger>
                          <TabsTrigger value="services">Services</TabsTrigger>
+                         <TabsTrigger value="certification">Certification</TabsTrigger>
                          <TabsTrigger value="pricing">Tarifs</TabsTrigger>
                          <TabsTrigger value="partnership">Agence</TabsTrigger>
                          <TabsTrigger value="contact">Contact</TabsTrigger>
@@ -1335,6 +1381,135 @@ export default function HomePageDashboard() {
                                                                  />
                                                             </div>
                                                        )}
+                                                  </div>
+                                             </Card>
+                                        ))}
+                                   </div>
+                              </CardContent>
+                         </Card>
+                    </TabsContent>
+
+                    <TabsContent value="certification" className="space-y-6">
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>Section Certification Odoo</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                             <Label>Titre</Label>
+                                             <Input
+                                                  value={homeData.certification.headline}
+                                                  onChange={(e) => updateField('certification.headline', e.target.value)}
+                                                  placeholder="Titre de la section certification"
+                                             />
+                                        </div>
+                                        <div>
+                                             <Label>Sous-titre</Label>
+                                             <Input
+                                                  value={homeData.certification.subheadline}
+                                                  onChange={(e) => updateField('certification.subheadline', e.target.value)}
+                                                  placeholder="Sous-titre"
+                                             />
+                                        </div>
+                                   </div>
+                                   <div>
+                                        <Label>Description</Label>
+                                        <Textarea
+                                             value={homeData.certification.description || ''}
+                                             onChange={(e) => updateField('certification.description', e.target.value)}
+                                             placeholder="Description"
+                                             rows={3}
+                                        />
+                                   </div>
+
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                             <Label>Titre du partenariat</Label>
+                                             <Input
+                                                  value={homeData.certification.partnerTitle}
+                                                  onChange={(e) => updateField('certification.partnerTitle', e.target.value)}
+                                                  placeholder="Titre du partenariat"
+                                             />
+                                        </div>
+                                        <div>
+                                             <Label>Description du partenariat</Label>
+                                             <Textarea
+                                                  value={homeData.certification.partnerDescription || ''}
+                                                  onChange={(e) => updateField('certification.partnerDescription', e.target.value)}
+                                                  placeholder="Description du partenariat"
+                                                  rows={3}
+                                             />
+                                        </div>
+                                   </div>
+
+                                   {/* Features */}
+                                   <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                             <Label className="text-lg font-semibold">Fonctionnalités</Label>
+                                             <Button
+                                                  onClick={() => addArrayItem('certification.features', {
+                                                       title: 'Nouvelle fonctionnalité',
+                                                       description: 'Description de la fonctionnalité',
+                                                       icon: 'CheckCircle'
+                                                  })}
+                                                  size="sm"
+                                                  className="flex items-center gap-2"
+                                             >
+                                                  <Plus className="w-4 h-4" />
+                                                  Ajouter une fonctionnalité
+                                             </Button>
+                                        </div>
+
+                                        {homeData.certification.features?.map((feature, index) => (
+                                             <Card key={index} className="p-4">
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <h4 className="font-semibold">Fonctionnalité {index + 1}</h4>
+                                                       <Button
+                                                            onClick={() => removeArrayItem('certification.features', index)}
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-red-600 hover:text-red-700"
+                                                       >
+                                                            <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label>Icône</Label>
+                                                            <Select
+                                                                 value={feature.icon}
+                                                                 onValueChange={(value) => updateArrayField('certification.features', index, 'icon', value)}
+                                                            >
+                                                                 <SelectTrigger>
+                                                                      <SelectValue placeholder="Choisir une icône" />
+                                                                 </SelectTrigger>
+                                                                 <SelectContent>
+                                                                      <SelectItem value="CheckCircle">CheckCircle</SelectItem>
+                                                                      <SelectItem value="Award">Award</SelectItem>
+                                                                      <SelectItem value="Shield">Shield</SelectItem>
+                                                                      <SelectItem value="Users">Users</SelectItem>
+                                                                 </SelectContent>
+                                                            </Select>
+                                                       </div>
+                                                       <div>
+                                                            <Label>Titre</Label>
+                                                            <Input
+                                                                 value={feature.title}
+                                                                 onChange={(e) => updateArrayField('certification.features', index, 'title', e.target.value)}
+                                                                 placeholder="Titre de la fonctionnalité"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <Label>Description</Label>
+                                                       <Input
+                                                            value={feature.description}
+                                                            onChange={(e) => updateArrayField('certification.features', index, 'description', e.target.value)}
+                                                            placeholder="Description de la fonctionnalité"
+                                                       />
                                                   </div>
                                              </Card>
                                         ))}

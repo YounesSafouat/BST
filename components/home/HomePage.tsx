@@ -112,6 +112,18 @@ interface HomePageData {
                image: string;
           }>;
      };
+     certification: {
+          headline: string;
+          subheadline: string;
+          description: string;
+          partnerTitle: string;
+          partnerDescription: string;
+          features: Array<{
+               title: string;
+               description: string;
+               icon: string;
+          }>;
+     };
      pricing: {
           headline: string;
           subheadline: string;
@@ -604,7 +616,7 @@ export default function HomePage() {
                     <ServicesSection servicesData={homePageData?.services} />
 
                     {/* SECTION 5: Odoo Certification - HomePage */}
-                    <OdooCertificationSection />
+                    <OdooCertificationSection certificationData={homePageData?.certification} />
 
                     {/* SECTION 6: Pricing Section - HomePage */}
                     <section id="pricing">

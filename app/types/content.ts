@@ -30,6 +30,22 @@ export interface ServicesData {
   services: Service[];
 }
 
+// Odoo Certification Section Types
+export interface CertificationFeature {
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface CertificationData {
+  headline: string;
+  subheadline: string;
+  description: string;
+  partnerTitle: string;
+  partnerDescription: string;
+  features: CertificationFeature[];
+}
+
 export interface Action { label: string; icon: string; }
 export interface Location { icon: string; title: string; subtitle: string; }
 export interface CTAContent { intro?: string; actions?: Action[]; locations?: Location[]; }
@@ -69,7 +85,7 @@ export interface ContactContent {
   cards: ContactCard[];
 }
 
-export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | ServicesData | CTAContent | ContactContent | Record<string, unknown>;
+export type ContentData = HeroContent | ChallengeContent | SolutionContent | TransformationContent | SuccessContent | TestimonialsContent | ServicesData | CertificationData | CTAContent | ContactContent | Record<string, unknown>;
 
 export interface ContentSection {
   _id: string;
