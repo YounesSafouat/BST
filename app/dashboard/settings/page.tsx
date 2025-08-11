@@ -48,12 +48,6 @@ interface SiteSettings {
     casClient: boolean;
     contact: boolean;
   };
-  // Snippets for tracking and analytics
-  snippets?: {
-    headSnippets?: string;
-    bodyStartSnippets?: string;
-    bodyEndSnippets?: string;
-  };
   // Legacy fields for backward compatibility
   contactEmail?: string;
   contactPhone?: string;
@@ -83,11 +77,6 @@ export default function SettingsDashboard() {
       about: true,
       casClient: true,
       contact: true
-    },
-    snippets: {
-      headSnippets: "",
-      bodyStartSnippets: "",
-      bodyEndSnippets: ""
     }
   })
   const [loading, setLoading] = useState(true)
@@ -128,11 +117,6 @@ export default function SettingsDashboard() {
               about: true,
               casClient: true,
               contact: true
-            },
-            snippets: data.content.snippets || {
-              headSnippets: "",
-              bodyStartSnippets: "",
-              bodyEndSnippets: ""
             }
           })
         }
@@ -171,14 +155,6 @@ export default function SettingsDashboard() {
       if (response.ok) {
         const result = await response.json()
         console.log("Save response:", result)
-
-        // Try to refresh snippets immediately after saving
-        if (typeof window !== 'undefined' && (window as any).refreshSnippets) {
-          setTimeout(() => {
-            (window as any).refreshSnippets()
-            console.log("Snippets refreshed after save")
-          }, 1000) // Wait 1 second for the save to propagate
-        }
 
         toast({
           title: "Succès",
@@ -552,162 +528,8 @@ export default function SettingsDashboard() {
             </CardContent>
           </Card>
 
-          {/* Snippets Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>📊 Snippets de Suivi et Analytics</CardTitle>
-              <p className="text-sm text-gray-600">
-                Ajoutez des scripts de suivi comme Google Analytics, Facebook Pixel, etc.
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Head Snippets */}
-              <div className="space-y-2">
-                <Label htmlFor="head-snippets">
-                  <div className="flex items-center gap-2">
-                    <span>📄 Scripts dans le &lt;head&gt;</span>
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Recommandé pour Google Analytics</span>
-                  </div>
-                </Label>
-                <Textarea
-                  id="head-snippets"
-                  placeholder={`<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
-</script>`}
-                  value={settings.snippets?.headSnippets || ""}
-                  onChange={(e) => updateField('snippets.headSnippets', e.target.value)}
-                  className="min-h-[200px] font-mono text-sm"
-                />
-                <p className="text-xs text-gray-500">
-                  Ces scripts seront injectés dans la balise &lt;head&gt; de toutes les pages
-                </p>
-              </div>
-
-              {/* Body Start Snippets */}
-              <div className="space-y-2">
-                <Label htmlFor="body-start-snippets">
-                  <div className="flex items-center gap-2">
-                    <span>🚀 Scripts au début du &lt;body&gt;</span>
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Pour les scripts prioritaires</span>
-                  </div>
-                </Label>
-                <Textarea
-                  id="body-start-snippets"
-                  placeholder={`<!-- Facebook Pixel Code -->
-<script>
-  !function(f,b,e,v,n,t,s)
-  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-  n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];
-  s.parentNode.insertBefore(t,s)}(window, document,'script',
-  'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', 'YOUR_PIXEL_ID');
-  fbq('track', 'PageView');
-</script>`}
-                  value={settings.snippets?.bodyStartSnippets || ""}
-                  onChange={(e) => updateField('snippets.bodyStartSnippets', e.target.value)}
-                  className="min-h-[200px] font-mono text-sm"
-                />
-                <p className="text-xs text-gray-500">
-                  Ces scripts seront injectés au début de la balise &lt;body&gt;
-                </p>
-              </div>
-
-              {/* Body End Snippets */}
-              <div className="space-y-2">
-                <Label htmlFor="body-end-snippets">
-                  <div className="flex items-center gap-2">
-                    <span>📈 Scripts à la fin du &lt;body&gt;</span>
-                    <span className="text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded">Pour les scripts non-critiques</span>
-                  </div>
-                </Label>
-                <Textarea
-                  id="body-end-snippets"
-                  placeholder={`<!-- Hotjar Tracking Code -->
-<script>
-  (function(h,o,t,j,a,r){
-    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-    h._hjSettings={hjid:YOUR_HOTJAR_ID,hjsv:6};
-    a=o.getElementsByTagName('head')[0];
-    r=o.createElement('script');r.async=1;
-    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-    a.appendChild(r);
-  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>`}
-                  value={settings.snippets?.bodyEndSnippets || ""}
-                  onChange={(e) => updateField('snippets.bodyEndSnippets', e.target.value)}
-                  className="min-h-[200px] font-mono text-sm"
-                />
-                <p className="text-xs text-gray-500">
-                  Ces scripts seront injectés à la fin de la balise &lt;body&gt;
-                </p>
-              </div>
-
-              {/* Snippet Preview Section */}
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3">👁️ Aperçu des snippets actifs</h4>
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-sm font-medium text-gray-700">📄 Head Snippets:</span>
-                    <div className="mt-1 p-2 bg-white border rounded text-xs font-mono max-h-20 overflow-y-auto">
-                      {settings.snippets?.headSnippets ? (
-                        <pre className="whitespace-pre-wrap">{settings.snippets.headSnippets}</pre>
-                      ) : (
-                        <span className="text-gray-400">Aucun snippet configuré</span>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-gray-700">🚀 Body Start Snippets:</span>
-                    <div className="mt-1 p-2 bg-white border rounded text-xs font-mono max-h-20 overflow-y-auto">
-                      {settings.snippets?.bodyStartSnippets ? (
-                        <pre className="whitespace-pre-wrap">{settings.snippets.bodyStartSnippets}</pre>
-                      ) : (
-                        <span className="text-gray-400">Aucun snippet configuré</span>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-gray-700">📈 Body End Snippets:</span>
-                    <div className="mt-1 p-2 bg-white border rounded text-xs font-mono max-h-20 overflow-y-auto">
-                      {settings.snippets?.bodyEndSnippets ? (
-                        <pre className="whitespace-pre-wrap">{settings.snippets.bodyEndSnippets}</pre>
-                      ) : (
-                        <span className="text-gray-400">Aucun snippet configuré</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-            </CardContent>
-          </Card>
-
           {/* Save Button */}
           <div className="flex justify-end gap-4">
-            <Button
-              onClick={() => {
-                if (typeof window !== 'undefined' && (window as any).refreshSnippets) {
-                  (window as any).refreshSnippets()
-                  toast({
-                    title: "Actualisation",
-                    description: "Snippets actualisés sur la page",
-                  })
-                }
-              }}
-              variant="outline"
-              className="border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white"
-            >
-              🔄 Actualiser les snippets
-            </Button>
             <Button
               onClick={saveSettings}
               disabled={saving}
