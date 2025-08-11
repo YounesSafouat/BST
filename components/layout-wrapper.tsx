@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import Header from "@/components/header"
 import MobileHeader from "@/components/MobileHeader"
 import Footer from "@/components/footer"
-import BottomNavigation from "@/components/BottomNavigation"
 import { ThemeProvider } from '@/components/theme-provider'
 import { usePageAnalytics } from '@/hooks/use-analytics'
 
@@ -16,7 +15,6 @@ export default function LayoutWrapper({
 }) {
   const [scrollY, setScrollY] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [headerData, setHeaderData] = useState<any>(null)
   const pathname = usePathname()
 
   usePageAnalytics();
@@ -32,21 +30,6 @@ export default function LayoutWrapper({
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
-
-  useEffect(() => {
-    // Fetch header data for bottom navigation
-    fetch("/api/content?type=header&t=" + Date.now())
-      .then(res => res.json())
-      .then(data => {
-        if (data.length > 0) {
-          setHeaderData(data[0].content)
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching header data:", error)
-        setHeaderData(null)
-      })
   }, [])
 
   // Reset scroll position on route change
@@ -67,7 +50,7 @@ export default function LayoutWrapper({
         {children}
       </main>
       {!isDashboard && !isAuth && !isMaintenance && !isPreview && <Footer />}
-      {!isDashboard && !isAuth && !isMaintenance && !isPreview && <BottomNavigation headerData={headerData} />}
+      {/* BottomNavigation removed as requested */}
     </ThemeProvider>
   )
 } 

@@ -166,6 +166,20 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               </div>
             </motion.div>
 
+            {/* Description - Now displayed under the video */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="text-base text-gray-600 leading-relaxed"
+              dangerouslySetInnerHTML={{
+                __html: heroData.description
+                  .replace(/&lt;/g, '<')
+                  .replace(/&gt;/g, '>')
+                  .replace(/&amp;/g, '&')
+              }}
+            />
+
             {/* 3. CTA Buttons - Side by Side */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
