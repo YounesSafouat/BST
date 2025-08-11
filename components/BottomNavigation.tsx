@@ -73,7 +73,7 @@ export default function BottomNavigation({ headerData }: BottomNavigationProps) 
           whatsapp = contactData.other?.whatsapp || null;
           break;
       }
-      
+
       setPhoneNumber(phone);
       setWhatsappNumber(whatsapp);
     }
