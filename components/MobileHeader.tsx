@@ -22,6 +22,7 @@ export default function MobileHeader() {
   const [location, setLocation] = useState<any>(null);
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
   const { trackButtonClick } = useButtonAnalytics()
@@ -66,19 +67,25 @@ export default function MobileHeader() {
     if (location && contactData) {
       const region = getRegionFromCountry(location.countryCode);
 
-      let number: string | null = null;
+      let whatsapp: string | null = null;
+      let phone: string | null = null;
+
       switch (region) {
         case 'france':
-          number = contactData.france?.whatsapp || null;
+          whatsapp = contactData.france?.whatsapp || null;
+          phone = contactData.france?.phone || null;
           break;
         case 'morocco':
-          number = contactData.morocco?.whatsapp || null;
+          whatsapp = contactData.morocco?.whatsapp || null;
+          phone = contactData.morocco?.phone || null;
           break;
         default:
-          number = contactData.other?.whatsapp || null;
+          whatsapp = contactData.other?.whatsapp || null;
+          phone = contactData.other?.phone || null;
           break;
       }
-      setWhatsappNumber(number);
+      setWhatsappNumber(whatsapp);
+      setPhoneNumber(phone);
     }
   }, [location, contactData]);
 
@@ -116,7 +123,14 @@ export default function MobileHeader() {
               variant="ghost"
               size="sm"
               className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2"
-              onClick={() => window.open('tel:+212783699603')}
+              onClick={() => {
+                if (phoneNumber) {
+                  window.open(`tel:${phoneNumber}`)
+                } else {
+                  // Fallback to default number
+                  window.open('tel:+212783699603')
+                }
+              }}
             >
               <Phone className="w-3 h-3" />
             </Button>

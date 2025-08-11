@@ -4,6 +4,8 @@ import { Phone, FileText, Users } from "lucide-react"
 import { FaWhatsapp } from "react-icons/fa"
 import Link from "next/link"
 import { useButtonAnalytics } from '@/hooks/use-analytics'
+import { useEffect, useState } from 'react'
+import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
 
 interface BottomNavigationProps {
   headerData?: any
@@ -11,15 +13,92 @@ interface BottomNavigationProps {
 
 export default function BottomNavigation({ headerData }: BottomNavigationProps) {
   const { trackButtonClick } = useButtonAnalytics()
+  const [location, setLocation] = useState<any>(null)
+  const [contactData, setContactData] = useState<any>(null)
+  const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
+  const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null)
+
+  // Detect location
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        const userLocation = await getUserLocation();
+        setLocation(userLocation);
+      } catch (error) {
+        console.error("Error detecting location for bottom navigation:", error);
+      }
+    };
+
+    detectLocation();
+  }, []);
+
+  // Fetch regional contact data
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        const response = await fetch('/api/content/settings');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.content?.regionalContact) {
+            setContactData(data.content.regionalContact);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching contact data for bottom navigation:', error);
+      }
+    };
+
+    fetchContactData();
+  }, []);
+
+  // Update contact numbers based on detected region
+  useEffect(() => {
+    if (location && contactData) {
+      const region = getRegionFromCountry(location.countryCode);
+
+      let phone: string | null = null;
+      let whatsapp: string | null = null;
+
+      switch (region) {
+        case 'france':
+          phone = contactData.france?.phone || null;
+          whatsapp = contactData.france?.whatsapp || null;
+          break;
+        case 'morocco':
+          phone = contactData.morocco?.phone || null;
+          whatsapp = contactData.morocco?.whatsapp || null;
+          break;
+        default:
+          phone = contactData.other?.phone || null;
+          whatsapp = contactData.other?.whatsapp || null;
+          break;
+      }
+      
+      setPhoneNumber(phone);
+      setWhatsappNumber(whatsapp);
+    }
+  }, [location, contactData]);
 
   const handlePhoneClick = () => {
     trackButtonClick('bottom-nav-phone')
-    window.location.href = `tel:${headerData?.contact?.phone || '+212XXXXXXXXX'}`
+    if (phoneNumber) {
+      window.location.href = `tel:${phoneNumber}`
+    } else {
+      // Fallback to header data or default
+      const fallbackPhone = headerData?.contact?.phone || '+212XXXXXXXXX'
+      window.location.href = `tel:${fallbackPhone}`
+    }
   }
 
   const handleWhatsAppClick = () => {
     trackButtonClick('bottom-nav-whatsapp')
-    window.open(`https://wa.me/${headerData?.contact?.phone?.replace(/\D/g, '') || '212XXXXXXXXX'}`, '_blank')
+    if (whatsappNumber) {
+      window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, '')}`, '_blank')
+    } else {
+      // Fallback to header data or default
+      const fallbackWhatsApp = headerData?.contact?.phone?.replace(/\D/g, '') || '212XXXXXXXXX'
+      window.open(`https://wa.me/${fallbackWhatsApp}`, '_blank')
+    }
   }
 
   const handleBlogClick = () => {

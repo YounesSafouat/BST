@@ -703,19 +703,34 @@ export default function HomePage() {
                                              {odooData?.testimonialsSection?.subdescription || 'Découvrez pourquoi nos clients nous recommandent'}
                                         </p>
                                    </div>
-                                   <div className="flex items-center gap-4">
 
-                                        <button
-                                             onClick={prevTestimonial}
-                                             className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
-                                             aria-label="Témoignages précédents"
-                                        >
-                                             <ChevronLeft className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:-translate-x-1" />
-                                        </button>
+                                   {/* Navigation and Content Container */}
+                                   <div className="relative">
+                                        {/* Navigation Buttons */}
+                                        <div className="absolute top-1/2 left-0 -translate-y-1/2 z-10">
+                                             <button
+                                                  onClick={prevTestimonial}
+                                                  className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
+                                                  aria-label="Témoignages précédents"
+                                             >
+                                                  <ChevronLeft className="w-6 h-6 text-gray-600" />
+                                             </button>
+                                        </div>
 
-                                        <div className="flex flex-col md:flex-row justify-center items-stretch gap-8 flex-1">
+                                        <div className="absolute top-1/2 right-0 -translate-y-1/2 z-10">
+                                             <button
+                                                  onClick={nextTestimonial}
+                                                  className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
+                                                  aria-label="Témoignages suivants"
+                                             >
+                                                  <ChevronRight className="w-6 h-6 text-gray-600" />
+                                             </button>
+                                        </div>
+
+                                        {/* Content Area with Proper Padding for Buttons */}
+                                        <div className="px-16 md:px-20">
                                              {/* Desktop: Show 3 testimonials */}
-                                             <div className="hidden md:flex gap-8 flex-1 justify-center overflow-hidden">
+                                             <div className="hidden md:grid grid-cols-3 gap-6 lg:gap-8">
                                                   {[0, 1, 2].map((offset) => {
                                                        const testimonialIndex = (currentTestimonialIndex + offset) % odooData.testimonials.length;
                                                        const testimonialId = odooData.testimonials[testimonialIndex];
@@ -725,11 +740,7 @@ export default function HomePage() {
                                                        return (
                                                             <div
                                                                  key={`desktop-${testimonialId}-${currentTestimonialIndex}-${offset}`}
-                                                                 className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-lg border border-gray-200 w-full max-w-md transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
-                                                                 style={{
-                                                                      animation: animationDirection === 'next' ? 'slideInFromRight 0.7s ease-out forwards' : 'slideInFromLeft 0.7s ease-out forwards',
-                                                                      perspective: '1000px'
-                                                                 }}
+                                                                 className="bg-white rounded-xl p-6 lg:p-8 flex flex-col shadow-lg border border-gray-200 h-full transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
                                                             >
                                                                  {/* Stars */}
                                                                  <div className="flex items-center mb-4">
@@ -737,20 +748,23 @@ export default function HomePage() {
                                                                            <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
                                                                       ))}
                                                                  </div>
+
                                                                  {/* Quote */}
-                                                                 <blockquote className="italic text-gray-900 mb-6">"{testimonial.quote}"</blockquote>
+                                                                 <blockquote className="italic text-gray-900 mb-6 flex-1 leading-relaxed">"{testimonial.quote}"</blockquote>
+
                                                                  <div className="border-t border-gray-100 my-4"></div>
+
                                                                  {/* Author */}
-                                                                 <div className="flex items-center gap-4 mt-2">
+                                                                 <div className="flex items-center gap-4 mt-auto">
                                                                       {renderAvatar(testimonialId)}
-                                                                      <div className="flex-1">
-                                                                           <div className="flex items-center gap-2">
-                                                                                <div className="font-bold text-gray-900">{testimonial.name}</div>
+                                                                      <div className="flex-1 min-w-0">
+                                                                           <div className="flex items-center gap-2 flex-wrap">
+                                                                                <div className="font-bold text-gray-900 truncate">{testimonial.name}</div>
                                                                                 <div className="text-sm text-gray-500">•</div>
-                                                                                <div className="text-sm text-gray-500">{testimonial.role}</div>
+                                                                                <div className="text-sm text-gray-500 truncate">{testimonial.role}</div>
                                                                            </div>
                                                                            {testimonial.company && (
-                                                                                <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1">{testimonial.company}</div>
+                                                                                <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1 truncate">{testimonial.company}</div>
                                                                            )}
                                                                       </div>
                                                                  </div>
@@ -760,7 +774,7 @@ export default function HomePage() {
                                              </div>
 
                                              {/* Mobile: Show 1 testimonial */}
-                                             <div className="md:hidden flex justify-center overflow-hidden">
+                                             <div className="md:hidden">
                                                   {(() => {
                                                        const testimonialId = odooData.testimonials[currentTestimonialIndex];
                                                        const testimonial = availableTestimonials.find(t => t._id === testimonialId);
@@ -769,11 +783,7 @@ export default function HomePage() {
                                                        return (
                                                             <div
                                                                  key={`mobile-${testimonialId}-${currentTestimonialIndex}`}
-                                                                 className="bg-white rounded-xl px-8 py-8 flex flex-col shadow-lg border border-gray-200 w-full max-w-md mx-auto transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
-                                                                 style={{
-                                                                      animation: animationDirection === 'next' ? 'slideInFromRight 0.7s ease-out forwards' : 'slideInFromLeft 0.7s ease-out forwards',
-                                                                      perspective: '1000px'
-                                                                 }}
+                                                                 className="bg-white rounded-xl p-6 flex flex-col shadow-lg border border-gray-200 w-full max-w-lg mx-auto"
                                                             >
                                                                  {/* Stars */}
                                                                  <div className="flex items-center mb-4">
@@ -781,20 +791,23 @@ export default function HomePage() {
                                                                            <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
                                                                       ))}
                                                                  </div>
+
                                                                  {/* Quote */}
-                                                                 <blockquote className="italic text-gray-900 mb-6">"{testimonial.quote}"</blockquote>
+                                                                 <blockquote className="italic text-gray-900 mb-6 leading-relaxed">"{testimonial.quote}"</blockquote>
+
                                                                  <div className="border-t border-gray-100 my-4"></div>
+
                                                                  {/* Author */}
-                                                                 <div className="flex items-center gap-4 mt-2">
+                                                                 <div className="flex items-center gap-4 mt-auto">
                                                                       {renderAvatar(testimonialId)}
-                                                                      <div className="flex-1">
-                                                                           <div className="flex items-center gap-2">
-                                                                                <div className="font-bold text-gray-900">{testimonial.name}</div>
+                                                                      <div className="flex-1 min-w-0">
+                                                                           <div className="flex items-center gap-2 flex-wrap">
+                                                                                <div className="font-bold text-gray-900 truncate">{testimonial.name}</div>
                                                                                 <div className="text-sm text-gray-500">•</div>
-                                                                                <div className="text-sm text-gray-500">{testimonial.role}</div>
+                                                                                <div className="text-sm text-gray-500 truncate">{testimonial.role}</div>
                                                                            </div>
                                                                            {testimonial.company && (
-                                                                                <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1">{testimonial.company}</div>
+                                                                                <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1 truncate">{testimonial.company}</div>
                                                                            )}
                                                                       </div>
                                                                  </div>
@@ -803,14 +816,6 @@ export default function HomePage() {
                                                   })()}
                                              </div>
                                         </div>
-
-                                        <button
-                                             onClick={nextTestimonial}
-                                             className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
-                                             aria-label="Témoignages suivants"
-                                        >
-                                             <ChevronRight className="w-6 h-6 text-gray-600 transition-transform duration-300 group-hover:translate-x-1" />
-                                        </button>
                                    </div>
                               </div>
                          </section>
