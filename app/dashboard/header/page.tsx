@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { Save, Loader2 } from "lucide-react";
-import Loader from '@/components/home/Loader';
 
 interface HeaderData {
      logo: {
@@ -42,6 +41,7 @@ export default function HeaderDashboard() {
      });
      const [loading, setLoading] = useState(true);
      const [saving, setSaving] = useState(false);
+     const [error, setError] = useState<string | null>(null);
 
      useEffect(() => {
           fetchHeaderData();
@@ -49,15 +49,19 @@ export default function HeaderDashboard() {
 
      const fetchHeaderData = async () => {
           try {
+               setError(null);
                const response = await fetch('/api/content?type=header');
                if (response.ok) {
                     const data = await response.json();
-                    if (data.length > 0 && data[0].content) {
+                    if (data && data.length > 0 && data[0].content) {
                          setHeaderData(data[0].content);
                     }
+               } else {
+                    console.warn('Header data not found, using defaults');
                }
           } catch (error) {
                console.error('Error fetching header data:', error);
+               setError('Failed to load header data. Using default values.');
           } finally {
                setLoading(false);
           }
@@ -65,6 +69,7 @@ export default function HeaderDashboard() {
 
      const saveHeader = async () => {
           setSaving(true);
+          setError(null);
           try {
                const response = await fetch('/api/content?type=header', {
                     method: 'PUT',
@@ -89,6 +94,7 @@ export default function HeaderDashboard() {
                }
           } catch (error) {
                console.error('Error saving header:', error);
+               setError('Failed to save header configuration.');
                toast({
                     title: "Erreur",
                     description: "Impossible de sauvegarder le header",
@@ -100,22 +106,46 @@ export default function HeaderDashboard() {
      };
 
      const updateNavigationItem = (index: number, field: 'name' | 'href', value: string) => {
-          const newNavigation = [...headerData.navigation.main];
-          newNavigation[index] = { ...newNavigation[index], [field]: value };
-          setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               newNavigation[index] = { ...newNavigation[index], [field]: value };
+               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          } catch (error) {
+               console.error('Error updating navigation item:', error);
+               setError('Failed to update navigation item.');
+          }
      };
 
      const addNavigationItem = () => {
-          const newNavigation = [...headerData.navigation.main, { name: '', href: '' }];
-          setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          try {
+               const newNavigation = [...headerData.navigation.main, { name: '', href: '' }];
+               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          } catch (error) {
+               console.error('Error adding navigation item:', error);
+               setError('Failed to add navigation item.');
+          }
      };
 
      const removeNavigationItem = (index: number) => {
-          const newNavigation = headerData.navigation.main.filter((_, i) => i !== index);
-          setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          try {
+               const newNavigation = headerData.navigation.main.filter((_, i) => i !== index);
+               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          } catch (error) {
+               console.error('Error removing navigation item:', error);
+               setError('Failed to remove navigation item.');
+          }
      };
 
-     if (loading) return <Loader />;
+     if (loading) {
+          return (
+               <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="flex items-center space-x-2">
+                         <Loader2 className="h-6 w-6 animate-spin" />
+                         <span>Chargement...</span>
+                    </div>
+               </div>
+          );
+     }
 
      return (
           <div className="space-y-6">
@@ -125,6 +155,13 @@ export default function HeaderDashboard() {
                          Gérez le logo et la navigation du header
                     </p>
                </div>
+
+               {/* Error Display */}
+               {error && (
+                    <div className="bg-red-50 border border-red-200 rounded-md p-4">
+                         <p className="text-red-800 text-sm">{error}</p>
+                    </div>
+               )}
 
                {/* Logo Configuration */}
                <Card>
@@ -229,7 +266,7 @@ export default function HeaderDashboard() {
                     <Button
                          onClick={saveHeader}
                          disabled={saving}
-                         className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white"
+                         className="bg-blue-600 hover:bg-blue-700 text-white"
                     >
                          <Save className="w-4 h-4 mr-2" />
                          {saving ? "Sauvegarde..." : "Sauvegarder le Header"}

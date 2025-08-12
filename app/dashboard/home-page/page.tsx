@@ -98,6 +98,10 @@ interface HomePageData {
                description: string;
                icon: string;
           }>;
+          certificationImages?: Array<{
+               src: string;
+               alt: string;
+          }>;
      };
      pricing: {
           headline: string;
@@ -294,8 +298,40 @@ export default function HomePageDashboard() {
                                         description: "Standards Odoo",
                                         icon: "Award"
                                    }
+                              ],
+                              certificationImages: [
+                                   {
+                                        src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
+                                        alt: "Odoo Certification Certificate"
+                                   },
+                                   {
+                                        src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Blog%205/blog%205%20(1).png",
+                                        alt: "Odoo Silver Partner Badge"
+                                   },
+                                   {
+                                        src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo.png",
+                                        alt: "Odoo Official Partner"
+                                   }
                               ]
                          };
+                    }
+
+                    // Initialize certificationImages if it doesn't exist
+                    if (!data.certification.certificationImages || data.certification.certificationImages.length === 0) {
+                         data.certification.certificationImages = [
+                              {
+                                   src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
+                                   alt: "Odoo Certification Certificate"
+                              },
+                              {
+                                   src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Blog%205/blog%205%20(1).png",
+                                   alt: "Odoo Silver Partner Badge"
+                              },
+                              {
+                                   src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo.png",
+                                   alt: "Odoo Official Partner"
+                              }
+                         ];
                     }
 
                     // Initialize with default companies if no companies exist
@@ -1511,6 +1547,82 @@ export default function HomePageDashboard() {
                                                             placeholder="Description de la fonctionnalité"
                                                        />
                                                   </div>
+                                             </Card>
+                                        ))}
+                                   </div>
+
+                                   {/* Certification Images */}
+                                   <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                             <Label className="text-lg font-semibold">Images de Certification</Label>
+                                             <Button
+                                                  onClick={() => addArrayItem('certification.certificationImages', {
+                                                       src: '',
+                                                       alt: 'Nouvelle image de certification'
+                                                  })}
+                                                  size="sm"
+                                                  className="flex items-center gap-2"
+                                             >
+                                                  <Plus className="w-4 h-4" />
+                                                  Ajouter une image
+                                             </Button>
+                                        </div>
+
+                                        {homeData.certification.certificationImages?.map((image, index) => (
+                                             <Card key={index} className="p-4">
+                                                  <div className="flex items-center justify-between mb-4">
+                                                       <h4 className="font-semibold">Image {index + 1}</h4>
+                                                       <Button
+                                                            onClick={() => removeArrayItem('certification.certificationImages', index)}
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="text-red-600 hover:text-red-700"
+                                                       >
+                                                            <Trash2 className="w-4 h-4" />
+                                                       </Button>
+                                                  </div>
+
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label>URL de l'image</Label>
+                                                            <Input
+                                                                 value={image.src}
+                                                                 onChange={(e) => updateArrayField('certification.certificationImages', index, 'src', e.target.value)}
+                                                                 placeholder="https://example.com/image.jpg"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label>Texte alternatif</Label>
+                                                            <Input
+                                                                 value={image.alt}
+                                                                 onChange={(e) => updateArrayField('certification.certificationImages', index, 'alt', e.target.value)}
+                                                                 placeholder="Description de l'image"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  {/* Image Preview */}
+                                                  {image.src && (
+                                                       <div className="mt-4">
+                                                            <Label>Aperçu</Label>
+                                                            <div className="mt-2 relative w-full h-32 bg-gray-100 rounded-lg overflow-hidden">
+                                                                 <img
+                                                                      src={image.src}
+                                                                      alt={image.alt}
+                                                                      className="w-full h-full object-cover"
+                                                                      onError={(e) => {
+                                                                           const target = e.currentTarget as HTMLImageElement;
+                                                                           const errorDiv = target.nextElementSibling as HTMLDivElement;
+                                                                           target.style.display = 'none';
+                                                                           if (errorDiv) errorDiv.style.display = 'flex';
+                                                                      }}
+                                                                 />
+                                                                 <div className="hidden absolute inset-0 items-center justify-center text-gray-500 text-sm">
+                                                                      Image non trouvée
+                                                                 </div>
+                                                            </div>
+                                                       </div>
+                                                  )}
                                              </Card>
                                         ))}
                                    </div>

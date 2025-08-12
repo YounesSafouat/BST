@@ -37,6 +37,11 @@ export interface CertificationFeature {
   icon: string;
 }
 
+export interface CertificationImage {
+  src: string;
+  alt: string;
+}
+
 export interface CertificationData {
   headline: string;
   subheadline: string;
@@ -44,6 +49,7 @@ export interface CertificationData {
   partnerTitle: string;
   partnerDescription: string;
   features: CertificationFeature[];
+  certificationImages?: CertificationImage[];
 }
 
 export interface Action { label: string; icon: string; }

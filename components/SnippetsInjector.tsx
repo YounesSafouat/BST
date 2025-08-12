@@ -22,10 +22,27 @@ export default function SnippetsInjector() {
      const [snippets, setSnippets] = useState<Snippet[]>([]);
      const [loading, setLoading] = useState(true);
      const [isMounted, setIsMounted] = useState(false);
+     const [error, setError] = useState<string | null>(null);
+
+     // Early return for SSR
+     if (typeof window === 'undefined') {
+          return null;
+     }
+
+     // Return null if there's an error to prevent crashes
+     if (error) {
+          console.warn('SnippetsInjector error:', error);
+          return null;
+     }
 
      useEffect(() => {
-          setIsMounted(true);
-          fetchSnippets();
+          try {
+               setIsMounted(true);
+               fetchSnippets();
+          } catch (error) {
+               console.error('SnippetsInjector initialization error:', error);
+               setError('Failed to initialize snippets');
+          }
      }, []);
 
      const fetchSnippets = async () => {
