@@ -122,23 +122,41 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
           <div className="lg:hidden space-y-6 pt-0 mt-0 -mt-4" style={{ marginTop: '0', paddingTop: '0' }}>
-            {/* 1. Headline First */}
+            {/* 1. Odoo Silver Partner Badge First */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="flex justify-center"
+            >
+              <img
+                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/oodo-silver-partner-logo.svg"
+                alt="Odoo Silver Partner"
+                className="w-32 h-16 object-contain"
+                onError={(e) => {
+                  console.error('Odoo Silver Partner badge failed to load');
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </motion.div>
+
+            {/* 2. Headline Second - Centered and Bigger */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-2xl md:text-3xl font-semibold text-gray-900 leading-tight tracking-tight text-left mt-0 pt-0"
+              className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight tracking-tight text-center"
               style={{ lineHeight: '1.1', marginTop: '0', paddingTop: '0' }}
             >
               {heroData.headline}
             </motion.h1>
 
-            {/* 2. Description Second */}
+            {/* 3. Description Third */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-base text-gray-600 leading-relaxed"
+              className="text-base text-gray-600 leading-relaxed text-center px-2"
               dangerouslySetInnerHTML={{
                 __html: heroData.description
                   .replace(/&lt;/g, '<')
@@ -147,7 +165,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               }}
             />
 
-            {/* 3. Video Third */}
+            {/* 4. Video Fourth */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -155,8 +173,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               className="w-full"
             >
               <div className="relative mx-2 sm:mx-4">
-                <div className="bg-white/90 backdrop-blur-sm p-2 rounded-xl shadow-lg">
-                  <div className="relative aspect-[16/9] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg overflow-hidden">
+                <div className="bg-white p-2 rounded-xl shadow-lg">
+                  <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg overflow-hidden">
                     {/* Video element */}
                     <video
                       ref={videoRef}
@@ -169,10 +187,10 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     />
 
                     {/* Expertise Badge - completely hidden on mobile */}
-                    <div className="absolute -bottom-4 -right-4 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2" style={{ display: 'none' }}>
+                    <div className="absolute -bottom-4 -right-4 bg-white rounded-xl shadow-lg border border-gray-200 p-2" style={{ display: 'none' }}>
                       <div className="text-center">
                         <div className="text-sm font-bold text-[var(--color-main)]">3 ans</div>
-                        <div className="text-xs text-gray-600">d'expertise</div>
+                        <div className="text-xs text-gray-700">d'expertise</div>
                       </div>
                     </div>
                   </div>
@@ -180,16 +198,16 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               </div>
             </motion.div>
 
-            {/* 4. CTA Buttons Fourth */}
+            {/* 5. CTA Buttons Fifth */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex gap-2 justify-center px-2"
+              className="flex flex-row gap-3 justify-center px-4"
             >
               <Button
                 size="sm"
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-3 py-2 text-sm font-semibold rounded-full flex-1 h-9"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-3 py-1.5 text-xs font-medium rounded-full flex-1 h-8 shadow-sm hover:shadow-md transition-all duration-200"
                 onClick={() => scrollToSection('#contact')}
               >
                 {heroData.ctaPrimary.text}
@@ -198,27 +216,11 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               <Button
                 size="sm"
                 variant="outline"
-                className="px-3 py-2 text-sm font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full flex-1 h-9"
+                className="px-3 py-1.5 text-xs font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full flex-1 h-8 shadow-sm hover:shadow-md transition-all duration-200 bg-white"
                 onClick={() => scrollToSection('#modules')}
               >
                 {heroData.ctaSecondary.text}
               </Button>
-            </motion.div>
-
-            {/* 5. Reference Bar Fifth - Mobile Companies Carousel */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="bg-white pt-4"
-            >
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <CompaniesCarousel
-                  companies={heroData.carousel?.companies}
-                  speed={40}
-                  text={heroData.carousel?.text}
-                />
-              </div>
             </motion.div>
           </div>
 
@@ -304,8 +306,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               className="order-1 lg:order-2"
             >
               <div className="relative mx-4 sm:mx-6 lg:mx-0">
-                <div className="bg-white/90 backdrop-blur-sm p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
-                  <div className="relative aspect-[16/9] bg-gradient-to-br from-[var(--odoo-purple-light)] to-white rounded-lg lg:rounded-xl overflow-hidden">
+                <div className="bg-white p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
+                  <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg lg:rounded-xl overflow-hidden">
                     {/* Video element */}
                     <video
                       ref={videoRef}
@@ -331,7 +333,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   </div>
 
                   {/* Expertise Badge overlay - hidden on mobile, visible on desktop */}
-                  <div className="hidden lg:block absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-white/80 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/40 p-2 sm:p-3 lg:p-3 hover:bg-white/95 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+                  <div className="hidden lg:block absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-white rounded-xl shadow-lg border border-gray-200 p-2 sm:p-3 lg:p-3 hover:bg-gray-50 transition-all duration-300 hover:shadow-xl hover:scale-105">
                     {heroData.expertiseBadgeUrl ? (
                       <img
                         src={heroData.expertiseBadgeUrl}
@@ -345,7 +347,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     ) : (
                       <div className="text-center">
                         <div className="text-sm sm:text-base lg:text-lg font-bold text-[var(--color-main)]">3 ans</div>
-                        <div className="text-xs sm:text-sm text-gray-600">d'expertise</div>
+                        <div className="text-xs sm:text-sm text-gray-700">d'expertise</div>
                       </div>
                     )}
                   </div>

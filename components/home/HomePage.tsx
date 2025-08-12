@@ -477,6 +477,17 @@ export default function HomePage() {
 
                     </div>
 
+                    {/* Mobile Companies Carousel - Separate Section */}
+                    <div className="lg:hidden bg-white py-8">
+                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                              <CompaniesCarousel
+                                   companies={homePageData?.hero?.carousel?.companies}
+                                   speed={40}
+                                   text={homePageData?.hero?.carousel?.text}
+                              />
+                         </div>
+                    </div>
+
                     {/* SECTION 2: Platform Modules Timeline - HomePage */}
                     <section className="py-12 bg-white overflow-hidden" id="modules">
                          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

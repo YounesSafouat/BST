@@ -37,9 +37,33 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
      return (
           <div className="relative overflow-hidden py-4 w-full">
                {/* Text above carousel */}
-               {text && text.trim() !== '' && (
+               {(text && text.trim() !== '') ? (
                     <div className="text-center mb-8">
-                         <p className="text-gray-400 text-sm font-normal">{text}</p>
+                         <p
+                              className="text-gray-400 text-lg md:text-sm font-medium bg-white px-4 py-2 rounded-lg shadow-sm"
+                              style={{
+                                   textRendering: 'optimizeLegibility',
+                                   WebkitFontSmoothing: 'antialiased',
+                                   MozOsxFontSmoothing: 'grayscale',
+                                   filter: 'none'
+                              }}
+                         >
+                              {text}
+                         </p>
+                    </div>
+               ) : (
+                    <div className="text-center mb-8">
+                         <p
+                              className="text-gray-400 text-lg md:text-sm font-medium bg-white px-4 py-2 rounded-lg shadow-sm"
+                              style={{
+                                   textRendering: 'optimizeLegibility',
+                                   WebkitFontSmoothing: 'antialiased',
+                                   MozOsxFontSmoothing: 'grayscale',
+                                   filter: 'none'
+                              }}
+                         >
+                              Ils ont choisi l'excellence Blackswan Technology. Plus de 100 fois.
+                         </p>
                     </div>
                )}
 
