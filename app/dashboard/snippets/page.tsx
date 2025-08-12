@@ -40,49 +40,78 @@ export default function SnippetsDashboard() {
           fetchSnippets();
      }, []);
 
-       const fetchSnippets = async () => {
-    try {
-      const response = await fetch("/api/content/snippets");
-      if (response.ok) {
-        const data = await response.json();
-        if (data.length > 0) {
-          setSnippets(data[0].content?.snippets || []);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching snippets:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger les snippets",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-       const saveSnippets = async () => {
-    setSaving(true);
-    try {
-      const response = await fetch("/api/content/snippets", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: { snippets },
-          title: "Snippets Configuration",
-          description: "Meta tags, tracking codes, and custom scripts",
-          isActive: true
-        }),
-      });
+     const fetchSnippets = async () => {
+          console.log('fetchSnippets called'); // Debug log
+          try {
+               console.log('Fetching from /api/content/snippets...'); // Debug log
+               const response = await fetch("/api/content/snippets");
+               console.log('Response status:', response.status); // Debug log
+               console.log('Response ok:', response.ok); // Debug log
 
                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Fetched data:', data); // Debug log
+
+                    if (data.length > 0) {
+                         console.log('Content from data:', data[0].content); // Debug log
+                         console.log('Snippets from content:', data[0].content?.snippets); // Debug log
+                         setSnippets(data[0].content?.snippets || []);
+                    } else {
+                         console.log('No data returned from API'); // Debug log
+                    }
+               } else {
+                    console.log('Response not ok, status:', response.status); // Debug log
+                    const errorText = await response.text();
+                    console.log('Error response text:', errorText); // Debug log
+               }
+          } catch (error) {
+               console.error("Error fetching snippets:", error);
+               toast({
+                    title: "Erreur",
+                    description: "Impossible de charger les snippets",
+                    variant: "destructive"
+               });
+          } finally {
+               setLoading(false);
+          }
+     };
+
+     const saveSnippets = async () => {
+          console.log('saveSnippets called'); // Debug log
+          console.log('Current snippets state:', snippets); // Debug log
+          setSaving(true);
+          try {
+               const requestBody = {
+                    content: { snippets },
+                    title: "Snippets Configuration",
+                    description: "Meta tags, tracking codes, and custom scripts",
+                    isActive: true
+               };
+
+               console.log('Sending request body:', requestBody); // Debug log
+               console.log('Making PUT request to /api/content/snippets...'); // Debug log
+
+               const response = await fetch("/api/content/snippets", {
+                    method: "PUT",
+                    headers: {
+                         "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(requestBody),
+               });
+
+               console.log('Response received, status:', response.status); // Debug log
+               console.log('Response ok:', response.ok); // Debug log
+
+               if (response.ok) {
+                    const responseData = await response.json();
+                    console.log('Success response data:', responseData); // Debug log
                     toast({
                          title: "Succès",
                          description: "Snippets sauvegardés avec succès",
                     });
                } else {
+                    const errorText = await response.text();
+                    console.log('Error response text:', errorText); // Debug log
                     throw new Error("Failed to save");
                }
           } catch (error) {
