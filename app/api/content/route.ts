@@ -13,10 +13,26 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
-    console.log("API: Request params:", { type })
+    const search = searchParams.get('search');
+    console.log("API: Request params:", { type, search })
 
     const query: any = {};
     if (type) query.type = type;
+    
+    // Add search functionality
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      query.$or = [
+        { title: searchRegex },
+        { description: searchRegex },
+        { 'content.title': searchRegex },
+        { 'content.description': searchRegex },
+        { 'content.name': searchRegex },
+        { 'content.excerpt': searchRegex },
+        { 'content.content': searchRegex }
+      ];
+    }
+    
     console.log("API: Query being executed:", JSON.stringify(query))
 
     const contents = await Content.find(query);

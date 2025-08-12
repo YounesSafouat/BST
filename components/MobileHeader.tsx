@@ -111,6 +111,38 @@ export default function MobileHeader() {
     }
   }, [location, contactData]);
 
+  // Get meeting link based on detected region
+  const getMeetingLink = () => {
+    if (location && contactData) {
+      const region = getRegionFromCountry(location.countryCode);
+      switch (region) {
+        case 'france':
+          return contactData.france?.meetingLink || 'https://meetings.hubspot.com/france';
+        case 'morocco':
+          return contactData.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+        default:
+          return contactData.other?.meetingLink || 'https://meetings.hubspot.com/other';
+      }
+    }
+    // Fallback to Morocco if no location detected
+    return contactData?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+  };
+
+  // Function to get logo size class
+  const getLogoSizeClass = (size: string) => {
+    const sizeMap: { [key: string]: string } = {
+      '8': 'h-8',
+      '10': 'h-10',
+      '12': 'h-12',
+      '14': 'h-14',
+      '16': 'h-16',
+      '20': 'h-20',
+      '24': 'h-24',
+      '32': 'h-32'
+    };
+    return sizeMap[size] || 'h-8';
+  };
+
   // Use CMS navigation data or fallback to default
   const navigation = headerData?.navigation?.main || [
     { name: 'Solutions', href: '#modules' },
@@ -140,7 +172,7 @@ export default function MobileHeader() {
             <img
               src={headerData?.logo?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg"}
               alt={headerData?.logo?.alt || "BlackSwan"}
-              className={`h-${headerData?.logo?.size || '8'}`}
+              className={getLogoSizeClass(headerData?.logo?.size || '8')}
             />
           </div>
 
@@ -198,8 +230,8 @@ export default function MobileHeader() {
               <div className="pb-4 border-b border-gray-200">
                 <Button
                   onClick={() => {
-                    scrollToSection('#contact');
                     trackButtonClick('mobile_header_rdv_button');
+                    window.open(getMeetingLink(), '_blank');
                   }}
                   className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-105"
                 >

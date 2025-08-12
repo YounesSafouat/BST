@@ -109,6 +109,43 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     { name: 'Témoignages', href: '#testimonials' },
   ];
 
+  // Use contact data from settings (not header)
+  const phoneNumber = contactData?.regionalContact?.morocco?.phone || '+212783699603';
+
+  // Get meeting link based on detected region
+  const getMeetingLink = () => {
+    if (location && contactData) {
+      const region = getRegionFromCountry(location.countryCode);
+      switch (region) {
+        case 'france':
+          return contactData.regionalContact?.france?.meetingLink || 'https://meetings.hubspot.com/france';
+        case 'morocco':
+          return contactData.regionalContact?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+        default:
+          return contactData.regionalContact?.other?.meetingLink || 'https://meetings.hubspot.com/other';
+      }
+    }
+    // Fallback to Morocco if no location detected
+    return contactData?.regionalContact?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+  };
+
+  const meetingLink = getMeetingLink();
+
+  // Function to get logo size class
+  const getLogoSizeClass = (size: string) => {
+    const sizeMap: { [key: string]: string } = {
+      '8': 'h-8',
+      '10': 'h-10',
+      '12': 'h-12',
+      '14': 'h-14',
+      '16': 'h-16',
+      '20': 'h-20',
+      '24': 'h-24',
+      '32': 'h-32'
+    };
+    return sizeMap[size] || 'h-10';
+  };
+
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
     if (element) {
@@ -133,7 +170,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             <img
               src={headerData?.logo?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg"}
               alt={headerData?.logo?.alt || "BlackSwan"}
-              className={`h-${headerData?.logo?.size || '10'}`}
+              className={getLogoSizeClass(headerData?.logo?.size || '10')}
             />
           </div>
 
@@ -156,9 +193,9 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               variant="ghost"
               size="sm"
               className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2"
-              onClick={() => window.open('tel:+212783699603')}
+              onClick={() => window.open(`tel:${phoneNumber}`)}
             >
-              <Phone className="w-3 h-3" />
+              <Phone className="w-4 h-4" />
             </Button>
             <Button
               variant="ghost"
@@ -176,7 +213,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               <Button
                 size="sm"
                 className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full"
-                onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
+                onClick={() => window.open(meetingLink, '_blank')}
               >
                 <span className="font-semibold">Prendre RDV</span>
                 <ArrowRight className="w-4 h-4" />
@@ -222,7 +259,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                 >
                   <Button
                     className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full w-full"
-                    onClick={() => window.open('https://meetings-eu1.hubspot.com/yraissi', '_blank')}
+                    onClick={() => window.open(meetingLink, '_blank')}
                   >
                     <span className="font-semibold">Prendre RDV</span>
                     <ArrowRight className="w-4 h-4" />

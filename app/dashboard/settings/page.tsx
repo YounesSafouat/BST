@@ -25,18 +25,21 @@ interface SiteSettings {
       email: string;
       address: string;
       whatsapp?: string;
+      meetingLink?: string;
     };
     morocco: {
       phone: string;
       email: string;
       address: string;
       whatsapp?: string;
+      meetingLink?: string;
     };
     other: {
       phone: string;
       email: string;
       address: string;
       whatsapp?: string;
+      meetingLink?: string;
     };
   };
   // Page visibility settings
@@ -65,10 +68,11 @@ export default function SettingsDashboard() {
     contactEmail: "",
     contactPhone: "",
     address: "",
+
     regionalContact: {
-      france: { phone: "", email: "", address: "", whatsapp: "" },
-      morocco: { phone: "", email: "", address: "", whatsapp: "" },
-      other: { phone: "", email: "", address: "", whatsapp: "" }
+      france: { phone: "", email: "", address: "", whatsapp: "", meetingLink: "" },
+      morocco: { phone: "", email: "", address: "", whatsapp: "", meetingLink: "" },
+      other: { phone: "", email: "", address: "", whatsapp: "", meetingLink: "" }
     },
     pageVisibility: {
       home: true,
@@ -106,10 +110,11 @@ export default function SettingsDashboard() {
             contactPhone: data.content.contactPhone || "",
             address: data.content.address || "",
             regionalContact: data.content.regionalContact || {
-              france: { phone: "", email: "", address: "", whatsapp: "" },
-              morocco: { phone: "", email: "", address: "", whatsapp: "" },
-              other: { phone: "", email: "", address: "", whatsapp: "" }
+              france: { phone: "", email: "", address: "", whatsapp: "", meetingLink: "" },
+              morocco: { phone: "", email: "", address: "", whatsapp: "", meetingLink: "" },
+              other: { phone: "", email: "", address: "", whatsapp: "", meetingLink: "" }
             },
+
             pageVisibility: data.content.pageVisibility || {
               home: true,
               blog: true,
@@ -194,6 +199,8 @@ export default function SettingsDashboard() {
       return newSettings as SiteSettings
     })
   }
+
+
 
   if (loading) {
     return <Loader />
@@ -327,6 +334,16 @@ export default function SettingsDashboard() {
                       onChange={(e) => updateField('regionalContact.france.whatsapp', e.target.value)}
                     />
                   </div>
+                  <div>
+                    <Label htmlFor="france-meeting">Lien de prise de rendez-vous</Label>
+                    <Input
+                      id="france-meeting"
+                      type="url"
+                      placeholder="https://meetings.hubspot.com/france"
+                      value={settings.regionalContact?.france?.meetingLink || ""}
+                      onChange={(e) => updateField('regionalContact.france.meetingLink', e.target.value)}
+                    />
+                  </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="france-address">Adresse</Label>
                     <Input
@@ -372,6 +389,16 @@ export default function SettingsDashboard() {
                       placeholder="+212 7 83 69 96 03"
                       value={settings.regionalContact?.morocco?.whatsapp || ""}
                       onChange={(e) => updateField('regionalContact.morocco.whatsapp', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="morocco-meeting">Lien de prise de rendez-vous</Label>
+                    <Input
+                      id="morocco-meeting"
+                      type="url"
+                      placeholder="https://meetings-eu1.hubspot.com/yraissi"
+                      value={settings.regionalContact?.morocco?.meetingLink || ""}
+                      onChange={(e) => updateField('regionalContact.morocco.meetingLink', e.target.value)}
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -421,6 +448,16 @@ export default function SettingsDashboard() {
                       onChange={(e) => updateField('regionalContact.other.whatsapp', e.target.value)}
                     />
                   </div>
+                  <div>
+                    <Label htmlFor="other-meeting">Lien de prise de rendez-vous</Label>
+                    <Input
+                      id="other-meeting"
+                      type="url"
+                      placeholder="https://meetings.hubspot.com/other"
+                      value={settings.regionalContact?.other?.meetingLink || ""}
+                      onChange={(e) => updateField('regionalContact.other.meetingLink', e.target.value)}
+                    />
+                  </div>
                   <div className="md:col-span-2">
                     <Label htmlFor="other-address">Adresse</Label>
                     <Input
@@ -435,6 +472,8 @@ export default function SettingsDashboard() {
               </div>
             </CardContent>
           </Card>
+
+
 
           {/* Page Visibility Settings */}
           <Card>
