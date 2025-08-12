@@ -73,13 +73,6 @@ const menuGroups = [
       },
 
       {
-        title: "About Page",
-        href: "/dashboard/about",
-        icon: Info,
-        color: "from-cyan-200 to-cyan-100 text-cyan-700",
-      },
-
-      {
         title: "Blog Page",
         href: "/dashboard/blog",
         icon: BookText,
@@ -90,12 +83,6 @@ const menuGroups = [
         href: "/dashboard/clients",
         icon: Building2,
         color: "from-[var(--color-secondary)]/20 to-[var(--color-secondary)]/10 text-[var(--color-secondary)]",
-      },
-      {
-        title: "HubSpot Page",
-        href: "/dashboard/hubspot",
-        icon: Globe,
-        color: "from-orange-200 to-orange-100 text-orange-700",
       },
 
     ]
@@ -145,15 +132,9 @@ const menuGroups = [
       },
       {
         title: "Snippets",
-        href: "/dashboard/settings#snippets",
+        href: "/dashboard/snippets",
         icon: Code,
         color: "from-blue-200 to-blue-100 text-blue-700",
-      },
-      {
-        title: "Test Snippets",
-        href: "/test-snippets",
-        icon: Code,
-        color: "from-purple-200 to-purple-100 text-purple-700",
       },
     ]
   },

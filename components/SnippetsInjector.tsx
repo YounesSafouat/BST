@@ -1,0 +1,240 @@
+"use client";
+
+import { useEffect, useState } from 'react';
+
+interface Snippet {
+  _id?: string;
+  title: string;
+  description: string;
+  type: 'meta' | 'script' | 'analytics' | 'tracking' | 'custom';
+  location: 'head' | 'body-top' | 'body-bottom';
+  content: string;
+  isActive: boolean;
+  pages?: string[];
+  priority?: number;
+}
+
+interface SnippetsData {
+  snippets: Snippet[];
+}
+
+export default function SnippetsInjector() {
+  const [snippets, setSnippets] = useState<Snippet[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchSnippets();
+  }, []);
+
+  const fetchSnippets = async () => {
+    try {
+      const response = await fetch('/api/content/snippets');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0 && data[0].content?.snippets) {
+          // Sort by priority
+          const sortedSnippets = data[0].content.snippets
+            .filter((snippet: Snippet) => snippet.isActive)
+            .sort((a: Snippet, b: Snippet) => (a.priority || 0) - (b.priority || 0));
+          setSnippets(sortedSnippets);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching snippets:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (snippets.length === 0 || loading) return;
+
+    // Inject snippets based on their location
+    snippets.forEach((snippet) => {
+      if (!snippet.isActive) return;
+
+      // Check if snippet should apply to current page
+      const currentPath = window.location.pathname;
+      const shouldApply = !snippet.pages || snippet.pages.length === 0 || snippet.pages.includes(currentPath);
+
+      if (!shouldApply) return;
+
+      switch (snippet.location) {
+        case 'head':
+          injectInHead(snippet.content);
+          break;
+        case 'body-top':
+          injectInBodyTop(snippet.content);
+          break;
+        case 'body-bottom':
+          injectInBodyBottom(snippet.content);
+          break;
+      }
+    });
+  }, [snippets, loading]);
+
+  const injectInHead = (content: string) => {
+    // Create a temporary div to parse HTML
+    const temp = document.createElement('div');
+    temp.innerHTML = content;
+    
+    // Handle different types of content
+    const scripts = temp.querySelectorAll('script');
+    const links = temp.querySelectorAll('link');
+    const metas = temp.querySelectorAll('meta');
+    const styles = temp.querySelectorAll('style');
+    
+    // Inject meta tags
+    metas.forEach(meta => {
+      const newMeta = document.createElement('meta');
+      Array.from(meta.attributes).forEach(attr => {
+        newMeta.setAttribute(attr.name, attr.value);
+      });
+      document.head.appendChild(newMeta);
+    });
+    
+    // Inject link tags (CSS, etc.)
+    links.forEach(link => {
+      const newLink = document.createElement('link');
+      Array.from(link.attributes).forEach(attr => {
+        newLink.setAttribute(attr.name, attr.value);
+      });
+      document.head.appendChild(newLink);
+    });
+    
+    // Inject style tags
+    styles.forEach(style => {
+      const newStyle = document.createElement('style');
+      newStyle.textContent = style.textContent;
+      document.head.appendChild(newStyle);
+    });
+    
+    // Inject script tags
+    scripts.forEach(script => {
+      const newScript = document.createElement('script');
+      Array.from(script.attributes).forEach(attr => {
+        if (attr.name !== 'src') {
+          newScript.setAttribute(attr.name, attr.value);
+        }
+      });
+      if (script.src) {
+        newScript.src = script.src;
+      } else {
+        newScript.textContent = script.textContent;
+      }
+      document.head.appendChild(newScript);
+    });
+    
+    // Handle raw text content (like meta tags written as strings)
+    if (temp.children.length === 0 && content.trim()) {
+      const rawContent = content.trim();
+      if (rawContent.startsWith('<meta') || rawContent.startsWith('<link') || rawContent.startsWith('<script') || rawContent.startsWith('<style')) {
+        const newElement = document.createElement('div');
+        newElement.innerHTML = rawContent;
+        const element = newElement.firstElementChild;
+        if (element) {
+          document.head.appendChild(element.cloneNode(true));
+        }
+      }
+    }
+  };
+
+  const injectInBodyTop = (content: string) => {
+    const temp = document.createElement('div');
+    temp.innerHTML = content;
+    
+    const scripts = temp.querySelectorAll('script');
+    const divs = temp.querySelectorAll('div');
+    const spans = temp.querySelectorAll('span');
+    
+    // Inject scripts
+    scripts.forEach(script => {
+      const newScript = document.createElement('script');
+      Array.from(script.attributes).forEach(attr => {
+        if (attr.name !== 'src') {
+          newScript.setAttribute(attr.name, attr.value);
+        }
+      });
+      if (script.src) {
+        newScript.src = script.src;
+      } else {
+        newScript.textContent = script.textContent;
+      }
+      document.body.insertBefore(newScript, document.body.firstChild);
+    });
+    
+    // Inject other elements
+    [...divs, ...spans].forEach(element => {
+      const newElement = document.createElement(element.tagName.toLowerCase());
+      newElement.innerHTML = element.innerHTML;
+      Array.from(element.attributes).forEach(attr => {
+        newElement.setAttribute(attr.name, attr.value);
+      });
+      document.body.insertBefore(newElement, document.body.firstChild);
+    });
+    
+    // Handle raw content
+    if (temp.children.length === 0 && content.trim()) {
+      const rawContent = content.trim();
+      if (rawContent.startsWith('<script') || rawContent.startsWith('<div') || rawContent.startsWith('<span')) {
+        const newElement = document.createElement('div');
+        newElement.innerHTML = rawContent;
+        const element = newElement.firstElementChild;
+        if (element) {
+          document.body.insertBefore(element.cloneNode(true), document.body.firstChild);
+        }
+      }
+    }
+  };
+
+  const injectInBodyBottom = (content: string) => {
+    const temp = document.createElement('div');
+    temp.innerHTML = content;
+    
+    const scripts = temp.querySelectorAll('script');
+    const divs = temp.querySelectorAll('div');
+    const spans = temp.querySelectorAll('span');
+    
+    // Inject scripts
+    scripts.forEach(script => {
+      const newScript = document.createElement('script');
+      Array.from(script.attributes).forEach(attr => {
+        if (attr.name !== 'src') {
+          newScript.setAttribute(attr.name, attr.value);
+        }
+      });
+      if (script.src) {
+        newScript.src = script.src;
+      } else {
+        newScript.textContent = script.textContent;
+      }
+      document.body.appendChild(newScript);
+    });
+    
+    // Inject other elements
+    [...divs, ...spans].forEach(element => {
+      const newElement = document.createElement(element.tagName.toLowerCase());
+      newElement.innerHTML = element.innerHTML;
+      Array.from(element.attributes).forEach(attr => {
+        newElement.setAttribute(attr.name, attr.value);
+      });
+      document.body.appendChild(newElement);
+    });
+    
+    // Handle raw content
+    if (temp.children.length === 0 && content.trim()) {
+      const rawContent = content.trim();
+      if (rawContent.startsWith('<script') || rawContent.startsWith('<div') || rawContent.startsWith('<span')) {
+        const newElement = document.createElement('div');
+        newElement.innerHTML = rawContent;
+        const element = newElement.firstElementChild;
+        if (element) {
+          document.body.appendChild(element.cloneNode(true));
+        }
+      }
+    }
+  };
+
+  // This component doesn't render anything visible
+  return null;
+}

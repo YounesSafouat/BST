@@ -5,6 +5,7 @@ import { LoaderProvider, LoaderRouteListener } from '@/components/LoaderProvider
 import StructuredData from '@/components/structured-data'
 import { ThemeProvider } from '@/components/theme-provider'
 import FaviconProvider from '@/components/FaviconProvider'
+import SnippetsInjector from '@/components/SnippetsInjector'
 
 export const metadata: Metadata = {
   title: {
@@ -115,6 +116,7 @@ export default function RootLayout({
             <LayoutWrapper>
               {children}
             </LayoutWrapper>
+            <SnippetsInjector />
           </LoaderProvider>
         </ThemeProvider>
       </body>

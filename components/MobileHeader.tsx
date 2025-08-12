@@ -23,6 +23,7 @@ export default function MobileHeader() {
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [headerData, setHeaderData] = useState<any>(null);
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
   const { trackButtonClick } = useButtonAnalytics()
@@ -39,6 +40,27 @@ export default function MobileHeader() {
     };
 
     detectLocation();
+  }, []);
+
+  // Fetch header data from CMS
+  useEffect(() => {
+    const fetchHeaderData = async () => {
+      try {
+        const response = await fetch('/api/content?type=header');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.length > 0) {
+            setHeaderData(data[0].content);
+          }
+        } else {
+          console.error('Failed to fetch header data:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching header data:', error);
+      }
+    };
+
+    fetchHeaderData();
   }, []);
 
   // Fetch regional contact data
@@ -89,7 +111,8 @@ export default function MobileHeader() {
     }
   }, [location, contactData]);
 
-  const navigation = [
+  // Use CMS navigation data or fallback to default
+  const navigation = headerData?.navigation?.main || [
     { name: 'Solutions', href: '#modules' },
     { name: 'Tarifs', href: '#pricing' },
     { name: 'Notre Agence', href: '#team' },
@@ -114,7 +137,11 @@ export default function MobileHeader() {
         <div className="flex justify-between items-center py-2">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
-            <img src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg" alt="BlackSwan" className="h-8" />
+            <img
+              src={headerData?.logo?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg"}
+              alt={headerData?.logo?.alt || "BlackSwan"}
+              className={`h-${headerData?.logo?.size || '8'}`}
+            />
           </div>
 
           {/* Contact Actions */}
