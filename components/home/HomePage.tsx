@@ -255,9 +255,13 @@ export default function HomePage() {
 
      const fetchHomePageData = async () => {
           try {
+               console.log('🔄 Starting to fetch home page data...');
                const timestamp = Date.now();
                const random = Math.random();
-               const response = await fetch(`/api/content?type=home-page&t=${timestamp}&r=${random}`, {
+               const url = `/api/content?type=home-page&t=${timestamp}&r=${random}`;
+               console.log('📡 Fetching from URL:', url);
+
+               const response = await fetch(url, {
                     cache: 'no-store',
                     headers: {
                          'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -265,28 +269,41 @@ export default function HomePage() {
                          'Expires': '0'
                     }
                });
+
+               console.log('📥 Response status:', response.status);
+               console.log('📥 Response ok:', response.ok);
+
                if (response.ok) {
                     const data = await response.json();
+                    console.log('📊 Raw API response data:', data);
+                    console.log('📊 Data type:', typeof data);
+                    console.log('📊 Is array:', Array.isArray(data));
+                    console.log('📊 Array length:', Array.isArray(data) ? data.length : 'N/A');
+
                     if (data && Array.isArray(data) && data.length > 0) {
                          // Get the first (and should be only) home-page document
                          const homePageContent = data[0];
+                         console.log('📄 First content item:', homePageContent);
+                         console.log('📄 Content type:', homePageContent.type);
+                         console.log('📄 Has content field:', !!homePageContent.content);
 
                          // Check if the content field exists
                          if (homePageContent.content) {
+                              console.log('✅ Setting home page data:', homePageContent.content);
                               setHomePageData(homePageContent.content);
                          } else {
-                              console.error('Home page content structure is invalid');
+                              console.error('❌ Home page content structure is invalid');
                          }
                     } else {
-                         console.error('Invalid data format or no home-page content found:', data);
+                         console.error('❌ Invalid data format or no home-page content found:', data);
                     }
                } else {
-                    console.error('Failed to fetch home page data:', response.status);
+                    console.error('❌ Failed to fetch home page data:', response.status);
                     const errorText = await response.text();
-                    console.error('Error response:', errorText);
+                    console.error('❌ Error response:', errorText);
                }
           } catch (error) {
-               console.error('Error fetching home page data:', error);
+               console.error('💥 Error fetching home page data:', error);
           }
      };
 
