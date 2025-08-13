@@ -148,7 +148,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight tracking-tight text-center"
               style={{ lineHeight: '1.1', marginTop: '0', paddingTop: '0' }}
             >
-              {heroData.headline}
+              {heroData?.headline || 'Chargement...'}
             </motion.h1>
 
             {/* 3. Description Third */}
@@ -158,7 +158,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               transition={{ delay: 0.3 }}
               className="text-base text-gray-600 leading-relaxed text-center px-2"
               dangerouslySetInnerHTML={{
-                __html: heroData.description
+                __html: (heroData?.description || 'Chargement...')
                   .replace(/&lt;/g, '<')
                   .replace(/&gt;/g, '>')
                   .replace(/&amp;/g, '&')
@@ -178,7 +178,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     {/* Video element */}
                     <video
                       ref={videoRef}
-                      src={heroData.videoUrl}
+                      src={heroData?.videoUrl || ''}
                       muted
                       autoPlay
                       loop
@@ -210,8 +210,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-3 py-1.5 text-xs font-medium rounded-full flex-1 h-8 shadow-sm hover:shadow-md transition-all duration-200"
                 onClick={() => scrollToSection('#contact')}
               >
-                {heroData.ctaPrimary.text}
-                {getIconComponent(heroData.ctaPrimary.icon)}
+                {heroData?.ctaPrimary?.text || 'Chargement...'}
+                {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
               </Button>
               <Button
                 size="sm"
@@ -219,7 +219,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 className="px-3 py-1.5 text-xs font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full flex-1 h-8 shadow-sm hover:shadow-md transition-all duration-200 bg-white"
                 onClick={() => scrollToSection('#modules')}
               >
-                {heroData.ctaSecondary.text}
+                {heroData?.ctaSecondary?.text || 'Chargement...'}
               </Button>
             </motion.div>
           </div>
@@ -256,7 +256,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-900 leading-tight tracking-tight"
                   style={{ lineHeight: '1.1' }}
                 >
-                  {heroData.headline}
+                  {heroData?.headline || 'Chargement...'}
                 </motion.h1>
 
                 <motion.div

@@ -270,7 +270,7 @@ export default function HomePage() {
                     if (data && Array.isArray(data) && data.length > 0) {
                          // Get the first (and should be only) home-page document
                          const homePageContent = data[0];
-                         
+
                          // Check if the content field exists
                          if (homePageContent.content) {
                               setHomePageData(homePageContent.content);
