@@ -455,7 +455,15 @@ export default function HomePageDashboard() {
                     content: homeData
                };
 
-               const response = await fetch('/api/content?type=home-page', {
+               const apiUrl = '/api/content?type=home-page';
+               console.log('Sending request to:', apiUrl);
+               console.log('Request body:', requestBody);
+
+               // Try with absolute URL to see if that helps
+               const fullUrl = window.location.origin + apiUrl;
+               console.log('Full URL:', fullUrl);
+
+               const response = await fetch(fullUrl, {
                     method: 'PUT',
                     headers: {
                          'Content-Type': 'application/json',

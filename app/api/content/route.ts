@@ -101,10 +101,13 @@ export async function PUT(req: NextRequest) {
   try {
     console.log("API: Starting PUT request...")
     console.log("API: Request URL:", req.url)
+    console.log("API: Request method:", req.method)
+    console.log("API: Request headers:", Object.fromEntries(req.headers.entries()))
     await connectDB();
     
     const { searchParams } = new URL(req.url);
     console.log("API: All search params:", Object.fromEntries(searchParams.entries()))
+    console.log("API: Search params string:", searchParams.toString())
     
     const type = searchParams.get('type');
     console.log("API: PUT request for type:", type)
