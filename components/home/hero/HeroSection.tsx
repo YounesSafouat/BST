@@ -245,7 +245,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     className="border-gray-300 text-gray-600 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-[var(--color-secondary)] hover:text-white hover:border-[var(--color-secondary)] transition-all duration-300 shadow-md hover:shadow-lg"
                     onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
                   >
-                    {heroData.badge || 'Partenaire Silver Odoo'}
+                    {heroData?.badge || 'Partenaire Silver Odoo'}
                   </Badge>
                 </motion.div>
 
@@ -265,7 +265,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   transition={{ delay: 0.4 }}
                   className="text-lg text-gray-600 leading-relaxed max-w-3xl"
                   dangerouslySetInnerHTML={{
-                    __html: heroData.description
+                    __html: (heroData?.description || 'Chargement...')
                       .replace(/&lt;/g, '<')
                       .replace(/&gt;/g, '>')
                       .replace(/&amp;/g, '&')
@@ -284,8 +284,8 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold group rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
                   onClick={() => scrollToSection('#contact')}
                 >
-                  {heroData.ctaPrimary.text}
-                  {getIconComponent(heroData.ctaPrimary.icon)}
+                  {heroData?.ctaPrimary?.text || 'Chargement...'}
+                  {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
                 </Button>
                 <Button
                   size="sm"
@@ -293,7 +293,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   className="px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
                   onClick={() => scrollToSection('#modules')}
                 >
-                  {heroData.ctaSecondary.text}
+                  {heroData?.ctaSecondary?.text || 'Chargement...'}
                 </Button>
               </motion.div>
             </motion.div>
@@ -311,7 +311,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                     {/* Video element */}
                     <video
                       ref={videoRef}
-                      src={heroData.videoUrl}
+                      src={heroData?.videoUrl || ''}
                       muted
                       autoPlay
                       loop
