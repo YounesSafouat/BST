@@ -450,12 +450,17 @@ export default function HomePageDashboard() {
 
           setSaving(true);
           try {
+               // Wrap the data in the content field as expected by the API
+               const requestBody = {
+                    content: homeData
+               };
+
                const response = await fetch('/api/content?type=home-page', {
                     method: 'PUT',
                     headers: {
                          'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(homeData),
+                    body: JSON.stringify(requestBody),
                });
 
                if (response.ok) {
@@ -464,7 +469,9 @@ export default function HomePageDashboard() {
                          description: "Données sauvegardées avec succès",
                     });
                } else {
-                    throw new Error('Failed to save');
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('API Error Response:', errorData);
+                    throw new Error(`Failed to save: ${errorData.error || 'Unknown error'}`);
                }
           } catch (error) {
                console.error('Error saving home data:', error);

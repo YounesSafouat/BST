@@ -291,7 +291,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   size="sm"
                   variant="outline"
                   className="px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
-                  onClick={() => scrollToSection('#modules')}
+                  onClick={() => scrollToSection('#expertise')}
                 >
                   {heroData?.ctaSecondary?.text || 'Chargement...'}
                 </Button>
