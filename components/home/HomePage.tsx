@@ -257,7 +257,7 @@ export default function HomePage() {
           try {
                const timestamp = Date.now();
                const random = Math.random();
-               const response = await fetch(`/api/content/odoo?t=${timestamp}&r=${random}`, {
+               const response = await fetch(`/api/content?type=home-page&t=${timestamp}&r=${random}`, {
                     cache: 'no-store',
                     headers: {
                          'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -267,10 +267,18 @@ export default function HomePage() {
                });
                if (response.ok) {
                     const data = await response.json();
-                    if (data && typeof data === 'object') {
-                         setHomePageData(data);
+                    if (data && Array.isArray(data) && data.length > 0) {
+                         // Get the first (and should be only) home-page document
+                         const homePageContent = data[0];
+                         
+                         // Check if the content field exists
+                         if (homePageContent.content) {
+                              setHomePageData(homePageContent.content);
+                         } else {
+                              console.error('Home page content structure is invalid');
+                         }
                     } else {
-                         console.error('Invalid data format:', data);
+                         console.error('Invalid data format or no home-page content found:', data);
                     }
                } else {
                     console.error('Failed to fetch home page data:', response.status);
