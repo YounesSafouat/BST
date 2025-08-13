@@ -64,11 +64,14 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        const response = await fetch('/api/content/settings');
+        const response = await fetch('/api/content?type=settings');
         if (response.ok) {
           const data = await response.json();
-          if (data.success && data.content?.regionalContact) {
-            setContactData(data.content.regionalContact);
+          if (data.length > 0) {
+            const settingsContent = data.find(item => item.type === 'settings');
+            if (settingsContent && settingsContent.content?.regionalContact) {
+              setContactData(settingsContent.content.regionalContact);
+            }
           }
         } else {
           console.error('Failed to fetch contact data for header:', response.status);
@@ -113,7 +116,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   ];
 
   // Use contact data from settings (not header)
-  const phoneNumber = contactData?.regionalContact?.morocco?.phone || '+212783699603';
+  const phoneNumber = contactData?.morocco?.phone || '+212783699603';
 
   // Get meeting link based on detected region
   const getMeetingLink = () => {
@@ -121,15 +124,15 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       const region = getRegionFromCountry(location.countryCode);
       switch (region) {
         case 'france':
-          return contactData.regionalContact?.france?.meetingLink || 'https://meetings.hubspot.com/france';
+          return contactData.france?.meetingLink || 'https://meetings.hubspot.com/france';
         case 'morocco':
-          return contactData.regionalContact?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+          return contactData.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
         default:
-          return contactData.regionalContact?.other?.meetingLink || 'https://meetings.hubspot.com/other';
+          return contactData.other?.meetingLink || 'https://meetings.hubspot.com/other';
       }
     }
     // Fallback to Morocco if no location detected
-    return contactData?.regionalContact?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+    return contactData?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
   };
 
   const meetingLink = getMeetingLink();

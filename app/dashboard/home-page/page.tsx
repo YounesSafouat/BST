@@ -210,21 +210,30 @@ export default function HomePageDashboard() {
 
      const fetchHomeData = async () => {
           try {
-               const response = await fetch('/api/content/odoo');
+               const response = await fetch('/api/content?type=home-page');
                if (response.ok) {
                     const data = await response.json();
 
+                    // Find the home-page content specifically
+                    const homePageContent = data.find(item => item.type === 'home-page');
+                    if (!homePageContent || !homePageContent.content) {
+                         console.error('No home-page content found');
+                         return;
+                    }
+
+                    const contentData = homePageContent.content;
+
                     // Initialize carousel data if it doesn't exist
-                    if (!data.hero.carousel) {
-                         data.hero.carousel = {
+                    if (!contentData.hero.carousel) {
+                         contentData.hero.carousel = {
                               companies: [],
                               speed: 20
                          };
                     }
 
                     // Initialize services data if it doesn't exist
-                    if (!data.services) {
-                         data.services = {
+                    if (!contentData.services) {
+                         contentData.services = {
                               headline: "NOS SERVICES",
                               subheadline: "De l'audit à la mise en production, nous vous accompagnons à chaque étape",
                               description: "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.",
@@ -270,8 +279,8 @@ export default function HomePageDashboard() {
                     }
 
                     // Initialize certification data if it doesn't exist
-                    if (!data.certification) {
-                         data.certification = {
+                    if (!contentData.certification) {
+                         contentData.certification = {
                               headline: "Certifications Odoo",
                               subheadline: "EXPERTISE RECONNUE",
                               description: "Notre expertise certifiée sur les dernières versions d'Odoo vous garantit des implémentations de qualité professionnelle.",
@@ -317,8 +326,8 @@ export default function HomePageDashboard() {
                     }
 
                     // Initialize certificationImages if it doesn't exist
-                    if (!data.certification.certificationImages || data.certification.certificationImages.length === 0) {
-                         data.certification.certificationImages = [
+                    if (!contentData.certification?.certificationImages || contentData.certification.certificationImages.length === 0) {
+                         contentData.certification.certificationImages = [
                               {
                                    src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
                                    alt: "Odoo Certification Certificate"
@@ -335,7 +344,7 @@ export default function HomePageDashboard() {
                     }
 
                     // Initialize with default companies if no companies exist
-                    if (!data.hero.carousel.companies || data.hero.carousel.companies.length === 0) {
+                    if (!contentData.hero.carousel?.companies || contentData.hero.carousel.companies.length === 0) {
                          const defaultCompanies = [
                               { name: "FitnessPark", logo: "/ref/fitnespark-vectorized-white-3.svg" },
                               { name: "IDC Pharma", logo: "/ref/idc_pharma-horizontal-white-vector.svg" },
@@ -353,10 +362,10 @@ export default function HomePageDashboard() {
                               { name: "ICAT", logo: "/ref/icat-vectorized-white.svg" },
                               { name: "Titre Français", logo: "/ref/titre-francais-vectorized-white.svg" },
                          ];
-                         data.hero.carousel.companies = defaultCompanies;
+                         contentData.hero.carousel.companies = defaultCompanies;
                     }
 
-                    setHomeData(data);
+                    setHomeData(contentData);
                } else {
                     console.error('Failed to fetch home data');
                     toast({
@@ -406,7 +415,7 @@ export default function HomePageDashboard() {
 
           setSaving(true);
           try {
-               const response = await fetch('/api/content/odoo', {
+               const response = await fetch('/api/content?type=home-page', {
                     method: 'PUT',
                     headers: {
                          'Content-Type': 'application/json',
