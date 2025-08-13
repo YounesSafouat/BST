@@ -460,15 +460,19 @@ export default function HomePageDashboard() {
                console.log('Request body:', requestBody);
 
                // Try with absolute URL to see if that helps
-               const fullUrl = window.location.origin + apiUrl;
+               const fullUrl = window.location.origin + '/api/content';
                console.log('Full URL:', fullUrl);
 
                const response = await fetch(fullUrl, {
-                    method: 'PUT',
+                    method: 'POST',
                     headers: {
                          'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(requestBody),
+                    body: JSON.stringify({
+                         action: 'update',
+                         type: 'home-page',
+                         ...requestBody
+                    }),
                });
 
                if (response.ok) {

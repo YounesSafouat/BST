@@ -160,4 +160,76 @@ export async function PUT(req: NextRequest) {
     console.error('API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
+}
+
+// POST: Update content by type (alternative method)
+export async function POST(req: NextRequest) {
+  try {
+    console.log("API: Starting POST request for update...")
+    console.log("API: Request URL:", req.url)
+    console.log("API: Request method:", req.method)
+    await connectDB();
+    
+    const body = await req.json();
+    console.log("API: POST request body:", body)
+    
+    // Check if this is an update request
+    if (body.action === 'update' && body.type) {
+      const type = body.type;
+      console.log("API: POST update request for type:", type)
+      
+      // Only allow updating the content field for safety
+      const update: any = {};
+      if (body.content) update['content'] = body.content;
+      if (body.title) update['title'] = body.title;
+      if (body.description) update['description'] = body.description;
+      if (body.metadata) update['metadata'] = body.metadata;
+      if (typeof body.isActive === 'boolean') update['isActive'] = body.isActive;
+      
+      console.log("API: Update object:", update)
+      
+      if (Object.keys(update).length === 0) {
+        return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
+      }
+      
+      const updated = await Content.findOneAndUpdate(
+        { type },
+        { $set: update },
+        { new: true }
+      );
+      
+      console.log("API: Update result:", updated)
+      
+      if (!updated) {
+        console.log("API: No document found to update for type:", type)
+        return NextResponse.json({ error: 'Content not found' }, { status: 404 });
+      }
+      
+      return NextResponse.json(updated, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      });
+    }
+    
+    // If not an update request, create new content
+    console.log("API: Creating new content")
+    const content = await Content.create(body);
+    console.log("API: Created content:", content)
+
+    return NextResponse.json(content, {
+      status: 201,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
+  } catch (error: any) {
+    console.error('API Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 } 
