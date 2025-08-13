@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { CheckCircle, Award, Shield, Users, ChevronUp, ChevronDown } from 'lucide-react';
+import { CheckCircle, Award, Shield, Users } from 'lucide-react';
 
 // Icon mapping for dynamic icon rendering
 const iconMap: { [key: string]: React.ComponentType<any> } = {
@@ -41,7 +41,7 @@ export default function OdooCertificationSection({
 }: OdooCertificationSectionProps) {
      // State for managing current image index
      const [currentImageIndex, setCurrentImageIndex] = useState(0);
-     const [animationDirection, setAnimationDirection] = useState<'up' | 'down'>('down');
+     const [isPaused, setIsPaused] = useState(false);
 
      // Fallback data when no CMS data is provided
      const fallbackData: CertificationData = {
@@ -94,20 +94,20 @@ export default function OdooCertificationSection({
      // Array of certification images
      const certificationImages = data.certificationImages || [];
 
-     // Navigation functions
-     const goToNextImage = () => {
-          setAnimationDirection('down');
-          setCurrentImageIndex((prev) =>
-               prev === certificationImages.length - 1 ? 0 : prev + 1
-          );
-     };
+     // Auto-rotate through images if there are multiple
+     React.useEffect(() => {
+          if (certificationImages.length <= 1 || isPaused) return;
 
-     const goToPreviousImage = () => {
-          setAnimationDirection('up');
-          setCurrentImageIndex((prev) =>
-               prev === 0 ? certificationImages.length - 1 : prev - 1
-          );
-     };
+          const interval = setInterval(() => {
+               setCurrentImageIndex((prev) =>
+                    prev === certificationImages.length - 1 ? 0 : prev + 1
+               );
+          }, 5000); // Change image every 5 seconds
+
+          return () => clearInterval(interval);
+     }, [certificationImages.length, isPaused]);
+
+
 
      return (
           <section id="expertise" className={`py-16 bg-[var(--color-teal-light)] relative ${className}`}>
@@ -150,34 +150,17 @@ export default function OdooCertificationSection({
                          <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-sm hover:shadow-md transition-shadow">
                               <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-                                   {/* Left Side - Certificate Image with Navigation */}
+                                   {/* Left Side - Certificate Image */}
                                    <div className="flex justify-center lg:justify-start relative">
-                                        {/* Navigation Buttons - Left Side (Both Mobile and Desktop) */}
-                                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 flex flex-col gap-3">
-                                             <button
-                                                  onClick={goToPreviousImage}
-                                                  className="w-10 h-10 lg:w-12 lg:h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-white/20 flex items-center justify-center hover:bg-white transition-all duration-200 hover:scale-110"
-                                                  aria-label="Previous image"
-                                             >
-                                                  <ChevronUp className="w-5 h-5 lg:w-6 lg:h-6 text-[var(--color-secondary)]" />
-                                             </button>
-                                             <button
-                                                  onClick={goToNextImage}
-                                                  className="w-10 h-10 lg:w-12 lg:h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-white/20 flex items-center justify-center hover:bg-white transition-all duration-200 hover:scale-110"
-                                                  aria-label="Next image"
-                                             >
-                                                  <ChevronDown className="w-5 h-5 lg:w-6 lg:h-6 text-[var(--color-secondary)]" />
-                                             </button>
-                                        </div>
 
                                         {/* Image Container */}
                                         <div className="relative w-full h-80 lg:h-96">
                                              <AnimatePresence mode="wait">
                                                   <motion.div
                                                        key={currentImageIndex}
-                                                       initial={{ opacity: 0, y: animationDirection === 'up' ? -50 : 50 }}
-                                                       animate={{ opacity: 1, y: 0 }}
-                                                       exit={{ opacity: 0, y: animationDirection === 'up' ? 50 : -50 }}
+                                                       initial={{ opacity: 0, scale: 0.95 }}
+                                                       animate={{ opacity: 1, scale: 1 }}
+                                                       exit={{ opacity: 0, scale: 0.95 }}
                                                        transition={{ duration: 0.5, ease: "easeInOut" }}
                                                        className="w-full h-full flex items-center justify-center"
                                                   >
@@ -197,6 +180,27 @@ export default function OdooCertificationSection({
                                                        {currentImageIndex + 1} / {certificationImages.length}
                                                   </span>
                                              </div>
+
+                                             {/* Dots Navigation - Positioned at bottom of image */}
+                                             {certificationImages.length > 1 && (
+                                                  <div
+                                                       className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2"
+                                                       onMouseEnter={() => setIsPaused(true)}
+                                                       onMouseLeave={() => setIsPaused(false)}
+                                                  >
+                                                       {certificationImages.map((_, index) => (
+                                                            <button
+                                                                 key={index}
+                                                                 onClick={() => setCurrentImageIndex(index)}
+                                                                 className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentImageIndex
+                                                                      ? 'bg-[var(--color-secondary)] scale-110'
+                                                                      : 'bg-gray-300 hover:bg-gray-400'
+                                                                      }`}
+                                                                 aria-label={`Go to image ${index + 1}`}
+                                                            />
+                                                       ))}
+                                                  </div>
+                                             )}
                                         </div>
                                    </div>
 

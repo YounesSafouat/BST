@@ -9,16 +9,37 @@ const TestimonialSchema = new mongoose.Schema({
   role: String,
   text: String,
   photo: String,
+  // Add region targeting
+  targetRegions: {
+    type: [String],
+    default: ['all'], // 'all', 'france', 'morocco', 'international'
+    enum: ['all', 'france', 'morocco', 'international']
+  },
   createdAt: Date,
   updatedAt: Date,
 }, { collection: 'testimonials' });
 
 const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial', TestimonialSchema);
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
-    const testimonials = await Testimonial.find({}).lean();
+    
+    // Check if region filtering is requested
+    const { searchParams } = new URL(request.url);
+    const region = searchParams.get('region');
+    
+    let query = {};
+    if (region && region !== 'all') {
+      query = {
+        $or: [
+          { targetRegions: 'all' },
+          { targetRegions: region }
+        ]
+      };
+    }
+    
+    const testimonials = await Testimonial.find(query).lean();
     return NextResponse.json(testimonials);
   } catch (error) {
     console.error('Error fetching testimonials:', error);
@@ -30,7 +51,7 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
     const body = await request.json();
-    const { author, role, text, photo } = body;
+    const { author, role, text, photo, targetRegions } = body;
     if (!author || !role || !text) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -39,6 +60,7 @@ export async function POST(request: NextRequest) {
       role,
       text,
       photo: photo || null,
+      targetRegions: targetRegions || ['all'],
       createdAt: new Date(),
       updatedAt: new Date()
     });

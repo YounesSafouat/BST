@@ -40,6 +40,7 @@ import {
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import * as LucideIcons from "lucide-react"
+import Loader from "./Loader"
 
 interface AboutContent {
   hero: {
@@ -151,14 +152,7 @@ export default function AboutUs() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[var(--color-main)] mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
-        </div>
-      </div>
-    )
+    return <Loader />
   }
 
   // If no content is available, show empty state

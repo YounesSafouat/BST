@@ -150,6 +150,7 @@ interface HomePageData {
                textColor: string;
                videoUrl?: string;
                thumbnailUrl?: string;
+               targetRegions?: string[]; // Add region targeting
           }>;
      };
      faq?: {
@@ -2509,7 +2510,8 @@ export default function HomePageDashboard() {
                                                        backgroundColor: 'bg-gray-800',
                                                        textColor: 'text-white',
                                                        videoUrl: '',
-                                                       thumbnailUrl: ''
+                                                       thumbnailUrl: '',
+                                                       targetRegions: ['all'] // Default to all regions
                                                   })}
                                                   size="sm"
                                                   className="flex items-center gap-2"
@@ -2633,6 +2635,55 @@ export default function HomePageDashboard() {
                                                             <p className="text-xs text-gray-500 mt-1">
                                                                  URL d'une image qui sera affichée avant la lecture de la vidéo
                                                             </p>
+                                                       </div>
+
+                                                       {/* Region Targeting */}
+                                                       <div className="mt-4">
+                                                            <Label>Ciblage Régional</Label>
+                                                            <p className="text-xs text-gray-500 mb-2">
+                                                                 Sélectionnez les régions où cette vidéo doit être visible
+                                                            </p>
+                                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                                                 {[
+                                                                      { value: 'all', label: 'Toutes les régions' },
+                                                                      { value: 'france', label: '🇫🇷 France' },
+                                                                      { value: 'morocco', label: '🇲🇦 Maroc' },
+                                                                      { value: 'international', label: '🌍 International' }
+                                                                 ].map((region) => (
+                                                                      <label key={region.value} className="flex items-center space-x-2 cursor-pointer">
+                                                                           <input
+                                                                                type="checkbox"
+                                                                                checked={(video.targetRegions || ['all']).includes(region.value)}
+                                                                                onChange={(e) => {
+                                                                                     const currentRegions = video.targetRegions || ['all'];
+                                                                                     let newRegions: string[];
+
+                                                                                     if (e.target.checked) {
+                                                                                          // If "all" is selected, remove other regions
+                                                                                          if (region.value === 'all') {
+                                                                                               newRegions = ['all'];
+                                                                                          } else {
+                                                                                               // Remove "all" if selecting specific regions
+                                                                                               newRegions = currentRegions.filter(r => r !== 'all');
+                                                                                               newRegions.push(region.value);
+                                                                                          }
+                                                                                     } else {
+                                                                                          // Remove the region
+                                                                                          newRegions = currentRegions.filter(r => r !== region.value);
+                                                                                          // If no regions selected, default to "all"
+                                                                                          if (newRegions.length === 0) {
+                                                                                               newRegions = ['all'];
+                                                                                          }
+                                                                                     }
+
+                                                                                     updateArrayField('videoTestimonials.videos', index, 'targetRegions', newRegions);
+                                                                                }}
+                                                                                className="rounded border-gray-300 text-[var(--color-main)] focus:ring-[var(--color-main)]"
+                                                                           />
+                                                                           <span className="text-xs font-medium text-gray-700">{region.label}</span>
+                                                                      </label>
+                                                                 ))}
+                                                            </div>
                                                        </div>
 
                                                        {/* Video Preview */}

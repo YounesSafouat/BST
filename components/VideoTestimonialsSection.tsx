@@ -2,6 +2,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Volume2, Pause, VolumeX, X, Maximize2 } from 'lucide-react';
+import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import Loader from './home/Loader';
+
 
 interface VideoTestimonial {
      id: string;
@@ -13,6 +16,7 @@ interface VideoTestimonial {
      textColor: string;
      videoUrl?: string;
      thumbnailUrl?: string;
+     targetRegions?: string[]; // Add region targeting
 }
 
 interface VideoTestimonialsData {
@@ -40,11 +44,31 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           wasMuted: boolean;
      } | null>(null);
      const [forceUpdate, setForceUpdate] = useState(0);
+     const [userRegion, setUserRegion] = useState<string>('international');
+     const [locationLoading, setLocationLoading] = useState(true);
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
      const sectionRef = useRef<HTMLElement>(null);
      const eventHandlersRef = useRef<Map<string, { play: () => void; pause: () => void }>>(new Map());
 
+     // Detect user location for region-based filtering
+     useEffect(() => {
+          const detectUserLocation = async () => {
+               try {
+                    const location = await getUserLocation();
+                    if (location) {
+                         const region = getRegionFromCountry(location.countryCode);
+                         setUserRegion(region);
+                    }
+               } catch (error) {
+                    console.error('Video Testimonials - Error detecting user location:', error);
+               } finally {
+                    setLocationLoading(false);
+               }
+          };
+
+          detectUserLocation();
+     }, []);
 
      const fallbackTestimonials: VideoTestimonial[] = [
           {
@@ -55,7 +79,8 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                backgroundColor: 'bg-gray-800',
                textColor: 'text-white',
                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-               thumbnailUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg'
+               thumbnailUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
+               targetRegions: ['all'] // Default to all regions
           },
           {
                id: '2',
@@ -66,21 +91,34 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                backgroundColor: 'bg-gray-800',
                textColor: 'text-white',
                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-               thumbnailUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg'
+               thumbnailUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg',
+               targetRegions: ['all'] // Default to all regions
           }
      ];
 
-     const testimonials = videoTestimonialsData?.videos || fallbackTestimonials;
+     // Filter testimonials based on user region
+     const filterTestimonialsByRegion = (testimonials: VideoTestimonial[], region: string): VideoTestimonial[] => {
+          return testimonials.filter(testimonial => {
+               // If no targetRegions specified, show to all
+               if (!testimonial.targetRegions || testimonial.targetRegions.length === 0) {
+                    return true;
+               }
+               // Show if targeting all regions or specifically targeting user's region
+               return testimonial.targetRegions.includes('all') || testimonial.targetRegions.includes(region);
+          });
+     };
+
+     const allTestimonials = videoTestimonialsData?.videos || fallbackTestimonials;
+     const testimonials = filterTestimonialsByRegion(allTestimonials, userRegion);
      const headline = videoTestimonialsData?.headline || 'NOS DERNIERS PROJETS';
      const description = videoTestimonialsData?.description || 'Témoignages clients';
      const subdescription = videoTestimonialsData?.subdescription || 'Découvrez comment nos clients ont transformé leur entreprise avec Odoo';
 
-
-
-
-
-
+     // Move useEffect hook before any conditional returns to follow Rules of Hooks
      useEffect(() => {
+          // Only add event listeners if testimonials exist and location is not loading
+          if (locationLoading || testimonials.length === 0) return;
+
           const handlePlay = (videoId: string) => {
                setPlayingVideos(prev => ({ ...prev, [videoId]: true }));
           };
@@ -96,7 +134,6 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                     const playHandler = () => handlePlay(testimonial.id);
                     const pauseHandler = () => handlePause(testimonial.id);
 
-
                     const existingHandlers = eventHandlersRef.current.get(testimonial.id);
                     if (existingHandlers) {
                          video.removeEventListener('play', existingHandlers.play);
@@ -106,11 +143,9 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                     video.addEventListener('play', playHandler);
                     video.addEventListener('pause', pauseHandler);
 
-
                     eventHandlersRef.current.set(testimonial.id, { play: playHandler, pause: pauseHandler });
                }
           });
-
 
           return () => {
                testimonials.forEach((testimonial) => {
@@ -123,7 +158,18 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                     }
                });
           };
-     }, [testimonials, forceUpdate]);
+     }, [testimonials, forceUpdate, locationLoading]);
+
+     // Hide section entirely if no videos available for user's region
+     if (!locationLoading && testimonials.length === 0) {
+          return null;
+     }
+
+     // Show loading while detecting location
+     if (locationLoading) {
+          return <Loader />;
+     }
+
 
      const togglePlay = (videoId: string) => {
           const video = videoRefs.current[videoId];
@@ -173,29 +219,30 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           }
      };
 
-     const handleFullscreenLoadedMetadata = () => {
-          if (fullscreenVideoRef.current && fullscreenState) {
-               fullscreenVideoRef.current.currentTime = fullscreenState.currentTime;
-               fullscreenVideoRef.current.muted = fullscreenState.wasMuted;
-
-               // If it was playing, start playing in fullscreen
-               if (fullscreenState.wasPlaying) {
-                    fullscreenVideoRef.current.play();
-               }
-
-               // Clear the state
-               setFullscreenState(null);
+     const handleProgressClick = (videoId: string, e: React.MouseEvent<HTMLDivElement>) => {
+          const video = videoRefs.current[videoId];
+          if (video) {
+               const rect = e.currentTarget.getBoundingClientRect();
+               const clickX = e.clientX - rect.left;
+               const width = rect.width;
+               const clickTime = (clickX / width) * video.duration;
+               video.currentTime = clickTime;
           }
      };
 
-     const handleProgressClick = (videoId: string, event: React.MouseEvent<HTMLDivElement>) => {
-          const video = videoRefs.current[videoId];
-          if (video) {
-               const rect = event.currentTarget.getBoundingClientRect();
-               const clickX = event.clientX - rect.left;
-               const width = rect.width;
-               const percentage = clickX / width;
-               video.currentTime = percentage * video.duration;
+     const handleFullscreenLoadedMetadata = () => {
+          if (fullscreenVideoRef.current) {
+               const video = fullscreenVideoRef.current;
+               if (fullscreenState) {
+                    // Restore the state
+                    video.currentTime = fullscreenState.currentTime;
+                    video.muted = fullscreenState.wasMuted;
+                    if (fullscreenState.wasPlaying) {
+                         video.play().catch((error) => {
+                              console.error('Error playing fullscreen video:', error);
+                         });
+                    }
+               }
           }
      };
 
@@ -396,7 +443,7 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                                                             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
                                                                  <div className="text-center">
                                                                       <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                                                                           <Play className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800 ml-0.5 sm:ml-1" />
+                                                                           <Play className="w-6 h-6 sm:w-8 sm:w-8 text-gray-800 ml-0.5 sm:ml-1" />
                                                                       </div>
                                                                       <p className="text-white text-sm sm:text-lg font-medium">
                                                                            {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}

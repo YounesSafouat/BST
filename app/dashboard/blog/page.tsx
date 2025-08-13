@@ -12,6 +12,7 @@ import { FileText, Pencil, Trash2, Eye, Plus, X, Save, Calendar, Clock, User, St
 import * as LucideIcons from "lucide-react";
 import Loader from '@/components/home/Loader';
 import { BlogPost } from "@/components/BlogPost";
+import YoastSEO from "@/components/YoastSEO";
 
 // Rich Text Editor Component
 const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), { ssr: false });
@@ -36,6 +37,23 @@ interface BlogPost {
 
   similarPosts?: string[];
   targetRegions?: string[];
+
+  // SEO fields - all required
+  seo: {
+    keywords: string[];
+    metaDescription: string;
+    metaTitle: string;
+    focusKeyword: string;
+    seoScore: number;
+    readabilityScore: number;
+    keywordDensity: {
+      primary: number;
+      secondary: Array<{
+        keyword: string;
+        density: number;
+      }>;
+    };
+  };
 }
 
 function emptyPost() {
@@ -57,6 +75,20 @@ function emptyPost() {
 
     similarPosts: [],
     targetRegions: ['france', 'morocco', 'international'],
+
+    // SEO fields - ensure all are required
+    seo: {
+      keywords: [],
+      metaDescription: "",
+      metaTitle: "",
+      focusKeyword: "",
+      seoScore: 0,
+      readabilityScore: 0,
+      keywordDensity: {
+        primary: 0,
+        secondary: []
+      }
+    }
   };
 }
 
@@ -84,6 +116,67 @@ function formatScheduledDate(dateString: string): string {
   });
 }
 
+// SEO Helper Functions
+function calculateSEOScore(post: BlogPost): number {
+  let score = 0;
+
+  // Title optimization (25 points)
+  if (post.title && post.title.length >= 30 && post.title.length <= 60) score += 25;
+  else if (post.title) score += Math.max(0, 25 - Math.abs(post.title.length - 45) * 2);
+
+  // Meta description (20 points)
+  if (post.seo?.metaDescription && post.seo.metaDescription.length >= 120 && post.seo.metaDescription.length <= 160) score += 20;
+  else if (post.seo?.metaDescription) score += Math.max(0, 20 - Math.abs(post.seo.metaDescription.length - 140) * 0.5);
+
+  // Keywords (25 points)
+  if (post.seo?.keywords && post.seo.keywords.length >= 3 && post.seo.keywords.length <= 8) score += 25;
+  else if (post.seo?.keywords) score += Math.max(0, 25 - Math.abs(post.seo.keywords.length - 5) * 5);
+
+  // Content length (15 points)
+  if (post.body && post.body.length >= 300) score += 15;
+  else if (post.body) score += Math.max(0, (post.body.length / 300) * 15);
+
+  // Image optimization (15 points)
+  if (post.image) score += 15;
+
+  return Math.min(100, Math.round(score));
+}
+
+function calculateReadabilityScore(content: string): number {
+  if (!content) return 0;
+
+  const words = content.split(' ').length;
+  const sentences = content.split(/[.!?]+/).length;
+  const syllables = content.toLowerCase().replace(/[^a-z]/g, '').split('').filter(char => 'aeiou'.includes(char)).length;
+
+  // Flesch Reading Ease formula
+  const fleschScore = 206.835 - (1.015 * (words / sentences)) - (84.6 * (syllables / words));
+
+  // Convert to 0-100 scale
+  return Math.max(0, Math.min(100, Math.round(fleschScore)));
+}
+
+function calculateKeywordDensity(content: string, keywords: string[]): any {
+  if (!content || !keywords || keywords.length === 0) return { primary: 0, secondary: [] };
+
+  const wordCount = content.toLowerCase().split(' ').length;
+  const keywordDensity = keywords.map(keyword => {
+    const regex = new RegExp(keyword.toLowerCase(), 'gi');
+    const matches = content.match(regex) || [];
+    const density = (matches.length / wordCount) * 100;
+
+    return {
+      keyword,
+      density: Math.round(density * 100) / 100
+    };
+  });
+
+  return {
+    primary: keywordDensity[0]?.density || 0,
+    secondary: keywordDensity.slice(1)
+  };
+}
+
 export default function BlogAdminPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
 
@@ -94,6 +187,9 @@ export default function BlogAdminPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewing, setPreviewing] = useState<BlogPost | null>(null);
 
+  // Separate state for keywords input to handle comma input better
+  const [keywordsInput, setKeywordsInput] = useState<string>("");
+
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all"); // all, published, draft, scheduled
@@ -101,7 +197,8 @@ export default function BlogAdminPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [featuredFilter, setFeaturedFilter] = useState<boolean | null>(null); // null = all, true = featured, false = not featured
   const [regionFilter, setRegionFilter] = useState<string>("all");
-  const [sortBy, setSortBy] = useState<string>("date"); // date, title, author, scheduledDate
+  const [seoFilter, setSeoFilter] = useState<string>("all"); // all, high, medium, low
+  const [sortBy, setSortBy] = useState<string>("date"); // date, title, author, scheduledDate, seoScore
   const [sortOrder, setSortOrder] = useState<string>("desc"); // asc, desc
 
   // Helper function to get filtered and sorted posts
@@ -174,6 +271,23 @@ export default function BlogAdminPage() {
       );
     }
 
+    // SEO filter
+    if (seoFilter !== "all") {
+      filtered = filtered.filter(post => {
+        const seoScore = post.seo?.seoScore || 0;
+        switch (seoFilter) {
+          case "high":
+            return seoScore >= 80;
+          case "medium":
+            return seoScore >= 60 && seoScore < 80;
+          case "low":
+            return seoScore < 60;
+          default:
+            return true;
+        }
+      });
+    }
+
     // Sort
     filtered.sort((a, b) => {
       let aValue: any, bValue: any;
@@ -190,6 +304,10 @@ export default function BlogAdminPage() {
         case "scheduledDate":
           aValue = a.scheduledDate ? new Date(a.scheduledDate).getTime() : 0;
           bValue = b.scheduledDate ? new Date(b.scheduledDate).getTime() : 0;
+          break;
+        case "seoScore":
+          aValue = a.seo?.seoScore || 0;
+          bValue = b.seo?.seoScore || 0;
           break;
         case "date":
         default:
@@ -281,7 +399,22 @@ export default function BlogAdminPage() {
     console.log("Post ID being stored:", postToEdit._id);
     console.log("Post ID type:", typeof postToEdit._id);
     setEditing(postToEdit._id || null); // Store the ID instead of index
-    setForm(postToEdit);
+    // Ensure the post has a complete SEO object
+    const postWithCompleteSeo = {
+      ...postToEdit,
+      seo: {
+        keywords: postToEdit.seo?.keywords || [],
+        metaDescription: postToEdit.seo?.metaDescription || "",
+        metaTitle: postToEdit.seo?.metaTitle || "",
+        focusKeyword: postToEdit.seo?.focusKeyword || "",
+        seoScore: postToEdit.seo?.seoScore || 0,
+        readabilityScore: postToEdit.seo?.readabilityScore || 0,
+        keywordDensity: postToEdit.seo?.keywordDensity || { primary: 0, secondary: [] }
+      }
+    };
+    setForm(postWithCompleteSeo);
+    // Sync keywords input state
+    setKeywordsInput(postToEdit.seo?.keywords?.join(', ') || '');
     setIsModalOpen(true);
   }
 
@@ -289,6 +422,7 @@ export default function BlogAdminPage() {
   function newPost() {
     setEditing("new");
     setForm(emptyPost());
+    setKeywordsInput(''); // Reset keywords input
     setIsModalOpen(true);
   }
 
@@ -296,6 +430,7 @@ export default function BlogAdminPage() {
   function cancelEdit() {
     setEditing(null);
     setForm(emptyPost());
+    setKeywordsInput(''); // Reset keywords input
     setIsModalOpen(false);
   }
 
@@ -312,6 +447,18 @@ export default function BlogAdminPage() {
 
         similarPosts: form.similarPosts || [],
         targetRegions: form.targetRegions || ['france', 'morocco', 'international'],
+
+        // Calculate SEO scores
+        seo: {
+          ...form.seo,
+          keywords: form.seo?.keywords || [],
+          metaDescription: form.seo?.metaDescription || "",
+          metaTitle: form.seo?.metaTitle || "",
+          focusKeyword: form.seo?.focusKeyword || "",
+          seoScore: calculateSEOScore(form),
+          readabilityScore: calculateReadabilityScore(form.body),
+          keywordDensity: calculateKeywordDensity(form.body, form.seo?.keywords || [])
+        }
       };
 
       console.log("Form data to save:", formData);
@@ -670,6 +817,192 @@ export default function BlogAdminPage() {
                   </CardContent>
                 </Card>
 
+                {/* SEO Management */}
+                <Card>
+                  <CardHeader><CardTitle>Optimisation SEO</CardTitle></CardHeader>
+                  <CardContent className="space-y-6">
+                    {/* SEO Form Fields */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Mot-clé Principal</Label>
+                        <Input
+                          name="focusKeyword"
+                          value={form.seo?.focusKeyword || ''}
+                          onChange={(e) => setForm(f => ({
+                            ...f,
+                            seo: {
+                              keywords: f.seo?.keywords || [],
+                              metaDescription: f.seo?.metaDescription || "",
+                              metaTitle: f.seo?.metaTitle || "",
+                              focusKeyword: e.target.value,
+                              seoScore: f.seo?.seoScore || 0,
+                              readabilityScore: f.seo?.readabilityScore || 0,
+                              keywordDensity: f.seo?.keywordDensity || { primary: 0, secondary: [] }
+                            }
+                          }))}
+                          placeholder="Mot-clé principal pour ce post"
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Mots-clés (séparés par des virgules)</Label>
+                        <Input
+                          name="keywords"
+                          value={keywordsInput}
+                          onChange={(e) => {
+                            const inputValue = e.target.value;
+                            setKeywordsInput(inputValue);
+                            console.log('Keywords input value:', inputValue);
+
+                            // Split by comma and clean up each keyword
+                            const keywords = inputValue
+                              .split(',')
+                              .map(k => k.trim())
+                              .filter(k => k.length > 0); // Only keep non-empty keywords
+
+                            console.log('Processed keywords:', keywords);
+
+                            setForm(f => {
+                              const newForm = {
+                                ...f,
+                                seo: {
+                                  keywords: keywords,
+                                  metaDescription: f.seo?.metaDescription || "",
+                                  metaTitle: f.seo?.metaTitle || "",
+                                  focusKeyword: f.seo?.focusKeyword || "",
+                                  seoScore: f.seo?.seoScore || 0,
+                                  readabilityScore: f.seo?.readabilityScore || 0,
+                                  keywordDensity: f.seo?.keywordDensity || { primary: 0, secondary: [] }
+                                }
+                              };
+                              console.log('Updated form SEO:', newForm.seo);
+                              return newForm;
+                            });
+                          }}
+                          onBlur={() => {
+                            // When input loses focus, ensure the form is updated
+                            const keywords = keywordsInput
+                              .split(',')
+                              .map(k => k.trim())
+                              .filter(k => k.length > 0);
+
+                            setForm(f => ({
+                              ...f,
+                              seo: {
+                                keywords: keywords,
+                                metaDescription: f.seo?.metaDescription || "",
+                                metaTitle: f.seo?.metaTitle || "",
+                                focusKeyword: f.seo?.focusKeyword || "",
+                                seoScore: f.seo?.seoScore || 0,
+                                readabilityScore: f.seo?.readabilityScore || 0,
+                                keywordDensity: f.seo?.keywordDensity || { primary: 0, secondary: [] }
+                              }
+                            }));
+                          }}
+                          placeholder="mot-clé1, mot-clé2, mot-clé3"
+                        />
+                        <div className="text-xs text-gray-500 mt-1">
+                          {form.seo?.keywords?.length || 0} mot(s)-clé(s) configuré(s)
+                        </div>
+
+                        {/* Keywords Preview */}
+                        {form.seo?.keywords && form.seo.keywords.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {form.seo.keywords.map((keyword, index) => (
+                              <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 border border-blue-200">
+                                {keyword}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newKeywords = form.seo?.keywords?.filter((_, i) => i !== index) || [];
+                                    setForm(f => ({
+                                      ...f,
+                                      seo: {
+                                        keywords: newKeywords,
+                                        metaDescription: f.seo?.metaDescription || "",
+                                        metaTitle: f.seo?.metaTitle || "",
+                                        focusKeyword: f.seo?.focusKeyword || "",
+                                        seoScore: f.seo?.seoScore || 0,
+                                        readabilityScore: f.seo?.readabilityScore || 0,
+                                        keywordDensity: f.seo?.keywordDensity || { primary: 0, secondary: [] }
+                                      }
+                                    }));
+                                  }}
+                                  className="ml-1 text-blue-600 hover:text-blue-800"
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <Label>Meta Description</Label>
+                        <textarea
+                          name="metaDescription"
+                          value={form.seo?.metaDescription || ''}
+                          onChange={(e) => setForm(f => ({
+                            ...f,
+                            seo: {
+                              keywords: f.seo?.keywords || [],
+                              metaDescription: e.target.value,
+                              metaTitle: f.seo?.metaTitle || "",
+                              focusKeyword: f.seo?.focusKeyword || "",
+                              seoScore: f.seo?.seoScore || 0,
+                              readabilityScore: f.seo?.readabilityScore || 0,
+                              keywordDensity: f.seo?.keywordDensity || { primary: 0, secondary: [] }
+                            }
+                          }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          rows={3}
+                          placeholder="Description SEO pour les moteurs de recherche (120-160 caractères)"
+                          maxLength={160}
+                        />
+                        <div className="text-xs text-gray-500 mt-1">
+                          {form.seo?.metaDescription?.length || 0}/160 caractères
+                        </div>
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <Label>Meta Title</Label>
+                        <Input
+                          name="metaTitle"
+                          value={form.seo?.metaTitle || ''}
+                          onChange={(e) => setForm(f => ({
+                            ...f,
+                            seo: {
+                              keywords: f.seo?.keywords || [],
+                              metaDescription: f.seo?.metaDescription || "",
+                              metaTitle: e.target.value,
+                              focusKeyword: f.seo?.focusKeyword || "",
+                              seoScore: f.seo?.seoScore || 0,
+                              readabilityScore: f.seo?.readabilityScore || 0,
+                              keywordDensity: f.seo?.keywordDensity || { primary: 0, secondary: [] }
+                            }
+                          }))}
+                          placeholder="Titre SEO personnalisé (optionnel)"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Yoast SEO Analysis */}
+                <Card>
+                  <CardHeader><CardTitle>Analyse SEO Yoast</CardTitle></CardHeader>
+                  <CardContent>
+                    <YoastSEO
+                      title={form.title}
+                      content={form.body}
+                      focusKeyword={form.seo?.focusKeyword || ''}
+                      metaDescription={form.seo?.metaDescription || ''}
+                      slug={form.slug}
+                    />
+                  </CardContent>
+                </Card>
+
                 {/* Content Editor */}
                 <Card>
                   <CardHeader><CardTitle>Contenu</CardTitle></CardHeader>
@@ -744,6 +1077,7 @@ export default function BlogAdminPage() {
                   setCategoryFilter("all");
                   setFeaturedFilter(null);
                   setRegionFilter("all");
+                  setSeoFilter("all");
                   setSortBy("date");
                   setSortOrder("desc");
                 }}
@@ -839,6 +1173,22 @@ export default function BlogAdminPage() {
                 </select>
               </div>
 
+              {/* SEO Filter */}
+              <div>
+                <Label className="text-sm font-medium">Score SEO</Label>
+                <select
+                  value={seoFilter}
+                  onChange={(e) => setSeoFilter(e.target.value)}
+                  className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  aria-label="Filtrer par score SEO"
+                >
+                  <option value="all">Tous les scores</option>
+                  <option value="high">Élevé (80-100)</option>
+                  <option value="medium">Moyen (60-79)</option>
+                  <option value="low">Faible (0-59)</option>
+                </select>
+              </div>
+
               {/* Sort Options */}
               <div>
                 <Label className="text-sm font-medium">Trier par</Label>
@@ -853,6 +1203,7 @@ export default function BlogAdminPage() {
                     <option value="title">Titre</option>
                     <option value="author">Auteur</option>
                     <option value="scheduledDate">Date programmée</option>
+                    <option value="seoScore">Score SEO</option>
                   </select>
                   <Button
                     variant="outline"
@@ -989,7 +1340,35 @@ export default function BlogAdminPage() {
                       {post.targetRegions.length === 3 ? 'Toutes' : post.targetRegions.join(', ')}
                     </span>
                   )}
+
+                  {/* SEO Score Badge */}
+                  {post.seo?.seoScore && (
+                    <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold border ${post.seo.seoScore >= 80 ? 'bg-green-100 text-green-700 border-green-200' :
+                      post.seo.seoScore >= 60 ? 'bg-yellow-100 text-yellow-700 border-yellow-200' :
+                        'bg-red-100 text-red-700 border-red-200'
+                      }`}>
+                      SEO: {post.seo.seoScore}/100
+                    </span>
+                  )}
                 </div>
+
+                {/* SEO Keywords Display */}
+                {post.seo?.keywords && post.seo.keywords.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-1">
+                      {post.seo.keywords.slice(0, 3).map((keyword, index) => (
+                        <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700 border border-blue-200">
+                          {keyword}
+                        </span>
+                      ))}
+                      {post.seo.keywords.length > 3 && (
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-50 text-gray-600 border border-gray-200">
+                          +{post.seo.keywords.length - 3} autres
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons - Icon Only */}

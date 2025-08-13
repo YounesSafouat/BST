@@ -403,6 +403,43 @@ export default function BlogPage() {
                           {post.title}
                         </h3>
                         <p className="text-gray-500 mb-4 flex-1">{post.excerpt}</p>
+                        {/* SEO Information Display */}
+                        {post.seo && (
+                          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
+                              <span>Score SEO: {post.seo.seoScore || 0}/100</span>
+                              <span>Lisibilité: {post.seo.readabilityScore || 0}/100</span>
+                            </div>
+
+                            {/* SEO Score Bar */}
+                            <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                              <div
+                                className={`h-2 rounded-full transition-all duration-300 ${(post.seo.seoScore || 0) >= 80 ? 'bg-green-500' :
+                                    (post.seo.seoScore || 0) >= 60 ? 'bg-yellow-500' :
+                                      'bg-red-500'
+                                  }`}
+                                style={{ width: `${post.seo.seoScore || 0}%` }}
+                              ></div>
+                            </div>
+
+                            {/* Keywords Display */}
+                            {post.seo.keywords && post.seo.keywords.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {post.seo.keywords.slice(0, 3).map((keyword: string, index: number) => (
+                                  <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 border border-blue-200">
+                                    {keyword}
+                                  </span>
+                                ))}
+                                {post.seo.keywords.length > 3 && (
+                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600 border border-gray-200">
+                                    +{post.seo.keywords.length - 3} autres
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {/* Bottom Row: Lire link right-aligned */}
                         <div className="flex items-center justify-end mt-auto">
                           <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1 text-color-main font-medium hover:underline text-sm">

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { FileText, Pencil, Trash2, Plus, X, Save, User, Quote } from "lucide-react";
+import { FileText, Pencil, Trash2, Plus, X, Save, User, Quote, Globe } from "lucide-react";
 import Loader from '@/components/home/Loader';
 
 interface Testimonial {
@@ -15,6 +15,7 @@ interface Testimonial {
   role: string;
   text: string;
   photo?: string;
+  targetRegions?: string[]; // Add region targeting
   createdAt?: string;
   updatedAt?: string;
 }
@@ -25,6 +26,7 @@ function emptyTestimonial(): Testimonial {
     role: "",
     text: "",
     photo: "",
+    targetRegions: [], // Initialize with empty array
   };
 }
 
@@ -49,6 +51,7 @@ export default function TestimonialsPage() {
           role: t.role || '',
           text: t.text || '',
           photo: t.photo || '',
+          targetRegions: t.targetRegions || ['all'],
           createdAt: t.createdAt,
           updatedAt: t.updatedAt,
         }));
@@ -66,6 +69,26 @@ export default function TestimonialsPage() {
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
+  }
+
+  // Handle region targeting changes
+  function handleRegionChange(region: string, checked: boolean) {
+    setForm((f) => {
+      if (checked) {
+        // If "all" is selected, remove other regions
+        if (region === 'all') {
+          return { ...f, targetRegions: ['all'] };
+        }
+        // Remove "all" if selecting specific regions
+        const newRegions = f.targetRegions?.filter(r => r !== 'all') || [];
+        return { ...f, targetRegions: [...newRegions, region] };
+      } else {
+        // Remove the region
+        const newRegions = f.targetRegions?.filter(r => r !== region) || [];
+        // If no regions selected, default to "all"
+        return { ...f, targetRegions: newRegions.length > 0 ? newRegions : ['all'] };
+      }
+    });
   }
 
   // Start editing a testimonial
@@ -99,7 +122,13 @@ export default function TestimonialsPage() {
         const res = await fetch("/api/testimonials", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify({
+            author: form.author,
+            role: form.role,
+            text: form.text,
+            photo: form.photo,
+            targetRegions: form.targetRegions || ['all']
+          }),
         });
 
         if (res.ok) {
@@ -116,7 +145,13 @@ export default function TestimonialsPage() {
           const res = await fetch(`/api/testimonials/${testimonials[editing]._id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(form),
+            body: JSON.stringify({
+              author: form.author,
+              role: form.role,
+              text: form.text,
+              photo: form.photo,
+              targetRegions: form.targetRegions || ['all']
+            }),
           });
           if (res.ok) {
             const updatedTestimonials = testimonials.map((t, i) =>
@@ -161,6 +196,17 @@ export default function TestimonialsPage() {
     setSaving(false);
   }
 
+  // Helper function to get region display names
+  const getRegionDisplayName = (region: string) => {
+    switch (region) {
+      case 'all': return 'Toutes les régions';
+      case 'france': return '🇫🇷 France';
+      case 'morocco': return '🇲🇦 Maroc';
+      case 'international': return '🌍 International';
+      default: return region;
+    }
+  };
+
   // UI
   if (loading) {
     return <Loader />;
@@ -168,7 +214,7 @@ export default function TestimonialsPage() {
 
   return (
     <div className="container mx-auto py-4 sm:py-6 lg:py-8">
-      <div className="flex justify-between items-center mb-4 sm:mb-6">
+      <div className="flex justify-between items-center mb-4 sm:py-6">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Gestion des Témoignages</h1>
         <Button onClick={newTestimonial} className="bg-[--color-black] hover:bg-primary-dark text-white">
           <Plus className="h-4 w-4 mr-2" />
@@ -185,7 +231,7 @@ export default function TestimonialsPage() {
                 {editing === "new" ? "Nouveau Témoignage" : `Modifier: ${form.author}`}
               </h2>
               <Button variant="ghost" size="icon" onClick={cancelEdit} className="h-8 w-8 sm:h-10 sm:w-10">
-                <X className="h-4 w-4 sm:h-6 sm:w-6" />
+                <X className="h-4 h-4 sm:h-6 sm:w-6" />
               </Button>
             </div>
 
@@ -217,6 +263,32 @@ export default function TestimonialsPage() {
                         placeholder="Le témoignage..."
                         rows={4}
                       />
+                    </div>
+
+                    {/* Region Targeting */}
+                    <div>
+                      <Label className="block mb-2">Régions cibles</Label>
+                      <div className="space-y-2">
+                        {[
+                          { value: 'france', label: '🇫🇷 France' },
+                          { value: 'morocco', label: '🇲🇦 Maroc' },
+                          { value: 'international', label: '🌍 International' },
+                          { value: 'all', label: '🌐 Toutes les régions' }
+                        ].map((region) => (
+                          <label key={region.value} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              checked={form.targetRegions?.includes(region.value)}
+                              onChange={(e) => handleRegionChange(region.value, e.target.checked)}
+                              className="rounded border-gray-300 text-[var(--color-main)] focus:ring-[var(--color-main)]"
+                            />
+                            <span className="text-sm text-gray-700">{region.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Sélectionnez les régions où ce témoignage doit être visible. Laissez vide pour afficher partout.
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -277,6 +349,22 @@ export default function TestimonialsPage() {
                 <p className="text-sm text-gray-600 line-clamp-3 max-w-[220px]">
                   "{testimonial.text || "Aucun témoignage"}"
                 </p>
+
+                {/* Region targeting display */}
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {testimonial.targetRegions?.map((region) => (
+                    <span
+                      key={region}
+                      className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                    >
+                      {region === 'france' && '🇫🇷'}
+                      {region === 'morocco' && '🇲🇦'}
+                      {region === 'international' && '🌍'}
+                      {region === 'all' && '🌐'}
+                      {region}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {/* Bottom Section: Actions */}
