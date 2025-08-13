@@ -281,21 +281,27 @@ export default function HomePage() {
                     console.log('📊 Array length:', Array.isArray(data) ? data.length : 'N/A');
 
                     if (data && Array.isArray(data) && data.length > 0) {
-                         // Get the first (and should be only) home-page document
-                         const homePageContent = data[0];
-                         console.log('📄 First content item:', homePageContent);
-                         console.log('📄 Content type:', homePageContent.type);
-                         console.log('📄 Has content field:', !!homePageContent.content);
+                         // Find the home-page content specifically
+                         const homePageContent = data.find(item => item.type === 'home-page');
 
-                         // Check if the content field exists
-                         if (homePageContent.content) {
-                              console.log('✅ Setting home page data:', homePageContent.content);
-                              setHomePageData(homePageContent.content);
+                         if (homePageContent) {
+                              console.log('📄 Found home-page content:', homePageContent);
+                              console.log('📄 Content type:', homePageContent.type);
+                              console.log('📄 Has content field:', !!homePageContent.content);
+
+                              // Check if the content field exists
+                              if (homePageContent.content) {
+                                   console.log('✅ Setting home page data:', homePageContent.content);
+                                   setHomePageData(homePageContent.content);
+                              } else {
+                                   console.error('❌ Home page content structure is invalid');
+                              }
                          } else {
-                              console.error('❌ Home page content structure is invalid');
+                              console.error('❌ No home-page content found in the data array');
+                              console.log('📊 Available content types:', data.map(item => item.type));
                          }
                     } else {
-                         console.error('❌ Invalid data format or no home-page content found:', data);
+                         console.error('❌ Invalid data format or no content found:', data);
                     }
                } else {
                     console.error('❌ Failed to fetch home page data:', response.status);
