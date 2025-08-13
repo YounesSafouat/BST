@@ -343,6 +343,41 @@ export default function HomePageDashboard() {
                          ];
                     }
 
+                    // Initialize FAQ data if it doesn't exist
+                    if (!contentData.faq) {
+                         contentData.faq = {
+                              headline: "QUESTIONS FRÉQUENTES",
+                              description: "Tout savoir sur Odoo",
+                              subdescription: "Découvrez les réponses aux questions les plus courantes sur notre accompagnement Odoo",
+                              items: [
+                                   {
+                                        question: "Odoo est-il adapté à mon secteur d'activité ?",
+                                        answer: "Absolument ! Odoo propose une architecture modulaire ultra-flexible qui s'adapte parfaitement à tous les secteurs d'activité : industrie, services, BTP, distribution, éducation, santé, et bien d'autres. Chez BlackswanTechnology, nous créons des solutions verticales sur mesure qui intègrent les spécificités métier de votre secteur pour maximiser votre productivité."
+                                   },
+                                   {
+                                        question: "Comment se déroule un projet d'intégration Odoo avec BlackswanTechnology ?",
+                                        answer: "Chez BlackswanTechnology, nous suivons une méthodologie éprouvée en 4 phases : cadrage détaillé de vos besoins, déploiement progressif, formation personnalisée de vos équipes, et support continu. Chaque étape est supervisée par nos experts certifiés Odoo pour garantir une mise en œuvre sans accroc et un ROI optimal."
+                                   },
+                                   {
+                                        question: "Quels sont les délais moyens d'un projet d'intégration ?",
+                                        answer: "Nos délais varient selon la complexité : pour un projet standard avec une équipe de taille humaine, comptez 6 à 16 semaines. Pour des projets plus complexes multi-services, les délais s'étendent de 12 à 22 semaines. Notre approche agile vous permet de voir des résultats concrets dès les premières semaines avec des livrables à chaque sprint."
+                                   },
+                                   {
+                                        question: "Puis-je héberger Odoo sur le cloud ?",
+                                        answer: "Bien sûr ! BlackswanTechnology propose un hébergement cloud managé de haute qualité via notre plateforme dédiée. Nous garantissons une haute disponibilité, des sauvegardes quotidiennes automatisées, et un monitoring 24/7 pour assurer la continuité de vos activités."
+                                   },
+                                   {
+                                        question: "Proposez-vous une formation à l'utilisation d'Odoo ?",
+                                        answer: "Oui, la formation est un élément clé de notre accompagnement ! Chaque projet inclut des sessions de formation personnalisées adaptées à vos processus métier. Nos experts BlackswanTechnology accompagnent vos équipes pour une prise en main rapide et efficace, garantissant l'autonomie de vos utilisateurs."
+                                   },
+                                   {
+                                        question: "Comment se passe le support après la mise en production ?",
+                                        answer: "Chez BlackswanTechnology, votre succès ne s'arrête pas à la mise en production ! Nous assurons un support technique et fonctionnel complet avec des SLA définis et respectés. Vous bénéficiez d'un accompagnement continu - vous n'êtes jamais seul, même après la mise en ligne de votre solution Odoo."
+                                   }
+                              ]
+                         };
+                    }
+
                     // Initialize with default companies if no companies exist
                     if (!contentData.hero.carousel?.companies || contentData.hero.carousel.companies.length === 0) {
                          const defaultCompanies = [
@@ -2220,6 +2255,15 @@ export default function HomePageDashboard() {
                                                   placeholder="Description"
                                              />
                                         </div>
+                                   </div>
+
+                                   <div>
+                                        <Label>Sous-description</Label>
+                                        <Input
+                                             value={homeData.faq?.subdescription || ''}
+                                             onChange={(e) => updateField('faq.subdescription', e.target.value)}
+                                             placeholder="Découvrez les réponses aux questions les plus courantes sur notre accompagnement Odoo"
+                                        />
                                    </div>
 
                                    {/* FAQ Items */}
