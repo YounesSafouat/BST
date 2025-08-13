@@ -114,8 +114,11 @@ function HubSpotPageContent() {
       const response = await fetch(`${baseUrl}/api/content?type=hubspot-page`);
       if (response.ok) {
         const data = await response.json();
-        if (data.length > 0 && data[0].content) {
-          setHubspotData(data[0].content);
+        if (data.length > 0) {
+          const hubspotContent = data.find(item => item.type === 'hubspot-page');
+          if (hubspotContent && hubspotContent.content) {
+            setHubspotData(hubspotContent.content);
+          }
         }
       }
     } catch (error) {

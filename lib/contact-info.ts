@@ -33,7 +33,11 @@ export async function getContactInfoAPI() {
     const response = await fetch('/api/content?type=contact-info');
     if (response.ok) {
       const data = await response.json();
-      return data.length > 0 ? data[0].content : null;
+              if (data.length > 0) {
+            const settingsContent = data.find(item => item.type === 'settings');
+            return settingsContent ? settingsContent.content : null;
+        }
+        return null;
     }
     return null;
   } catch (error) {

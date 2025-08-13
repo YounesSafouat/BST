@@ -50,7 +50,10 @@ export default function MobileHeader() {
         if (response.ok) {
           const data = await response.json();
           if (data.length > 0) {
-            setHeaderData(data[0].content);
+            const headerContent = data.find(item => item.type === 'header');
+            if (headerContent && headerContent.content) {
+              setHeaderData(headerContent.content);
+            }
           }
         } else {
           console.error('Failed to fetch header data:', response.status);

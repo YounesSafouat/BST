@@ -53,8 +53,11 @@ export default function HeaderDashboard() {
                const response = await fetch('/api/content?type=header');
                if (response.ok) {
                     const data = await response.json();
-                    if (data && data.length > 0 && data[0].content) {
-                         setHeaderData(data[0].content);
+                    if (data && data.length > 0) {
+                         const headerContent = data.find(item => item.type === 'header');
+                         if (headerContent && headerContent.content) {
+                              setHeaderData(headerContent.content);
+                         }
                     }
                } else {
                     console.warn('Header data not found, using defaults');

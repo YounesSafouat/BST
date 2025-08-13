@@ -126,7 +126,10 @@ export default function AboutUs() {
         if (response.ok) {
           const data = await response.json()
           if (data.length > 0) {
-            setAboutContent(data[0].content)
+            const aboutContent = data.find(item => item.type === 'about');
+            if (aboutContent && aboutContent.content) {
+              setAboutContent(aboutContent.content);
+            }
           }
         }
       } catch (error) {

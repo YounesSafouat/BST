@@ -92,7 +92,7 @@ export default function ClientsAdminPage() {
     fetch("/api/content?type=clients-page")
       .then((res) => res.json())
       .then((data) => {
-        const page = Array.isArray(data) ? data[0] : data;
+        const page = Array.isArray(data) ? data.find(item => item.type === 'clients-page') : data;
         setClients(page?.content?.clientCases || []);
         setLoading(false);
       })
@@ -212,15 +212,15 @@ export default function ClientsAdminPage() {
           <Plus className="h-4 w-4 mr-2" />
           Nouveau Client
         </Button>
-                  </div>
+      </div>
 
       {loading ? (
         <div className="flex items-center justify-center min-h-[300px] sm:min-h-[400px]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-sm sm:text-lg text-gray-600">Chargement des cas clients...</p>
-                    </div>
-                  </div>
+          </div>
+        </div>
       ) : (
         <>
           {/* Modal for editing */}
@@ -235,7 +235,7 @@ export default function ClientsAdminPage() {
                     <X className="h-4 w-4 sm:h-6 sm:w-6" />
                   </Button>
                 </div>
-                
+
                 <div className="flex-grow overflow-y-auto p-4">
                   <div className="space-y-6">
                     {/* Basic Information */}
@@ -243,27 +243,27 @@ export default function ClientsAdminPage() {
                       <CardHeader><CardTitle>Informations de Base</CardTitle></CardHeader>
                       <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+                          <div>
                             <Label>Nom du client</Label>
                             <Input name="name" value={form.name} onChange={handleChange} />
-            </div>
-            <div>
+                          </div>
+                          <div>
                             <Label>Slug</Label>
                             <Input name="slug" value={form.slug} onChange={handleChange} placeholder="nom-client" />
-            </div>
-            <div>
+                          </div>
+                          <div>
                             <Label>Titre principal</Label>
                             <Input name="headline" value={form.headline} onChange={handleChange} />
-            </div>
-            <div>
+                          </div>
+                          <div>
                             <Label>Secteur</Label>
                             <Input name="sector" value={form.sector} onChange={handleChange} />
-            </div>
-            <div>
+                          </div>
+                          <div>
                             <Label>Taille</Label>
                             <Input name="size" value={form.size} onChange={handleChange} />
-            </div>
-            <div>
+                          </div>
+                          <div>
                             <Label>Migration</Label>
                             <Input name="migration" value={form.migration} onChange={handleChange} />
                           </div>
@@ -274,8 +274,8 @@ export default function ClientsAdminPage() {
                           <div className="md:col-span-2">
                             <Label>Résumé</Label>
                             <Input name="summary" value={form.summary} onChange={handleChange} />
-            </div>
-            </div>
+                          </div>
+                        </div>
                         <div className="flex items-center space-x-4">
                           <div className="flex items-center space-x-2">
                             <Switch
@@ -284,7 +284,7 @@ export default function ClientsAdminPage() {
                               onCheckedChange={(checked) => setForm(f => ({ ...f, featured: checked }))}
                             />
                             <Label htmlFor="featured">Mis en avant</Label>
-            </div>
+                          </div>
                           <div className="flex items-center space-x-2">
                             <Switch
                               id="featuredInHeader"
@@ -292,12 +292,12 @@ export default function ClientsAdminPage() {
                               onCheckedChange={(checked) => setForm(f => ({ ...f, featuredInHeader: checked }))}
                             />
                             <Label htmlFor="featuredInHeader">Mis en avant dans l'en-tête</Label>
-            </div>
-            </div>
+                          </div>
+                        </div>
                       </CardContent>
                     </Card>
 
-            {/* Project Stats */}
+                    {/* Project Stats */}
                     <Card>
                       <CardHeader>
                         <CardTitle>Statistiques du projet</CardTitle>
@@ -305,14 +305,14 @@ export default function ClientsAdminPage() {
                       <CardContent className="space-y-4">
                         {form.projectStats.map((stat, idx) => (
                           <div key={idx} className="flex gap-2">
-                  <Input
-                    placeholder="Label"
-                    value={stat.label}
+                            <Input
+                              placeholder="Label"
+                              value={stat.label}
                               onChange={(e) => handleArrayChange("projectStats", idx, "label", e.target.value)}
-                  />
-                  <Input
-                    placeholder="Valeur"
-                    value={stat.value}
+                            />
+                            <Input
+                              placeholder="Valeur"
+                              value={stat.value}
                               onChange={(e) => handleArrayChange("projectStats", idx, "value", e.target.value)}
                             />
                             <Button
@@ -322,8 +322,8 @@ export default function ClientsAdminPage() {
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
-                </div>
-              ))}
+                          </div>
+                        ))}
                         <Button
                           variant="outline"
                           onClick={() => addArrayItem("projectStats", { label: "", value: "" })}
@@ -334,7 +334,7 @@ export default function ClientsAdminPage() {
                       </CardContent>
                     </Card>
 
-            {/* Challenges */}
+                    {/* Challenges */}
                     <Card>
                       <CardHeader>
                         <CardTitle>Défis</CardTitle>
@@ -343,7 +343,7 @@ export default function ClientsAdminPage() {
                         {form.challenges.map((challenge, idx) => (
                           <div key={idx} className="space-y-2 p-4 border rounded-lg">
                             <div className="flex gap-2">
-                  <Input
+                              <Input
                                 placeholder="Titre du défi"
                                 value={challenge.title}
                                 onChange={(e) => handleArrayChange("challenges", idx, "title", e.target.value)}
@@ -356,18 +356,18 @@ export default function ClientsAdminPage() {
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
-                  <Input
-                    placeholder="Description"
+                            <Input
+                              placeholder="Description"
                               value={challenge.description}
                               onChange={(e) => handleArrayChange("challenges", idx, "description", e.target.value)}
-                  />
-                  <Input
-                    placeholder="Impact"
+                            />
+                            <Input
+                              placeholder="Impact"
                               value={challenge.impact}
                               onChange={(e) => handleArrayChange("challenges", idx, "impact", e.target.value)}
-                  />
-                </div>
-              ))}
+                            />
+                          </div>
+                        ))}
                         <Button
                           variant="outline"
                           onClick={() => addArrayItem("challenges", { title: "", description: "", impact: "" })}
@@ -378,7 +378,7 @@ export default function ClientsAdminPage() {
                       </CardContent>
                     </Card>
 
-            {/* Solutions */}
+                    {/* Solutions */}
                     <Card>
                       <CardHeader>
                         <CardTitle>Solutions</CardTitle>
@@ -387,8 +387,8 @@ export default function ClientsAdminPage() {
                         {form.solutions.map((solution, idx) => (
                           <div key={idx} className="space-y-2 p-4 border rounded-lg">
                             <div className="flex gap-2">
-                  <Input
-                    placeholder="Module"
+                              <Input
+                                placeholder="Module"
                                 value={solution.module}
                                 onChange={(e) => handleArrayChange("solutions", idx, "module", e.target.value)}
                               />
@@ -400,18 +400,18 @@ export default function ClientsAdminPage() {
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
-                  <Input
-                    placeholder="Description"
+                            <Input
+                              placeholder="Description"
                               value={solution.description}
                               onChange={(e) => handleArrayChange("solutions", idx, "description", e.target.value)}
-                  />
-                  <Input
-                    placeholder="Bénéfice"
+                            />
+                            <Input
+                              placeholder="Bénéfice"
                               value={solution.benefit}
                               onChange={(e) => handleArrayChange("solutions", idx, "benefit", e.target.value)}
-                  />
-                </div>
-              ))}
+                            />
+                          </div>
+                        ))}
                         <Button
                           variant="outline"
                           onClick={() => addArrayItem("solutions", { module: "", description: "", benefit: "" })}
@@ -441,27 +441,27 @@ export default function ClientsAdminPage() {
                             }}
                           />
                           <Label htmlFor="hasTestimonial">Inclure un témoignage</Label>
-            </div>
+                        </div>
                         {form.testimonial && (
                           <div className="space-y-4">
-                  <Input
-                    placeholder="Citation"
+                            <Input
+                              placeholder="Citation"
                               value={form.testimonial.quote}
                               onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, quote: e.target.value } }))}
                             />
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Input
-                    placeholder="Auteur"
+                              <Input
+                                placeholder="Auteur"
                                 value={form.testimonial.author}
                                 onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, author: e.target.value } }))}
-                  />
-                  <Input
-                    placeholder="Rôle"
+                              />
+                              <Input
+                                placeholder="Rôle"
                                 value={form.testimonial.role}
                                 onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, role: e.target.value } }))}
-                  />
-                  <Input
-                    placeholder="Initiales"
+                              />
+                              <Input
+                                placeholder="Initiales"
                                 value={form.testimonial.initials}
                                 onChange={(e) => setForm(f => ({ ...f, testimonial: { ...f.testimonial!, initials: e.target.value } }))}
                               />
@@ -475,31 +475,31 @@ export default function ClientsAdminPage() {
 
                 {/* Sticky Action Bar */}
                 <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8 border-t mt-0 bg-white sticky bottom-0 z-20 px-4 pb-4">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    size="lg" 
-                    className="min-w-[120px] text-base font-semibold" 
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    className="min-w-[120px] text-base font-semibold"
                     onClick={cancelEdit}
                   >
                     Annuler
                   </Button>
                   {editing !== "new" && editing !== null && (
-                    <Button 
-                      type="button" 
-                      variant="destructive" 
-                      size="lg" 
-                      className="min-w-[120px] text-base font-semibold" 
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="lg"
+                      className="min-w-[120px] text-base font-semibold"
                       onClick={() => typeof editing === 'number' && deleteClient(editing)}
                     >
                       <Trash2 className="h-5 w-5 mr-2" />
                       Supprimer
                     </Button>
                   )}
-                  <Button 
-                    type="button" 
-                    size="lg" 
-                    className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg" 
+                  <Button
+                    type="button"
+                    size="lg"
+                    className="min-w-[160px] text-base font-bold bg-[--color-black] hover:bg-primary-dark text-white shadow-lg"
                     onClick={saveClient}
                     disabled={saving}
                   >
@@ -507,9 +507,9 @@ export default function ClientsAdminPage() {
                     {saving ? "Enregistrement..." : "Enregistrer"}
                   </Button>
                 </div>
+              </div>
             </div>
-        </div>
-      )}
+          )}
 
           {/* Clients Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -554,24 +554,23 @@ export default function ClientsAdminPage() {
                   {/* Bottom Section: Status & Actions */}
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mt-4 sm:mt-6">
                     <div className="flex items-center space-x-2 sm:space-x-3">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                        client.featured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${client.featured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                        }`}>
                         {client.featured ? 'Mis en avant' : 'Standard'}
                       </span>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 sm:space-x-2">
                       <Button
-                        variant="outline" 
+                        variant="outline"
                         size="sm"
                         onClick={() => editClient(idx)}
                         className="border-gray-300 hover:bg-gray-100 text-xs sm:text-sm"
                       >
                         <Pencil className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                         Modifier
-              </Button>
-            </div>
-            </div>
+                      </Button>
+                    </div>
+                  </div>
                 </Card>
               ))
             )}

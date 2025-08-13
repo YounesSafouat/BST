@@ -53,9 +53,12 @@ export default function SnippetsDashboard() {
                     console.log('Fetched data:', data); // Debug log
 
                     if (data.length > 0) {
-                         console.log('Content from data:', data[0].content); // Debug log
-                         console.log('Snippets from content:', data[0].content?.snippets); // Debug log
-                         setSnippets(data[0].content?.snippets || []);
+                         const snippetsContent = data.find(item => item.type === 'snippets');
+                         if (snippetsContent && snippetsContent.content) {
+                              console.log('Content from data:', snippetsContent.content); // Debug log
+                              console.log('Snippets from content:', snippetsContent.content?.snippets); // Debug log
+                              setSnippets(snippetsContent.content?.snippets || []);
+                         }
                     } else {
                          console.log('No data returned from API'); // Debug log
                     }

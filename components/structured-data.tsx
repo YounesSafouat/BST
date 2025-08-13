@@ -11,8 +11,11 @@ export default function StructuredData() {
         const response = await fetch('/api/content?type=structured-data');
         if (response.ok) {
           const data = await response.json();
-          if (data.length > 0 && data[0].content) {
-            setStructuredData(data[0].content);
+          if (data.length > 0) {
+            const structuredContent = data.find(item => item.type === 'structured-data');
+            if (structuredContent && structuredContent.content) {
+              setStructuredData(structuredContent.content);
+            }
           }
         }
       } catch (error) {

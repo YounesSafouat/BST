@@ -11,13 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Globe, 
-  Save, 
-  Eye, 
-  Plus, 
-  Trash2, 
-  Copy, 
+import {
+  Globe,
+  Save,
+  Eye,
+  Plus,
+  Trash2,
+  Copy,
   Settings,
   Target,
   Users,
@@ -34,7 +34,7 @@ import {
   ExternalLink,
   ChevronDown
 } from 'lucide-react';
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -231,8 +231,11 @@ export default function HubSpotDashboard() {
       const response = await fetch('/api/content?type=hubspot-page');
       if (response.ok) {
         const data = await response.json();
-        if (data.length > 0 && data[0].content) {
-          setHubspotData(data[0].content as HubSpotData);
+        if (data.length > 0) {
+          const hubspotContent = data.find(item => item.type === 'hubspot-page');
+          if (hubspotContent && hubspotContent.content) {
+            setHubspotData(hubspotContent.content as HubSpotData);
+          }
         }
       }
     } catch (error) {
@@ -271,14 +274,14 @@ export default function HubSpotDashboard() {
       if (!getResponse.ok) {
         throw new Error('Failed to fetch existing data');
       }
-      
+
       const existingData = await getResponse.json();
       const hasExisting = existingData.length > 0;
-      
+
       // Use PUT to update existing record, or POST to create new one
       const method = hasExisting ? 'PUT' : 'POST';
       const url = hasExisting ? '/api/content?type=hubspot-page' : '/api/content';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
@@ -319,14 +322,14 @@ export default function HubSpotDashboard() {
       const newData = { ...prev };
       const keys = path.split('.');
       let current: any = newData;
-      
+
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
           current[keys[i]] = {};
         }
         current = current[keys[i]];
       }
-      
+
       current[keys[keys.length - 1]] = value;
       return newData;
     });
@@ -337,15 +340,15 @@ export default function HubSpotDashboard() {
       const newData = { ...prev };
       const keys = path.split('.');
       let current: any = newData;
-      
+
       for (let i = 0; i < keys.length; i++) {
         current = current[keys[i]];
       }
-      
+
       if (current[index]) {
         current[index] = { ...current[index], [field]: value };
       }
-      
+
       return newData;
     });
   };
@@ -395,8 +398,8 @@ export default function HubSpotDashboard() {
   const addFeature = (cardIndex: number) => {
     setHubspotData(prev => ({
       ...prev,
-      hubCards: prev.hubCards.map((card, i) => 
-        i === cardIndex 
+      hubCards: prev.hubCards.map((card, i) =>
+        i === cardIndex
           ? { ...card, features: [...card.features, ""] }
           : card
       )
@@ -406,8 +409,8 @@ export default function HubSpotDashboard() {
   const removeFeature = (cardIndex: number, featureIndex: number) => {
     setHubspotData(prev => ({
       ...prev,
-      hubCards: prev.hubCards.map((card, i) => 
-        i === cardIndex 
+      hubCards: prev.hubCards.map((card, i) =>
+        i === cardIndex
           ? { ...card, features: card.features.filter((_, fi) => fi !== featureIndex) }
           : card
       )
@@ -437,7 +440,7 @@ export default function HubSpotDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          
+
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Page HubSpot</h1>
             <p className="text-gray-600">Gérez le contenu de votre page HubSpot</p>
@@ -513,9 +516,9 @@ export default function HubSpotDashboard() {
                       rows={3}
                     />
                   </div>
-                  
+
                   <Separator />
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>CTA Principal - Texte</Label>
@@ -807,7 +810,7 @@ export default function HubSpotDashboard() {
                           rows={2}
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label>Fonctionnalités</Label>
                         {card.features.map((feature, featureIndex) => (
@@ -881,7 +884,7 @@ export default function HubSpotDashboard() {
                       rows={3}
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label>Hubs Certifiés</Label>
                     <div className="space-y-2">
@@ -892,8 +895,8 @@ export default function HubSpotDashboard() {
                             onChange={(e) => {
                               const newHubs = [...hubspotData.partnership.hubs];
                               newHubs[index] = e.target.value;
-                              setHubspotData(prev => ({ 
-                                ...prev, 
+                              setHubspotData(prev => ({
+                                ...prev,
                                 partnership: { ...prev.partnership, hubs: newHubs }
                               }));
                             }}
@@ -904,8 +907,8 @@ export default function HubSpotDashboard() {
                             size="sm"
                             onClick={() => {
                               const newHubs = hubspotData.partnership.hubs.filter((_, i) => i !== index);
-                              setHubspotData(prev => ({ 
-                                ...prev, 
+                              setHubspotData(prev => ({
+                                ...prev,
                                 partnership: { ...prev.partnership, hubs: newHubs }
                               }));
                             }}
@@ -918,8 +921,8 @@ export default function HubSpotDashboard() {
                       <Button
                         onClick={() => {
                           const newHubs = [...hubspotData.partnership.hubs, ""];
-                          setHubspotData(prev => ({ 
-                            ...prev, 
+                          setHubspotData(prev => ({
+                            ...prev,
                             partnership: { ...prev.partnership, hubs: newHubs }
                           }));
                         }}
@@ -973,7 +976,7 @@ export default function HubSpotDashboard() {
                   </div>
                 );
               })}
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="w-full" size="sm">
@@ -1060,7 +1063,7 @@ export default function HubSpotDashboard() {
                 </Button>
               </div>
             </div>
-            
+
             {/* Modal Content - Website Preview */}
             <div className="flex-1 relative">
               <iframe

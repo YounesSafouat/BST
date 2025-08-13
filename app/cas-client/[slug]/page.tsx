@@ -22,21 +22,21 @@ import { useState, useEffect, useRef } from "react"
 
 export default async function ClientPage({ params }: { params: { slug: string } }) {
   let client: any = null
-  
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/content?type=clients-page`, { 
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/content?type=clients-page`, {
       cache: "no-store",
       headers: {
         'Content-Type': 'application/json',
       }
     })
-    
+
     if (!res.ok) {
       throw new Error(`Failed to fetch: ${res.status}`)
     }
-    
+
     const data = await res.json()
-    const page = Array.isArray(data) ? data[0] : data
+    const page = Array.isArray(data) ? data.find(item => item.type === 'clients-page') : data
     client = page?.content?.clientCases?.find((c: any) => c.slug === params.slug)
 
     if (!client) return notFound()

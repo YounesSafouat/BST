@@ -152,8 +152,11 @@ export default function AboutDashboard() {
       const response = await fetch('/api/content?type=about');
       if (response.ok) {
         const data = await response.json();
-        if (data.length > 0 && data[0].content) {
-          setAboutData(data[0].content);
+        if (data.length > 0) {
+          const aboutContent = data.find(item => item.type === 'about');
+          if (aboutContent && aboutContent.content) {
+            setAboutData(aboutContent.content);
+          }
         }
       }
     } catch (error) {

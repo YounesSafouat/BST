@@ -348,8 +348,11 @@ export default function HomePage() {
                });
                if (response.ok) {
                     const data = await response.json();
-                    if (data.length > 0 && data[0].content && data[0].content.clientCases) {
-                         setClientCases(data[0].content.clientCases);
+                    if (data.length > 0) {
+                         const clientsContent = data.find(item => item.type === 'clients-page');
+                         if (clientsContent && clientsContent.content && clientsContent.content.clientCases) {
+                              setClientCases(clientsContent.content.clientCases);
+                         }
                     }
                }
           } catch (error) {

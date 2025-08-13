@@ -46,7 +46,7 @@ export default function CasClient() {
       try {
         const res = await fetch("/api/content?type=clients-page")
         const data = await res.json()
-        const page = Array.isArray(data) ? data[0] : data
+        const page = Array.isArray(data) ? data.find(item => item.type === 'clients-page') : data
         const cases = page?.content?.clientCases || []
         setClientsData(cases)
         setFilteredClients(cases)
@@ -55,7 +55,7 @@ export default function CasClient() {
         setFilteredClients([])
       } finally {
         setLoading(false)
-    }
+      }
     }
     fetchClients()
   }, [])
@@ -147,11 +147,10 @@ export default function CasClient() {
                     <button
                       key={solution.value}
                       onClick={() => setSelectedSolution(solution.value)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                        selectedSolution === solution.value
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${selectedSolution === solution.value
                           ? "bg-gray-50 border-2 border-gray-200"
                           : "hover:bg-gray-50 border-2 border-transparent"
-                      }`}
+                        }`}
                     >
                       <div className="w-4 h-4 rounded-full" style={{ backgroundColor: solution.color }}></div>
                       <span className="font-medium text-gray">{solution.label}</span>
@@ -171,11 +170,10 @@ export default function CasClient() {
                     <button
                       key={sector.name}
                       onClick={() => setSelectedSector(sector.name)}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                        selectedSector === sector.name
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${selectedSector === sector.name
                           ? "bg-gray-50 border-2 border-gray-200"
                           : "hover:bg-gray-50 border-2 border-transparent"
-                      }`}
+                        }`}
                     >
                       <sector.icon className="w-4 h-4 text-gray" />
                       <span className="font-medium text-gray">{sector.name}</span>
@@ -191,7 +189,7 @@ export default function CasClient() {
                 <h2 className="text-2xl font-bold text-black">
                   {filteredClients.length} Études de Cas
                 </h2>
-                
+
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -218,9 +216,9 @@ export default function CasClient() {
                       ) : (
                         <div
                           className="w-16 h-16 rounded-2xl flex items-center justify-center text-white font-bold text-lg group-hover:scale-110 transition-transform duration-300 bg-[var(--color-secondary)]"
-                      >
+                        >
                           {client.name[0]}
-                      </div>
+                        </div>
                       )}
                       <div className="text-right">
                         <div className="text-xs text-gray mb-1">SECTEUR</div>
@@ -246,7 +244,7 @@ export default function CasClient() {
                         className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       >
                         <a href={`/cas-client/${client.slug}`} className="inline-flex items-center">
-                        Voir le cas <ArrowRight className="ml-2 w-4 h-4" /></a>
+                          Voir le cas <ArrowRight className="ml-2 w-4 h-4" /></a>
                       </Button>
                     </div>
 
