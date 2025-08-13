@@ -334,13 +334,13 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
 
                   {/* Expertise Badge overlay - hidden on mobile, visible on desktop */}
                   <div className="hidden lg:block absolute -bottom-4 -right-4 sm:-bottom-6 sm:-right-6 lg:-bottom-8 lg:-right-8 bg-white rounded-xl shadow-lg border border-gray-200 p-2 sm:p-3 lg:p-3 hover:bg-gray-50 transition-all duration-300 hover:shadow-xl hover:scale-105">
-                    {heroData.expertiseBadgeUrl ? (
+                    {heroData?.expertiseBadgeUrl ? (
                       <img
                         src={heroData.expertiseBadgeUrl}
                         alt="Expertise badge"
                         className="w-50 h-20 lg:w-50 lg:h-30 object-contain"
                         onError={(e) => {
-                          console.error('Badge image failed to load:', heroData.expertiseBadgeUrl);
+                          console.error('Badge image failed to load:', heroData?.expertiseBadgeUrl);
                           e.currentTarget.style.display = 'none';
                         }}
                       />
@@ -362,9 +362,9 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       <div className="hidden lg:block bg-white pt-8 sm:pt-10 md:pt-12 lg:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
-            companies={heroData.carousel?.companies}
-            speed={heroData.carousel?.speed}
-            text={heroData.carousel?.text}
+            companies={heroData?.carousel?.companies}
+            speed={heroData?.carousel?.speed}
+            text={heroData?.carousel?.text}
           />
         </div>
       </div>
