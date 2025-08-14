@@ -38,15 +38,15 @@ interface BlogPost {
   similarPosts?: string[];
   targetRegions?: string[];
 
-  // SEO fields - all required
-  seo: {
-    keywords: string[];
-    metaDescription: string;
-    metaTitle: string;
-    focusKeyword: string;
-    seoScore: number;
-    readabilityScore: number;
-    keywordDensity: {
+  // SEO fields - make them optional to match form state
+  seo?: {
+    keywords?: string[];
+    metaDescription?: string;
+    metaTitle?: string;
+    focusKeyword?: string;
+    seoScore?: number;
+    readabilityScore?: number;
+    keywordDensity?: {
       primary: number;
       secondary: Array<{
         keyword: string;
@@ -76,7 +76,7 @@ function emptyPost() {
     similarPosts: [],
     targetRegions: ['france', 'morocco', 'international'],
 
-    // SEO fields - ensure all are required
+    // SEO fields - make them optional to match interface
     seo: {
       keywords: [],
       metaDescription: "",

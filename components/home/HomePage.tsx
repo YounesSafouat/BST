@@ -1,6 +1,27 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
+// Preload critical resources
+const preloadCriticalResources = () => {
+     // Preload hero image
+     const heroImg = new window.Image();
+     heroImg.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hero-digital-transformation.png";
+
+     // Preload critical fonts/icons
+     const link = document.createElement('link');
+     link.rel = 'preload';
+     link.href = '/fonts/inter-var.woff2';
+     link.as = 'font';
+     link.type = 'font/woff2';
+     link.crossOrigin = 'anonymous';
+     document.head.appendChild(link);
+};
+
+// Execute preloading
+if (typeof window !== 'undefined') {
+     preloadCriticalResources();
+}
+
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import {
      Calculator,
      ShoppingCart,
@@ -41,6 +62,11 @@ import FAQSection from '../FAQSection';
 import OdooCertificationSection from '../OdooCertificationSection';
 import { Button } from '@/components/ui/button';
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import PerformanceMonitor from '../PerformanceMonitor';
+
+// Lazy load non-critical components
+const LazyFAQSection = lazy(() => import('../FAQSection'));
+const LazyOdooCertificationSection = lazy(() => import('../OdooCertificationSection'));
 
 interface Testimonial {
      _id: string;
@@ -246,11 +272,16 @@ export default function HomePage() {
           if (!mounted) return;
 
           const detectUserLocation = async () => {
+               const startTime = performance.now();
                try {
                     const location = await getUserLocation();
                     if (location) {
                          const region = getRegionFromCountry(location.countryCode);
                          setUserRegion(region);
+
+                         // Performance monitoring
+                         const endTime = performance.now();
+                         console.log(`🚀 Geolocation detected in ${(endTime - startTime).toFixed(2)}ms`);
                     }
                } catch (error) {
                     console.error('HomePage - Error detecting user location:', error);
@@ -315,17 +346,29 @@ export default function HomePage() {
      const fetchHomePageData = async () => {
           try {
                console.log('🔄 Starting to fetch home page data...');
-               const timestamp = Date.now();
-               const random = Math.random();
-               const url = `/api/content?type=home-page&t=${timestamp}&r=${random}`;
+
+               // Use cached data if available and fresh
+               const cachedData = sessionStorage.getItem('homePageData');
+               if (cachedData) {
+                    try {
+                         const parsed = JSON.parse(cachedData);
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000) { // 5 minutes cache
+                              console.log('📋 Using cached home page data');
+                              setHomePageData(parsed.data);
+                              return;
+                         }
+                    } catch (e) {
+                         console.log('📋 Cache parse error, fetching fresh data');
+                    }
+               }
+
+               const url = `/api/content?type=home-page`;
                console.log('📡 Fetching from URL:', url);
 
                const response = await fetch(url, {
-                    cache: 'no-store',
+                    cache: 'force-cache', // Use Next.js caching
                     headers: {
-                         'Cache-Control': 'no-cache, no-store, must-revalidate',
-                         'Pragma': 'no-cache',
-                         'Expires': '0'
+                         'Accept': 'application/json'
                     }
                });
 
@@ -351,6 +394,12 @@ export default function HomePage() {
                               if (homePageContent.content) {
                                    console.log('✅ Setting home page data:', homePageContent.content);
                                    setHomePageData(homePageContent.content);
+
+                                   // Cache the data for 5 minutes
+                                   sessionStorage.setItem('homePageData', JSON.stringify({
+                                        data: homePageContent.content,
+                                        timestamp: Date.now()
+                                   }));
                               } else {
                                    console.error('❌ Home page content structure is invalid');
                               }
@@ -373,15 +422,30 @@ export default function HomePage() {
 
      const fetchTestimonials = async () => {
           try {
-               const timestamp = Date.now();
-               // Use region-based filtering API
+               // Use cached testimonials if available and fresh
                const region = userRegion || 'international';
                if (!region) {
                     console.log('⏳ Waiting for geolocation detection...');
                     return;
                }
-               const response = await fetch(`/api/testimonials?region=${region}&t=${timestamp}`, {
-                    cache: 'no-store'
+
+               const cacheKey = `testimonials_${region}`;
+               const cachedData = sessionStorage.getItem(cacheKey);
+               if (cachedData) {
+                    try {
+                         const parsed = JSON.parse(cachedData);
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 10 * 60 * 1000) { // 10 minutes cache
+                              console.log('📋 Using cached testimonials for region:', region);
+                              setAvailableTestimonials(parsed.data);
+                              return;
+                         }
+                    } catch (e) {
+                         console.log('📋 Cache parse error, fetching fresh testimonials');
+                    }
+               }
+
+               const response = await fetch(`/api/testimonials?region=${region}`, {
+                    cache: 'force-cache' // Use Next.js caching
                });
                if (response.ok) {
                     const data = await response.json();
@@ -402,6 +466,12 @@ export default function HomePage() {
 
                     console.log('✅ Mapped testimonials:', mappedTestimonials);
                     setAvailableTestimonials(mappedTestimonials);
+
+                    // Cache the testimonials for 10 minutes
+                    sessionStorage.setItem(cacheKey, JSON.stringify({
+                         data: mappedTestimonials,
+                         timestamp: Date.now()
+                    }));
                } else {
                     console.error('Failed to fetch testimonials, status:', response.status);
                }
@@ -412,9 +482,23 @@ export default function HomePage() {
 
      const fetchClientCases = async () => {
           try {
-               const timestamp = Date.now();
-               const response = await fetch(`/api/content?type=clients-page&t=${timestamp}`, {
-                    cache: 'no-store'
+               // Use cached client cases if available and fresh
+               const cachedData = sessionStorage.getItem('clientCases');
+               if (cachedData) {
+                    try {
+                         const parsed = JSON.parse(cachedData);
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 15 * 60 * 1000) { // 15 minutes cache
+                              console.log('📋 Using cached client cases');
+                              setClientCases(parsed.data);
+                              return;
+                         }
+                    } catch (e) {
+                         console.log('📋 Cache parse error, fetching fresh client cases');
+                    }
+               }
+
+               const response = await fetch(`/api/content?type=clients-page`, {
+                    cache: 'force-cache' // Use Next.js caching
                });
                if (response.ok) {
                     const data = await response.json();
@@ -422,6 +506,12 @@ export default function HomePage() {
                          const clientsContent = data.find(item => item.type === 'clients-page');
                          if (clientsContent && clientsContent.content && clientsContent.content.clientCases) {
                               setClientCases(clientsContent.content.clientCases);
+
+                              // Cache the client cases for 15 minutes
+                              sessionStorage.setItem('clientCases', JSON.stringify({
+                                   data: clientsContent.content.clientCases,
+                                   timestamp: Date.now()
+                              }));
                          }
                     }
                }
@@ -560,6 +650,7 @@ export default function HomePage() {
 
      return (
           <>
+               <PerformanceMonitor />
                <div className="min-h-screen bg-white overflow-hidden">
                     {/* SECTION 1: Hero Section - HomePage */}
                     <div className="h-[95vh] flex flex-col justify-center pt-20">
@@ -726,7 +817,9 @@ export default function HomePage() {
                     <ServicesSection servicesData={homePageData?.services} />
 
                     {/* SECTION 5: Odoo Certification - HomePage */}
-                    <OdooCertificationSection certificationData={homePageData?.certification} />
+                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                         <LazyOdooCertificationSection certificationData={homePageData?.certification} />
+                    </Suspense>
 
                     {/* SECTION 6: Pricing Section - HomePage */}
                     <section id="pricing">
@@ -970,7 +1063,9 @@ export default function HomePage() {
                     <ContactSection contactData={homePageData?.contact} />
 
                     {/* SECTION 10: FAQ Section - HomePage */}
-                    <FAQSection faqData={homePageData?.faq} />
+                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                         <LazyFAQSection faqData={homePageData?.faq} />
+                    </Suspense>
 
                     <style jsx>{`
         @keyframes scroll-up {

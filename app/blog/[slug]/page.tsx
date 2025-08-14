@@ -13,14 +13,29 @@ function getBaseUrl() {
 // This function is required for static site generation with dynamic routes
 export async function generateStaticParams() {
   try {
+    // During build time, we might not have access to external URLs
+    // Return an empty array to avoid build failures
+    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_SITE_URL) {
+      console.warn("No site URL configured for production build, returning empty array");
+      return [];
+    }
+
     const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
-    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+    const res = await fetch(`${baseUrl}/api/blog`, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
     if (!res.ok) {
       console.warn("Failed to fetch blog data for static params, returning empty array");
       return [];
     }
-    
+
     const data = await res.json();
     const posts = Array.isArray(data) ? data : [];
     return posts.map((post: any) => ({ slug: post.slug }));
@@ -33,16 +48,32 @@ export async function generateStaticParams() {
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   try {
+    // During build time, we might not have access to external URLs
+    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_SITE_URL) {
+      return {
+        title: "Blog | Blackswantechnology",
+        description: "Découvrez nos articles sur Odoo ERP, HubSpot CRM et la transformation digitale.",
+      };
+    }
+
     const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
-    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+    const res = await fetch(`${baseUrl}/api/blog`, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
     if (!res.ok) {
       return {
         title: "Blog | Blackswantechnology",
         description: "Découvrez nos articles sur Odoo ERP, HubSpot CRM et la transformation digitale.",
       };
     }
-    
+
     const data = await res.json();
     const posts = Array.isArray(data) ? data : [];
     const post = posts.find((p: any) => p.slug === params.slug);
@@ -76,9 +107,29 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
 export default async function Page({ params }: { params: { slug: string } }) {
   try {
+    // During build time, we might not have access to external URLs
+    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_SITE_URL) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center py-12">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Erreur lors du chargement de l'article</h1>
+            <p className="text-gray-600">Veuillez réessayer plus tard.</p>
+          </div>
+        </div>
+      );
+    }
+
     const baseUrl = getBaseUrl();
-    const res = await fetch(`${baseUrl}/api/blog`, { cache: "no-store" });
-    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+    const res = await fetch(`${baseUrl}/api/blog`, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId);
+
     if (!res.ok) {
       return (
         <div className="min-h-screen flex items-center justify-center">
@@ -89,7 +140,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
       );
     }
-    
+
     const data = await res.json();
     const posts = Array.isArray(data) ? data : [];
     const post = posts.find((p: any) => p.slug === params.slug && p.published);
@@ -99,22 +150,15 @@ export default async function Page({ params }: { params: { slug: string } }) {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">Article non trouvé</h1>
-            <p className="text-gray-600">Cet article n'existe pas ou a été déplacé.</p>
-            <a href="/blog" className="text-[var(--color-secondary)] hover:underline mt-4 inline-block">
-              Retour au blog
-            </a>
+            <p className="text-gray-600">Cet article n'existe pas ou n'est pas encore publié.</p>
           </div>
         </div>
       );
     }
 
-    return (
-      <div className="min-h-screen bg-white">
-        <BlogPost post={post} />
-      </div>
-    );
+    return <BlogPost post={post} />;
   } catch (error) {
-    console.error("Error loading blog post:", error);
+    console.warn("Error loading blog post:", error);
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center py-12">

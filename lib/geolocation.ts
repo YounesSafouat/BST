@@ -8,127 +8,108 @@ export interface GeolocationData {
 
 export type Region = 'france' | 'morocco' | 'international';
 
+// Cache for geolocation data to avoid repeated API calls
+let geolocationCache: { data: GeolocationData; timestamp: number } | null = null;
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
 export async function getUserLocation(): Promise<GeolocationData | null> {
   try {
-    // Detect if we're on mobile
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    console.log('Device detection - Mobile:', isMobile, 'User Agent:', navigator.userAgent);
-
-    // For mobile devices, try simpler services first
-    const mobileServices = [
-      'https://ipinfo.io/json',
-      'https://ipapi.co/json/',
-      'https://api.ipgeolocation.io/ipgeo?apiKey=free'
-    ];
-
-    // For desktop, use the full service list
-    const desktopServices = [
-      'https://ipapi.co/json/',
-      'https://ipinfo.io/json',
-      'https://api.ipgeolocation.io/ipgeo?apiKey=free',
-      'https://ipapi.com/ip_api.php?ip='
-    ];
-
-    const services = isMobile ? mobileServices : desktopServices;
-
-    for (const serviceUrl of services) {
-      try {
-        console.log('Trying geolocation service:', serviceUrl, 'on mobile:', isMobile);
-        
-        // Add timeout to prevent hanging requests (shorter timeout for mobile)
-        const controller = new AbortController();
-        const timeout = isMobile ? 3000 : 5000; // 3 seconds for mobile, 5 for desktop
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
-        
-        const response = await fetch(serviceUrl, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'User-Agent': isMobile ? 'Mobile-Browser/1.0' : 'Desktop-Browser/1.0',
-          },
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Geolocation data received from', serviceUrl, ':', data);
-          
-          // Handle different response formats
-          let countryName, countryCode, region, city, timezone;
-          
-          if (serviceUrl.includes('ipapi.co')) {
-            countryName = data.country_name;
-            countryCode = data.country_code;
-            region = data.region;
-            city = data.city;
-            timezone = data.timezone;
-          } else if (serviceUrl.includes('ipinfo.io')) {
-            countryName = data.country;
-            countryCode = data.country;
-            region = data.region;
-            city = data.city;
-            timezone = data.timezone;
-          } else if (serviceUrl.includes('ipgeolocation.io')) {
-            countryName = data.country_name;
-            countryCode = data.country_code2;
-            region = data.state_prov;
-            city = data.city;
-            timezone = data.timezone?.name;
-          } else if (serviceUrl.includes('ipapi.com')) {
-            countryName = data.country_name;
-            countryCode = data.country_code;
-            region = data.region;
-            city = data.city;
-            timezone = data.timezone;
-          }
-          
-          if (countryName && countryCode) {
-            return {
-              country: countryName,
-              countryCode: countryCode,
-              region: region,
-              city: city,
-              timezone: timezone,
-            };
-          }
-        }
-      } catch (serviceError) {
-        console.error('Error with service', serviceUrl, ':', serviceError);
-        continue; // Try next service
-      }
+    // Check cache first
+    if (geolocationCache && (Date.now() - geolocationCache.timestamp) < CACHE_DURATION) {
+      console.log('📍 Using cached geolocation data');
+      return geolocationCache.data;
     }
+
+    // Try the fastest service first (ipinfo.io is usually fastest)
+    const fastService = 'https://ipinfo.io/json';
     
-    // If all services fail, try a simple fallback
     try {
-      console.log('Trying fallback geolocation service');
-      const fallbackResponse = await fetch('https://httpbin.org/ip', {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+      console.log('📍 Trying fast geolocation service:', fastService);
       
-      if (fallbackResponse.ok) {
-        const fallbackData = await fallbackResponse.json();
-        console.log('Fallback IP data:', fallbackData);
-        // Return a default international response
-        return {
-          country: 'Unknown',
-          countryCode: 'XX',
-          region: 'Unknown',
-          city: 'Unknown',
-          timezone: 'UTC',
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+      
+      const response = await fetch(fastService, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📍 Geolocation data received from fast service:', data);
+        
+        const result = {
+          country: data.country || 'Unknown',
+          countryCode: data.country || 'XX',
+          region: data.region || 'Unknown',
+          city: data.city || 'Unknown',
+          timezone: data.timezone || 'UTC',
         };
+
+        // Cache the result
+        geolocationCache = { data: result, timestamp: Date.now() };
+        return result;
+      }
+    } catch (fastServiceError) {
+      console.log('📍 Fast service failed, trying fallback');
+    }
+
+    // Fallback to a single reliable service with short timeout
+    try {
+      const fallbackService = 'https://ipapi.co/json/';
+      console.log('📍 Trying fallback service:', fallbackService);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+      
+      const response = await fetch(fallbackService, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('📍 Geolocation data received from fallback service:', data);
+        
+        const result = {
+          country: data.country_name || 'Unknown',
+          countryCode: data.country_code || 'XX',
+          region: data.region || 'Unknown',
+          city: data.city || 'Unknown',
+          timezone: data.timezone || 'UTC',
+        };
+
+        // Cache the result
+        geolocationCache = { data: result, timestamp: Date.now() };
+        return result;
       }
     } catch (fallbackError) {
-      console.error('Fallback geolocation also failed:', fallbackError);
+      console.log('📍 Fallback service also failed');
     }
-    
-    throw new Error('All geolocation services failed');
+
+    // Return cached data even if expired, or default to international
+    if (geolocationCache) {
+      console.log('📍 Using expired cache as fallback');
+      return geolocationCache.data;
+    }
+
+    // Final fallback
+    console.log('📍 Using default international region');
+    return {
+      country: 'Unknown',
+      countryCode: 'XX',
+      region: 'Unknown',
+      city: 'Unknown',
+      timezone: 'UTC',
+    };
   } catch (error) {
-    console.error('Error fetching user location:', error);
+    console.error('📍 Error in geolocation:', error);
     return null;
   }
 }

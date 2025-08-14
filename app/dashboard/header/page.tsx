@@ -47,20 +47,47 @@ export default function HeaderDashboard() {
           fetchHeaderData();
      }, []);
 
+     // Check if we need to create initial header content
+     useEffect(() => {
+          if (!loading && !error) {
+               // If no header content exists, create it automatically
+               const createInitialHeader = async () => {
+                    try {
+                         const response = await fetch('/api/content/header');
+                         if (response.status === 404) {
+                              console.log('🚀 Creating initial header content...');
+                              await saveHeader();
+                         }
+                    } catch (error) {
+                         console.log('Could not check for initial header content:', error);
+                    }
+               };
+
+               createInitialHeader();
+          }
+     }, [loading, error]);
+
      const fetchHeaderData = async () => {
           try {
                setError(null);
-               const response = await fetch('/api/content?type=header');
+               console.log('🔍 Fetching header data...');
+               const response = await fetch('/api/content/header');
+               console.log('📡 Header API response status:', response.status);
+
                if (response.ok) {
                     const data = await response.json();
-                    if (data && data.length > 0) {
-                         const headerContent = data.find(item => item.type === 'header');
-                         if (headerContent && headerContent.content) {
-                              setHeaderData(headerContent.content);
-                         }
+                    console.log('📊 Header API response data:', data);
+
+                    if (data && data.content) {
+                         console.log('✅ Found existing header content:', data.content);
+                         setHeaderData(data.content);
+                    } else {
+                         console.log('⚠️ Header content found but no content field');
                     }
+               } else if (response.status === 404) {
+                    console.log('ℹ️ No header data found, using defaults');
                } else {
-                    console.warn('Header data not found, using defaults');
+                    console.warn('Header data fetch failed:', response.status);
                }
           } catch (error) {
                console.error('Error fetching header data:', error);
@@ -74,7 +101,8 @@ export default function HeaderDashboard() {
           setSaving(true);
           setError(null);
           try {
-               const response = await fetch('/api/content?type=header', {
+               console.log('💾 Saving header data...');
+               const response = await fetch('/api/content/header', {
                     method: 'PUT',
                     headers: {
                          'Content-Type': 'application/json',
@@ -87,13 +115,19 @@ export default function HeaderDashboard() {
                     }),
                });
 
+               console.log('📡 Save response status:', response.status);
+
                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Header saved successfully:', result);
                     toast({
                          title: "Succès",
                          description: "Header sauvegardé avec succès",
                     });
                } else {
-                    throw new Error('Failed to save');
+                    const errorData = await response.json();
+                    console.error('❌ Save failed:', errorData);
+                    throw new Error(errorData.error || 'Failed to save');
                }
           } catch (error) {
                console.error('Error saving header:', error);

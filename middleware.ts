@@ -40,6 +40,9 @@ export async function middleware(request: NextRequest) {
       
       console.log(`[Maintenance Middleware] Fetching from: ${maintenanceUrl}`);
       
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
       const response = await fetch(maintenanceUrl, {
         method: 'GET',
         headers: {
@@ -47,8 +50,10 @@ export async function middleware(request: NextRequest) {
           'User-Agent': 'Maintenance-Middleware/1.0',
         },
         // Add timeout for server environments
-        signal: AbortSignal.timeout(5000), // 5 second timeout
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
       
       if (response.ok) {
         const data = await response.json();
