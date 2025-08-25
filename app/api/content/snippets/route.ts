@@ -42,18 +42,18 @@ export async function PUT(request: NextRequest) {
     if (snippetsContent) {
       // Update existing
       snippetsContent.content = body.content;
-      snippetsContent.title = body.title;
-      snippetsContent.description = body.description;
-      snippetsContent.isActive = body.isActive;
+      snippetsContent.title = body.title || 'Snippets Configuration';
+      snippetsContent.description = body.description || 'Meta tags, tracking codes, and custom scripts';
+      snippetsContent.isActive = body.isActive !== undefined ? body.isActive : true;
       snippetsContent.updatedAt = new Date();
     } else {
       // Create new
       snippetsContent = new Content({
         type: 'snippets',
         content: body.content,
-        title: body.title,
-        description: body.description,
-        isActive: body.isActive,
+        title: body.title || 'Snippets Configuration',
+        description: body.description || 'Meta tags, tracking codes, and custom scripts',
+        isActive: body.isActive !== undefined ? body.isActive : true,
         createdAt: new Date(),
         updatedAt: new Date()
       });
@@ -65,6 +65,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ success: true, data: snippetsContent });
   } catch (error) {
     console.error("Error saving snippets:", error);
-    return NextResponse.json({ error: "Failed to save snippets" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to save snippets", details: error.message }, { status: 500 });
   }
 }

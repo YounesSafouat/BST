@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 
 const contentSchema = new mongoose.Schema({
   type: { type: String, required: true },
-  title: { type: String, required: true },
-  description: { type: String, required: true },
+  title: { type: String, required: function() { return this.type !== 'snippets'; } },
+  description: { type: String, required: function() { return this.type !== 'snippets'; } },
   content: { type: mongoose.Schema.Types.Mixed, required: false },
   metadata: {
     color: String,

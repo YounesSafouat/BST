@@ -113,15 +113,15 @@ export default function SnippetsDashboard() {
                          description: "Snippets sauvegardés avec succès",
                     });
                } else {
-                    const errorText = await response.text();
-                    console.log('Error response text:', errorText); // Debug log
-                    throw new Error("Failed to save");
+                    const errorData = await response.json();
+                    console.log('Error response data:', errorData); // Debug log
+                    throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
                }
           } catch (error) {
                console.error("Error saving snippets:", error);
                toast({
                     title: "Erreur",
-                    description: "Impossible de sauvegarder les snippets",
+                    description: `Impossible de sauvegarder les snippets: ${error.message}`,
                     variant: "destructive"
                });
           } finally {
@@ -155,7 +155,10 @@ export default function SnippetsDashboard() {
      };
 
      const saveSnippet = () => {
+          console.log('saveSnippet called with:', editingSnippet); // Debug log
+          
           if (!editingSnippet || !editingSnippet.title || !editingSnippet.content) {
+               console.log('Validation failed - missing title or content'); // Debug log
                toast({
                     title: "Erreur",
                     description: "Le titre et le contenu sont requis",
@@ -166,14 +169,18 @@ export default function SnippetsDashboard() {
 
           if (editingSnippet._id) {
                // Update existing
+               console.log('Updating existing snippet:', editingSnippet._id); // Debug log
                const newSnippets = snippets.map(s => s._id === editingSnippet._id ? editingSnippet : s);
                setSnippets(newSnippets);
           } else {
                // Add new
+               console.log('Adding new snippet'); // Debug log
                const newSnippet = { ...editingSnippet, _id: Date.now().toString() };
+               console.log('New snippet created:', newSnippet); // Debug log
                setSnippets([...snippets, newSnippet]);
           }
 
+          console.log('Snippets state after save:', snippets); // Debug log
           setShowForm(false);
           setEditingSnippet(null);
      };
@@ -213,10 +220,50 @@ export default function SnippetsDashboard() {
                               Gérez vos meta tags, Google Analytics, tracking codes et scripts personnalisés
                          </p>
                     </div>
-                    <Button onClick={addSnippet} className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)]">
-                         <Plus className="w-4 h-4 mr-2" />
-                         Ajouter un Snippet
-                    </Button>
+                    <div className="flex items-center gap-3">
+                         <Button 
+                              onClick={() => {
+                                   console.log('Testing API...');
+                                   fetch('/api/content/snippets')
+                                        .then(res => res.json())
+                                        .then(data => {
+                                             console.log('API Test Result:', data);
+                                             alert('Check console for API result');
+                                        })
+                                        .catch(err => {
+                                             console.error('API Test Error:', err);
+                                             alert('API Error: ' + err.message);
+                                        });
+                              }}
+                              variant="outline"
+                              className="text-sm"
+                         >
+                              Test API
+                         </Button>
+                         <Button 
+                              onClick={() => {
+                                   console.log('Testing health...');
+                                   fetch('/api/health')
+                                        .then(res => res.json())
+                                        .then(data => {
+                                             console.log('Health Check Result:', data);
+                                             alert(`Health: ${data.status}\nDatabase: ${data.database}\nContent Count: ${data.contentCount}`);
+                                        })
+                                        .catch(err => {
+                                             console.error('Health Check Error:', err);
+                                             alert('Health Check Error: ' + err.message);
+                                        });
+                              }}
+                              variant="outline"
+                              className="text-sm"
+                         >
+                              Health Check
+                         </Button>
+                         <Button onClick={addSnippet} className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)]">
+                              <Plus className="w-4 h-4 mr-2" />
+                              Ajouter un Snippet
+                         </Button>
+                    </div>
                </div>
 
                {/* Snippets List */}
