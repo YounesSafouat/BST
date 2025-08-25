@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useRouter } from 'next/navigation';
+import { useButtonAnalytics } from '@/hooks/use-analytics';
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -23,6 +24,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [headerData, setHeaderData] = useState<any>(null);
   const { isPageVisible } = usePageVisibility();
+  const { trackButtonClick } = useButtonAnalytics();
 
   // Detect location using the same logic as other components
   useEffect(() => {
@@ -232,7 +234,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               variant="ghost"
               size="sm"
               className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2"
-              onClick={() => window.open(`tel:${phoneNumber}`)}
+              onClick={() => {
+                window.open(`tel:${phoneNumber}`);
+                trackButtonClick('phone_number');
+              }}
             >
               <Phone className="w-4 h-4" />
             </Button>
@@ -240,7 +245,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               variant="ghost"
               size="sm"
               className="gap-1 bg-green-500 hover:bg-green-600 text-white h-10 px-3 transition-all duration-300 hover:scale-110 rounded-full"
-              onClick={() => whatsappNumber && window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, '')}`, '_blank')}
+              onClick={() => {
+                whatsappNumber && window.open(`https://wa.me/${whatsappNumber.replace(/\D/g, '')}`, '_blank');
+                trackButtonClick('whatsapp_number');
+              }}
               disabled={!whatsappNumber}
             >
               <WhatsAppIcon className="w-4 h-4" />
@@ -252,7 +260,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               <Button
                 size="sm"
                 className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full"
-                onClick={() => window.open(meetingLink, '_blank')}
+                onClick={() => {
+                  window.open(meetingLink, '_blank');
+                  trackButtonClick('meeting_link');
+                }}
               >
                 <span className="font-semibold">Prendre RDV</span>
                 <ArrowRight className="w-4 h-4" />
@@ -298,7 +309,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                 >
                   <Button
                     className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full w-full"
-                    onClick={() => window.open(meetingLink, '_blank')}
+                    onClick={() => {
+                      window.open(meetingLink, '_blank');
+                      trackButtonClick('meeting_link');
+                    }}
                   >
                     <span className="font-semibold">Prendre RDV</span>
                     <ArrowRight className="w-4 h-4" />

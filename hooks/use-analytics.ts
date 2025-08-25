@@ -49,7 +49,38 @@ export function useButtonAnalytics() {
     sessionData[key] = (sessionData[key] || 0) + 1;
     sessionStorage.setItem('buttonClicks', JSON.stringify(sessionData));
     
-    console.log(`Button click tracked: ${buttonId} on ${pathname} (Session: ${sessionData[key]}, Total in DB: +1)`);
+    // Track in Google Analytics 4 (if available)
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'button_click', {
+        'event_category': 'engagement',
+        'event_label': buttonId,
+        'button_id': buttonId,
+        'page_path': pathname,
+        'button_text': getButtonText(buttonId)
+      });
+    }
+    
+    console.log(`Button click tracked: ${buttonId} on ${pathname} (Session: ${sessionData[key]}, Total in DB: +1, GA: +1)`);
+  };
+
+  // Helper function to get button text for better GA reporting
+  const getButtonText = (buttonId: string): string => {
+    const buttonTextMap: { [key: string]: string } = {
+      'bottom-nav-phone': 'Phone Call',
+      'bottom-nav-whatsapp': 'WhatsApp',
+      'bottom-nav-blog': 'Blog',
+      'bottom-nav-cas-client': 'CAS Client',
+      'mobile_header_rdv_button': 'Prendre RDV',
+      'header_phone_button': 'Phone Call',
+      'header_whatsapp_button': 'WhatsApp',
+      'header_rdv_button': 'Prendre RDV',
+      'footer_contact_button': 'Contact',
+      'hero_cta_button': 'Hero CTA',
+      'pricing_cta_button': 'Pricing CTA',
+      'contact_form_submit': 'Contact Form Submit'
+    };
+    
+    return buttonTextMap[buttonId] || buttonId;
   };
 
   return { trackButtonClick };

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
 import { useRouter } from 'next/navigation'
+import { useButtonAnalytics } from '@/hooks/use-analytics'
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -32,6 +33,7 @@ export default function Footer() {
   const [loading, setLoading] = useState(true);
   const [contactData, setContactData] = useState<any>(null);
   const [footerContent, setFooterContent] = useState<any>(null);
+  const { trackButtonClick } = useButtonAnalytics();
 
   // Detect location using the same logic as pricing section
   useEffect(() => {
@@ -124,6 +126,7 @@ export default function Footer() {
   const regionalContact = getRegionalContactInfo();
 
   const handleNewsletterSubmit = async () => {
+    trackButtonClick('newsletter_submit');
     await new Promise(resolve => setTimeout(resolve, 2000))
   }
 
@@ -217,30 +220,39 @@ export default function Footer() {
                   {regionalContact.phone && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                      <a href={`tel:${regionalContact.phone}`} className="hover:text-white transition-colors">
-                        {regionalContact.phone}
-                      </a>
+                                             <a 
+                         href={`tel:${regionalContact.phone}`} 
+                         className="hover:text-white transition-colors"
+                         onClick={() => trackButtonClick('footer_phone')}
+                       >
+                         {regionalContact.phone}
+                       </a>
                     </div>
                   )}
                   {regionalContact.email && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                      <a href={`mailto:${regionalContact.email}`} className="hover:text-white transition-colors">
-                        {regionalContact.email}
-                      </a>
+                                             <a 
+                         href={`mailto:${regionalContact.email}`} 
+                         className="hover:text-white transition-colors"
+                         onClick={() => trackButtonClick('footer_email')}
+                       >
+                         {regionalContact.email}
+                       </a>
                     </div>
                   )}
                   {regionalContact.whatsapp && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                      <a
-                        href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-white transition-colors"
-                      >
-                        {regionalContact.whatsapp}
-                      </a>
+                                             <a
+                         href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className="hover:text-white transition-colors"
+                         onClick={() => trackButtonClick('footer_whatsapp')}
+                       >
+                         {regionalContact.whatsapp}
+                       </a>
                     </div>
                   )}
                   {regionalContact.address && (
@@ -265,10 +277,13 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
-                  <button
-                    onClick={() => handleLinkClick(link.url)}
-                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-xs sm:text-sm w-full text-left"
-                  >
+                                     <button
+                     onClick={() => {
+                       handleLinkClick(link.url);
+                       trackButtonClick(`footer_link_${link.text.toLowerCase().replace(/\s+/g, '_')}`);
+                     }}
+                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-xs sm:text-sm w-full text-left"
+                   >
                     <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
                     {link.text}
                   </button>
