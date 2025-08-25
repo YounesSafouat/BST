@@ -26,8 +26,8 @@ export async function GET() {
   }
 }
 
-export async function PUT(request: NextRequest) {
-  console.log('PUT /api/content/snippets called'); // Debug log
+export async function POST(request: NextRequest) {
+  console.log('POST /api/content/snippets called'); // Debug log
   try {
     console.log('Connecting to database...'); // Debug log
     await connectDB();
@@ -67,4 +67,10 @@ export async function PUT(request: NextRequest) {
     console.error("Error saving snippets:", error);
     return NextResponse.json({ error: "Failed to save snippets", details: error.message }, { status: 500 });
   }
+}
+
+export async function PUT(request: NextRequest) {
+  console.log('PUT /api/content/snippets called'); // Debug log
+  // Redirect PUT to POST for compatibility
+  return POST(request);
 }

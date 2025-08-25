@@ -92,15 +92,28 @@ export default function SnippetsDashboard() {
                };
 
                console.log('Sending request body:', requestBody); // Debug log
-               console.log('Making PUT request to /api/content/snippets...'); // Debug log
-
-               const response = await fetch("/api/content/snippets", {
-                    method: "PUT",
-                    headers: {
-                         "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(requestBody),
-               });
+               
+               // Try POST first, then fall back to PUT
+               let response;
+               try {
+                    console.log('Trying POST request to /api/content/snippets...'); // Debug log
+                    response = await fetch("/api/content/snippets", {
+                         method: "POST",
+                         headers: {
+                              "Content-Type": "application/json",
+                         },
+                         body: JSON.stringify(requestBody),
+                    });
+               } catch (postError) {
+                    console.log('POST failed, trying PUT...', postError); // Debug log
+                    response = await fetch("/api/content/snippets", {
+                         method: "PUT",
+                         headers: {
+                              "Content-Type": "application/json",
+                         },
+                         body: JSON.stringify(requestBody),
+                    });
+               }
 
                console.log('Response received, status:', response.status); // Debug log
                console.log('Response ok:', response.ok); // Debug log
