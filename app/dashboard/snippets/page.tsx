@@ -148,7 +148,49 @@ export default function SnippetsDashboard() {
                description: "",
                type: 'meta',
                location: 'head',
-               content: "",
+               content: `<!-- Enhanced Button Click Tracking for GA4 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Track external link clicks (WhatsApp, phone, etc.)
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('a, button');
+    if (!target) return;
+
+    // WhatsApp tracking - updated for api.whatsapp.com
+    if (target.href && target.href.includes('api.whatsapp.com')) {
+      gtag('event', 'button_click', {
+        'event_category': 'engagement',
+        'event_label': 'whatsapp_external',
+        'button_id': 'whatsapp_external',
+        'button_text': target.textContent?.trim() || 'WhatsApp',
+        'page_path': window.location.pathname
+      });
+    }
+
+    // Phone tracking
+    if (target.href && target.href.includes('tel:')) {
+      gtag('event', 'button_click', {
+        'event_category': 'engagement',
+        'event_label': 'phone_external',
+        'button_id': 'phone_external',
+        'button_text': target.textContent?.trim() || 'Phone',
+        'page_path': window.location.pathname
+      });
+    }
+
+    // Meeting/Contact tracking
+    if (target.href && (target.href.includes('meetings.hubspot') || target.href.includes('contact'))) {
+      gtag('event', 'button_click', {
+        'event_category': 'engagement',
+        'event_label': 'contact_external',
+        'button_id': 'contact_external',
+        'button_text': target.textContent?.trim() || 'Contact',
+        'page_path': window.location.pathname
+      });
+    }
+  });
+});
+</script>`,
                isActive: true,
                pages: [],
                priority: snippets.length + 1
