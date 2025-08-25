@@ -3,86 +3,63 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ArrowRight,
-  Play,
-  Shield,
-  Award,
-  Users,
-  FileText,
-  Building2,
-  MessageSquare,
-  Settings,
   Eye,
   MousePointer,
   TrendingUp,
-  Calendar,
-  Clock,
-  Target,
   BarChart3,
   Activity,
   Zap,
   Globe,
-  Smartphone,
   Mail,
   Phone,
   MessageCircle,
-  ExternalLink,
-  ArrowUpRight,
-  ArrowDownRight,
-  Minus,
+  Calendar,
+  Plus,
+  Filter,
+  RefreshCw,
+  Target,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { useTheme } from "@/components/theme-provider";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import Loader from '@/components/home/Loader';
-import GlobalSEOAnalyzer from '@/components/GlobalSEOAnalyzer';
 
 interface PageView {
   _id: string;
+  path: string;
   page: string;
   count: number;
   lastViewed: string;
-  path?: string;
+  totalViews: number;
+  avgTimeOnPage: number;
+  bounceRate: number;
 }
 
 interface ButtonClick {
   _id: string;
   buttonId: string;
+  path: string;
   count: number;
   lastClicked: string;
-}
-
-interface SEOData {
-  _id: string;
-  page: string;
-  language: string;
-  title: string;
-  description: string;
-  keywords: string;
-  ogTitle?: string;
-  ogDescription?: string;
-  ogImage?: string;
-  canonical?: string;
-  isActive: boolean;
-  lastUpdated: string;
-  updatedBy: string;
+  buttonType: string;
+  buttonText: string;
+  totalClicks: number;
+  conversionRate: number;
 }
 
 export default function DashboardPage() {
   const [pageViews, setPageViews] = useState<PageView[]>([]);
   const [buttonClicks, setButtonClicks] = useState<ButtonClick[]>([]);
-  const [seoData, setSeoData] = useState<SEOData[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Global filters
   const [timeRange, setTimeRange] = useState('7d');
-  const { theme } = useTheme();
+  const [device, setDevice] = useState('all');
+  const [country, setCountry] = useState('all');
+  const [buttonType, setButtonType] = useState('all');
 
-  // Helper functions - moved to top to avoid ReferenceError
+  // Helper functions
   const getButtonDisplayName = (buttonId: string): string => {
     const buttonNames: { [key: string]: string } = {
       'whatsapp_number': 'WhatsApp',
@@ -101,6 +78,14 @@ export default function DashboardPage() {
     return buttonNames[buttonId] || buttonId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  const getButtonIcon = (buttonId: string) => {
+    if (buttonId.includes('whatsapp')) return <MessageCircle className="w-4 h-4" />;
+    if (buttonId.includes('phone')) return <Phone className="w-4 h-4" />;
+    if (buttonId.includes('email') || buttonId.includes('newsletter')) return <Mail className="w-4 h-4" />;
+    if (buttonId.includes('rdv') || buttonId.includes('meeting')) return <Calendar className="w-4 h-4" />;
+    return <MousePointer className="w-4 h-4" />;
+  };
+
   const getPageDisplayName = (page: string): string => {
     if (page === '/') return 'Home Page';
     if (page === '/blog') return 'Blog';
@@ -111,23 +96,30 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [timeRange, device, country, buttonType]);
 
   const fetchData = async () => {
     try {
-      const [viewsResponse, clicksResponse, seoResponse] = await Promise.all([
-        fetch('/api/dashboard/page-views'),
-        fetch('/api/dashboard/button-clicks'),
-        fetch('/api/seo')
+      setLoading(true);
+      
+             // Build query parameters
+       const params = new URLSearchParams({
+         timeRange,
+         ...(device && device !== 'all' && { device }),
+         ...(country && country !== 'all' && { country }),
+         ...(buttonType && buttonType !== 'all' && { buttonType })
+       });
+
+      const [viewsResponse, clicksResponse] = await Promise.all([
+        fetch(`/api/dashboard/page-views?${params}`),
+        fetch(`/api/dashboard/button-clicks?${params}`)
       ]);
 
       const viewsData = await viewsResponse.json();
       const clicksData = await clicksResponse.json();
-      const seoData = await seoResponse.json();
 
       setPageViews(viewsData);
       setButtonClicks(clicksData);
-      setSeoData(seoData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -137,29 +129,25 @@ export default function DashboardPage() {
 
   const totalPageViews = pageViews.reduce((sum, pv) => sum + pv.count, 0);
   const totalButtonClicks = buttonClicks.reduce((sum, bc) => sum + bc.count, 0);
-
-  // Enhanced analytics calculations
-  const topPages = [...pageViews].sort((a, b) => b.count - a.count).slice(0, 5);
-  const topButtons = [...buttonClicks].sort((a, b) => b.count - a.count).slice(0, 5);
-  
-  // Engagement rate calculation
   const engagementRate = totalPageViews > 0 ? ((totalButtonClicks / totalPageViews) * 100).toFixed(1) : '0';
-  
-  // Button performance analysis
+
+  // Top performers
+  const topPages = pageViews.slice(0, 5);
+  const topButtons = buttonClicks.slice(0, 5);
+
+  // Chart data
+  const pagePerformance = pageViews.map(view => ({
+    name: getPageDisplayName(view.path),
+    views: view.count,
+    percentage: totalPageViews > 0 ? ((view.count / totalPageViews) * 100).toFixed(1) : '0'
+  }));
+
   const buttonPerformance = buttonClicks.map(click => ({
     name: getButtonDisplayName(click.buttonId),
     clicks: click.count,
     engagement: totalPageViews > 0 ? ((click.count / totalPageViews) * 100).toFixed(1) : '0'
   }));
 
-  // Page performance analysis
-  const pagePerformance = pageViews.map(view => ({
-    name: getPageDisplayName(view.path || view.page),
-    views: view.count,
-    percentage: totalPageViews > 0 ? ((view.count / totalPageViews) * 100).toFixed(1) : '0'
-  }));
-
-  // Chart colors
   const chartColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#84CC16', '#F97316'];
 
   if (loading) {
@@ -167,80 +155,142 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with Time Range Selector */}
+    <div className="min-h-screen bg-gray-50 p-6 space-y-6">
+      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard Analytics</h1>
-          <p className="text-muted-foreground">Real-time insights into your website performance</p>
+          <h1 className="text-3xl font-bold text-gray-900">Dashboard Analytics</h1>
+          <p className="text-gray-600">Real-time insights into your website performance</p>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-32">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="24h">Last 24h</SelectItem>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="90d">Last 90 days</SelectItem>
-          </SelectContent>
-        </Select>
+        <Button onClick={fetchData} variant="outline" size="sm">
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Refresh
+        </Button>
       </div>
 
+      {/* Global Filters */}
+      <Card className="bg-white border-0 shadow-sm">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-900">
+            <Filter className="w-5 h-5" />
+            Global Filters
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">Time Range</label>
+              <Select value={timeRange} onValueChange={setTimeRange}>
+                <SelectTrigger className="w-full bg-white border-gray-200">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="24h">Last 24h</SelectItem>
+                  <SelectItem value="7d">Last 7 days</SelectItem>
+                  <SelectItem value="30d">Last 30 days</SelectItem>
+                  <SelectItem value="90d">Last 90 days</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+                         <div>
+               <label className="text-sm font-medium text-gray-700 mb-2 block">Device</label>
+               <Select value={device} onValueChange={setDevice}>
+                 <SelectTrigger className="w-full bg-white border-gray-200">
+                   <SelectValue placeholder="All devices" />
+                 </SelectTrigger>
+                 <SelectContent>
+                   <SelectItem value="all">All devices</SelectItem>
+                   <SelectItem value="desktop">Desktop</SelectItem>
+                   <SelectItem value="mobile">Mobile</SelectItem>
+                   <SelectItem value="tablet">Tablet</SelectItem>
+                 </SelectContent>
+               </Select>
+             </div>
+             
+             <div>
+               <label className="text-sm font-medium text-gray-700 mb-2 block">Country</label>
+               <Select value={country} onValueChange={setCountry}>
+                 <SelectTrigger className="w-full bg-white border-gray-200">
+                   <SelectValue placeholder="All countries" />
+                 </SelectTrigger>
+                 <SelectContent>
+                   <SelectItem value="all">All countries</SelectItem>
+                   <SelectItem value="FR">France</SelectItem>
+                   <SelectItem value="US">United States</SelectItem>
+                   <SelectItem value="CA">Canada</SelectItem>
+                   <SelectItem value="GB">United Kingdom</SelectItem>
+                 </SelectContent>
+               </Select>
+             </div>
+             
+             <div>
+               <label className="text-sm font-medium text-gray-700 mb-2 block">Button Type</label>
+               <Select value={buttonType} onValueChange={setButtonType}>
+                 <SelectTrigger className="w-full bg-white border-gray-200">
+                   <SelectValue placeholder="All types" />
+                 </SelectTrigger>
+                 <SelectContent>
+                   <SelectItem value="all">All types</SelectItem>
+                   <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                   <SelectItem value="phone">Phone</SelectItem>
+                   <SelectItem value="email">Email</SelectItem>
+                   <SelectItem value="contact">Contact</SelectItem>
+                   <SelectItem value="newsletter">Newsletter</SelectItem>
+                   <SelectItem value="rdv">RDV</SelectItem>
+                 </SelectContent>
+               </Select>
+             </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Key Performance Indicators */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-l-4 border-l-blue-500">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Page Views</CardTitle>
-            <Eye className="h-4 w-4 text-blue-500" />
+            <CardTitle className="text-sm font-medium text-gray-600">Total Page Views</CardTitle>
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <Eye className="h-4 w-4 text-blue-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-600">{totalPageViews.toLocaleString()}</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
+            <div className="text-3xl font-bold text-gray-900">{totalPageViews.toLocaleString()}</div>
+            <div className="flex items-center text-xs text-gray-500 mt-1">
               <TrendingUp className="w-3 h-3 mr-1 text-green-500" />
-              <span>All time views</span>
+              <span>↑ {timeRange} period</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-green-500">
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Button Clicks</CardTitle>
-            <MousePointer className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-medium text-gray-600">Total Button Clicks</CardTitle>
+            <div className="p-2 bg-green-100 rounded-lg">
+              <MousePointer className="h-4 w-4 text-green-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">{totalButtonClicks.toLocaleString()}</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
+            <div className="text-3xl font-bold text-gray-900">{totalButtonClicks.toLocaleString()}</div>
+            <div className="flex items-center text-xs text-gray-500 mt-1">
               <Target className="w-3 h-3 mr-1 text-green-500" />
-              <span>All time clicks</span>
+              <span>↑ {timeRange} period</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-l-purple-500">
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Engagement Rate</CardTitle>
-            <Activity className="h-4 w-4 text-purple-500" />
+            <CardTitle className="text-sm font-medium text-gray-600">Engagement Rate</CardTitle>
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <Activity className="h-4 w-4 text-purple-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-purple-600">{engagementRate}%</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
+            <div className="text-3xl font-bold text-gray-900">{engagementRate}%</div>
+            <div className="flex items-center text-xs text-gray-500 mt-1">
               <Zap className="w-3 h-3 mr-1 text-purple-500" />
               <span>Clicks per page view</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-l-4 border-l-orange-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Pages</CardTitle>
-            <Globe className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-orange-600">{pageViews.length}</div>
-            <div className="flex items-center text-xs text-muted-foreground mt-1">
-              <FileText className="w-3 h-3 mr-1 text-orange-500" />
-              <span>Pages with traffic</span>
             </div>
           </CardContent>
         </Card>
@@ -249,20 +299,23 @@ export default function DashboardPage() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Page Views Chart */}
-        <Card>
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="w-5 h-5" />
-              Page Views Performance
-            </CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">Page Views Performance</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={pagePerformance}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
+                <YAxis stroke="#64748b" fontSize={12} />
                 <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'white', 
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                  }}
                   formatter={(value: any, name: any) => [value, name === 'views' ? 'Views' : 'Percentage']}
                   labelFormatter={(label) => `Page: ${label}`}
                 />
@@ -273,20 +326,23 @@ export default function DashboardPage() {
         </Card>
 
         {/* Button Clicks Chart */}
-        <Card>
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MousePointer className="w-5 h-5" />
-              Button Engagement Performance
-            </CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">Button Engagement Performance</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={buttonPerformance}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
+                <YAxis stroke="#64748b" fontSize={12} />
                 <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'white', 
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                  }}
                   formatter={(value: any, name: any) => [value, name === 'clicks' ? 'Clicks' : 'Engagement %']}
                   labelFormatter={(label) => `Button: ${label}`}
                 />
@@ -297,27 +353,24 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Detailed Analytics Tables */}
+      {/* Top Performers Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Performing Pages */}
-        <Card>
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-600" />
-              Top Performing Pages
-            </CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">Top Performing Pages</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {topPages.map((page, index) => (
-                <div key={page._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={page._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                       <span className="text-sm font-bold text-blue-600">#{index + 1}</span>
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">{getPageDisplayName(page.path || page.page)}</div>
-                      <div className="text-sm text-gray-500">{page.path || page.page}</div>
+                      <div className="font-medium text-gray-900">{getPageDisplayName(page.path)}</div>
+                      <div className="text-sm text-gray-500">{page.path}</div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -333,24 +386,21 @@ export default function DashboardPage() {
         </Card>
 
         {/* Top Performing Buttons */}
-        <Card>
+        <Card className="bg-white border-0 shadow-sm">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="w-5 h-5 text-purple-600" />
-              Top Performing Buttons
-            </CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">Top Performing Buttons</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {topButtons.map((button, index) => (
-                <div key={button._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={button._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm font-bold text-purple-600">#{index + 1}</span>
+                      {getButtonIcon(button.buttonId)}
                     </div>
                     <div>
                       <div className="font-medium text-gray-900">{getButtonDisplayName(button.buttonId)}</div>
-                      <div className="text-sm text-gray-500">{button.buttonId}</div>
+                      <div className="text-sm text-gray-500">{button.buttonType || 'Unknown'}</div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -366,40 +416,28 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Insights & Recommendations */}
-      <Card className="border-l-4 border-l-yellow-500">
+      {/* Data Summary */}
+      <Card className="bg-white border-0 shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-yellow-700">
-            <Award className="w-5 h-5" />
-            Key Insights & Recommendations
-          </CardTitle>
+          <CardTitle className="text-lg font-semibold text-gray-900">Data Summary</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-2">🚀 Performance Highlights</h4>
-              <ul className="text-sm text-blue-700 space-y-1">
-                <li>• {topPages[0]?.count || 0} views on your top page</li>
-                <li>• {topButtons[0]?.count || 0} clicks on your most engaging button</li>
-                <li>• {engagementRate}% overall engagement rate</li>
-              </ul>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{pageViews.length}</div>
+              <div className="text-sm text-gray-600">Pages Tracked</div>
             </div>
-            <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-semibold text-green-800 mb-2">💡 Optimization Tips</h4>
-              <ul className="text-sm text-green-700 space-y-1">
-                <li>• Focus on high-performing pages</li>
-                <li>• Optimize button placement based on click data</li>
-                <li>• Monitor engagement trends over time</li>
-              </ul>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{buttonClicks.length}</div>
+              <div className="text-sm text-gray-600">Buttons Tracked</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{timeRange}</div>
+              <div className="text-sm text-gray-600">Current Period</div>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Global SEO Analysis */}
-      <div className="mb-6">
-        <GlobalSEOAnalyzer seoData={seoData} />
-      </div>
     </div>
   );
 } 
