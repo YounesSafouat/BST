@@ -6,6 +6,7 @@ import StructuredData from '@/components/structured-data'
 import { ThemeProvider } from '@/components/theme-provider'
 import FaviconProvider from '@/components/FaviconProvider'
 import SnippetsInjector from '@/components/SnippetsInjector'
+import PerformanceMonitor from '@/components/PerformanceMonitor'
 
 export const metadata: Metadata = {
   title: {
@@ -95,9 +96,13 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
+        {/* Optimized font loading - only essential fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400;500;700;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Lato:wght@100;300;400;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Source+Sans+Pro:wght@200;300;400;600;700;900&family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link 
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" 
+          rel="stylesheet" 
+        />
         <StructuredData />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2563eb" />
@@ -117,6 +122,7 @@ export default function RootLayout({
               {children}
             </LayoutWrapper>
             <SnippetsInjector />
+            <PerformanceMonitor />
           </LoaderProvider>
         </ThemeProvider>
       </body>

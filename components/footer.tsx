@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
+import { useRouter } from 'next/navigation'
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -26,6 +27,7 @@ const IconMap = {
 }
 
 export default function Footer() {
+  const router = useRouter();
   const [location, setLocation] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [contactData, setContactData] = useState<any>(null);
@@ -129,12 +131,41 @@ export default function Footer() {
     // Check if it's an external route (starts with /)
     if (url.startsWith('/')) {
       // For external routes like /blog, /about, etc.
-      window.location.href = url;
+      router.push(url);
     } else {
       // For internal anchor links like #hero, #contact, etc.
-      const element = document.querySelector(url);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      // Check if we're on the home page
+      if (window.location.pathname === '/') {
+        const element = document.querySelector(url);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // Not on home page, navigate to home page first, then scroll to section
+        router.push('/');
+        
+        // Wait for navigation to complete and DOM to be ready, then scroll to section
+        let retryCount = 0;
+        const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
+        
+        const waitForSection = () => {
+          const element = document.querySelector(url);
+          if (element) {
+            // Section found, scroll to it
+            element.scrollIntoView({ behavior: 'smooth' });
+          } else if (retryCount < maxRetries) {
+            // Section not found yet, wait a bit more and try again
+            retryCount++;
+            setTimeout(waitForSection, 50);
+          } else {
+            // Max retries reached, scroll to top as fallback
+            console.warn(`Section ${url} not found after ${maxRetries} retries`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        };
+        
+        // Start waiting for the section with a longer initial delay
+        setTimeout(waitForSection, 500);
       }
     }
   }

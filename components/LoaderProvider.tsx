@@ -31,7 +31,7 @@ export function LoaderProvider({ children }: { children: ReactNode }) {
   };
 
   const hideLoader = () => {
-    const minDuration = 2000; // 2 seconds
+    const minDuration = 800; // Reduced from 2 seconds to 800ms for better UX
     const now = Date.now();
     const elapsed = showTimeRef.current ? now - showTimeRef.current : 0;
     if (elapsed >= minDuration) {

@@ -45,6 +45,7 @@ export const useTheme = () => useContext(ThemeContext);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<AppearanceSettings | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const applyTheme = (appearance: AppearanceSettings) => {
     const root = document.documentElement;
@@ -96,14 +97,64 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const fetchActiveTheme = async () => {
     try {
+      // Check if we have cached theme data
+      const cachedTheme = localStorage.getItem('bst-theme');
+      if (cachedTheme) {
+        const parsedTheme = JSON.parse(cachedTheme);
+        setTheme(parsedTheme);
+        applyTheme(parsedTheme);
+        setIsLoading(false);
+        
+        // Fetch fresh data in background
+        fetch('/api/appearance/active')
+          .then(res => res.json())
+          .then(freshTheme => {
+            if (freshTheme && freshTheme._id !== parsedTheme._id) {
+              setTheme(freshTheme);
+              applyTheme(freshTheme);
+              localStorage.setItem('bst-theme', JSON.stringify(freshTheme));
+            }
+          })
+          .catch(() => {}); // Silent fail for background refresh
+        return;
+      }
+
       const response = await fetch('/api/appearance/active');
       if (response.ok) {
-        const data = await response.json();
-        setTheme(data);
-        applyTheme(data);
+        const appearance = await response.json();
+        setTheme(appearance);
+        applyTheme(appearance);
+        // Cache the theme data
+        localStorage.setItem('bst-theme', JSON.stringify(appearance));
       }
     } catch (error) {
-      console.error('Error fetching active theme:', error);
+      console.error('Error fetching theme:', error);
+      // Apply fallback theme
+      const fallbackTheme: AppearanceSettings = {
+        name: 'Default',
+        description: 'Default theme',
+        isActive: true,
+        colorMain: '#f97316',
+        colorSecondary: '#8b5cf6',
+        colorBackground: '#ffffff',
+        colorBlack: '#000000',
+        colorWhite: '#ffffff',
+        colorGray: '#6b7280',
+        colorGreen: '#10b981',
+        fontFamily: 'Inter',
+        headingFontFamily: 'Poppins',
+        fontSize: '16px',
+        headingFontSize: '24px',
+        lineHeight: '1.5',
+        borderRadius: '8px',
+        spacing: '16px',
+        shadowColor: 'rgba(0, 0, 0, 0.1)',
+        shadowSize: '4px',
+      };
+      setTheme(fallbackTheme);
+      applyTheme(fallbackTheme);
+    } finally {
+      setIsLoading(false);
     }
   };
 

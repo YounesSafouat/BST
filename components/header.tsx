@@ -6,6 +6,7 @@ import { Phone, Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
+import { useRouter } from 'next/navigation';
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -15,6 +16,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoaded: boolean }) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [location, setLocation] = useState<any>(null);
   const [contactData, setContactData] = useState<any>(null);
@@ -153,10 +155,41 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   };
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
+    // Check if we're on the home page
+    if (window.location.pathname === '/') {
+      // On home page, scroll to section
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        setMobileMenuOpen(false);
+      }
+    } else {
+      // Not on home page, navigate to home page with hash
+      // Use the correct approach: navigate to home page first, then scroll to section
+      router.push('/');
+      
+      // Wait for navigation to complete and DOM to be ready, then scroll to section
+      let retryCount = 0;
+      const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
+      
+      const waitForSection = () => {
+        const element = document.querySelector(href);
+        if (element) {
+          // Section found, scroll to it
+          element.scrollIntoView({ behavior: 'smooth' });
+        } else if (retryCount < maxRetries) {
+          // Section not found yet, wait a bit more and try again
+          retryCount++;
+          setTimeout(waitForSection, 50);
+        } else {
+          // Max retries reached, scroll to top as fallback
+          console.warn(`Section ${href} not found after ${maxRetries} retries`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      };
+      
+      // Start waiting for the section with a longer initial delay
+      setTimeout(waitForSection, 500);
     }
   };
 
@@ -172,7 +205,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-2">
           {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.location.href = '/'}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
               src={headerData?.logo?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg"}
               alt={headerData?.logo?.alt || "BlackSwan"}

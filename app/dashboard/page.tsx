@@ -26,6 +26,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import Loader from '@/components/home/Loader';
+import GlobalSEOAnalyzer from '@/components/GlobalSEOAnalyzer';
 
 const stats = [
   {
@@ -73,9 +74,26 @@ interface ButtonClick {
   lastClicked: string;
 }
 
+interface SEOData {
+  _id: string;
+  page: string;
+  language: string;
+  title: string;
+  description: string;
+  keywords: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  canonical?: string;
+  isActive: boolean;
+  lastUpdated: string;
+  updatedBy: string;
+}
+
 export default function DashboardPage() {
   const [pageViews, setPageViews] = useState<PageView[]>([]);
   const [buttonClicks, setButtonClicks] = useState<ButtonClick[]>([]);
+  const [seoData, setSeoData] = useState<SEOData[]>([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
 
@@ -85,16 +103,19 @@ export default function DashboardPage() {
 
   const fetchData = async () => {
     try {
-      const [viewsResponse, clicksResponse] = await Promise.all([
+      const [viewsResponse, clicksResponse, seoResponse] = await Promise.all([
         fetch('/api/dashboard/page-views'),
-        fetch('/api/dashboard/button-clicks')
+        fetch('/api/dashboard/button-clicks'),
+        fetch('/api/seo')
       ]);
 
       const viewsData = await viewsResponse.json();
       const clicksData = await clicksResponse.json();
+      const seoData = await seoResponse.json();
 
       setPageViews(viewsData);
       setButtonClicks(clicksData);
+      setSeoData(seoData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -111,6 +132,11 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      {/* Global SEO Analysis */}
+      <div className="mb-6">
+        <GlobalSEOAnalyzer seoData={seoData} />
+      </div>
+
       {/* Analytics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>

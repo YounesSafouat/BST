@@ -1,119 +1,115 @@
-"use client"
+"use client";
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react';
+
+interface PerformanceMetrics {
+  fcp: number; // First Contentful Paint
+  lcp: number; // Largest Contentful Paint
+  fid: number; // First Input Delay
+  cls: number; // Cumulative Layout Shift
+  ttfb: number; // Time to First Byte
+}
 
 export default function PerformanceMonitor() {
-     useEffect(() => {
-          let lcpObserver: PerformanceObserver | null = null;
-          let fidObserver: PerformanceObserver | null = null;
-          let clsObserver: PerformanceObserver | null = null;
-          let resourceObserver: PerformanceObserver | null = null;
+  const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-          // Monitor Core Web Vitals
-          if ('PerformanceObserver' in window) {
-               try {
-                    // Largest Contentful Paint (LCP)
-                    lcpObserver = new PerformanceObserver((list) => {
-                         const entries = list.getEntries()
-                         const lastEntry = entries[entries.length - 1]
-                         console.log('🚀 LCP:', lastEntry.startTime.toFixed(2) + 'ms')
+  useEffect(() => {
+    // Only show in development
+    if (process.env.NODE_ENV !== 'development') return;
 
-                         // Send to analytics if needed
-                         if (lastEntry.startTime < 2500) {
-                              console.log('✅ LCP is excellent (< 2.5s)')
-                         } else if (lastEntry.startTime < 4000) {
-                              console.log('⚠️ LCP needs improvement (< 4s)')
-                         } else {
-                              console.log('❌ LCP is poor (> 4s)')
-                         }
-                    })
-                    lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] })
-
-                    // First Input Delay (FID)
-                    fidObserver = new PerformanceObserver((list) => {
-                         const entries = list.getEntries()
-                         entries.forEach((entry: any) => {
-                              // Use proper typing for first-input entries
-                              const fidEntry = entry as PerformanceEntry & { processingStart?: number }
-                              if (fidEntry.processingStart !== undefined) {
-                                   console.log('⚡ FID:', fidEntry.processingStart - fidEntry.startTime + 'ms')
-
-                                   if (fidEntry.processingStart - fidEntry.startTime < 100) {
-                                        console.log('✅ FID is excellent (< 100ms)')
-                                   } else if (fidEntry.processingStart - fidEntry.startTime < 300) {
-                                        console.log('⚠️ FID needs improvement (< 300ms)')
-                                   } else {
-                                        console.log('❌ FID is poor (> 300ms)')
-                                   }
-                              }
-                         })
-                    })
-                    fidObserver.observe({ entryTypes: ['first-input'] })
-
-                    // Cumulative Layout Shift (CLS)
-                    clsObserver = new PerformanceObserver((list) => {
-                         let clsValue = 0
-                         const entries = list.getEntries()
-                         entries.forEach((entry: any) => {
-                              if (!entry.hadRecentInput) {
-                                   clsValue += entry.value
-                              }
-                         })
-                         console.log('📐 CLS:', clsValue.toFixed(3))
-
-                         if (clsValue < 0.1) {
-                              console.log('✅ CLS is excellent (< 0.1)')
-                         } else if (clsValue < 0.25) {
-                              console.log('⚠️ CLS needs improvement (< 0.25)')
-                         } else {
-                              console.log('❌ CLS is poor (> 0.25)')
-                         }
-                    })
-                    clsObserver.observe({ entryTypes: ['layout-shift'] })
-               } catch (error) {
-                    console.log('Performance monitoring not supported:', error)
-               }
+    const measurePerformance = () => {
+      if ('performance' in window) {
+        const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        
+        // Measure Core Web Vitals
+        const observer = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+              const lcp = entry.startTime;
+              setMetrics(prev => prev ? { ...prev, lcp } : { fcp: 0, lcp, fid: 0, cls: 0, ttfb: 0 });
+            }
           }
+        });
 
-          // Monitor page load time
-          window.addEventListener('load', () => {
-               const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-               if (navigation) {
-                    const loadTime = navigation.loadEventEnd - navigation.loadEventStart
-                    const domContentLoaded = navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart
-                    const firstPaint = performance.getEntriesByName('first-paint')[0] as PerformanceEntry
-                    const firstContentfulPaint = performance.getEntriesByName('first-contentful-paint')[0] as PerformanceEntry
+        observer.observe({ entryTypes: ['largest-contentful-paint'] });
 
-                    console.log('📊 Performance Metrics:')
-                    console.log(`   Page Load: ${loadTime.toFixed(2)}ms`)
-                    console.log(`   DOM Ready: ${domContentLoaded.toFixed(2)}ms`)
-                    if (firstPaint) console.log(`   First Paint: ${firstPaint.startTime.toFixed(2)}ms`)
-                    if (firstContentfulPaint) console.log(`   First Contentful Paint: ${firstContentfulPaint.startTime.toFixed(2)}ms`)
-               }
-          })
+        // Measure other metrics
+        const fcp = perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart;
+        const ttfb = perfData.responseStart - perfData.requestStart;
+        
+        setMetrics(prev => prev ? { ...prev, fcp, ttfb } : { fcp, lcp: 0, fid: 0, cls: 0, ttfb });
+      }
+    };
 
-          // Monitor resource loading
-          if ('PerformanceObserver' in window) {
-               resourceObserver = new PerformanceObserver((list) => {
-                    list.getEntries().forEach((entry) => {
-                         if (entry.entryType === 'resource') {
-                              const resourceEntry = entry as PerformanceResourceTiming
-                              if (resourceEntry.duration > 1000) {
-                                   console.log(`🐌 Slow resource: ${resourceEntry.name} (${resourceEntry.duration.toFixed(2)}ms)`)
-                              }
-                         }
-                    })
-               })
-               resourceObserver.observe({ entryTypes: ['resource'] })
-          }
+    // Measure after page load
+    if (document.readyState === 'complete') {
+      measurePerformance();
+    } else {
+      window.addEventListener('load', measurePerformance);
+    }
 
-          return () => {
-               lcpObserver?.disconnect()
-               fidObserver?.disconnect()
-               clsObserver?.disconnect()
-               resourceObserver?.disconnect()
-          }
-     }, [])
+    // Toggle visibility with Ctrl+Shift+P
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'P') {
+        setIsVisible(prev => !prev);
+      }
+    };
 
-     return null // This component doesn't render anything
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('load', measurePerformance);
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
+
+  if (!isVisible || process.env.NODE_ENV !== 'development') return null;
+
+  const getPerformanceColor = (value: number, threshold: number) => {
+    if (value <= threshold) return 'text-green-600';
+    if (value <= threshold * 1.5) return 'text-yellow-600';
+    return 'text-red-600';
+  };
+
+  return (
+    <div className="fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 max-w-sm">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-sm font-semibold text-gray-900">Performance Monitor</h3>
+        <button
+          onClick={() => setIsVisible(false)}
+          className="text-gray-400 hover:text-gray-600"
+        >
+          ×
+        </button>
+      </div>
+      
+      {metrics && (
+        <div className="space-y-2 text-xs">
+          <div className="flex justify-between">
+            <span>FCP:</span>
+            <span className={getPerformanceColor(metrics.fcp, 1800)}>
+              {metrics.fcp.toFixed(0)}ms
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>LCP:</span>
+            <span className={getPerformanceColor(metrics.lcp, 2500)}>
+              {metrics.lcp.toFixed(0)}ms
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>TTFB:</span>
+            <span className={getPerformanceColor(metrics.ttfb, 800)}>
+              {metrics.ttfb.toFixed(0)}ms
+            </span>
+          </div>
+        </div>
+      )}
+      
+      <div className="mt-3 text-xs text-gray-500">
+        Press Ctrl+Shift+P to toggle
+      </div>
+    </div>
+  );
 }

@@ -151,23 +151,33 @@ export default function BlogPage() {
   const blogCategories = blogData.content?.categories?.items?.map((cat: any) => ({ name: cat.name, count: undefined })) || [];
   const blogPosts = blogData.content?.blogPosts || [];
 
-  // Generate categories from actual blog posts
+  // Generate categories from region-filtered blog posts
   const generateCategoriesFromPosts = () => {
     const categoryCounts: { [key: string]: number } = {};
-    blogPosts.forEach((post: any) => {
+    filteredPosts.forEach((post: any) => {
       if (post.category) {
         categoryCounts[post.category] = (categoryCounts[post.category] || 0) + 1;
       }
     });
 
-    return Object.entries(categoryCounts).map(([name, count]) => ({
-      name,
-      count,
-      color: getCategoryColor(name)
-    }));
+    // Add "Tous" (All) category with total count
+    const allCategories = [
+      {
+        name: "Tous",
+        count: filteredPosts.length,
+        color: "var(--color-main)"
+      },
+      ...Object.entries(categoryCounts).map(([name, count]) => ({
+        name,
+        count,
+        color: getCategoryColor(name)
+      }))
+    ];
+
+    return allCategories;
   };
 
-  // Get popular articles (for now, just the most recent 3, but this could be enhanced with view counts)
+  // Get categories from filtered posts
   const actualCategories = generateCategoriesFromPosts();
 
   // Pagination logic
@@ -288,25 +298,31 @@ export default function BlogPage() {
                   <h3 className="text-lg font-bold text-color-black">Catégories</h3>
                 </div>
                 <div className="space-y-2">
-                  {actualCategories.map((category: any) => (
-                    <button
-                      key={category.name}
-                      onClick={() => setSelectedCategory(category.name)}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${selectedCategory === category.name
-                        ? "bg-gray-50 border-2 border-gray-200"
-                        : "hover:bg-gray-50 border-2 border-transparent"
-                        }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: category.color || "var(--color-main)" }}
-                        ></div>
-                        <span className="font-medium text-color-gray">{category.name}</span>
-                      </div>
-                      <span className="text-sm text-color-gray">{category.count}</span>
-                    </button>
-                  ))}
+                  {actualCategories.length > 1 ? (
+                    actualCategories.map((category: any) => (
+                      <button
+                        key={category.name}
+                        onClick={() => setSelectedCategory(category.name)}
+                        className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${selectedCategory === category.name
+                          ? "bg-gray-50 border-2 border-gray-200"
+                          : "hover:bg-gray-50 border-2 border-transparent"
+                          }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: category.color || "var(--color-main)" }}
+                          ></div>
+                          <span className="font-medium text-color-gray">{category.name}</span>
+                        </div>
+                        <span className="text-sm text-color-gray">{category.count}</span>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="text-center py-4 text-sm text-gray-500">
+                      Aucune catégorie disponible pour votre région
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -332,19 +348,11 @@ export default function BlogPage() {
 
             {/* Blog Posts Grid */}
             <div className="flex-1">
-              <div className="mb-6 flex items-center justify-between">
+              <div className="mb-6">
                 <h2 className="text-2xl font-bold text-black">
                   {filteredPosts.length} Article{filteredPosts.length > 1 ? "s" : ""}{" "}
                   {selectedCategory !== "Tous" ? `dans ${selectedCategory}` : ""}
                 </h2>
-                <div className="text-sm text-gray-500">
-                  <span>Trier par: </span>
-                  <select title="selector" className="ml-2 bg-transparent border-b border-gray-300 focus:outline-none">
-                    <option>Plus récents</option>
-                    <option>Plus populaires</option>
-                    <option>Plus lus</option>
-                  </select>
-                </div>
               </div>
 
               {filteredPosts.length === 0 ? (
@@ -352,8 +360,18 @@ export default function BlogPage() {
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Search className="w-8 h-8 text-color-gray" />
                   </div>
-                  <h3 className="text-xl font-bold text-color-black mb-2">Aucun article trouvé</h3>
-                  <p className="text-color-gray">Essayez de modifier vos critères de recherche.</p>
+                  <h3 className="text-xl font-bold text-color-black mb-2">
+                    {searchTerm || selectedCategory !== "Tous" 
+                      ? "Aucun article trouvé" 
+                      : "Aucun article disponible pour votre région"
+                    }
+                  </h3>
+                  <p className="text-color-gray">
+                    {searchTerm || selectedCategory !== "Tous"
+                      ? "Essayez de modifier vos critères de recherche."
+                      : "Le contenu sera bientôt disponible pour votre région."
+                    }
+                  </p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -403,43 +421,7 @@ export default function BlogPage() {
                           {post.title}
                         </h3>
                         <p className="text-gray-500 mb-4 flex-1">{post.excerpt}</p>
-                        {/* SEO Information Display */}
-                        {post.seo && (
-                          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center justify-between text-xs text-gray-600 mb-2">
-                              <span>Score SEO: {post.seo.seoScore || 0}/100</span>
-                              <span>Lisibilité: {post.seo.readabilityScore || 0}/100</span>
-                            </div>
-
-                            {/* SEO Score Bar */}
-                            <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-                              <div
-                                className={`h-2 rounded-full transition-all duration-300 ${(post.seo.seoScore || 0) >= 80 ? 'bg-green-500' :
-                                    (post.seo.seoScore || 0) >= 60 ? 'bg-yellow-500' :
-                                      'bg-red-500'
-                                  }`}
-                                style={{ width: `${post.seo.seoScore || 0}%` }}
-                              ></div>
-                            </div>
-
-                            {/* Keywords Display */}
-                            {post.seo.keywords && post.seo.keywords.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {post.seo.keywords.slice(0, 3).map((keyword: string, index: number) => (
-                                  <span key={index} className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 border border-blue-200">
-                                    {keyword}
-                                  </span>
-                                ))}
-                                {post.seo.keywords.length > 3 && (
-                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-600 border border-gray-200">
-                                    +{post.seo.keywords.length - 3} autres
-                                  </span>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
+                        
                         {/* Bottom Row: Lire link right-aligned */}
                         <div className="flex items-center justify-end mt-auto">
                           <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1 text-color-main font-medium hover:underline text-sm">
