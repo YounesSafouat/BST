@@ -148,7 +148,7 @@ export default function SnippetsDashboard() {
                description: "",
                type: 'meta',
                location: 'head',
-               content: `<!-- Enhanced Button Click Tracking for GA4 -->
+               content: `<!-- Enhanced Button Click Tracking for GA4 - Readable Reports -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Track external link clicks (WhatsApp, phone, etc.)
@@ -158,34 +158,71 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // WhatsApp tracking - updated for api.whatsapp.com
     if (target.href && target.href.includes('api.whatsapp.com')) {
-      gtag('event', 'button_click', {
-        'event_category': 'engagement',
-        'event_label': 'whatsapp_external',
-        'button_id': 'whatsapp_external',
+      gtag('event', 'whatsapp_button_click', {
+        'event_category': 'Contact Actions',
+        'event_label': 'WhatsApp Button',
+        'button_name': 'WhatsApp',
+        'button_type': 'whatsapp',
         'button_text': target.textContent?.trim() || 'WhatsApp',
-        'page_path': window.location.pathname
+        'page_path': window.location.pathname,
+        'page_title': document.title,
+        'user_action': 'clicked_whatsapp'
       });
     }
 
     // Phone tracking
     if (target.href && target.href.includes('tel:')) {
-      gtag('event', 'button_click', {
-        'event_category': 'engagement',
-        'event_label': 'phone_external',
-        'button_id': 'phone_external',
+      gtag('event', 'phone_button_click', {
+        'event_category': 'Contact Actions',
+        'event_label': 'Phone Button',
+        'button_name': 'Phone Call',
+        'button_type': 'phone',
         'button_text': target.textContent?.trim() || 'Phone',
-        'page_path': window.location.pathname
+        'page_path': window.location.pathname,
+        'page_title': document.title,
+        'user_action': 'clicked_phone'
       });
     }
 
     // Meeting/Contact tracking
     if (target.href && (target.href.includes('meetings.hubspot') || target.href.includes('contact'))) {
-      gtag('event', 'button_click', {
-        'event_category': 'engagement',
-        'event_label': 'contact_external',
-        'button_id': 'contact_external',
+      gtag('event', 'contact_button_click', {
+        'event_category': 'Contact Actions',
+        'event_label': 'Contact Button',
+        'button_name': 'Contact Form',
+        'button_type': 'contact',
         'button_text': target.textContent?.trim() || 'Contact',
-        'page_path': window.location.pathname
+        'page_path': window.location.pathname,
+        'page_title': document.title,
+        'user_action': 'clicked_contact'
+      });
+    }
+
+    // Email tracking
+    if (target.href && target.href.includes('mailto:')) {
+      gtag('event', 'email_button_click', {
+        'event_category': 'Contact Actions',
+        'event_label': 'Email Button',
+        'button_name': 'Email',
+        'button_type': 'email',
+        'button_text': target.textContent?.trim() || 'Email',
+        'page_path': window.location.pathname,
+        'page_title': document.title,
+        'user_action': 'clicked_email'
+      });
+    }
+
+    // Newsletter tracking
+    if (target.textContent?.toLowerCase().includes('newsletter') || target.textContent?.toLowerCase().includes('inscription')) {
+      gtag('event', 'newsletter_button_click', {
+        'event_category': 'Marketing Actions',
+        'event_label': 'Newsletter Button',
+        'button_name': 'Newsletter',
+        'button_type': 'newsletter',
+        'button_text': target.textContent?.trim() || 'Newsletter',
+        'page_path': window.location.pathname,
+        'page_title': document.title,
+        'user_action': 'clicked_newsletter'
       });
     }
   });

@@ -49,38 +49,139 @@ export function useButtonAnalytics() {
     sessionData[key] = (sessionData[key] || 0) + 1;
     sessionStorage.setItem('buttonClicks', JSON.stringify(sessionData));
     
-    // Track in Google Analytics 4 (if available)
+    // Track in Google Analytics 4 with readable events
     if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'button_click', {
-        'event_category': 'engagement',
-        'event_label': buttonId,
-        'button_id': buttonId,
+      const buttonInfo = getButtonInfo(buttonId);
+      
+      (window as any).gtag('event', buttonInfo.eventName, {
+        'event_category': buttonInfo.category,
+        'event_label': buttonInfo.label,
+        'button_name': buttonInfo.displayName,
+        'button_type': buttonInfo.type,
+        'button_text': buttonInfo.displayName,
         'page_path': pathname,
-        'button_text': getButtonText(buttonId)
+        'page_title': document.title,
+        'user_action': buttonInfo.userAction
       });
     }
     
     console.log(`Button click tracked: ${buttonId} on ${pathname} (Session: ${sessionData[key]}, Total in DB: +1, GA: +1)`);
   };
 
-  // Helper function to get button text for better GA reporting
-  const getButtonText = (buttonId: string): string => {
-    const buttonTextMap: { [key: string]: string } = {
-      'bottom-nav-phone': 'Phone Call',
-      'bottom-nav-whatsapp': 'WhatsApp',
-      'bottom-nav-blog': 'Blog',
-      'bottom-nav-cas-client': 'CAS Client',
-      'mobile_header_rdv_button': 'Prendre RDV',
-      'header_phone_button': 'Phone Call',
-      'header_whatsapp_button': 'WhatsApp',
-      'header_rdv_button': 'Prendre RDV',
-      'footer_contact_button': 'Contact',
-      'hero_cta_button': 'Hero CTA',
-      'pricing_cta_button': 'Pricing CTA',
-      'contact_form_submit': 'Contact Form Submit'
+  // Helper function to get button info for better GA reporting
+  const getButtonInfo = (buttonId: string) => {
+    const buttonInfoMap: { [key: string]: any } = {
+      // Bottom navigation
+      'bottom-nav-phone': {
+        eventName: 'phone_button_click',
+        category: 'Contact Actions',
+        label: 'Phone Button',
+        displayName: 'Phone Call',
+        type: 'phone',
+        userAction: 'clicked_phone'
+      },
+      'bottom-nav-whatsapp': {
+        eventName: 'whatsapp_button_click',
+        category: 'Contact Actions',
+        label: 'WhatsApp Button',
+        displayName: 'WhatsApp',
+        type: 'whatsapp',
+        userAction: 'clicked_whatsapp'
+      },
+      'bottom-nav-blog': {
+        eventName: 'blog_button_click',
+        category: 'Navigation Actions',
+        label: 'Blog Button',
+        displayName: 'Blog',
+        type: 'navigation',
+        userAction: 'clicked_blog'
+      },
+      'bottom-nav-cas-client': {
+        eventName: 'cas_client_button_click',
+        category: 'Navigation Actions',
+        label: 'CAS Client Button',
+        displayName: 'CAS Client',
+        type: 'navigation',
+        userAction: 'clicked_cas_client'
+      },
+      // Mobile header
+      'mobile_header_rdv_button': {
+        eventName: 'meeting_button_click',
+        category: 'Contact Actions',
+        label: 'Meeting Button',
+        displayName: 'Prendre RDV',
+        type: 'meeting',
+        userAction: 'clicked_meeting'
+      },
+      // Header
+      'header_phone_button': {
+        eventName: 'phone_button_click',
+        category: 'Contact Actions',
+        label: 'Phone Button',
+        displayName: 'Phone Call',
+        type: 'phone',
+        userAction: 'clicked_phone'
+      },
+      'header_whatsapp_button': {
+        eventName: 'whatsapp_button_click',
+        category: 'Contact Actions',
+        label: 'WhatsApp Button',
+        displayName: 'WhatsApp',
+        type: 'whatsapp',
+        userAction: 'clicked_whatsapp'
+      },
+      'header_rdv_button': {
+        eventName: 'meeting_button_click',
+        category: 'Contact Actions',
+        label: 'Meeting Button',
+        displayName: 'Prendre RDV',
+        type: 'meeting',
+        userAction: 'clicked_meeting'
+      },
+      // Footer
+      'footer_contact_button': {
+        eventName: 'contact_button_click',
+        category: 'Contact Actions',
+        label: 'Contact Button',
+        displayName: 'Contact',
+        type: 'contact',
+        userAction: 'clicked_contact'
+      },
+      // Other buttons
+      'hero_cta_button': {
+        eventName: 'hero_cta_button_click',
+        category: 'Conversion Actions',
+        label: 'Hero CTA Button',
+        displayName: 'Hero CTA',
+        type: 'cta',
+        userAction: 'clicked_hero_cta'
+      },
+      'pricing_cta_button': {
+        eventName: 'pricing_cta_button_click',
+        category: 'Conversion Actions',
+        label: 'Pricing CTA Button',
+        displayName: 'Pricing CTA',
+        type: 'cta',
+        userAction: 'clicked_pricing_cta'
+      },
+      'contact_form_submit': {
+        eventName: 'contact_form_submit',
+        category: 'Form Actions',
+        label: 'Contact Form Submit',
+        displayName: 'Contact Form',
+        type: 'form',
+        userAction: 'submitted_contact_form'
+      }
     };
     
-    return buttonTextMap[buttonId] || buttonId;
+    return buttonInfoMap[buttonId] || {
+      eventName: 'button_click',
+      category: 'Other Actions',
+      label: buttonId,
+      displayName: buttonId,
+      type: 'other',
+      userAction: 'clicked_button'
+    };
   };
 
   return { trackButtonClick };
