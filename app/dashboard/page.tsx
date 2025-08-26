@@ -62,36 +62,62 @@ export default function DashboardPage() {
   // Helper functions
   const getButtonDisplayName = (buttonId: string): string => {
     const buttonNames: { [key: string]: string } = {
-      'whatsapp_number': 'WhatsApp',
-      'phone_number': 'Phone Call',
-      'meeting_link': 'Prendre RDV',
-      'footer_phone': 'Footer Phone',
-      'footer_email': 'Footer Email',
-      'footer_whatsapp': 'Footer WhatsApp',
-      'newsletter_submit': 'Newsletter',
-      'mobile_header_rdv_button': 'Mobile RDV',
-      'bottom-nav-phone': 'Bottom Nav Phone',
-      'bottom-nav-whatsapp': 'Bottom Nav WhatsApp',
-      'bottom-nav-blog': 'Bottom Nav Blog',
-      'bottom-nav-cas-client': 'Bottom Nav CAS'
+      // Header buttons
+      'header_phone_button': '📞 Phone Call',
+      'header_whatsapp_button': '💬 WhatsApp',
+      'header_rdv_button': '📅 Prendre RDV',
+      
+      // Footer buttons
+      'footer_phone': '📞 Footer Phone',
+      'footer_email': '📧 Footer Email',
+      'footer_whatsapp': '💬 Footer WhatsApp',
+      'footer_contact_button': '📝 Contact Form',
+      
+      // Mobile navigation
+      'mobile_header_rdv_button': '📅 Mobile RDV',
+      'bottom-nav-phone': '📞 Bottom Phone',
+      'bottom-nav-whatsapp': '💬 Bottom WhatsApp',
+      'bottom-nav-blog': '📰 Blog',
+      'bottom-nav-cas-client': '👤 CAS Client',
+      
+      // Other buttons
+      'whatsapp_number': '💬 WhatsApp',
+      'phone_number': '📞 Phone Call',
+      'meeting_link': '📅 Meeting Link',
+      'newsletter_submit': '📧 Newsletter',
+      'hero_cta_button': '🚀 Hero CTA',
+      'pricing_cta_button': '💰 Pricing CTA',
+      'contact_form_submit': '📝 Contact Submit'
     };
     return buttonNames[buttonId] || buttonId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
   const getButtonIcon = (buttonId: string) => {
-    if (buttonId.includes('whatsapp')) return <MessageCircle className="w-4 h-4" />;
-    if (buttonId.includes('phone')) return <Phone className="w-4 h-4" />;
-    if (buttonId.includes('email') || buttonId.includes('newsletter')) return <Mail className="w-4 h-4" />;
-    if (buttonId.includes('rdv') || buttonId.includes('meeting')) return <Calendar className="w-4 h-4" />;
-    return <MousePointer className="w-4 h-4" />;
+    if (buttonId.includes('whatsapp')) return <MessageCircle className="w-4 h-4 text-green-500" />;
+    if (buttonId.includes('phone')) return <Phone className="w-4 h-4 text-blue-500" />;
+    if (buttonId.includes('email') || buttonId.includes('newsletter')) return <Mail className="w-4 h-4 text-purple-500" />;
+    if (buttonId.includes('rdv') || buttonId.includes('meeting')) return <Calendar className="w-4 h-4 text-orange-500" />;
+    if (buttonId.includes('contact')) return <Target className="w-4 h-4 text-red-500" />;
+    return <MousePointer className="w-4 h-4 text-gray-500" />;
+  };
+
+  const getButtonCategory = (buttonId: string): string => {
+    if (buttonId.includes('whatsapp')) return 'Communication';
+    if (buttonId.includes('phone')) return 'Communication';
+    if (buttonId.includes('email') || buttonId.includes('newsletter')) return 'Communication';
+    if (buttonId.includes('rdv') || buttonId.includes('meeting')) return 'Appointment';
+    if (buttonId.includes('contact')) return 'Contact';
+    if (buttonId.includes('cta')) return 'Conversion';
+    return 'Other';
   };
 
   const getPageDisplayName = (page: string): string => {
-    if (page === '/') return 'Home Page';
-    if (page === '/blog') return 'Blog';
-    if (page === '/about') return 'About';
-    if (page === '/contact') return 'Contact';
-    return page.replace('/', '').replace(/\b\w/g, l => l.toUpperCase()) || 'Unknown Page';
+    if (page === '/') return '🏠 Home Page';
+    if (page === '/blog') return '📰 Blog';
+    if (page === '/about') return 'ℹ️ About';
+    if (page === '/contact') return '📞 Contact';
+    if (page === '/cas-client') return '👤 CAS Client';
+    return page.replace('/', '').replace(/\b\w/g, l => l.toUpperCase()) || '❓ Unknown Page';
   };
 
   useEffect(() => {
@@ -152,6 +178,32 @@ export default function DashboardPage() {
 
   if (loading) {
     return <Loader />;
+  }
+
+  // Show helpful message when no data
+  if (pageViews.length === 0 && buttonClicks.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+          <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6">
+            <BarChart3 className="w-12 h-12 text-blue-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">📊 Dashboard Ready!</h1>
+          <p className="text-lg text-gray-600 mb-6 max-w-md">
+            Your dashboard is set up and ready to collect data. 
+            Start browsing your website to see analytics appear here.
+          </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md">
+            <h3 className="font-semibold text-blue-900 mb-2">💡 What to do next:</h3>
+            <ul className="text-sm text-blue-800 space-y-1">
+              <li>• Visit different pages on your website</li>
+              <li>• Click buttons (WhatsApp, Phone, Contact)</li>
+              <li>• Check back in a few minutes</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -247,9 +299,9 @@ export default function DashboardPage() {
 
       {/* Key Performance Indicators */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Page Views</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">📊 Total Page Views</CardTitle>
             <div className="p-2 bg-blue-100 rounded-lg">
               <Eye className="h-4 w-4 text-blue-600" />
             </div>
@@ -258,14 +310,17 @@ export default function DashboardPage() {
             <div className="text-3xl font-bold text-gray-900">{totalPageViews.toLocaleString()}</div>
             <div className="flex items-center text-xs text-gray-500 mt-1">
               <TrendingUp className="w-3 h-3 mr-1 text-green-500" />
-              <span>↑ {timeRange} period</span>
+              <span>Last {timeRange === '24h' ? '24 hours' : timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '90 days'}</span>
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              {pageViews.length} pages tracked
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Button Clicks</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">🎯 Total Button Clicks</CardTitle>
             <div className="p-2 bg-green-100 rounded-lg">
               <MousePointer className="h-4 w-4 text-green-600" />
             </div>
@@ -274,14 +329,17 @@ export default function DashboardPage() {
             <div className="text-3xl font-bold text-gray-900">{totalButtonClicks.toLocaleString()}</div>
             <div className="flex items-center text-xs text-gray-500 mt-1">
               <Target className="w-3 h-3 mr-1 text-green-500" />
-              <span>↑ {timeRange} period</span>
+              <span>User interactions</span>
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              {buttonClicks.length} buttons tracked
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Engagement Rate</CardTitle>
+            <CardTitle className="text-sm font-medium text-gray-600">📈 Engagement Rate</CardTitle>
             <div className="p-2 bg-purple-100 rounded-lg">
               <Activity className="h-4 w-4 text-purple-600" />
             </div>
@@ -292,6 +350,9 @@ export default function DashboardPage() {
               <Zap className="w-3 h-3 mr-1 text-purple-500" />
               <span>Clicks per page view</span>
             </div>
+            <div className="text-xs text-gray-400 mt-1">
+              {totalButtonClicks > 0 ? `1 click every ${Math.round(totalPageViews / totalButtonClicks)} page views` : 'No clicks yet'}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -299,9 +360,10 @@ export default function DashboardPage() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Page Views Chart */}
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900">Page Views Performance</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">📊 Page Views Performance</CardTitle>
+            <p className="text-sm text-gray-500 mt-1">Which pages are getting the most traffic</p>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -326,9 +388,10 @@ export default function DashboardPage() {
         </Card>
 
         {/* Button Clicks Chart */}
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900">Button Engagement Performance</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">🎯 Button Engagement Performance</CardTitle>
+            <p className="text-sm text-gray-500 mt-1">Which buttons users click the most</p>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -356,9 +419,10 @@ export default function DashboardPage() {
       {/* Top Performers Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Performing Pages */}
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900">Top Performing Pages</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">🏆 Top Performing Pages</CardTitle>
+            <p className="text-sm text-gray-500 mt-1">Your most visited pages</p>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -386,9 +450,10 @@ export default function DashboardPage() {
         </Card>
 
         {/* Top Performing Buttons */}
-        <Card className="bg-white border-0 shadow-sm">
+        <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-gray-900">Top Performing Buttons</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900">🎯 Top Performing Buttons</CardTitle>
+            <p className="text-sm text-gray-500 mt-1">Your most clicked buttons</p>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -398,10 +463,10 @@ export default function DashboardPage() {
                     <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
                       {getButtonIcon(button.buttonId)}
                     </div>
-                    <div>
-                      <div className="font-medium text-gray-900">{getButtonDisplayName(button.buttonId)}</div>
-                      <div className="text-sm text-gray-500">{button.buttonType || 'Unknown'}</div>
-                    </div>
+                                          <div>
+                        <div className="font-medium text-gray-900">{getButtonDisplayName(button.buttonId)}</div>
+                        <div className="text-sm text-gray-500">{getButtonCategory(button.buttonId)}</div>
+                      </div>
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold text-purple-600">{button.count.toLocaleString()}</div>
@@ -417,23 +482,27 @@ export default function DashboardPage() {
       </div>
 
       {/* Data Summary */}
-      <Card className="bg-white border-0 shadow-sm">
+      <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-900">Data Summary</CardTitle>
+          <CardTitle className="text-lg font-semibold text-gray-900">📋 Data Summary</CardTitle>
+          <p className="text-sm text-gray-500 mt-1">Overview of your tracking setup</p>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{pageViews.length}</div>
               <div className="text-sm text-gray-600">Pages Tracked</div>
+              <div className="text-xs text-gray-400 mt-1">Active monitoring</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">{buttonClicks.length}</div>
               <div className="text-sm text-gray-600">Buttons Tracked</div>
+              <div className="text-xs text-gray-400 mt-1">User interactions</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{timeRange}</div>
+              <div className="text-2xl font-bold text-purple-600">{timeRange === '24h' ? '24h' : timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '90 days'}</div>
               <div className="text-sm text-gray-600">Current Period</div>
+              <div className="text-xs text-gray-400 mt-1">Data range</div>
             </div>
           </div>
         </CardContent>

@@ -262,10 +262,26 @@ export default function HomePage() {
      const [userRegion, setUserRegion] = useState<string>('international');
      const [locationLoading, setLocationLoading] = useState(true);
      const [hiddenTimelineCards, setHiddenTimelineCards] = useState<Set<string>>(new Set());
+     const [renderPhase, setRenderPhase] = useState<'critical' | 'above-fold' | 'below-fold'>('critical');
 
      useEffect(() => {
           setMounted(true);
      }, []);
+
+     // Progressive rendering: Phase 1 - Critical content (header + hero)
+     useEffect(() => {
+          if (mounted) {
+               setRenderPhase('above-fold');
+          }
+     }, [mounted]);
+
+     // Progressive rendering: Phase 2 - Above-fold content after hero
+     useEffect(() => {
+          if (renderPhase === 'above-fold') {
+               const timer = setTimeout(() => setRenderPhase('below-fold'), 200);
+               return () => clearTimeout(timer);
+          }
+     }, [renderPhase]);
 
      // Detect user location for region-based filtering
      useEffect(() => {
@@ -648,6 +664,20 @@ export default function HomePage() {
           return <Loader />;
      }
 
+     // Progressive rendering loading indicator
+     if (renderPhase === 'critical') {
+          return (
+               <div className="min-h-screen bg-white overflow-hidden">
+                    <div className="h-[95vh] flex flex-col justify-center pt-20">
+                         <HomeHeroSplit heroData={homePageData?.hero} isPreview={false} />
+                    </div>
+                    <div className="flex justify-center items-center py-20">
+                         <div className="animate-pulse text-[var(--color-secondary)] text-lg">Chargement en cours...</div>
+                    </div>
+               </div>
+          );
+     }
+
      return (
           <>
                <PerformanceMonitor />
@@ -658,33 +688,36 @@ export default function HomePage() {
 
                     </div>
 
-                    {/* Mobile Companies Carousel - Separate Section */}
-                    <div className="lg:hidden bg-white py-8">
-                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                              <CompaniesCarousel
-                                   companies={homePageData?.hero?.carousel?.companies}
-                                   speed={40}
-                                   text={homePageData?.hero?.carousel?.text}
-                              />
-                         </div>
-                    </div>
-
-                    {/* SECTION 2: Platform Modules Timeline - HomePage */}
-                    <section className="py-12 bg-white overflow-hidden" id="modules">
-                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                              <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{homePageData?.platformSection?.headline}</div>
-                                   <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                        {homePageData?.platformSection?.subheadline && (
-                                             <>
-                                                  {homePageData.platformSection.subheadline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{homePageData.platformSection.subheadline.split(' ').slice(1).join(' ')}</span>
-                                             </>
-                                        )}
-                                   </h2>
-                                   <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                                        {homePageData?.platformSection?.description}
-                                   </p>
+                    {/* Phase 2: Above-fold content - Mobile Companies Carousel & Platform Modules */}
+                    {renderPhase !== 'critical' && (
+                         <>
+                              {/* Mobile Companies Carousel - Separate Section */}
+                              <div className="lg:hidden bg-white py-8">
+                                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                        <CompaniesCarousel
+                                             companies={homePageData?.hero?.carousel?.companies}
+                                             speed={40}
+                                             text={homePageData?.hero?.carousel?.text}
+                                        />
+                                   </div>
                               </div>
+
+                              {/* SECTION 2: Platform Modules Timeline - HomePage */}
+                              <section className="py-12 bg-white overflow-hidden" id="modules">
+                                   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                        <div className="text-center mb-12">
+                                             <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{homePageData?.platformSection?.headline}</div>
+                                             <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                                                  {homePageData?.platformSection?.subheadline && (
+                                                       <>
+                                                            {homePageData.platformSection.subheadline.split(' ')[0]} <span className="text-[var(--color-secondary)]">{homePageData.platformSection.subheadline.split(' ').slice(1).join(' ')}</span>
+                                                       </>
+                                                  )}
+                                             </h2>
+                                             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                                                  {homePageData?.platformSection?.description}
+                                             </p>
+                                        </div>
 
                               {/* Timeline 1 - Scrolling Up */}
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[600px] relative">
@@ -808,6 +841,12 @@ export default function HomePage() {
                               </div>
                          </div>
                     </section>
+                         </>
+                    )}
+
+                    {/* Phase 3: Below-fold content - All other sections */}
+                    {renderPhase === 'below-fold' && (
+                         <>
 
                     {/* SECTION 3: Video Testimonials - HomePage */}
 
@@ -1066,6 +1105,8 @@ export default function HomePage() {
                     <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
                          <LazyFAQSection faqData={homePageData?.faq} />
                     </Suspense>
+                         </>
+                    )}
 
                     <style jsx>{`
         @keyframes scroll-up {
