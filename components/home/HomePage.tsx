@@ -1,27 +1,40 @@
 "use client"
 
-// Preload critical resources
+// Preload critical resources for faster loading
 const preloadCriticalResources = () => {
-     // Preload hero image
+     // Preload hero image with high priority
      const heroImg = new window.Image();
      heroImg.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hero-digital-transformation.png";
-
-     // Preload critical fonts/icons
-     const link = document.createElement('link');
-     link.rel = 'preload';
-     link.href = '/fonts/inter-var.woff2';
-     link.as = 'font';
-     link.type = 'font/woff2';
-     link.crossOrigin = 'anonymous';
-     document.head.appendChild(link);
+     heroImg.fetchPriority = "high";
+     
+     // Preload critical fonts
+     const fontLink = document.createElement('link');
+     fontLink.rel = 'preload';
+     fontLink.href = '/fonts/inter-var.woff2';
+     fontLink.as = 'font';
+     fontLink.type = 'font/woff2';
+     fontLink.crossOrigin = 'anonymous';
+     document.head.appendChild(fontLink);
+     
+     // Preload critical CSS
+     const cssLink = document.createElement('link');
+     cssLink.rel = 'preload';
+     cssLink.href = '/globals.css';
+     cssLink.as = 'style';
+     document.head.appendChild(cssLink);
 };
 
-// Execute preloading
+// Execute preloading only on client side
 if (typeof window !== 'undefined') {
-     preloadCriticalResources();
+     // Use requestIdleCallback for non-critical preloading
+     if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => preloadCriticalResources());
+     } else {
+          setTimeout(preloadCriticalResources, 100);
+     }
 }
 
-import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy, useMemo } from 'react';
 import {
      Calculator,
      ShoppingCart,
@@ -263,6 +276,8 @@ export default function HomePage() {
      const [locationLoading, setLocationLoading] = useState(true);
      const [hiddenTimelineCards, setHiddenTimelineCards] = useState<Set<string>>(new Set());
      const [renderPhase, setRenderPhase] = useState<'critical' | 'above-fold' | 'below-fold'>('critical');
+     const [isInViewport, setIsInViewport] = useState(false);
+     const belowFoldRef = useRef<HTMLDivElement>(null);
 
      useEffect(() => {
           setMounted(true);
@@ -283,28 +298,40 @@ export default function HomePage() {
           }
      }, [renderPhase]);
 
+     // Intersection Observer for below-fold content
+     useEffect(() => {
+          if (!belowFoldRef.current) return;
+          
+          const observer = new IntersectionObserver(
+               ([entry]) => {
+                    if (entry.isIntersecting && renderPhase === 'below-fold') {
+                         setIsInViewport(true);
+                    }
+               },
+               { threshold: 0.1 }
+          );
+          
+          observer.observe(belowFoldRef.current);
+          return () => observer.disconnect();
+     }, [renderPhase]);
+
      // Detect user location for region-based filtering
      useEffect(() => {
           if (!mounted) return;
 
-          const detectUserLocation = async () => {
-               const startTime = performance.now();
-               try {
-                    const location = await getUserLocation();
-                    if (location) {
-                         const region = getRegionFromCountry(location.countryCode);
-                         setUserRegion(region);
-
-                         // Performance monitoring
-                         const endTime = performance.now();
-                         console.log(`🚀 Geolocation detected in ${(endTime - startTime).toFixed(2)}ms`);
-                    }
-               } catch (error) {
-                    console.error('HomePage - Error detecting user location:', error);
-               } finally {
-                    setLocationLoading(false);
-               }
-          };
+                     const detectUserLocation = async () => {
+                try {
+                     const location = await getUserLocation();
+                     if (location) {
+                          const region = getRegionFromCountry(location.countryCode);
+                          setUserRegion(region);
+                     }
+                } catch (error) {
+                     // Silent error handling for production
+                } finally {
+                     setLocationLoading(false);
+                }
+           };
 
           detectUserLocation();
      }, [mounted]);
@@ -359,182 +386,143 @@ export default function HomePage() {
           fetchTestimonials();
      }, [mounted, locationLoading]);
 
-     const fetchHomePageData = async () => {
-          try {
-               console.log('🔄 Starting to fetch home page data...');
+           const fetchHomePageData = async () => {
+           try {
+                // Use cached data if available and fresh
+                const cachedData = sessionStorage.getItem('homePageData');
+                if (cachedData) {
+                     try {
+                          const parsed = JSON.parse(cachedData);
+                          if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000) { // 5 minutes cache
+                               setHomePageData(parsed.data);
+                               return;
+                          }
+                     } catch (e) {
+                          // Cache parse error, continue to fetch fresh data
+                     }
+                }
 
-               // Use cached data if available and fresh
-               const cachedData = sessionStorage.getItem('homePageData');
-               if (cachedData) {
-                    try {
-                         const parsed = JSON.parse(cachedData);
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000) { // 5 minutes cache
-                              console.log('📋 Using cached home page data');
-                              setHomePageData(parsed.data);
-                              return;
-                         }
-                    } catch (e) {
-                         console.log('📋 Cache parse error, fetching fresh data');
-                    }
-               }
+                const url = `/api/content?type=home-page`;
+                const response = await fetch(url, {
+                     cache: 'force-cache', // Use Next.js caching
+                     headers: {
+                          'Accept': 'application/json'
+                     }
+                });
 
-               const url = `/api/content?type=home-page`;
-               console.log('📡 Fetching from URL:', url);
+                if (response.ok) {
+                     const data = await response.json();
 
-               const response = await fetch(url, {
-                    cache: 'force-cache', // Use Next.js caching
-                    headers: {
-                         'Accept': 'application/json'
-                    }
-               });
+                     if (data && Array.isArray(data) && data.length > 0) {
+                          // Find the home-page content specifically
+                          const homePageContent = data.find(item => item.type === 'home-page');
 
-               console.log('📥 Response status:', response.status);
-               console.log('📥 Response ok:', response.ok);
+                          if (homePageContent && homePageContent.content) {
+                               setHomePageData(homePageContent.content);
 
-               if (response.ok) {
-                    const data = await response.json();
-                    console.log('📊 Raw API response data:', data);
-                    console.log('📊 Data type:', typeof data);
-                    console.log('📊 Is array:', Array.isArray(data) ? data.length : 'N/A');
+                               // Cache the data for 5 minutes
+                               sessionStorage.setItem('homePageData', JSON.stringify({
+                                    data: homePageContent.content,
+                                    timestamp: Date.now()
+                               }));
+                          }
+                     }
+                }
+           } catch (error) {
+                // Silent error handling for production
+           }
+      };
 
-                    if (data && Array.isArray(data) && data.length > 0) {
-                         // Find the home-page content specifically
-                         const homePageContent = data.find(item => item.type === 'home-page');
+           const fetchTestimonials = async () => {
+           try {
+                // Use cached testimonials if available and fresh
+                const region = userRegion || 'international';
+                if (!region) {
+                     return;
+                }
 
-                         if (homePageContent) {
-                              console.log('📄 Found home-page content:', homePageContent);
-                              console.log('📄 Content type:', homePageContent.type);
-                              console.log('📄 Has content field:', !!homePageContent.content);
+                const cacheKey = `testimonials_${region}`;
+                const cachedData = sessionStorage.getItem(cacheKey);
+                if (cachedData) {
+                     try {
+                          const parsed = JSON.parse(cachedData);
+                          if (parsed.timestamp && (Date.now() - parsed.timestamp) < 10 * 60 * 1000) { // 10 minutes cache
+                               setAvailableTestimonials(parsed.data);
+                               return;
+                          }
+                     } catch (e) {
+                          // Cache parse error, continue to fetch fresh data
+                     }
+                }
 
-                              // Check if the content field exists
-                              if (homePageContent.content) {
-                                   console.log('✅ Setting home page data:', homePageContent.content);
-                                   setHomePageData(homePageContent.content);
+                const response = await fetch(`/api/testimonials?region=${region}`, {
+                     cache: 'force-cache' // Use Next.js caching
+                });
+                if (response.ok) {
+                     const data = await response.json();
 
-                                   // Cache the data for 5 minutes
-                                   sessionStorage.setItem('homePageData', JSON.stringify({
-                                        data: homePageContent.content,
-                                        timestamp: Date.now()
-                                   }));
-                              } else {
-                                   console.error('❌ Home page content structure is invalid');
-                              }
-                         } else {
-                              console.error('❌ No home-page content found in the data array');
-                              console.log('📊 Available content types:', data.map(item => item.type));
-                         }
-                    } else {
-                         console.error('❌ Invalid data format or no content found:', data);
-                    }
-               } else {
-                    console.error('❌ Failed to fetch home page data:', response.status);
-                    const errorText = await response.text();
-                    console.error('❌ Error response:', errorText);
-               }
-          } catch (error) {
-               console.error('💥 Error fetching home page data:', error);
-          }
-     };
+                     // Map the testimonials data to match the expected format
+                     const mappedTestimonials = data.map((item: any) => ({
+                          _id: item._id,
+                          name: item.author || '',
+                          role: item.role || '',
+                          company: item.company || '',
+                          quote: item.text || '',
+                          avatar: item.photo || '',
+                          targetRegions: item.targetRegions || ['all'], // Include region targeting
+                     }));
 
-     const fetchTestimonials = async () => {
-          try {
-               // Use cached testimonials if available and fresh
-               const region = userRegion || 'international';
-               if (!region) {
-                    console.log('⏳ Waiting for geolocation detection...');
-                    return;
-               }
+                     setAvailableTestimonials(mappedTestimonials);
 
-               const cacheKey = `testimonials_${region}`;
-               const cachedData = sessionStorage.getItem(cacheKey);
-               if (cachedData) {
-                    try {
-                         const parsed = JSON.parse(cachedData);
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 10 * 60 * 1000) { // 10 minutes cache
-                              console.log('📋 Using cached testimonials for region:', region);
-                              setAvailableTestimonials(parsed.data);
-                              return;
-                         }
-                    } catch (e) {
-                         console.log('📋 Cache parse error, fetching fresh testimonials');
-                    }
-               }
+                     // Cache the testimonials for 10 minutes
+                     sessionStorage.setItem(cacheKey, JSON.stringify({
+                          data: mappedTestimonials,
+                          timestamp: Date.now()
+                     }));
+                }
+           } catch (error) {
+                // Silent error handling for production
+           }
+      };
 
-               const response = await fetch(`/api/testimonials?region=${region}`, {
-                    cache: 'force-cache' // Use Next.js caching
-               });
-               if (response.ok) {
-                    const data = await response.json();
-                    console.log('📊 Raw testimonials API response data:', data);
-                    console.log('📊 Testimonials data type:', typeof data);
-                    console.log('📊 Is array:', Array.isArray(data) ? data.length : 'N/A');
+           const fetchClientCases = async () => {
+           try {
+                // Use cached client cases if available and fresh
+                const cachedData = sessionStorage.getItem('clientCases');
+                if (cachedData) {
+                     try {
+                          const parsed = JSON.parse(cachedData);
+                          if (parsed.timestamp && (Date.now() - parsed.timestamp) < 15 * 60 * 1000) { // 15 minutes cache
+                               setClientCases(parsed.data);
+                               return;
+                          }
+                     } catch (e) {
+                          // Cache parse error, continue to fetch fresh data
+                     }
+                }
 
-                    // Map the testimonials data to match the expected format
-                    const mappedTestimonials = data.map((item: any) => ({
-                         _id: item._id,
-                         name: item.author || '',
-                         role: item.role || '',
-                         company: item.company || '',
-                         quote: item.text || '',
-                         avatar: item.photo || '',
-                         targetRegions: item.targetRegions || ['all'], // Include region targeting
-                    }));
+                const response = await fetch(`/api/content?type=clients-page`, {
+                     cache: 'force-cache' // Use Next.js caching
+                });
+                if (response.ok) {
+                     const data = await response.json();
+                     if (data.length > 0) {
+                          const clientsContent = data.find(item => item.type === 'clients-page');
+                          if (clientsContent && clientsContent.content && clientsContent.content.clientCases) {
+                               setClientCases(clientsContent.content.clientCases);
 
-                    console.log('✅ Mapped testimonials:', mappedTestimonials);
-                    setAvailableTestimonials(mappedTestimonials);
-
-                    // Cache the testimonials for 10 minutes
-                    sessionStorage.setItem(cacheKey, JSON.stringify({
-                         data: mappedTestimonials,
-                         timestamp: Date.now()
-                    }));
-               } else {
-                    console.error('Failed to fetch testimonials, status:', response.status);
-               }
-          } catch (error) {
-               console.error('Error fetching testimonials:', error);
-          }
-     };
-
-     const fetchClientCases = async () => {
-          try {
-               // Use cached client cases if available and fresh
-               const cachedData = sessionStorage.getItem('clientCases');
-               if (cachedData) {
-                    try {
-                         const parsed = JSON.parse(cachedData);
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 15 * 60 * 1000) { // 15 minutes cache
-                              console.log('📋 Using cached client cases');
-                              setClientCases(parsed.data);
-                              return;
-                         }
-                    } catch (e) {
-                         console.log('📋 Cache parse error, fetching fresh client cases');
-                    }
-               }
-
-               const response = await fetch(`/api/content?type=clients-page`, {
-                    cache: 'force-cache' // Use Next.js caching
-               });
-               if (response.ok) {
-                    const data = await response.json();
-                    if (data.length > 0) {
-                         const clientsContent = data.find(item => item.type === 'clients-page');
-                         if (clientsContent && clientsContent.content && clientsContent.content.clientCases) {
-                              setClientCases(clientsContent.content.clientCases);
-
-                              // Cache the client cases for 15 minutes
-                              sessionStorage.setItem('clientCases', JSON.stringify({
-                                   data: clientsContent.content.clientCases,
-                                   timestamp: Date.now()
-                              }));
-                         }
-                    }
-               }
-          } catch (error) {
-               console.error('Error fetching client cases:', error);
-          }
-     };
+                               // Cache the client cases for 15 minutes
+                               sessionStorage.setItem('clientCases', JSON.stringify({
+                                    data: clientsContent.content.clientCases,
+                                    timestamp: Date.now()
+                               }));
+                          }
+                     }
+                }
+           } catch (error) {
+                // Silent error handling for production
+           }
+      };
 
 
 
@@ -597,16 +585,17 @@ export default function HomePage() {
           }
      };
 
-     // Split apps into 3 columns for timelines with priority for most demanded modules
-     // Get existing apps from data and filter out modules without icons
-     const existingApps = homePageData?.platformSection?.apps || [];
-     const appsWithIcons = existingApps.filter(app =>
-          app.icon &&
-          app.icon.trim() !== '' &&
-          app.icon !== 'undefined' &&
-          app.icon !== 'null' &&
-          !app.icon.includes('placeholder')
-     );
+     // Memoized app filtering for better performance
+     const appsWithIcons = useMemo(() => {
+          const existingApps = homePageData?.platformSection?.apps || [];
+          return existingApps.filter(app =>
+               app.icon &&
+               app.icon.trim() !== '' &&
+               app.icon !== 'undefined' &&
+               app.icon !== 'null' &&
+               !app.icon.includes('placeholder')
+          );
+     }, [homePageData?.platformSection?.apps]);
 
      // Create timelines with prominently marked apps appearing more frequently
      // Add prominent apps at different positions to distribute them evenly
@@ -734,11 +723,14 @@ export default function HomePage() {
                                                             className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                                                        >
                                                             <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                                                                 <img
+                                                                 <Image
                                                                       src={app.icon}
                                                                       alt={app.title}
+                                                                      width={48}
+                                                                      height={48}
                                                                       className="w-12 h-12 object-contain"
                                                                       onError={() => handleTimelineCardError(cardKey)}
+                                                                      priority={index < 3}
                                                                  />
                                                             </div>
                                                             <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
@@ -772,11 +764,14 @@ export default function HomePage() {
                                                             className="timeline-card bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                                                        >
                                                             <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                                                                 <img
+                                                                 <Image
                                                                       src={app.icon}
                                                                       alt={app.title}
+                                                                      width={48}
+                                                                      height={48}
                                                                       className="w-12 h-12 object-contain"
                                                                       onError={() => handleTimelineCardError(cardKey)}
+                                                                      priority={index < 3}
                                                                  />
                                                             </div>
                                                             <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
@@ -810,11 +805,14 @@ export default function HomePage() {
                                                             className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
                                                        >
                                                             <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                                                                 <img
+                                                                 <Image
                                                                       src={app.icon}
                                                                       alt={app.title}
+                                                                      width={48}
+                                                                      height={48}
                                                                       className="w-12 h-12 object-contain"
                                                                       onError={() => handleTimelineCardError(cardKey)}
+                                                                      priority={index < 3}
                                                                  />
                                                             </div>
                                                             <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
@@ -844,9 +842,9 @@ export default function HomePage() {
                          </>
                     )}
 
-                    {/* Phase 3: Below-fold content - All other sections */}
-                    {renderPhase === 'below-fold' && (
-                         <>
+                                         {/* Phase 3: Below-fold content - All other sections */}
+                     {renderPhase === 'below-fold' && (
+                          <div ref={belowFoldRef}>
 
                     {/* SECTION 3: Video Testimonials - HomePage */}
 
@@ -1101,12 +1099,12 @@ export default function HomePage() {
                     {/* SECTION 9: Contact Section - HomePage */}
                     <ContactSection contactData={homePageData?.contact} />
 
-                    {/* SECTION 10: FAQ Section - HomePage */}
-                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                         <LazyFAQSection faqData={homePageData?.faq} />
-                    </Suspense>
-                         </>
-                    )}
+                                         {/* SECTION 10: FAQ Section - HomePage */}
+                     <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                          <LazyFAQSection faqData={homePageData?.faq} />
+                     </Suspense>
+                          </div>
+                     )}
 
                     <style jsx>{`
         @keyframes scroll-up {

@@ -20,12 +20,12 @@ export function useGeolocation(): GeolocationData {
   useEffect(() => {
     const detectRegion = async () => {
       try {
-        console.log('Detecting region...');
+        // Detecting region silently
         // Try to get IP-based geolocation
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
         
-        console.log('Geolocation API response:', data);
+        // Geolocation API response received
         
         let region: Region = 'OTHER';
         
@@ -36,7 +36,7 @@ export function useGeolocation(): GeolocationData {
           region = 'MA';
         }
         
-        console.log('Detected region:', region, 'from country code:', data.country_code);
+        // Region detected silently
         
         setGeolocationData({
           region,

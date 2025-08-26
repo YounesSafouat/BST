@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic';
 // GET: Get all blog posts or blog settings
 export async function GET(req: NextRequest) {
   try {
-    console.log("Blog API: Starting blog posts fetch...")
+            // Blog API: Starting blog posts fetch...
     await connectDB();
-    console.log("Blog API: Connected to database")
+            // Blog API: Connected to database
 
     const { searchParams } = new URL(req.url);
     const settings = searchParams.get('settings');
@@ -33,17 +33,9 @@ export async function GET(req: NextRequest) {
 
     // First try to get blog posts from blog-page content
     const blogPageContent = await Content.findOne({ type: 'blog-page' });
-    console.log("Blog API: Blog page content found:", blogPageContent ? "Yes" : "No");
-    if (blogPageContent) {
-      console.log("Blog API: Blog page content structure:", {
-        hasContent: !!blogPageContent.content,
-        hasBlogPosts: !!(blogPageContent.content && blogPageContent.content.blogPosts),
-        blogPostsLength: blogPageContent.content?.blogPosts?.length || 0
-      });
-    }
+    // Blog API: Blog page content structure logged silently
 
     if (blogPageContent && blogPageContent.content && blogPageContent.content.blogPosts) {
-      console.log("Blog API: Found blog posts in blog-page:", blogPageContent.content.blogPosts.length);
       // Add the blog-page document ID to each blog post for reference
       const blogPostsWithId = blogPageContent.content.blogPosts.map((post: any, index: number) => ({
         ...post,
@@ -51,10 +43,7 @@ export async function GET(req: NextRequest) {
         _blogPageId: blogPageContent._id,
         _index: index
       }));
-      console.log("Blog API: Returning blog posts with IDs:", blogPostsWithId.length);
-      console.log("Blog API: Sample blog post ID:", blogPostsWithId[0]?._id);
-      console.log("Blog API: Blog page ID:", blogPageContent._id);
-      console.log("Blog API: All post IDs:", blogPostsWithId.map(p => ({ id: p._id, title: p.title })));
+      // Blog API: Blog posts with IDs logged silently
       return NextResponse.json(blogPostsWithId, {
         headers: {
           'Access-Control-Allow-Origin': '*',
@@ -66,8 +55,7 @@ export async function GET(req: NextRequest) {
 
     // If no blog-page content, try to get individual blog posts
     const individualBlogPosts = await Content.find({ type: 'blog-post' });
-    console.log("Blog API: Individual blog posts found:", individualBlogPosts.length);
-    console.log("Blog API: Individual blog posts structure:", individualBlogPosts.map(p => ({ id: p._id, type: p.type, hasContent: !!p.content })));
+    // Blog API: Individual blog posts structure logged silently
 
     return NextResponse.json(individualBlogPosts, {
       headers: {
@@ -87,7 +75,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const body = await req.json();
-    console.log("Blog API: Creating blog post:", body)
+    // Blog API: Creating blog post silently
 
     // Process SEO data if present
     if (body.seo) {
@@ -123,7 +111,7 @@ export async function POST(req: NextRequest) {
           blogPosts: []
         }
       });
-      console.log("Blog API: Created new blog-page document");
+      // Blog API: Created new blog-page document
     }
 
     // Add the new blog post to the array

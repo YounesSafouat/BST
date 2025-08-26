@@ -42,7 +42,7 @@ export function usePageVisibility() {
 
   const isPageVisible = (pageName: keyof PageVisibility): boolean => {
     const isVisible = pageVisibility[pageName] ?? true;
-    console.log(`Page ${pageName} visibility:`, isVisible, 'Current settings:', pageVisibility);
+            // Page visibility tracked silently
     return isVisible;
   };
 

@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
       const baseUrl = request.nextUrl.origin;
       const maintenanceUrl = `${baseUrl}/api/maintenance`;
       
-      console.log(`[Maintenance Middleware] Fetching from: ${maintenanceUrl}`);
+              // [Maintenance Middleware] Fetching from maintenance URL
       
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
@@ -67,15 +67,14 @@ export async function middleware(request: NextRequest) {
         };
         
         // Log maintenance status changes for debugging (both dev and prod)
-        console.log(`[Maintenance Middleware] Mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'} | Path: ${request.nextUrl.pathname} | Source: ${data.source}`);
+        // [Maintenance Middleware] Mode status logged silently
       } else {
         console.warn(`[Maintenance Middleware] API returned status: ${response.status}`);
         // Don't update cache on error, keep previous value
       }
     } catch (error) {
       // Fallback to environment variable if API call fails
-      console.log(`[Maintenance Middleware] API call failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      console.log('[Maintenance Middleware] Using environment variable fallback');
+              // [Maintenance Middleware] API call failed, using environment variable fallback
       maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
       
       // Update cache with fallback value
@@ -113,22 +112,22 @@ export async function middleware(request: NextRequest) {
             lastCheck: now,
             cacheDuration: 30000
           };
-          console.log(`[Maintenance Middleware] Cache refreshed - Mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'}`);
+          // [Maintenance Middleware] Cache refreshed silently
         }
       }
     } catch (error) {
-      console.log('[Maintenance Middleware] Cache refresh failed, using cached value');
+              // [Maintenance Middleware] Cache refresh failed, using cached value
     }
   }
 
   if (maintenanceMode) {
     if (request.nextUrl.pathname !== '/maintenance') {
-      console.log(`[Maintenance Middleware] Redirecting ${request.nextUrl.pathname} to /maintenance`);
+              // [Maintenance Middleware] Redirecting to maintenance page
       return NextResponse.redirect(new URL('/maintenance', request.url));
     }
   } else {
     if (request.nextUrl.pathname === '/maintenance') {
-      console.log(`[Maintenance Middleware] Redirecting /maintenance to /`);
+              // [Maintenance Middleware] Redirecting maintenance to home
       return NextResponse.redirect(new URL('/', request.url));
     }
   }
