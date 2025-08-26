@@ -11,10 +11,6 @@ const nextConfig = {
         },
       },
     },
-    // Enable modern JavaScript features
-    esmExternals: 'loose',
-    // Optimize CSS
-    optimizeCss: true,
   },
   
   // Image optimizations
@@ -80,15 +76,6 @@ const nextConfig = {
           {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
-          },
-          // Performance headers
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains',
           },
         ],
       },

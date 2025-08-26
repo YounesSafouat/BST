@@ -25,7 +25,7 @@ export function usePageAnalytics() {
     sessionData[pathname] = (sessionData[pathname] || 0) + 1;
     sessionStorage.setItem('pageVisits', JSON.stringify(sessionData));
     
-            // Page visit tracked silently
+    console.log(`Page visit tracked: ${pathname} (Session: ${sessionData[pathname]}, Total in DB: +1)`);
   }, [pathname]);
 }
 
@@ -65,7 +65,7 @@ export function useButtonAnalytics() {
       });
     }
     
-            // Button click tracked silently
+    console.log(`Button click tracked: ${buttonId} on ${pathname} (Session: ${sessionData[key]}, Total in DB: +1, GA: +1)`);
   };
 
   // Helper function to get button info for better GA reporting
