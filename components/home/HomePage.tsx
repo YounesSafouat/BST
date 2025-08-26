@@ -689,7 +689,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Phase 2: Above-fold content - Mobile Companies Carousel & Platform Modules */}
-                    {renderPhase !== 'critical' && (
+                    {renderPhase === 'above-fold' && (
                          <>
                               {/* Mobile Companies Carousel - Separate Section */}
                               <div className="lg:hidden bg-white py-8">
