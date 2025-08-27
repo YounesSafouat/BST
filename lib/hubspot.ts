@@ -38,7 +38,7 @@ export class HubSpotService {
             ]
           }
         ],
-        properties: ['email', 'firstname', 'lastname', 'phone', 'company', 'submission_count', 'last_submission_date', 'first_submission_date', 'contact_status'],
+        properties: ['email', 'firstname', 'lastname', 'phone', 'company', 'submission_count', 'last_submission_date', 'contact_status'],
         limit: 1
       });
 
@@ -65,10 +65,10 @@ export class HubSpotService {
         const currentSubmissionCount = existingContact.properties.submission_count || '0';
         const newSubmissionCount = parseInt(currentSubmissionCount) + 1;
 
-        // Add tracking properties (these will be ignored if they don't exist in HubSpot)
+        // Add tracking properties (only the ones that exist in HubSpot)
         properties.submission_count = newSubmissionCount.toString();
         properties.last_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
-        properties.contact_status = 're-engaged';
+        properties.contact_status = 're engaged';
 
         console.log('Updating existing contact with properties:', properties);
 
@@ -81,11 +81,11 @@ export class HubSpotService {
         return { success: true, action: 'updated', contactId: existingContact.id };
       } else {
         // New contact - create with initial values
-        // Add tracking properties (these will be ignored if they don't exist in HubSpot)
+        // Add tracking properties (only the ones that exist in HubSpot)
         properties.submission_count = '1';
         properties.first_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
         properties.last_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
-        properties.contact_status = 'new_lead';
+        properties.contact_status = 'new lead';
 
         console.log('Creating new contact with properties:', properties);
 
@@ -120,7 +120,7 @@ export class HubSpotService {
             ]
           }
         ],
-        properties: ['email', 'firstname', 'lastname', 'phone', 'company', 'submission_count', 'last_submission_date', 'first_submission_date', 'contact_status'],
+        properties: ['email', 'firstname', 'lastname', 'phone', 'company', 'submission_count', 'first_submission_date', 'last_submission_date', 'contact_status'],
         limit: 1
       });
 

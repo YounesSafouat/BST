@@ -54,17 +54,17 @@ export async function POST(req: Request) {
       )
     }
 
-    // Check if we already have a partial submission for this user
+    // Check if we already have a submission for this user (partial OR complete)
     let submission = await ContactSubmission.findOne({
       $or: [
-        { email: contactData.email, submissionStatus: 'partial' },
-        { phone: contactData.phone, submissionStatus: 'partial' }
+        { email: contactData.email },
+        { phone: contactData.phone }
       ]
     });
 
     if (submission) {
-      // Update existing partial submission to complete
-      console.log('Updating existing partial submission to complete...')
+      // Update existing submission (whether partial or complete)
+      console.log(`Updating existing ${submission.submissionStatus} submission to complete...`)
       submission.name = `${contactData.firstname} ${contactData.lastname}`.trim();
       submission.email = contactData.email;
       submission.phone = contactData.phone;
