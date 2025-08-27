@@ -33,8 +33,7 @@ export async function GET() {
         label: contactStatusProperty.label,
         type: contactStatusProperty.type,
         fieldType: contactStatusProperty.fieldType,
-        options: contactStatusProperty.options || [],
-        enumOptions: contactStatusProperty.enumOptions || []
+        options: contactStatusProperty.options || []
       }
     });
     
