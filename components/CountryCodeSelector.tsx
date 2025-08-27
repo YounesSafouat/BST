@@ -170,7 +170,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
                <button
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
-                    className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-l-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)] transition-colors"
+                    className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-l-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)] transition-colors h-11 sm:h-12 min-w-[100px]"
                >
                     <span className="text-lg">{selectedCountry.flag}</span>
                     <span className="text-sm font-medium text-gray-700">{selectedCountry.dialCode}</span>

@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       }
     })
 
-    // Validate required fields
+    // Validate required fields for complete submission
     if (!contactData.email) {
       console.log('Validation failed: Email is required')
       return NextResponse.json(
@@ -54,25 +54,79 @@ export async function POST(req: Request) {
       )
     }
 
-    // Save to MongoDB (existing functionality)
-    const submission = new ContactSubmission({
-      name: `${contactData.firstname} ${contactData.lastname}`.trim(),
-      email: contactData.email,
-      phone: contactData.phone,
-      company: contactData.company,
-      message: contactData.message,
-    })
+    // Check if we already have a partial submission for this user
+    let submission = await ContactSubmission.findOne({
+      $or: [
+        { email: contactData.email, submissionStatus: 'partial' },
+        { phone: contactData.phone, submissionStatus: 'partial' }
+      ]
+    });
+
+    if (submission) {
+      // Update existing partial submission to complete
+      console.log('Updating existing partial submission to complete...')
+      submission.name = `${contactData.firstname} ${contactData.lastname}`.trim();
+      submission.email = contactData.email;
+      submission.phone = contactData.phone;
+      submission.company = contactData.company;
+      submission.message = contactData.message;
+      submission.submissionStatus = 'complete';
+      submission.fieldsFilled = {
+        name: true,
+        email: true,
+        phone: true,
+        company: !!contactData.company,
+        message: !!contactData.message
+      };
+      submission.sentToHubSpot = false; // Will be set to true after HubSpot integration
+      
+      // Update additional fields if provided
+      if (body.countryCode) submission.countryCode = body.countryCode;
+      if (body.countryName) submission.countryName = body.countryName;
+      if (body.source) submission.source = body.source;
+      if (body.page) submission.page = body.page;
+      
+    } else {
+      // Create new complete submission
+      console.log('Creating new complete submission...')
+      submission = new ContactSubmission({
+        name: `${contactData.firstname} ${contactData.lastname}`.trim(),
+        email: contactData.email,
+        phone: contactData.phone,
+        company: contactData.company,
+        message: contactData.message,
+        submissionStatus: 'complete',
+        sentToHubSpot: false,
+        fieldsFilled: {
+          name: true,
+          email: true,
+          phone: true,
+          company: !!contactData.company,
+          message: !!contactData.message
+        },
+        countryCode: body.countryCode,
+        countryName: body.countryName,
+        source: body.source || 'website',
+        page: body.page || 'home',
+        userAgent: req.headers.get('user-agent') || '',
+      });
+    }
 
     console.log('Saving to MongoDB...')
     await submission.save()
     console.log('Successfully saved to MongoDB')
 
-    // Integrate with HubSpot CRM
+    // Integrate with HubSpot CRM (only for complete submissions)
     let hubspotResult: any = null
     try {
       console.log('Attempting HubSpot integration...')
       hubspotResult = await HubSpotService.upsertContact(contactData)
       console.log('HubSpot integration successful:', hubspotResult)
+      
+      // Mark as sent to HubSpot
+      submission.sentToHubSpot = true;
+      await submission.save();
+      
     } catch (hubspotError) {
       console.error('HubSpot integration failed:', hubspotError)
       // Don't fail the entire request if HubSpot fails

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Phone, Mail, Calendar, CheckCircle, Award, Zap, Shield } from "lucide-r
 import RegionalContactInfo from "./RegionalContactInfo";
 import { useToast } from "@/hooks/use-toast";
 import CountryCodeSelector from "./CountryCodeSelector";
+import { useGeolocation } from "@/hooks/useGeolocation";
 
 interface Country {
      code: string;
@@ -63,6 +64,109 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      const [isSubmitting, setIsSubmitting] = useState(false);
      const [submitError, setSubmitError] = useState('');
      const { toast } = useToast();
+     const { region, country, loading: geolocationLoading } = useGeolocation();
+
+     // Auto-detect country based on geolocation
+     useEffect(() => {
+          if (!geolocationLoading && region) {
+               let detectedCountry: Country;
+
+               switch (region) {
+                    case 'FR':
+                         detectedCountry = {
+                              code: 'FR',
+                              name: 'France',
+                              dialCode: '+33',
+                              flag: '🇫🇷'
+                         };
+                         break;
+                    case 'MA':
+                         detectedCountry = {
+                              code: 'MA',
+                              name: 'Maroc',
+                              dialCode: '+212',
+                              flag: '🇲🇦'
+                         };
+                         break;
+                    default:
+                         // Default to Morocco for other regions
+                         detectedCountry = {
+                              code: 'MA',
+                              name: 'Maroc',
+                              dialCode: '+212',
+                              flag: '🇲🇦'
+                         };
+               }
+
+               setSelectedCountry(detectedCountry);
+               console.log('Auto-detected country:', detectedCountry.name);
+          }
+     }, [region, geolocationLoading]);
+
+     // Store partial contact info as user types
+     const storePartialContact = async (field: string, value: string) => {
+          if (!value.trim()) return;
+
+          // Store for ALL fields, not just email and phone
+          if (field !== 'name' && field !== 'email' && field !== 'phone' && field !== 'company' && field !== 'message') return;
+
+          // For email, ONLY store when it's completely valid (not partial)
+          if (field === 'email') {
+               // Wait for complete email with proper domain
+               if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    console.log('Email not complete yet, skipping partial storage');
+                    return;
+               }
+               // Additional validation to ensure it's a real email format
+               if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
+                    console.log('Email format not valid yet, skipping partial storage');
+                    return;
+               }
+          }
+
+          // For phone, validate format before storing
+          if (field === 'phone' && !isPhoneValid(value)) {
+               console.log('Phone not valid yet, skipping partial storage');
+               return;
+          }
+
+          // For name, company, message - store immediately if they have content
+          // No validation needed for these fields
+
+          console.log(`Storing partial contact info for ${field}:`, value);
+
+          try {
+               // Get current page info dynamically
+               const currentPage = window.location.pathname || 'home';
+               const pageName = currentPage === '/' ? 'home' : currentPage.replace('/', '');
+
+               const partialData = {
+                    [field]: value,
+                    countryCode: selectedCountry.code,
+                    countryName: selectedCountry.name,
+                    source: 'website_contact_form',
+                    page: pageName
+               };
+
+               const response = await fetch('/api/contact/partial', {
+                    method: 'POST',
+                    headers: {
+                         'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(partialData),
+               });
+
+               if (response.ok) {
+                    const result = await response.json();
+                    console.log(`Partial contact info stored successfully for ${field}:`, result);
+               } else {
+                    console.error(`Failed to store partial contact info for ${field}:`, response.status);
+               }
+          } catch (error) {
+               console.error('Error storing partial contact info:', error);
+               // Don't show error to user for partial storage
+          }
+     };
 
      // Fallback data if no data is provided
      const fallbackContactData: ContactData = {
@@ -116,7 +220,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                newErrors.email = 'Veuillez entrer un email valide (ex: john@example.com)';
           } else if (formData.email.length > 254) {
                newErrors.email = 'L\'email est trop long (maximum 254 caractères)';
-          } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+          } else if (!/^[a-zA-Z0-9._%+-]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
                newErrors.email = 'Format d\'email invalide. Utilisez des caractères alphanumériques, points, tirets et underscores';
           } else if (formData.email.includes('..') || formData.email.includes('@@')) {
                newErrors.email = 'L\'email contient des caractères invalides consécutifs';
@@ -172,7 +276,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           return formData.name.trim().length >= 2 &&
                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
                formData.email.length <= 254 &&
-               /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email) &&
+               /^[a-zA-Z0-9._%+-]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(formData.email) &&
                !formData.email.includes('..') &&
                !formData.email.includes('@@') &&
                isPhoneValid(formData.phone);
@@ -341,9 +445,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     phone: formData.phone, // Already includes country code
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
-                    // Add source information for tracking
-                    source: 'odoo_page_contact',
-                    page: 'odoo',
+                    // Add source information for tracking - use dynamic values
+                    source: 'website_contact_form',
+                    page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
                     submitted_at: new Date().toISOString()
                };
 
@@ -433,17 +537,16 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      };
 
      const handleInputChange = (field: string, value: string) => {
-          setFormData(prev => ({
-               ...prev,
-               [field]: value
-          }));
+          setFormData(prev => ({ ...prev, [field]: value }));
 
-          // Clear error when user starts typing
+          // Clear error for this field if it exists
           if (errors[field]) {
-               setErrors(prev => ({
-                    ...prev,
-                    [field]: ''
-               }));
+               setErrors(prev => ({ ...prev, [field]: '' }));
+          }
+
+          // Store partial contact info for ALL fields as they are filled
+          if (value.trim() && (field === 'name' || field === 'email' || field === 'phone' || field === 'company' || field === 'message')) {
+               storePartialContact(field, value);
           }
      };
 
@@ -538,7 +641,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                   </div>
                                                   <div>
                                                        <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-2 block">Téléphone *</Label>
-                                                       <div className="flex">
+                                                       <div className="flex items-stretch">
                                                             <CountryCodeSelector
                                                                  selectedCountry={selectedCountry}
                                                                  onCountryChange={handleCountryChange}
