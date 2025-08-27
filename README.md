@@ -126,6 +126,15 @@ BST/
 - **Code Splitting** - Dynamic imports and bundle optimization
 - **Caching Strategies** - Session storage and Next.js caching
 
+### 6. Smart Contact System 🆕
+- **Partial Lead Capture** - Stores contact info as users type (name, email, phone, company, message)
+- **Duplicate Prevention** - Unique database constraints prevent multiple records per contact
+- **Geolocation Integration** - Auto-detects user's country and pre-selects country code
+- **HubSpot CRM Sync** - Real-time contact creation and updates with custom properties
+- **Status Tracking** - Monitors partial vs. complete form submissions
+- **Smart Record Updates** - Updates existing records instead of creating duplicates
+- **Custom Properties** - Tracks submission count, contact status, and submission dates
+
 ## 🔌 API Endpoints
 
 ### Authentication
@@ -150,6 +159,16 @@ BST/
 - `POST /api/testimonials` - Create new testimonial
 - `POST /api/contact` - Submit contact form
 - `GET /api/contact-submissions` - Get contact submissions
+
+### Smart Contact System 🆕
+- `POST /api/contact/partial` - Store partial contact information as users type
+- `POST /api/contact/cleanup-duplicates` - Clean up duplicate partial submissions
+- `POST /api/contact/merge-partials` - Merge duplicate partial records
+- `POST /api/contact/cleanup-incomplete` - Remove incomplete email records
+- `GET /api/contact/partial/test` - Test partial contact API functionality
+- `GET /api/test-hubspot` - Test HubSpot integration with custom properties
+- `GET /api/test-hubspot-properties` - List available HubSpot contact properties
+- `GET /api/test-hubspot-enum` - Check HubSpot enum property options
 
 ### SEO & Settings
 - `GET /api/seo/{id}` - Get SEO data
@@ -280,17 +299,65 @@ The workflow is configured in `.github/workflows/` and automatically:
 - **Rollback Ready** - Easy to revert to previous versions
 - **Team Collaboration** - Multiple developers can deploy safely
 
-#### Manual Deployment (if needed)
-```bash
-# Force a new deployment by pushing to main
-git push origin main
+## 🎯 Smart Contact System Implementation
 
-# Or create a deployment tag
-git tag v1.0.1
-git push origin v1.0.1
+### Overview
+The Smart Contact System is a sophisticated lead capture solution that stores contact information incrementally as users interact with the contact form, preventing data loss and ensuring comprehensive lead tracking.
+
+### Key Components
+
+#### 1. ContactSubmission Model
+```typescript
+interface ContactSubmission {
+  name?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  message?: string;
+  submissionStatus: 'partial' | 'complete';
+  fieldsFilled: {
+    name: boolean;
+    email: boolean;
+    phone: boolean;
+    company: boolean;
+    message: boolean;
+  };
+  sentToHubSpot: boolean;
+  countryCode: string;
+  countryName: string;
+  source: string;
+  page: string;
+  userAgent: string;
+  ipAddress: string;
+  status: 'pending' | 'read' | 'replied' | 'closed';
+  createdAt: Date;
+  updatedAt: Date;
+}
 ```
 
+#### 2. Database Constraints
+- **Unique Compound Indexes**: Prevents duplicate records per email/phone
+- **Sparse Indexing**: Handles null values efficiently
+- **Status Tracking**: Distinguishes between partial and complete submissions
 
+#### 3. HubSpot Integration
+- **Custom Properties**: `submission_count`, `contact_status`, `last_submission_date`
+- **Real-Time Sync**: Immediate contact creation and updates
+- **Status Management**: Tracks lead engagement over time
+
+### How It Works
+
+1. **Partial Capture**: As users type, valid information is immediately stored
+2. **Duplicate Prevention**: System checks for existing records before creating new ones
+3. **Smart Updates**: Existing records are updated with new information
+4. **HubSpot Sync**: Complete submissions trigger CRM integration
+5. **Status Tracking**: Monitors engagement from first contact to conversion
+
+### Benefits
+- **No Lost Leads**: Captures information even if form isn't completed
+- **Better Analytics**: Tracks user engagement patterns
+- **CRM Integration**: Seamless HubSpot synchronization
+- **Data Quality**: Prevents duplicate and incomplete records
 
 ## 📊 Analytics & Performance
 
