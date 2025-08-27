@@ -10,7 +10,19 @@
 
 ## 🚀 Project Overview
 
-BlackSwan Technology is a comprehensive business website and content management system for an official Odoo ERP and Platinum HubSpot CRM partner based in Morocco. The platform showcases expertise in digital transformation, ERP implementation, and CRM solutions while providing a robust admin dashboard for content management and analytics.
+**BlackSwan Technology** is a leading Moroccan company specializing in business solutions integration and digital transformation. We help companies manage their operations more efficiently by implementing and customizing **Odoo ERP** and **HubSpot CRM** solutions based on their specific needs.
+
+### What We Do
+- **Odoo ERP Implementation** - Complete business management solutions (inventory, accounting, HR, manufacturing, etc.)
+- **HubSpot CRM Integration** - Customer relationship management and marketing automation
+- **Hybrid Solutions** - Sometimes both Odoo and HubSpot when clients need comprehensive business management
+- **Custom Development** - Tailored solutions that fit each company's unique requirements
+- **Training & Support** - Ongoing assistance to ensure successful adoption
+
+### Our Mission
+We transform how companies operate by implementing the right tools and processes that streamline their business operations, improve customer relationships, and drive growth.
+
+This repository contains our company website and internal content management system that showcases our expertise and helps us manage our client projects effectively.
 
 ## 🏗️ Architecture & Technology Stack
 
