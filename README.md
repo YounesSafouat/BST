@@ -299,65 +299,37 @@ The workflow is configured in `.github/workflows/` and automatically:
 - **Rollback Ready** - Easy to revert to previous versions
 - **Team Collaboration** - Multiple developers can deploy safely
 
-## 🎯 Smart Contact System Implementation
+### **🎯 Smart Contact System Implementation**
 
-### Overview
-The Smart Contact System is a sophisticated lead capture solution that stores contact information incrementally as users interact with the contact form, preventing data loss and ensuring comprehensive lead tracking.
+#### **Overview**
+The Smart Contact System automatically captures leads as users interact with the contact form, ensuring no potential client is lost while maintaining optimal website performance.
 
-### Key Components
+#### **Key Components**
 
-#### 1. ContactSubmission Model
-```typescript
-interface ContactSubmission {
-  name?: string;
-  email?: string;
-  phone?: string;
-  company?: string;
-  message?: string;
-  submissionStatus: 'partial' | 'complete';
-  fieldsFilled: {
-    name: boolean;
-    email: boolean;
-    phone: boolean;
-    company: boolean;
-    message: boolean;
-  };
-  sentToHubSpot: boolean;
-  countryCode: string;
-  countryName: string;
-  source: string;
-  page: string;
-  userAgent: string;
-  ipAddress: string;
-  status: 'pending' | 'read' | 'replied' | 'closed';
-  createdAt: Date;
-  updatedAt: Date;
-}
-```
+##### **1. ContactSubmission Model**
+- **Status Tracking**: `submissionStatus` (partial/complete) and `status` (pending/read/replied/closed/partial_lead_sent)
+- **Field Completion**: `fieldsFilled` object tracks which form fields have been completed
+- **HubSpot Integration**: `sentToHubSpot`, `hubspotContactId`, `hubspotSyncDate` fields
+- **Database Constraints**: Unique compound indexes prevent duplicate partial submissions
 
-#### 2. Database Constraints
-- **Unique Compound Indexes**: Prevents duplicate records per email/phone
-- **Sparse Indexing**: Handles null values efficiently
-- **Status Tracking**: Distinguishes between partial and complete submissions
+##### **2. Partial Lead Management**
+- **2-Hour Timer**: Automatically sends partial leads to HubSpot if form not completed
+- **LocalStorage Tracking**: Client-side progress tracking with zero performance impact
+- **Smart Deduplication**: Updates existing records instead of creating duplicates
+- **Status Updates**: Database updated when leads are sent to HubSpot
 
-#### 3. HubSpot Integration
-- **Custom Properties**: `submission_count`, `contact_status`, `last_submission_date`
-- **Real-Time Sync**: Immediate contact creation and updates
-- **Status Management**: Tracks lead engagement over time
+##### **3. HubSpot Integration**
+- **Automatic Status**: `contact_status` set to 'partial lead' for incomplete submissions
+- **Custom Properties**: Tracks submission count, dates, and lead status
+- **Duplicate Prevention**: Prevents sending the same partial lead multiple times
+- **User Behavior Data**: Includes French descriptions of user engagement for sales team
 
-### How It Works
-
-1. **Partial Capture**: As users type, valid information is immediately stored
-2. **Duplicate Prevention**: System checks for existing records before creating new ones
-3. **Smart Updates**: Existing records are updated with new information
-4. **HubSpot Sync**: Complete submissions trigger CRM integration
-5. **Status Tracking**: Monitors engagement from first contact to conversion
-
-### Benefits
-- **No Lost Leads**: Captures information even if form isn't completed
-- **Better Analytics**: Tracks user engagement patterns
-- **CRM Integration**: Seamless HubSpot synchronization
-- **Data Quality**: Prevents duplicate and incomplete records
+##### **4. User Behavior Tracking**
+- **Page Visits**: Tracks which pages the user visited
+- **Time Spent**: Monitors time spent on the website
+- **Form Interactions**: Counts form field interactions
+- **French Descriptions**: Generates detailed behavior analysis in French for sales team
+- **Engagement Levels**: Categorizes users as high/medium/low engagement
 
 ## 📊 Analytics & Performance
 

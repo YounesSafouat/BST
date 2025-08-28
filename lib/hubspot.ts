@@ -15,6 +15,7 @@ export interface ContactData {
   phone?: string;
   company?: string;
   message?: string;
+  brief_description?: string; // Add explicit brief_description field
   [key: string]: any; // For additional custom properties
 }
 
@@ -53,11 +54,24 @@ export class HubSpotService {
         company: contactData.company || ''
       };
 
+      // Add custom properties
+      if (contactData.brief_description) {
+        properties.brief_description = contactData.brief_description;
+        console.log('Adding brief_description to HubSpot properties:', contactData.brief_description);
+      }
+
+      console.log('Final HubSpot properties being sent:', properties);
+
       // Add message as a note or custom property if needed
       if (contactData.message) {
-        // For now, we'll store the message in a standard property or skip it
-        // You can create a custom property called 'message' in HubSpot if needed
-        console.log('Message content:', contactData.message);
+        // Store the message in the company field if it's not too long, otherwise in a note
+        if (contactData.message.length <= 100) {
+          properties.company = contactData.company || contactData.message;
+        } else {
+          // For longer messages, we'll need to create a note or use a custom property
+          console.log('Message content (long):', contactData.message);
+          // You can create a custom property called 'message' in HubSpot if needed
+        }
       }
 
       if (existingContact) {
@@ -68,7 +82,13 @@ export class HubSpotService {
         // Add tracking properties (only the ones that exist in HubSpot)
         properties.submission_count = newSubmissionCount.toString();
         properties.last_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
-        properties.contact_status = 're engaged';
+        
+        // Check if this is a partial lead (has message indicating partial status)
+        if (contactData.message && contactData.message.includes('Partial lead')) {
+          properties.contact_status = 'partial lead';
+        } else {
+          properties.contact_status = 're engaged';
+        }
 
         console.log('Updating existing contact with properties:', properties);
 
@@ -85,7 +105,13 @@ export class HubSpotService {
         properties.submission_count = '1';
         properties.first_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
         properties.last_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
-        properties.contact_status = 'new lead';
+        
+        // Check if this is a partial lead
+        if (contactData.message && contactData.message.includes('Partial lead')) {
+          properties.contact_status = 'partial lead';
+        } else {
+          properties.contact_status = 'new lead';
+        }
 
         console.log('Creating new contact with properties:', properties);
 

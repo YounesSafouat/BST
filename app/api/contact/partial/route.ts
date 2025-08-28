@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     console.log('Partial contact request body received:', body)
     
     // Extract form data
-    const { name, email, phone, company, message, countryCode, countryName, source, page } = body
+    const { name, email, phone, company, message, countryCode, countryName, source, page, brief_description } = body
     
     // At least one field must be provided
     if (!name && !email && !phone && !company && !message) {
@@ -109,6 +109,11 @@ export async function POST(req: Request) {
     if (message && message.trim()) {
       submission.message = message.trim();
       fieldsFilled.message = true;
+    }
+    
+    // Store brief_description if provided
+    if (brief_description && brief_description.trim()) {
+      submission.brief_description = brief_description.trim();
     }
     
     // Update fieldsFilled object - merge with existing

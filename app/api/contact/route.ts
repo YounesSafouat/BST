@@ -19,7 +19,9 @@ export async function POST(req: Request) {
       lastname: body.lastname || body.name?.split(' ').slice(1).join(' ') || '',
       phone: body.phone || '',
       company: body.company || body.organization || '',
-      message: body.message || body.description || body.project_description || ''
+      message: body.message || body.description || body.project_description || '',
+      // Always include brief_description for HubSpot
+      brief_description: body.brief_description || body.userBehavior || ''
     }
 
     // Add any additional custom properties from the form
@@ -85,6 +87,8 @@ export async function POST(req: Request) {
       if (body.countryName) submission.countryName = body.countryName;
       if (body.source) submission.source = body.source;
       if (body.page) submission.page = body.page;
+      // Always include brief_description for complete submissions
+      if (body.brief_description) submission.brief_description = body.brief_description;
       
     } else {
       // Create new complete submission
@@ -109,6 +113,8 @@ export async function POST(req: Request) {
         source: body.source || 'website',
         page: body.page || 'home',
         userAgent: req.headers.get('user-agent') || '',
+        // Always include brief_description for complete submissions
+        brief_description: body.brief_description || ''
       });
     }
 
