@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       lastname: body.lastname || body.name?.split(' ').slice(1).join(' ') || '',
       phone: phone || '',
       company: body.company || '',
-      message: 'Lead partiel - Formulaire non complété dans les 2 heures',
+      message: 'Lead partiel - Formulaire non complété dans les 30 minutes',
       brief_description: body.brief_description || '' // Add French behavior description
     };
     

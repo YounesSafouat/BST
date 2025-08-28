@@ -1212,17 +1212,17 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
-     // Start 1-minute timer for partial lead (changed from 2 hours for testing)
+     // Start 30-minute timer for partial lead (changed from 1 minute for production)
      const startPartialLeadTimer = (partialData: any) => {
           // Clear existing timer to prevent memory leaks
           if (partialLeadTimer.current) {
                clearTimeout(partialLeadTimer.current);
           }
 
-          // Set 1-minute timer (1 * 60 * 1000 ms) for testing
+          // Set 30-minute timer (30 * 60 * 1000 ms) for production
           partialLeadTimer.current = setTimeout(async () => {
                try {
-                    console.log('1-minute timer expired, checking if form was completed...');
+                    console.log('30-minute timer expired, checking if form was completed...');
 
                     // Check if form was already completed (safety check)
                     const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
@@ -1277,7 +1277,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                } catch (error) {
                     console.error('Error sending partial lead to HubSpot:', error);
                }
-          }, 1 * 60 * 1000);
+          }, 30 * 60 * 1000);
      };
 
      // Generate French description of user behavior for sales team
