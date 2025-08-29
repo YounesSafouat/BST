@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     console.log('Contact API endpoint called')
     await connectDB()
     const body = await req.json()
-    console.log('Request body received:', body)
+    console.log('Request body received:', body);
     
     // Validate required fields for complete submission
     if (!body.email) {
@@ -60,6 +60,10 @@ export async function POST(req: Request) {
       first_submission_date: new Date().toISOString().split('T')[0],
       last_submission_date: new Date().toISOString().split('T')[0]
     };
+
+    console.log('Initial contactData:', contactData);
+    console.log('Body city field:', body.city);
+    console.log('Body countryCode field:', body.countryCode);
 
     // Only add geographic properties if we have real data
     if (body.countryCode) {
