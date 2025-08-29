@@ -12,6 +12,31 @@ export async function POST(req: Request) {
     const body = await req.json()
     console.log('Request body received:', body)
     
+    // Validate required fields for complete submission
+    if (!body.email) {
+      console.log('Validation failed: Email is required')
+      return NextResponse.json(
+        { error: "Email est requis" },
+        { status: 400 }
+      )
+    }
+    
+    if (!body.firstname || !body.lastname) {
+      console.log('Validation failed: Name is required')
+      return NextResponse.json(
+        { error: "Le nom est requis" },
+        { status: 400 }
+      )
+    }
+    
+    if (!body.phone) {
+      console.log('Validation failed: Phone is required')
+      return NextResponse.json(
+        { error: "Le téléphone est requis" },
+        { status: 400 }
+      )
+    }
+
     // Prepare contact data for HubSpot
     const contactData = {
       email: body.email,
@@ -23,65 +48,32 @@ export async function POST(req: Request) {
       brief_description: body.brief_description || '',
       
       // Website Analytics Properties (writable)
-      hs_analytics_source: body.hs_analytics_source || 'WEBSITE_FORM',
-      hs_analytics_source_data_1: body.hs_analytics_source_data_1 || 'contact_form',
-      hs_analytics_source_data_2: body.hs_analytics_source_data_2 || 'website',
+      hs_analytics_source: 'DIRECT_TRAFFIC',
       
       // Lead Qualification Properties (writable)
-      lifecyclestage: body.lifecyclestage || 'lead',
-      hs_lead_status: body.hs_lead_status || 'NEW',
-      
-      // Geographic & IP Data (writable)
-      country: body.country || body.countryCode || '',
-      hs_country_region_code: body.hs_country_region_code || body.countryCode || '',
-      city: body.city || '',
-      state: body.state || '',
-      hs_state_code: body.hs_state_code || '',
-      
-      // Company Information (writable)
-      industry: body.industry || '',
-      numemployees: body.numemployees || '',
-      annualrevenue: body.annualrevenue || '',
-      website: body.website || '',
-      jobtitle: body.jobtitle || '',
-      hs_role: body.hs_role || '',
-      hs_seniority: body.hs_seniority || '',
-      
-      // Sales Intelligence (writable)
-      hs_buying_role: body.hs_buying_role || 'DECISION_MAKER',
+      lifecyclestage: 'lead',
+      hs_lead_status: 'NEW',
       
       // Custom Properties
-      contact_status: body.contact_status || 'new lead',
-      source: body.source || 'website_contact_form',
-      page: body.page || '',
-      submission_count: body.submission_count || '1',
-      first_submission_date: body.first_submission_date || new Date().toISOString().split('T')[0],
-      last_submission_date: body.last_submission_date || new Date().toISOString().split('T')[0]
+      contact_status: 'new lead',
+      submission_count: '1',
+      first_submission_date: new Date().toISOString().split('T')[0],
+      last_submission_date: new Date().toISOString().split('T')[0]
     };
 
-    // Validate required fields for complete submission
-    if (!contactData.email) {
-      console.log('Validation failed: Email is required')
-      return NextResponse.json(
-        { error: "Email est requis" },
-        { status: 400 }
-      )
+    // Only add geographic properties if we have real data
+    if (body.countryCode) {
+      contactData.country = body.countryCode;
+      contactData.hs_country_region_code = body.countryCode;
     }
     
-    if (!contactData.firstname || !contactData.lastname) {
-      console.log('Validation failed: Name is required')
-      return NextResponse.json(
-        { error: "Le nom est requis" },
-        { status: 400 }
-      )
+    if (body.city) {
+      contactData.city = body.city;
     }
     
-    if (!contactData.phone) {
-      console.log('Validation failed: Phone is required')
-      return NextResponse.json(
-        { error: "Le téléphone est requis" },
-        { status: 400 }
-      )
+    if (body.state) {
+      contactData.state = body.state;
+      contactData.hs_state_code = body.state;
     }
 
     // Check if we already have a submission for this user (partial OR complete)

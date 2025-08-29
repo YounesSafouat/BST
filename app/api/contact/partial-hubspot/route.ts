@@ -79,41 +79,33 @@ export async function POST(req: Request) {
       brief_description: body.brief_description || '', // Add French behavior description
       
       // Website Analytics Properties (writable)
-      hs_analytics_source: body.hs_analytics_source || 'WEBSITE_FORM',
-      hs_analytics_source_data_1: body.hs_analytics_source_data_1 || 'contact_form',
-      hs_analytics_source_data_2: body.hs_analytics_source_data_2 || 'website',
+      hs_analytics_source: 'DIRECT_TRAFFIC',
       
       // Lead Qualification Properties (writable)
-      lifecyclestage: body.lifecyclestage || 'lead',
-      hs_lead_status: body.hs_lead_status || 'NEW',
-      
-      // Geographic & IP Data (writable)
-      country: body.country || body.countryCode || '',
-      hs_country_region_code: body.hs_country_region_code || body.countryCode || '',
-      city: body.city || '',
-      state: body.state || '',
-      hs_state_code: body.hs_state_code || '',
-      
-      // Company Information (writable)
-      industry: body.industry || '',
-      numemployees: body.numemployees || '',
-      annualrevenue: body.annualrevenue || '',
-      website: body.website || '',
-      jobtitle: body.jobtitle || '',
-      hs_role: body.hs_role || '',
-      hs_seniority: body.hs_seniority || '',
-      
-      // Sales Intelligence (writable)
-      hs_buying_role: body.hs_buying_role || 'DECISION_MAKER',
+      lifecyclestage: 'lead',
+      hs_lead_status: 'NEW',
       
       // Custom Properties
-      contact_status: body.contact_status || 'partial lead',
-      source: body.source || 'website_contact_form',
-      page: body.page || '',
-      submission_count: body.submission_count || '1',
-      first_submission_date: body.first_submission_date || new Date().toISOString().split('T')[0],
-      last_submission_date: body.last_submission_date || new Date().toISOString().split('T')[0]
+      contact_status: 'partial lead',
+      submission_count: '1',
+      first_submission_date: new Date().toISOString().split('T')[0],
+      last_submission_date: new Date().toISOString().split('T')[0]
     };
+    
+    // Only add geographic properties if we have real data
+    if (body.country || body.countryCode) {
+      contactData.country = body.country || body.countryCode;
+      contactData.hs_country_region_code = body.hs_country_region_code || body.country || body.countryCode;
+    }
+    
+    if (body.city) {
+      contactData.city = body.city;
+    }
+    
+    if (body.state) {
+      contactData.state = body.state;
+      contactData.hs_state_code = body.hs_state_code || body.state;
+    }
     
     // Add user behavior data if available
     if (body.userBehavior) {

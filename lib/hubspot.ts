@@ -19,36 +19,20 @@ export interface ContactData {
   
   // Website Analytics Properties (writable)
   hs_analytics_source?: string;
-  hs_analytics_source_data_1?: string;
-  hs_analytics_source_data_2?: string;
   
   // Lead Qualification Properties (writable)
   lifecyclestage?: string;
   hs_lead_status?: string;
   
-  // Geographic & IP Data (writable)
+  // Geographic & IP Data (writable) - Only include if we have real data
   country?: string;
   hs_country_region_code?: string;
   city?: string;
   state?: string;
   hs_state_code?: string;
   
-  // Company Information (writable)
-  industry?: string;
-  numemployees?: string;
-  annualrevenue?: string;
-  website?: string;
-  jobtitle?: string;
-  hs_role?: string;
-  hs_seniority?: string;
-  
-  // Sales Intelligence (writable)
-  hs_buying_role?: string;
-  
   // Custom Properties (writable)
   contact_status?: string;
-  source?: string;
-  page?: string;
   submission_count?: string;
   first_submission_date?: string;
   last_submission_date?: string;
@@ -88,46 +72,36 @@ export class HubSpotService {
         phone: contactData.phone || '',
         company: contactData.company || '',
         message: contactData.message || '',
+        brief_description: contactData.brief_description || '',
         
         // Website Analytics Properties (writable)
-        hs_analytics_source: contactData.hs_analytics_source || 'WEBSITE_FORM',
-        hs_analytics_source_data_1: contactData.hs_analytics_source_data_1 || 'contact_form',
-        hs_analytics_source_data_2: contactData.hs_analytics_source_data_2 || 'website',
+        hs_analytics_source: contactData.hs_analytics_source || 'DIRECT_TRAFFIC',
         
         // Lead Qualification Properties (writable)
         lifecyclestage: contactData.lifecyclestage || 'lead',
         hs_lead_status: contactData.hs_lead_status || 'NEW',
         
-        // Geographic & IP Data (writable)
-        country: contactData.country || '',
-        hs_country_region_code: contactData.hs_country_region_code || '',
-        city: contactData.city || '',
-        state: contactData.state || '',
-        hs_state_code: contactData.hs_state_code || '',
-        
-        // Company Information (writable)
-        industry: contactData.industry || '',
-        numemployees: contactData.numemployees || '',
-        annualrevenue: contactData.annualrevenue || '',
-        website: contactData.website || '',
-        jobtitle: contactData.jobtitle || '',
-        hs_role: contactData.hs_role || '',
-        hs_seniority: contactData.hs_seniority || '',
-        
-        // Sales Intelligence (writable)
-        hs_buying_role: contactData.hs_buying_role || 'DECISION_MAKER',
-        
         // Custom Properties (writable)
         contact_status: contactData.contact_status || 'new lead',
-        source: contactData.source || 'website_contact_form',
-        page: contactData.page || '',
         submission_count: contactData.submission_count || '1',
         first_submission_date: contactData.first_submission_date || new Date().toISOString().split('T')[0],
-        last_submission_date: contactData.last_submission_date || new Date().toISOString().split('T')[0],
-        
-        // Brief description for sales team
-        brief_description: contactData.brief_description || ''
+        last_submission_date: contactData.last_submission_date || new Date().toISOString().split('T')[0]
       };
+
+      // Only add geographic properties if we have real data
+      if (contactData.country) {
+        properties.country = contactData.country;
+        properties.hs_country_region_code = contactData.hs_country_region_code || contactData.country;
+      }
+      
+      if (contactData.city) {
+        properties.city = contactData.city;
+      }
+      
+      if (contactData.state) {
+        properties.state = contactData.state;
+        properties.hs_state_code = contactData.hs_state_code || contactData.state;
+      }
 
       console.log('Final HubSpot properties being sent:', properties);
 
