@@ -172,6 +172,9 @@ export async function POST(req: Request) {
         state: contactData.state,
         hs_state_code: contactData.hs_state_code
       });
+
+      console.log('New submission city field:', contactData.city);
+      console.log('New submission data being saved:', submission);
     }
 
     console.log('Saving to MongoDB...')
