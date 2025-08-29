@@ -137,9 +137,17 @@ export async function POST(req: Request) {
       hubspotResult = await HubSpotService.upsertContact(contactData)
       console.log('HubSpot integration successful:', hubspotResult)
       
-      // Mark as sent to HubSpot
+      // Mark as sent to HubSpot and store HubSpot details
       submission.sentToHubSpot = true;
+      submission.hubspotContactId = hubspotResult.contactId;
+      submission.hubspotSyncDate = new Date();
       await submission.save();
+      
+      console.log('Database updated with HubSpot details:', {
+        sentToHubSpot: submission.sentToHubSpot,
+        hubspotContactId: submission.hubspotContactId,
+        hubspotSyncDate: submission.hubspotSyncDate
+      });
       
     } catch (hubspotError) {
       console.error('HubSpot integration failed:', hubspotError)
