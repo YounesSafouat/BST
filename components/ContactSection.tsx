@@ -1212,96 +1212,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
-     // Start 30-minute timer for partial lead (changed from 1 minute for production)
-     const startPartialLeadTimer = useCallback(() => {
-          if (!isFormValid()) return;
-
-          const allFormData = {
-               email: formData.email,
-               firstname: formData.firstname,
-               lastname: formData.lastname,
-               phone: formData.phone,
-               company: formData.company,
-               message: formData.message,
-               brief_description: generateBehaviorDescription(),
-               hs_analytics_source: 'DIRECT_TRAFFIC',
-               lifecyclestage: 'lead',
-               hs_lead_status: 'NEW',
-               country: countryCode || '',
-               hs_country_region_code: countryCode || '',
-               city: city || '',
-               contact_status: 'partial lead',
-               submission_count: '1',
-               first_submission_date: new Date().toISOString().split('T')[0],
-               last_submission_date: new Date().toISOString().split('T')[0]
-          };
-
-          // Clear existing timer to prevent memory leaks
-          if (partialLeadTimer.current) {
-               clearTimeout(partialLeadTimer.current);
-          }
-
-          // Set 30-minute timer (30 * 60 * 1000 ms) for production
-          partialLeadTimer.current = setTimeout(async () => {
-               try {
-                    console.log('30-minute timer expired, checking if form was completed...');
-
-                    // Check if form was already completed (safety check)
-                    const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
-                    if (progress.formCompleted) {
-                         console.log('Form was already completed, skipping partial lead send');
-                         return;
-                    }
-
-                    console.log('Form not completed, sending partial lead to HubSpot');
-
-                    // Send partial lead to HubSpot
-                    const response = await fetch('/api/contact/partial-hubspot', {
-                         method: 'POST',
-                         headers: { 'Content-Type': 'application/json' },
-                         body: JSON.stringify(allFormData)
-                    });
-
-                    if (response.ok) {
-                         const result = await response.json();
-                         console.log('Partial lead sent to HubSpot successfully:', result);
-
-                         // Update the existing database record to mark it as sent to HubSpot
-                         if (result.submission && result.submission._id) {
-                              try {
-                                   const updateResponse = await fetch(`/api/contact/${result.submission._id}`, {
-                                        method: 'PATCH',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({
-                                             sentToHubSpot: true,
-                                             hubspotContactId: result.hubspotResult?.contactId,
-                                             hubspotSyncDate: new Date().toISOString(),
-                                             status: 'partial_lead_sent'
-                                        })
-                                   });
-
-                                   if (updateResponse.ok) {
-                                        console.log('Database record updated successfully to mark as sent to HubSpot');
-                                   } else {
-                                        console.error('Failed to update database record:', updateResponse.status);
-                                   }
-                              } catch (updateError) {
-                                   console.error('Error updating database record:', updateError);
-                              }
-                         }
-
-                         // Clear LocalStorage after successful HubSpot sync
-                         clearProgressFromLocalStorage();
-                    } else {
-                         const errorData = await response.json();
-                         console.error('Failed to send partial lead to HubSpot:', response.status, errorData);
-                    }
-               } catch (error) {
-                    console.error('Error sending partial lead to HubSpot:', error);
-               }
-          }, 30 * 60 * 1000);
-     }, [formData, countryCode, city, isFormValid]);
-
      // Generate French description of user behavior for sales team
      const generateBehaviorDescription = () => {
           const minutes = Math.floor(userBehavior.timeOnPage / 60000);
@@ -1622,7 +1532,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                // Check if the phone number starts with the country code
                let phoneWithoutCountry: string;
                if (formData.phone.startsWith(selectedCountry.dialCode)) {
-               // Remove country code and spaces for validation
+                    // Remove country code and spaces for validation
                     phoneWithoutCountry = formData.phone.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
                } else {
                     // If no country code, assume the entire number is the phone part
@@ -1658,7 +1568,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           // Check if the phone number starts with the country code
           let phoneWithoutCountry: string;
           if (phoneNumber.startsWith(selectedCountry.dialCode)) {
-          // Remove country code and spaces for validation
+               // Remove country code and spaces for validation
                phoneWithoutCountry = phoneNumber.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
           } else {
                // If no country code, assume the entire number is the phone part
@@ -1700,6 +1610,96 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
           return basicValid; // Allow submission with just name and email
      };
+
+     // Start 30-minute timer for partial lead (changed from 1 minute for production)
+     const startPartialLeadTimer = useCallback(() => {
+          if (!isFormValid()) return;
+
+          const allFormData = {
+               email: formData.email,
+               firstname: formData.firstname,
+               lastname: formData.lastname,
+               phone: formData.phone,
+               company: formData.company,
+               message: formData.message,
+               brief_description: generateBehaviorDescription(),
+               hs_analytics_source: 'DIRECT_TRAFFIC',
+               lifecyclestage: 'lead',
+               hs_lead_status: 'NEW',
+               country: countryCode || '',
+               hs_country_region_code: countryCode || '',
+               city: city || '',
+               contact_status: 'partial lead',
+               submission_count: '1',
+               first_submission_date: new Date().toISOString().split('T')[0],
+               last_submission_date: new Date().toISOString().split('T')[0]
+          };
+
+          // Clear existing timer to prevent memory leaks
+          if (partialLeadTimer.current) {
+               clearTimeout(partialLeadTimer.current);
+          }
+
+          // Set 30-minute timer (30 * 60 * 1000 ms) for production
+          partialLeadTimer.current = setTimeout(async () => {
+               try {
+                    console.log('30-minute timer expired, checking if form was completed...');
+
+                    // Check if form was already completed (safety check)
+                    const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
+                    if (progress.formCompleted) {
+                         console.log('Form was already completed, skipping partial lead send');
+                         return;
+                    }
+
+                    console.log('Form not completed, sending partial lead to HubSpot');
+
+                    // Send partial lead to HubSpot
+                    const response = await fetch('/api/contact/partial-hubspot', {
+                         method: 'POST',
+                         headers: { 'Content-Type': 'application/json' },
+                         body: JSON.stringify(allFormData)
+                    });
+
+                    if (response.ok) {
+                         const result = await response.json();
+                         console.log('Partial lead sent to HubSpot successfully:', result);
+
+                         // Update the existing database record to mark it as sent to HubSpot
+                         if (result.submission && result.submission._id) {
+                              try {
+                                   const updateResponse = await fetch(`/api/contact/${result.submission._id}`, {
+                                        method: 'PATCH',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({
+                                             sentToHubSpot: true,
+                                             hubspotContactId: result.hubspotResult?.contactId,
+                                             hubspotSyncDate: new Date().toISOString(),
+                                             status: 'partial_lead_sent'
+                                        })
+                                   });
+
+                                   if (updateResponse.ok) {
+                                        console.log('Database record updated successfully to mark as sent to HubSpot');
+                                   } else {
+                                        console.error('Failed to update database record:', updateResponse.status);
+                                   }
+                              } catch (updateError) {
+                                   console.error('Error updating database record:', updateError);
+                              }
+                         }
+
+                         // Clear LocalStorage after successful HubSpot sync
+                         clearProgressFromLocalStorage();
+                    } else {
+                         const errorData = await response.json();
+                         console.error('Failed to send partial lead to HubSpot:', response.status, errorData);
+                    }
+               } catch (error) {
+                    console.error('Error sending partial lead to HubSpot:', error);
+               }
+          }, 30 * 60 * 1000);
+     }, [formData, countryCode, city, isFormValid]);
 
      // Helper function to ensure phone is properly formatted with country code
      const ensurePhoneWithCountryCode = (phone: string) => {
@@ -1936,13 +1936,13 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     clearProgressFromLocalStorage();
 
                     setIsSubmitted(true);
-                         setFormData({
-                              name: '',
+                    setFormData({
+                         name: '',
                          firstname: '',
                          lastname: '',
-                              email: '',
-                              company: '',
-                              phone: '',
+                         email: '',
+                         company: '',
+                         phone: '',
                          message: '',
                          countryCode: 'MA'
                     });
@@ -2074,11 +2074,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                                                   <div className="space-y-4">
                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                       <div>
+                                                            <div>
                                                                  <label htmlFor="firstname" className="block text-sm font-medium text-gray-700 mb-2">
                                                                       Prénom *
                                                                  </label>
-                                                            <Input
+                                                                 <Input
                                                                       id="firstname"
                                                                       type="text"
                                                                       defaultValue={formData.firstname}
@@ -2102,12 +2102,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                       placeholder="John"
                                                                       required
                                                                  />
-                                                       </div>
-                                                       <div>
+                                                            </div>
+                                                            <div>
                                                                  <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-2">
                                                                       Nom *
                                                                  </label>
-                                                            <Input
+                                                                 <Input
                                                                       id="lastname"
                                                                       type="text"
                                                                       defaultValue={formData.lastname}
@@ -2135,17 +2135,17 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                       }}
                                                                       placeholder="Dupont"
                                                                       required
-                                                            />
+                                                                 />
+                                                            </div>
                                                        </div>
-                                                  </div>
 
-                                                  <div>
+                                                       <div>
                                                             <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                                                                  Téléphone *
                                                             </label>
                                                             <div className="flex space-x-2">
-                                                            <CountryCodeSelector
-                                                                 selectedCountry={selectedCountry}
+                                                                 <CountryCodeSelector
+                                                                      selectedCountry={selectedCountry}
                                                                       onCountryChange={(country) => {
                                                                            console.log('Country changed to:', country);
                                                                            handleCountryChange(country);
@@ -2153,9 +2153,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                            // Store partial contact info for country change
                                                                            storePartialContact('countryCode', country.code);
                                                                       }}
-                                                            />
-                                                            <Input
-                                                                 id="phone"
+                                                                 />
+                                                                 <Input
+                                                                      id="phone"
                                                                       type="tel"
                                                                       defaultValue={formData.phone}
                                                                       onChange={(e) => {
@@ -2239,12 +2239,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                                 storePartialContact('phone', formattedValue);
                                                                            }
                                                                       }}
-                                                                 placeholder="6 12 34 56 78"
+                                                                      placeholder="6 12 34 56 78"
                                                                       className="flex-1 h-11 sm:h-12"
                                                                       required
-                                                            />
-                                                       </div>
-                                                       {errors.phone && (
+                                                                 />
+                                                            </div>
+                                                            {errors.phone && (
                                                                  <div className="text-red-500 text-sm mt-1">
                                                                       <p className="font-medium">{errors.phone}</p>
                                                                       <p className="text-xs mt-1 text-red-400">
@@ -2266,11 +2266,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                  </div>
                                                             )}
                                                             <p className="text-gray-500 text-sm mt-1">
-                                                            Format: {selectedCountry.dialCode} 6 12 34 56 78
-                                                       </p>
-                                                  </div>
+                                                                 Format: {selectedCountry.dialCode} 6 12 34 56 78
+                                                            </p>
+                                                       </div>
 
-                                                  <div>
+                                                       <div>
                                                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                                                                  Email *
                                                             </label>
@@ -2352,7 +2352,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                  Message
                                                             </label>
                                                             <textarea
-                                                            id="message"
+                                                                 id="message"
                                                                  defaultValue={formData.message}
                                                                  onChange={(e) => {
                                                                       const value = e.target.value;
@@ -2374,13 +2374,13 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                       }
                                                                  }}
                                                                  placeholder="Décrivez votre projet, vos besoins ou posez-nous vos questions..."
-                                                            rows={4}
+                                                                 rows={4}
                                                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
-                                                       />
+                                                            />
                                                             {errors.message && (
                                                                  <p className="text-red-500 text-sm mt-1">{errors.message}</p>
                                                             )}
-                                                  </div>
+                                                       </div>
                                                   </div>
 
                                                   <Button
