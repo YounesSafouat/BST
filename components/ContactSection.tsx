@@ -1636,6 +1636,22 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                newErrors.email = 'Format d\'email invalide. Utilisez des caractères alphanumériques, points, tirets et underscores';
           } else if (formData.email.includes('..') || formData.email.includes('@@')) {
                newErrors.email = 'L\'email contient des caractères invalides consécutifs';
+          } else {
+               // Additional validation: check for common invalid TLDs and patterns
+               const emailParts = formData.email.split('@');
+               const domain = emailParts[1];
+               const tld = domain.split('.').pop();
+               
+               // Check for invalid TLDs (common test domains)
+               const invalidTlds = ['xr', 'test', 'invalid', 'fake', 'example'];
+               if (invalidTlds.includes(tld?.toLowerCase() || '')) {
+                    newErrors.email = 'Veuillez entrer un email valide avec un domaine réel';
+               }
+               
+               // Check for suspicious patterns
+               if (domain.includes('test.') || domain.includes('fake.') || domain.includes('invalid.')) {
+                    newErrors.email = 'Veuillez entrer un email valide avec un domaine réel';
+               }
           }
 
           if (!formData.phone.trim()) {
@@ -1705,7 +1721,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                formData.email.length <= 254 &&
                /^[a-zA-Z0-9._%+-]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(formData.email) &&
                !formData.email.includes('..') &&
-               !formData.email.includes('@@');
+               !formData.email.includes('@@') &&
+               !['xr', 'test', 'invalid', 'fake', 'example'].includes(formData.email.split('@')[1]?.split('.').pop()?.toLowerCase() || '') &&
+               !formData.email.split('@')[1]?.includes('test.') &&
+               !formData.email.split('@')[1]?.includes('fake.') &&
+               !formData.email.split('@')[1]?.includes('invalid.');
 
           // Phone is recommended but not required for basic submission
           const hasValidPhone = isPhoneValid(formData.phone);
