@@ -90,16 +90,15 @@ export default function BulkActions({
 
     setIsSending(true)
     try {
-      const completeSubmissions = selectedSubmissions.filter(s =>
-        s.submissionStatus === 'complete' && !s.sentToHubSpot
-      )
+      // Allow both complete AND partial submissions to be sent to HubSpot
+      const submissionsToSend = selectedSubmissions.filter(s => !s.sentToHubSpot)
 
-      if (completeSubmissions.length === 0) {
-        alert("Aucun lead complet non envoyé à HubSpot sélectionné")
+      if (submissionsToSend.length === 0) {
+        alert("Aucun lead non envoyé à HubSpot sélectionné")
         return
       }
 
-      await onBulkSendToHubSpot(completeSubmissions)
+      await onBulkSendToHubSpot(submissionsToSend)
     } catch (error) {
       console.error("Error sending bulk to HubSpot:", error)
     } finally {
@@ -211,7 +210,7 @@ export default function BulkActions({
         <div className="flex items-center gap-2">
           <Button
             onClick={handleBulkSendToHubSpot}
-            disabled={completeSubmissions.length === 0 || isSending}
+            disabled={selectedSubmissions.filter(s => !s.sentToHubSpot).length === 0 || isSending}
             variant="outline"
             size="sm"
             className="whitespace-nowrap border-[var(--color-main)] hover:bg-[var(--color-main)]/10 text-[var(--color-main)]"
@@ -221,7 +220,7 @@ export default function BulkActions({
             ) : (
               <Send className="w-4 h-4 mr-2" />
             )}
-            Envoyer {completeSubmissions.length} à HubSpot
+            Envoyer {selectedSubmissions.filter(s => !s.sentToHubSpot).length} à HubSpot
           </Button>
         </div>
 
@@ -248,7 +247,7 @@ export default function BulkActions({
               <li>• {completeSubmissions.length} leads complets prêts pour HubSpot</li>
             )}
             {partialSubmissions.length > 0 && (
-              <li>• {partialSubmissions.length} leads partiels (attendre la complétion)</li>
+              <li>• {partialSubmissions.length} leads partiels (peuvent être envoyés manuellement à HubSpot)</li>
             )}
             {alreadyInHubSpot.length > 0 && (
               <li>• {alreadyInHubSpot.length} leads déjà synchronisés avec HubSpot</li>
