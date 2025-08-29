@@ -58,38 +58,8 @@ export async function POST(req: Request) {
       console.log('Looking for existing submission by phone:', phone, 'Found:', !!submission);
     }
     
-    // If still no match, try to find by the OTHER field to prevent duplicate records
-    // This prevents creating separate records for the same user
-    if (!submission) {
-      if (email && phone) {
-        // We have both, try to find by phone if email search failed
-        submission = await ContactSubmission.findOne({
-          phone: phone,
-          submissionStatus: 'partial'
-        });
-        console.log('Trying phone search as fallback:', phone, 'Found:', !!submission);
-      } else if (email && !phone) {
-        // We only have email, try to find by phone if user had phone before
-        submission = await ContactSubmission.findOne({
-          submissionStatus: 'partial',
-          $or: [
-            { email: { $exists: true, $ne: null } },
-            { phone: { $exists: true, $ne: null } }
-          ]
-        });
-        console.log('Trying to find any existing partial submission for user with email:', email, 'Found:', !!submission);
-      } else if (phone && !email) {
-        // We only have phone, try to find by email if user had email before
-        submission = await ContactSubmission.findOne({
-          submissionStatus: 'partial',
-          $or: [
-            { email: { $exists: true, $ne: null } },
-            { phone: { $exists: true, $ne: null } }
-          ]
-        });
-        console.log('Trying to find any existing partial submission for user with phone:', phone, 'Found:', !!submission);
-      }
-    }
+    // REMOVED: The problematic broader search that was finding wrong records
+    // Now we only search by exact email or phone match - no cross-user interference
     
     if (!submission) {
       // Create new partial submission only if we can't find any existing one
