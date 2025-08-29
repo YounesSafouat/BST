@@ -207,8 +207,15 @@ export class HubSpotService {
         return { success: true, action: 'created', contactId: createResponse.id };
       }
     } catch (error) {
-      console.error('HubSpot API Error:', error);
-      throw new Error(`Failed to upsert contact in HubSpot: ${error}`);
+      console.error('❌ HubSpot Service Error:', error);
+      
+      // Return structured error response instead of throwing
+      return {
+        success: false,
+        action: 'error',
+        error: error instanceof Error ? error.message : 'Unknown HubSpot API error',
+        details: error
+      };
     }
   }
 
