@@ -1248,7 +1248,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          source: 'website_contact_form',
                          page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
                          timestamp: Date.now(),
-                         
+
                          // Website Analytics Properties
                          hs_analytics_source: 'WEBSITE_FORM',
                          hs_analytics_source_data_1: 'contact_form',
@@ -1260,18 +1260,18 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          hs_analytics_last_timestamp: new Date().toISOString(),
                          hs_analytics_last_url: window.location.href,
                          hs_analytics_last_referrer: document.referrer || '',
-                         hs_analytics_num_visits: userBehavior.visitCount || 1,
+                         hs_analytics_num_visits: userBehavior.pagesVisited.length || 1,
                          hs_analytics_num_page_views: userBehavior.pagesVisited.length,
                          hs_analytics_num_event_completions: 1,
                          hs_analytics_average_page_views: userBehavior.pagesVisited.length,
-                         
+
                          // Lead Qualification Properties
                          lifecyclestage: 'lead',
                          hs_lead_status: 'NEW',
                          hs_predictivecontactscore_v2: 50,
                          hs_predictivescoringtier: 'tier_3',
                          hs_time_to_first_engagement: 0,
-                         
+
                          // Conversion Tracking
                          first_conversion_date: new Date().toISOString().split('T')[0],
                          first_conversion_event_name: 'Partial Lead - Contact Form',
@@ -1279,14 +1279,14 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          recent_conversion_event_name: 'Partial Lead - Contact Form',
                          num_conversion_events: 1,
                          num_unique_conversion_events: 1,
-                         
+
                          // Geographic & IP Data
                          country: selectedCountry.code,
                          hs_country_region_code: selectedCountry.code,
                          city: '',
                          state: '',
                          hs_state_code: '',
-                         
+
                          // Company Information
                          industry: '',
                          numemployees: '',
@@ -1295,7 +1295,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          jobtitle: '',
                          hs_role: '',
                          hs_seniority: '',
-                         
+
                          // Sales Intelligence
                          hs_buying_role: 'DECISION_MAKER',
                          hs_sa_first_engagement_date: new Date().toISOString(),
@@ -1303,14 +1303,14 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          hs_sa_first_engagement_object_type: 'FORM',
                          num_associated_deals: 0,
                          total_revenue: 0,
-                         
+
                          // Engagement & Activity
                          hs_last_sales_activity_timestamp: new Date().toISOString(),
                          notes_last_contacted: new Date().toISOString(),
                          notes_last_updated: new Date().toISOString(),
                          num_contacted_notes: 0,
                          num_notes: 0,
-                         
+
                          // Email Marketing
                          hs_email_domain: progress.email?.split('@')[1] || '',
                          hs_email_open: 0,
@@ -1318,11 +1318,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          hs_email_delivered: 0,
                          hs_email_bounce: 0,
                          hs_email_optout: false,
-                         
+
                          // Custom Properties
                          contact_status: 'partial lead',
-                         source: 'website_contact_form',
-                         page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
                          submission_count: '1',
                          first_submission_date: new Date().toISOString().split('T')[0],
                          last_submission_date: new Date().toISOString().split('T')[0]
