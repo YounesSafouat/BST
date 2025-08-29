@@ -121,6 +121,20 @@ export async function POST(req: Request) {
       submission.brief_description = brief_description.trim();
     }
     
+    // Store comprehensive HubSpot properties if provided
+    if (body.hs_analytics_source) submission.hs_analytics_source = body.hs_analytics_source;
+    if (body.lifecyclestage) submission.lifecyclestage = body.lifecyclestage;
+    if (body.hs_lead_status) submission.hs_lead_status = body.hs_lead_status;
+    if (body.contact_status) submission.contact_status = body.contact_status;
+    if (body.submission_count) submission.submission_count = body.submission_count;
+    if (body.first_submission_date) submission.first_submission_date = body.first_submission_date;
+    if (body.last_submission_date) submission.last_submission_date = body.last_submission_date;
+    if (body.country) submission.country = body.country;
+    if (body.hs_country_region_code) submission.hs_country_region_code = body.hs_country_region_code;
+    if (body.city) submission.city = body.city;
+    if (body.state) submission.state = body.state;
+    if (body.hs_state_code) submission.hs_state_code = body.hs_state_code;
+    
     // Ensure status is valid - if it's not set or invalid, set to 'pending'
     if (!submission.status || !['pending', 'in-progress', 'completed', 'read', 'replied', 'closed', 'partial_lead_sent', 'archived'].includes(submission.status)) {
       submission.status = 'pending';

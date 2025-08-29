@@ -114,6 +114,20 @@ export async function POST(req: Request) {
       // Always include brief_description for complete submissions
       if (body.brief_description) submission.brief_description = body.brief_description;
       
+      // Update comprehensive HubSpot properties
+      if (contactData.hs_analytics_source) submission.hs_analytics_source = contactData.hs_analytics_source;
+      if (contactData.lifecyclestage) submission.lifecyclestage = contactData.lifecyclestage;
+      if (contactData.hs_lead_status) submission.hs_lead_status = contactData.hs_lead_status;
+      if (contactData.contact_status) submission.contact_status = contactData.contact_status;
+      if (contactData.submission_count) submission.submission_count = contactData.submission_count;
+      if (contactData.first_submission_date) submission.first_submission_date = contactData.first_submission_date;
+      if (contactData.last_submission_date) submission.last_submission_date = contactData.last_submission_date;
+      if (contactData.country) submission.country = contactData.country;
+      if (contactData.hs_country_region_code) submission.hs_country_region_code = contactData.hs_country_region_code;
+      if (contactData.city) submission.city = contactData.city;
+      if (contactData.state) submission.state = contactData.state;
+      if (contactData.hs_state_code) submission.hs_state_code = contactData.hs_state_code;
+      
     } else {
       // Create new complete submission
       console.log('Creating new complete submission...')
@@ -142,7 +156,21 @@ export async function POST(req: Request) {
         page: body.page || 'home',
         userAgent: req.headers.get('user-agent') || '',
         // Always include brief_description for complete submissions
-        brief_description: body.brief_description || ''
+        brief_description: body.brief_description || '',
+        
+        // Comprehensive HubSpot properties
+        hs_analytics_source: contactData.hs_analytics_source,
+        lifecyclestage: contactData.lifecyclestage,
+        hs_lead_status: contactData.hs_lead_status,
+        contact_status: contactData.contact_status,
+        submission_count: contactData.submission_count,
+        first_submission_date: contactData.first_submission_date,
+        last_submission_date: contactData.last_submission_date,
+        country: contactData.country,
+        hs_country_region_code: contactData.hs_country_region_code,
+        city: contactData.city,
+        state: contactData.state,
+        hs_state_code: contactData.hs_state_code
       });
     }
 

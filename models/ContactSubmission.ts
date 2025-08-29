@@ -72,6 +72,28 @@ const contactSubmissionSchema = new mongoose.Schema({
   hubspotSyncDate: Date,
   // French behavior description for commercial team
   brief_description: String,
+  
+  // Comprehensive HubSpot properties for analytics and reporting
+  // Website Analytics Properties
+  hs_analytics_source: String,
+  
+  // Lead Qualification Properties
+  lifecyclestage: String,
+  hs_lead_status: String,
+  
+  // Custom Properties
+  contact_status: String,
+  submission_count: String,
+  first_submission_date: String,
+  last_submission_date: String,
+  
+  // Geographic Properties
+  country: String,
+  hs_country_region_code: String,
+  city: String,
+  state: String,
+  hs_state_code: String,
+  
   createdAt: {
     type: Date,
     default: Date.now,

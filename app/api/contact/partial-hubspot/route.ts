@@ -127,6 +127,20 @@ export async function POST(req: Request) {
       submission.firstname = body.firstname || ''; // Save firstname to DB
       submission.lastname = body.lastname || ''; // Save lastname to DB
       
+      // Save comprehensive HubSpot properties to database
+      submission.hs_analytics_source = contactData.hs_analytics_source;
+      submission.lifecyclestage = contactData.lifecyclestage;
+      submission.hs_lead_status = contactData.hs_lead_status;
+      submission.contact_status = contactData.contact_status;
+      submission.submission_count = contactData.submission_count;
+      submission.first_submission_date = contactData.first_submission_date;
+      submission.last_submission_date = contactData.last_submission_date;
+      submission.country = contactData.country;
+      submission.hs_country_region_code = contactData.hs_country_region_code;
+      submission.city = contactData.city;
+      submission.state = contactData.state;
+      submission.hs_state_code = contactData.hs_state_code;
+      
       await submission.save();
       
       console.log('Partial lead sent to HubSpot successfully and database updated');
