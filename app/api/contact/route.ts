@@ -163,24 +163,30 @@ export async function POST(req: Request) {
     try {
       console.log('Attempting HubSpot integration...')
       hubspotResult = await HubSpotService.upsertContact(contactData)
-      console.log('HubSpot integration successful:', hubspotResult)
+      console.log('HubSpot integration result:', hubspotResult)
       
-      // Mark as sent to HubSpot and store HubSpot details
-      submission.sentToHubSpot = true;
-      submission.hubspotContactId = hubspotResult.contactId;
-      submission.hubspotSyncDate = new Date();
-      await submission.save();
-      
-      console.log('Database updated with HubSpot details:', {
-        sentToHubSpot: submission.sentToHubSpot,
-        hubspotContactId: submission.hubspotContactId,
-        hubspotSyncDate: submission.hubspotSyncDate
-      });
+      // Only mark as sent to HubSpot if the operation was successful
+      if (hubspotResult.success) {
+        submission.sentToHubSpot = true;
+        submission.hubspotContactId = hubspotResult.contactId;
+        submission.hubspotSyncDate = new Date();
+        await submission.save();
+        
+        console.log('Database updated with HubSpot details:', {
+          sentToHubSpot: submission.sentToHubSpot,
+          hubspotContactId: submission.hubspotContactId,
+          hubspotSyncDate: submission.hubspotSyncDate
+        });
+      } else {
+        console.log('HubSpot integration failed, not updating database:', hubspotResult.error);
+        // Keep sentToHubSpot as false since the operation failed
+      }
       
     } catch (hubspotError) {
-      console.error('HubSpot integration failed:', hubspotError)
+      console.error('HubSpot integration failed with exception:', hubspotError)
       // Don't fail the entire request if HubSpot fails
       // The contact is still saved in MongoDB
+      // Keep sentToHubSpot as false since the operation failed
     }
 
     console.log('Returning success response')
