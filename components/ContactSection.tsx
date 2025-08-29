@@ -1419,6 +1419,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     phone: progress.phone ? ensurePhoneWithCountryCode(progress.phone) : progress.phone,
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
+                    // Add geolocation data
+                    city: city || '',
                     source: 'website_contact_form',
                     page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
                     timestamp: Date.now(),
