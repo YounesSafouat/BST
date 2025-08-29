@@ -13,7 +13,7 @@ export async function POST() {
     const allSubmissions = await ContactSubmission.find({ submissionStatus: 'partial' }).sort({ createdAt: 1 });
     console.log(`Found ${allSubmissions.length} partial submissions`)
     
-    const mergedCount = 0;
+    let mergedCount = 0;
     const processedIds = new Set();
     
     for (const submission of allSubmissions) {
