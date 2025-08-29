@@ -395,6 +395,153 @@ For technical support or questions:
 
 ---
 
+## 🚀 **LEADS Management System**
+
+### **Overview**
+The LEADS management system provides comprehensive contact and lead management capabilities with full HubSpot CRM integration. It handles both partial and complete form submissions, tracks user behavior, and provides powerful filtering and bulk management tools.
+
+### **Features**
+
+#### **📊 Lead Dashboard**
+- **Real-time Statistics**: Total leads, partial vs. complete submissions, HubSpot sync status
+- **Visual Indicators**: Color-coded badges for different submission types and statuses
+- **Quick Overview**: At-a-glance lead distribution and performance metrics
+
+#### **🔍 Advanced Filtering & Search**
+- **Text Search**: Search across names, emails, phones, and company names
+- **Status Filters**: Filter by commercial status (pending, in-progress, completed, archived)
+- **HubSpot Filters**: Filter by HubSpot sync status (sent, not sent)
+- **Submission Type**: Filter by form completion status (partial, complete)
+- **Geographic Filters**: Filter by country code and country name
+- **Real-time Updates**: Filters apply instantly without page refresh
+
+#### **📋 Lead Management**
+- **Individual Actions**: View details, update status, send to HubSpot
+- **Bulk Operations**: Select multiple leads for batch processing
+- **Status Management**: Update commercial status for multiple leads simultaneously
+- **HubSpot Integration**: Bulk send complete leads to HubSpot CRM
+
+#### **🔗 HubSpot Integration**
+- **Direct Links**: Click to view contacts directly in HubSpot CRM
+- **Sync Status**: Track which leads have been sent to HubSpot
+- **Manual Sync**: Manually trigger HubSpot integration for individual or bulk leads
+- **Contact IDs**: Store and display HubSpot contact IDs for reference
+
+#### **📱 User Behavior Tracking**
+- **Comprehensive Analytics**: Page visits, time spent, button clicks, scroll depth
+- **Engagement Scoring**: Automatic lead qualification based on user behavior
+- **Sales Intelligence**: Detailed descriptions for commercial teams
+- **Behavior History**: Track user interactions across multiple sessions
+
+### **Technical Implementation**
+
+#### **Database Schema**
+```typescript
+interface ContactSubmission {
+  _id: string
+  name: string                    // Combined name
+  firstname: string              // First name (HubSpot: firstname)
+  lastname: string               // Last name (HubSpot: lastname)
+  email: string                  // Email address
+  phone: string                  // Phone with country code
+  company: string                // Company name
+  message: string                // User message
+  submissionStatus: 'partial' | 'complete'
+  status: string                 // Commercial status
+  sentToHubSpot: boolean         // HubSpot sync status
+  hubspotContactId?: string      // HubSpot contact ID
+  hubspotSyncDate?: string       // Last sync timestamp
+  brief_description?: string     // User behavior analysis
+  fieldsFilled: {                // Form completion tracking
+    name: boolean
+    firstname: boolean
+    lastname: boolean
+    email: boolean
+    phone: boolean
+    company: boolean
+    message: boolean
+  }
+  countryCode: string            // ISO country code
+  countryName: string            // Country name
+  source: string                 // Traffic source
+  page: string                   // Page where form was submitted
+  createdAt: string              // Creation timestamp
+  updatedAt: string              // Last update timestamp
+}
+```
+
+#### **API Endpoints**
+- **`GET /api/contact`**: Fetch all contact submissions
+- **`POST /api/contact`**: Submit complete form and sync to HubSpot
+- **`PATCH /api/contact/[id]`**: Update lead status
+- **`POST /api/contact/partial`**: Store partial form data
+- **`POST /api/contact/partial-hubspot`**: Send partial leads to HubSpot after timer
+
+#### **HubSpot Properties**
+- **`firstname`**: User's first name
+- **`lastname`**: User's last name
+- **`email`**: Email address
+- **`phone`**: Phone number with country code
+- **`company`**: Company name
+- **`message`**: User message or project description
+- **`brief_description`**: French user behavior analysis
+- **`submission_count`**: Number of form submissions
+- **`contact_status`**: Lead qualification status
+- **`last_submission_date`**: Most recent submission
+- **`first_submission_date`**: Initial contact date
+
+### **User Workflow**
+
+#### **1. Lead Capture**
+- **Partial Submission**: Store contact info as soon as valid email/phone entered
+- **Complete Submission**: Full form submission with HubSpot sync
+- **Auto-timer**: Send partial leads to HubSpot after 30 minutes if not completed
+
+#### **2. Lead Management**
+- **Review**: View detailed lead information and user behavior
+- **Qualify**: Update commercial status based on lead quality
+- **Process**: Send qualified leads to HubSpot CRM
+- **Track**: Monitor HubSpot sync status and contact IDs
+
+#### **3. Bulk Operations**
+- **Select**: Choose multiple leads using checkboxes
+- **Update**: Bulk status updates for selected leads
+- **Sync**: Send multiple complete leads to HubSpot simultaneously
+- **Archive**: Bulk archive processed leads
+
+### **Access Control**
+- **Authentication Required**: Only authenticated users can access the LEADS section
+- **Role-based Access**: Different permission levels for different user roles
+- **Audit Trail**: Track all lead status changes and HubSpot operations
+
+### **Performance Features**
+- **Lazy Loading**: Load leads in batches for better performance
+- **Real-time Updates**: Instant status updates without page refresh
+- **Efficient Filtering**: Client-side filtering for fast response times
+- **Optimized Queries**: Database queries optimized for lead management
+
+### **Integration Points**
+- **HubSpot CRM**: Full bidirectional sync with custom properties
+- **Geolocation API**: Automatic country detection and phone formatting
+- **User Behavior Tracking**: Comprehensive engagement analytics
+- **Email/Phone Validation**: Real-time validation with helpful user guidance
+
+---
+
+## 🎯 **Next Steps & Enhancements**
+
+### **Planned Features**
+- **Lead Scoring**: Automatic lead qualification based on behavior patterns
+- **Email Campaigns**: Integration with email marketing platforms
+- **Advanced Analytics**: Conversion funnel analysis and ROI tracking
+- **Mobile App**: Native mobile application for lead management
+- **API Webhooks**: Real-time notifications for lead updates
+
+### **Customization Options**
+- **Custom Fields**: Add company-specific lead properties
+- **Workflow Automation**: Custom lead processing workflows
+- **Integration APIs**: Connect with additional CRM and marketing tools
+- **Reporting Dashboard**: Custom reports and analytics views
 
 
 *Official Odoo Partner & Platinum HubSpot Partner in Morocco*

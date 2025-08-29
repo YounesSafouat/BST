@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1467,9 +1467,22 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                localStorage.setItem(localStorageKey, JSON.stringify(progress));
           }
 
+          // Get current progress from LocalStorage
+          const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
+
+          // Only call the API if we have email OR phone (required for lead tracking)
+          if (!progress.email && !progress.phone) {
+               console.log('No email or phone yet - saving to LocalStorage only, will call API later');
+               return;
+          }
+
+          console.log(`Calling API for ${field} - we have email: ${progress.email}, phone: ${progress.phone}`);
+
           try {
                const partialData = {
-                    [field]: value,
+                    // Include ALL current data from Local Storage, not just the single field
+                    ...progress,  // This includes firstname, lastname, phone, etc.
+                    [field]: value,  // Update the specific field being changed
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
                     source: 'website_contact_form',
@@ -1478,6 +1491,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     // Include brief_description for better lead qualification
                     brief_description: generateBehaviorDescription()
                };
+
+               // Remove the old email/phone inclusion since we're now including everything from progress
+               console.log('Sending partial data to API:', partialData);
 
                const response = await fetch('/api/contact/partial', {
                     method: 'POST',
@@ -1490,7 +1506,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     console.log(`Partial contact info stored successfully for ${field}:`, result);
 
                     // Check if we have enough data to start the 1-minute timer
-                    const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
                     if (progress.email || progress.phone) {
                          // Start 1-minute timer for partial lead
                          startPartialLeadTimer(partialData);

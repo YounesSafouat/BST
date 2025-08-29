@@ -1,29 +1,34 @@
-import { NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
-import Content from "@/models/Content";
+import { NextResponse } from "next/server"
+import connectDB from '@/lib/mongodb'
+import ContactSubmission from '@/models/ContactSubmission'
 
 export async function GET() {
   try {
-    console.log('Health check: Connecting to database...');
-    await connectDB();
-    console.log('Health check: Database connected successfully');
+    console.log('Health check endpoint called')
     
-    // Test database query
-    const count = await Content.countDocuments();
-    console.log('Health check: Content count:', count);
+    // Test database connection
+    await connectDB()
+    console.log('Database connection successful')
     
-    return NextResponse.json({ 
-      status: 'healthy', 
+    // Test if we can query the ContactSubmission model
+    const count = await ContactSubmission.countDocuments()
+    console.log(`ContactSubmission count: ${count}`)
+    
+    return NextResponse.json({
+      status: 'healthy',
       database: 'connected',
-      contentCount: count,
+      contactSubmissions: count,
       timestamp: new Date().toISOString()
-    });
+    })
   } catch (error) {
-    console.error("Health check failed:", error);
-    return NextResponse.json({ 
-      status: 'unhealthy', 
-      error: error.message,
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    console.error("Health check failed:", error)
+    return NextResponse.json(
+      { 
+        status: 'unhealthy',
+        error: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      },
+      { status: 500 }
+    )
   }
 } 

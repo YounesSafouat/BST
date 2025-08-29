@@ -102,6 +102,12 @@ const menuGroups = [
     title: "Management",
     items: [
       {
+        title: "Leads",
+        href: "/dashboard/leads",
+        icon: Users,
+        color: "from-purple-200 to-purple-100 text-purple-700",
+      },
+      {
         title: "Users",
         href: "/dashboard/users",
         icon: UserCircle,

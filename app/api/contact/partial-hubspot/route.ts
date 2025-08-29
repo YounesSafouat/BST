@@ -37,6 +37,8 @@ export async function POST(req: Request) {
       submission = new ContactSubmission({
         email: email || '',
         phone: phone || '',
+        firstname: body.firstname || '',
+        lastname: body.lastname || '',
         countryCode,
         countryName,
         source: source || 'website_contact_form',
@@ -45,6 +47,8 @@ export async function POST(req: Request) {
         fieldsFilled: {
           email: !!email,
           phone: !!phone,
+          firstname: !!body.firstname,
+          lastname: !!body.lastname,
           name: false,
           company: false,
           message: false
@@ -92,6 +96,8 @@ export async function POST(req: Request) {
       submission.hubspotContactId = hubspotResult.contactId;
       submission.hubspotSyncDate = new Date();
       submission.brief_description = body.brief_description || ''; // Save French description to DB
+      submission.firstname = body.firstname || ''; // Save firstname to DB
+      submission.lastname = body.lastname || ''; // Save lastname to DB
       
       await submission.save();
       

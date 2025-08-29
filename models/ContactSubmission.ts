@@ -5,6 +5,14 @@ const contactSubmissionSchema = new mongoose.Schema({
     type: String,
     required: false, // Changed to false for partial submissions
   },
+  firstname: {
+    type: String,
+    required: false,
+  },
+  lastname: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     required: false, // Changed to false for partial submissions
@@ -34,6 +42,8 @@ const contactSubmissionSchema = new mongoose.Schema({
   // Track which fields were filled
   fieldsFilled: {
     name: { type: Boolean, default: false },
+    firstname: { type: Boolean, default: false },
+    lastname: { type: Boolean, default: false },
     email: { type: Boolean, default: false },
     phone: { type: Boolean, default: false },
     company: { type: Boolean, default: false },
@@ -54,7 +64,7 @@ const contactSubmissionSchema = new mongoose.Schema({
   // Existing status field for CRM workflow
   status: {
     type: String,
-    enum: ['pending', 'read', 'replied', 'closed', 'partial_lead_sent'],
+    enum: ['pending', 'in-progress', 'completed', 'read', 'replied', 'closed', 'partial_lead_sent', 'archived'],
     default: 'pending',
   },
   // HubSpot integration tracking
@@ -72,9 +82,9 @@ const contactSubmissionSchema = new mongoose.Schema({
   },
 });
 
-// Add compound indexes to prevent duplicates
-contactSubmissionSchema.index({ email: 1, submissionStatus: 1 }, { unique: true, sparse: true });
-contactSubmissionSchema.index({ phone: 1, submissionStatus: 1 }, { unique: true, sparse: true });
+// Remove the problematic unique indexes that prevent users from having both email and phone
+// Instead, use a more logical approach - no unique constraints that would prevent merging
+// We'll handle duplicates in the application logic instead
 
 // Update the updatedAt timestamp before saving
 contactSubmissionSchema.pre('save', function(next) {

@@ -12,22 +12,33 @@ export async function POST(req: Request) {
     console.log('Partial contact request body received:', body)
     
     // Extract form data
-    const { name, email, phone, company, message, countryCode, countryName, source, page, brief_description } = body
+    const { name, firstname, lastname, email, phone, company, message, countryCode, countryName, source, page, brief_description } = body
     
-    // At least one field must be provided
-    if (!name && !email && !phone && !company && !message) {
+    // Check if we have at least one valid field - be more flexible for single field updates
+    const hasValidField = firstname?.trim() || lastname?.trim() || email?.trim() || phone?.trim() || company?.trim() || message?.trim();
+    
+    if (!hasValidField) {
+      console.log('Validation failed - no valid fields provided:', { firstname, lastname, email, phone, company, message })
       return NextResponse.json(
-        { error: "Au moins un champ doit être rempli" },
+        { error: "Au moins un champ doit être rempli (firstname, lastname, email, phone, company, ou message)" },
         { status: 400 }
       )
     }
+
+    console.log('Validation passed, processing fields:', { firstname, lastname, email, phone, company, message })
 
     // Check if we already have a partial submission for this user
     let submission;
     let isNewSubmission = false;
     
-    // Strategy: ALWAYS try to find existing partial submission
-    // This ensures we update the same record when user adds ANY field
+    // Only proceed if we have email OR phone (required for lead tracking)
+    if (!email && !phone) {
+      console.log('No email or phone provided - skipping partial submission');
+      return NextResponse.json({
+        success: false,
+        message: 'Email or phone is required for partial submission tracking'
+      });
+    }
     
     // First, try to find by exact email match if email is provided
     if (email) {
@@ -47,23 +58,37 @@ export async function POST(req: Request) {
       console.log('Looking for existing submission by phone:', phone, 'Found:', !!submission);
     }
     
-    // If still no match, do a broader search for ANY partial submission
-    // that might be from the same user (same source, page, country)
-    // This is crucial for when user adds fields like company, name, or message
+    // If still no match, try to find by the OTHER field to prevent duplicate records
+    // This prevents creating separate records for the same user
     if (!submission) {
-      const broaderSearch: any = {
-        submissionStatus: 'partial',
-        source: source || 'website',
-        page: page || 'home'
-      };
-      
-      // Add country info if available to make search more specific
-      if (countryCode) {
-        broaderSearch.countryCode = countryCode;
+      if (email && phone) {
+        // We have both, try to find by phone if email search failed
+        submission = await ContactSubmission.findOne({
+          phone: phone,
+          submissionStatus: 'partial'
+        });
+        console.log('Trying phone search as fallback:', phone, 'Found:', !!submission);
+      } else if (email && !phone) {
+        // We only have email, try to find by phone if user had phone before
+        submission = await ContactSubmission.findOne({
+          submissionStatus: 'partial',
+          $or: [
+            { email: { $exists: true, $ne: null } },
+            { phone: { $exists: true, $ne: null } }
+          ]
+        });
+        console.log('Trying to find any existing partial submission for user with email:', email, 'Found:', !!submission);
+      } else if (phone && !email) {
+        // We only have phone, try to find by email if user had email before
+        submission = await ContactSubmission.findOne({
+          submissionStatus: 'partial',
+          $or: [
+            { email: { $exists: true, $ne: null } },
+            { phone: { $exists: true, $ne: null } }
+          ]
+        });
+        console.log('Trying to find any existing partial submission for user with phone:', phone, 'Found:', !!submission);
       }
-      
-      submission = await ContactSubmission.findOne(broaderSearch);
-      console.log('Broader search for existing submission:', broaderSearch, 'Found:', !!submission);
     }
     
     if (!submission) {
@@ -91,6 +116,16 @@ export async function POST(req: Request) {
       fieldsFilled.name = true;
     }
     
+    if (firstname && firstname.trim()) {
+      submission.firstname = firstname.trim();
+      fieldsFilled.firstname = true;
+    }
+    
+    if (lastname && lastname.trim()) {
+      submission.lastname = lastname.trim();
+      fieldsFilled.lastname = true;
+    }
+    
     if (email && email.trim()) {
       submission.email = email.trim();
       fieldsFilled.email = true;
@@ -116,6 +151,11 @@ export async function POST(req: Request) {
       submission.brief_description = brief_description.trim();
     }
     
+    // Ensure status is valid - if it's not set or invalid, set to 'pending'
+    if (!submission.status || !['pending', 'in-progress', 'completed', 'read', 'replied', 'closed', 'partial_lead_sent', 'archived'].includes(submission.status)) {
+      submission.status = 'pending';
+    }
+    
     // Update fieldsFilled object - merge with existing
     submission.fieldsFilled = { 
       ...submission.fieldsFilled, 
@@ -127,6 +167,15 @@ export async function POST(req: Request) {
     if (countryName) submission.countryName = countryName;
     
     console.log('Saving partial submission to MongoDB...')
+    console.log('Submission data to save:', {
+      submissionStatus: submission.submissionStatus,
+      fieldsFilled: submission.fieldsFilled,
+      email: submission.email,
+      phone: submission.phone,
+      firstname: submission.firstname,
+      lastname: submission.lastname
+    })
+    
     await submission.save()
     console.log('Successfully saved partial submission to MongoDB')
 

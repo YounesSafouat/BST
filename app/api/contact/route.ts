@@ -68,6 +68,8 @@ export async function POST(req: Request) {
       // Update existing submission (whether partial or complete)
       console.log(`Updating existing ${submission.submissionStatus} submission to complete...`)
       submission.name = `${contactData.firstname} ${contactData.lastname}`.trim();
+      submission.firstname = contactData.firstname || '';
+      submission.lastname = contactData.lastname || '';
       submission.email = contactData.email;
       submission.phone = contactData.phone;
       submission.company = contactData.company;
@@ -75,6 +77,8 @@ export async function POST(req: Request) {
       submission.submissionStatus = 'complete';
       submission.fieldsFilled = {
         name: true,
+        firstname: !!contactData.firstname,
+        lastname: !!contactData.lastname,
         email: true,
         phone: true,
         company: !!contactData.company,
@@ -95,6 +99,8 @@ export async function POST(req: Request) {
       console.log('Creating new complete submission...')
       submission = new ContactSubmission({
         name: `${contactData.firstname} ${contactData.lastname}`.trim(),
+        firstname: contactData.firstname || '',
+        lastname: contactData.lastname || '',
         email: contactData.email,
         phone: contactData.phone,
         company: contactData.company,
@@ -103,6 +109,8 @@ export async function POST(req: Request) {
         sentToHubSpot: false,
         fieldsFilled: {
           name: true,
+          firstname: !!contactData.firstname,
+          lastname: !!contactData.lastname,
           email: true,
           phone: true,
           company: !!contactData.company,
