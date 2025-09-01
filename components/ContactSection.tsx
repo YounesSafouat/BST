@@ -1896,7 +1896,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           try {
                // Create standardized form data
                const standardFormData: StandardFormData = {
-                    name: formData.name || `${formData.firstname || ''} ${formData.lastname || ''}`.trim(),
+                    name: formData.name || `${formData.firstname || ''} ${formData.lastname || ''}`.trim().replace(/\s+/g, ' '),
                     company: formData.company,
                     email: formData.email,
                     phone: ensurePhoneWithCountryCode(formData.phone),
