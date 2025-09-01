@@ -94,7 +94,7 @@ export const metadata: Metadata = {
     siteName: 'Blackswan Technology',
     images: [
       {
-        url: '/og-image.jpg',
+        url: 'https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png',
         width: 1200,
         height: 630,
         alt: 'Blackswan Technology - Expert Odoo & HubSpot',
@@ -105,7 +105,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Blackswan Technology - Expert Odoo ERP & HubSpot CRM',
     description: 'Partenaire Officiel Odoo et Platinum HubSpot au Maroc. Solutions sur mesure pour votre transformation digitale.',
-    images: ['/og-image.jpg'],
+    images: ['https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png'],
   },
   robots: {
     index: true,
