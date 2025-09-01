@@ -220,7 +220,7 @@ export default function BlogPage() {
             </p>
           </div>
 
-                     <div className="max-w-2xl mx-auto mb-12">
+          <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-color-gray" />
               <input
@@ -237,7 +237,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-             {filteredPosts.find((post: any) => post.featured) && (
+      {filteredPosts.find((post: any) => post.featured) && (
         <section className="pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
 
@@ -305,11 +305,11 @@ export default function BlogPage() {
         </section>
       )}
 
-             <section className="pb-20 px-6 lg:px-8">
+      <section className="pb-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-8">
-                         <div className="lg:w-80 space-y-8">
-               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
+            <div className="lg:w-80 space-y-8">
+              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-6">
                   <Filter className="w-5 h-5 text-color-gray" />
                   <h3 className="text-lg font-bold text-color-black">Catégories</h3>
@@ -345,7 +345,7 @@ export default function BlogPage() {
 
 
 
-                             <div className="bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-2xl p-6 text-white">
+              <div className="bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-2xl p-6 text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <BookOpen className="w-5 h-5 text-white" />
                   <h3 className="text-lg font-bold">Newsletter</h3>
@@ -362,7 +362,7 @@ export default function BlogPage() {
               </div>
             </div>
 
-                         <div className="flex-1">
+            <div className="flex-1">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-black">
                   {filteredPosts.length} Article{filteredPosts.length > 1 ? "s" : ""}{" "}
@@ -395,12 +395,10 @@ export default function BlogPage() {
                       key={post.slug}
                       className="group relative flex flex-col bg-white rounded-3xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500"
                     >
-                      {/* Category badge */}
                       <div className="absolute top-4 left-4 px-4 py-2 rounded-full text-white text-sm font-medium z-10"
                         style={{ backgroundColor: getCategoryColor(post.category) }}>
                         {post.category}
                       </div>
-                      {/* Image */}
                       <div className="relative h-64 overflow-hidden">
                         <div className="aspect-video relative overflow-hidden bg-gray-100">
                           <img
@@ -410,13 +408,10 @@ export default function BlogPage() {
                           />
                         </div>
                       </div>
-                      {/* Card Content */}
                       <div className="flex flex-col flex-1 p-6">
-                        {/* Author and Date Row */}
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                              {/* If you have author image, use it here. Otherwise, fallback to icon/initials */}
                               <User className="w-6 h-6 text-gray-500" />
                             </div>
                             <div>
@@ -431,13 +426,11 @@ export default function BlogPage() {
                             {post.date ? post.date : "Date inconnue"}
                           </div>
                         </div>
-                        {/* Title and Excerpt */}
                         <h3 className="text-xl font-bold text-black mb-2 group-hover:text-color-main transition-colors duration-300">
                           {post.title}
                         </h3>
                         <p className="text-gray-500 mb-4 flex-1">{post.excerpt}</p>
 
-                        {/* Bottom Row: Lire link right-aligned */}
                         <div className="flex items-center justify-end mt-auto">
                           <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1 text-color-main font-medium hover:underline text-sm">
                             Lire <ArrowRight className="w-4 h-4 ml-1" />
@@ -449,7 +442,6 @@ export default function BlogPage() {
                 </div>
               )}
 
-              {/* Pagination Controls */}
               <div className="mt-12 flex justify-center">
                 <Pagination>
                   <PaginationContent>
@@ -461,9 +453,7 @@ export default function BlogPage() {
                         href="#"
                       />
                     </PaginationItem>
-                    {/* Render page numbers with ellipsis if needed */}
                     {Array.from({ length: totalPages }).map((_, i) => {
-                      // Show first, last, current, and neighbors; ellipsis for gaps
                       if (
                         i === 0 ||
                         i === totalPages - 1 ||
@@ -508,9 +498,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-gray-50 via-white to-gray-50 relative overflow-hidden">
-        {/* Background Elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-72 h-72 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
@@ -530,13 +518,11 @@ export default function BlogPage() {
             </p>
           </div>
 
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
             <Button
               size="lg"
               className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
               onClick={() => {
-                // Navigate to home page and scroll to contact section
                 window.location.href = '/#contact';
               }}
             >
@@ -548,7 +534,6 @@ export default function BlogPage() {
               size="lg"
               className="border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 group"
               onClick={() => {
-                // Navigate to home page and scroll to modules section
                 window.location.href = '/#modules';
               }}
             >
@@ -557,7 +542,6 @@ export default function BlogPage() {
             </Button>
           </div>
 
-          {/* Trust Indicators */}
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="w-16 h-16 bg-[var(--color-secondary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
