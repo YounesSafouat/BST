@@ -119,9 +119,8 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
+    google: '-1nA_9mXSq4HQbclHCPYAHNjSdpGwbCjR-qbVQrstyQ',
+    yandex: 'ad9c44fd82c550c8',
   },
 }
 
