@@ -36,13 +36,10 @@
 
 "use client"
 
-// Preload critical resources
 const preloadCriticalResources = () => {
-     // Preload hero image
      const heroImg = new window.Image();
      heroImg.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hero-digital-transformation.png";
 
-     // Preload critical fonts/icons
      const link = document.createElement('link');
      link.rel = 'preload';
      link.href = '/fonts/inter-var.woff2';
@@ -52,7 +49,6 @@ const preloadCriticalResources = () => {
      document.head.appendChild(link);
 };
 
-// Execute preloading
 if (typeof window !== 'undefined') {
      preloadCriticalResources();
 }
@@ -100,7 +96,6 @@ import { Button } from '@/components/ui/button';
 import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
 import PerformanceMonitor from '../PerformanceMonitor';
 
-// Lazy load non-critical components
 const LazyFAQSection = lazy(() => import('../FAQSection'));
 const LazyOdooCertificationSection = lazy(() => import('../OdooCertificationSection'));
 
@@ -112,7 +107,7 @@ interface Testimonial {
      result: string;
      avatar: string;
      company?: string;
-     targetRegions?: string[]; // Add region targeting
+     targetRegions?: string[];
 }
 
 interface HomePageData {
@@ -234,7 +229,7 @@ interface HomePageData {
                textColor: string;
                videoUrl?: string;
                thumbnailUrl?: string;
-               targetRegions?: string[]; // Add region targeting
+               targetRegions?: string[];
           }>;
      };
      faq?: {
@@ -304,14 +299,12 @@ export default function HomePage() {
           setMounted(true);
      }, []);
 
-     // Progressive rendering: Phase 1 - Critical content (header + hero)
      useEffect(() => {
           if (mounted) {
                setRenderPhase('above-fold');
           }
      }, [mounted]);
 
-     // Progressive rendering: Phase 2 - Above-fold content after hero
      useEffect(() => {
           if (renderPhase === 'above-fold') {
                const timer = setTimeout(() => setRenderPhase('below-fold'), 200);
@@ -319,7 +312,6 @@ export default function HomePage() {
           }
      }, [renderPhase]);
 
-     // Detect user location for region-based filtering
      useEffect(() => {
           if (!mounted) return;
 
@@ -331,7 +323,6 @@ export default function HomePage() {
                          const region = getRegionFromCountry(location.countryCode);
                          setUserRegion(region);
 
-                         // Performance monitoring
                          const endTime = performance.now();
                          console.log(`🚀 Geolocation detected in ${(endTime - startTime).toFixed(2)}ms`);
                     }
@@ -345,10 +336,9 @@ export default function HomePage() {
           detectUserLocation();
      }, [mounted]);
 
-     // Filter testimonials based on user region
      const shouldShowTestimonial = (testimonial: Testimonial): boolean => {
           if (!testimonial.targetRegions || testimonial.targetRegions.length === 0) {
-               return true; // Show to all if no specific regions defined
+               return true;
           }
 
           return testimonial.targetRegions.includes('all') || testimonial.targetRegions.includes(userRegion);
@@ -356,7 +346,6 @@ export default function HomePage() {
 
      const filteredTestimonials = availableTestimonials.filter(shouldShowTestimonial);
 
-     // Reset testimonial index when filtered testimonials change
      useEffect(() => {
           if (filteredTestimonials.length > 0 && currentTestimonialIndex >= filteredTestimonials.length) {
                setCurrentTestimonialIndex(0);
@@ -365,7 +354,6 @@ export default function HomePage() {
           }
      }, [filteredTestimonials, currentTestimonialIndex]);
 
-     // Function to handle hiding timeline cards
      const handleTimelineCardError = (cardKey: string) => {
           setHiddenTimelineCards(prev => new Set([...prev, cardKey]));
      };
@@ -376,7 +364,6 @@ export default function HomePage() {
           const timer = setTimeout(() => setStatsVisible(true), 800);
           const loadTimer = setTimeout(() => setIsLoaded(true), 100);
 
-          // Fetch home page data with a small delay to ensure proper initialization
           setTimeout(() => {
                fetchHomePageData();
                fetchClientCases();
@@ -388,7 +375,6 @@ export default function HomePage() {
           };
      }, [mounted]);
 
-     // Fetch testimonials only after geolocation is detected
      useEffect(() => {
           if (!mounted || locationLoading) return;
 
@@ -418,7 +404,7 @@ export default function HomePage() {
                console.log('📡 Fetching from URL:', url);
 
                const response = await fetch(url, {
-                    cache: 'force-cache', // Use Next.js caching
+                    cache: 'force-cache',
                     headers: {
                          'Accept': 'application/json'
                     }
@@ -434,7 +420,6 @@ export default function HomePage() {
                     console.log('📊 Is array:', Array.isArray(data) ? data.length : 'N/A');
 
                     if (data && Array.isArray(data) && data.length > 0) {
-                         // Find the home-page content specifically
                          const homePageContent = data.find(item => item.type === 'home-page');
 
                          if (homePageContent) {
@@ -442,12 +427,10 @@ export default function HomePage() {
                               console.log('📄 Content type:', homePageContent.type);
                               console.log('📄 Has content field:', !!homePageContent.content);
 
-                              // Check if the content field exists
                               if (homePageContent.content) {
                                    console.log('✅ Setting home page data:', homePageContent.content);
                                    setHomePageData(homePageContent.content);
 
-                                   // Cache the data for 5 minutes
                                    sessionStorage.setItem('homePageData', JSON.stringify({
                                         data: homePageContent.content,
                                         timestamp: Date.now()
@@ -474,7 +457,6 @@ export default function HomePage() {
 
      const fetchTestimonials = async () => {
           try {
-               // Use cached testimonials if available and fresh
                const region = userRegion || 'international';
                if (!region) {
                     console.log('⏳ Waiting for geolocation detection...');
@@ -486,7 +468,7 @@ export default function HomePage() {
                if (cachedData) {
                     try {
                          const parsed = JSON.parse(cachedData);
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 10 * 60 * 1000) { // 10 minutes cache
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 10 * 60 * 1000) {
                               console.log('📋 Using cached testimonials for region:', region);
                               setAvailableTestimonials(parsed.data);
                               return;
@@ -497,7 +479,7 @@ export default function HomePage() {
                }
 
                const response = await fetch(`/api/testimonials?region=${region}`, {
-                    cache: 'force-cache' // Use Next.js caching
+                    cache: 'force-cache'
                });
                if (response.ok) {
                     const data = await response.json();
@@ -534,12 +516,11 @@ export default function HomePage() {
 
      const fetchClientCases = async () => {
           try {
-               // Use cached client cases if available and fresh
                const cachedData = sessionStorage.getItem('clientCases');
                if (cachedData) {
                     try {
                          const parsed = JSON.parse(cachedData);
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 15 * 60 * 1000) { // 15 minutes cache
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 15 * 60 * 1000) {
                               console.log('📋 Using cached client cases');
                               setClientCases(parsed.data);
                               return;
@@ -550,7 +531,7 @@ export default function HomePage() {
                }
 
                const response = await fetch(`/api/content?type=clients-page`, {
-                    cache: 'force-cache' // Use Next.js caching
+                    cache: 'force-cache'
                });
                if (response.ok) {
                     const data = await response.json();
@@ -559,7 +540,6 @@ export default function HomePage() {
                          if (clientsContent && clientsContent.content && clientsContent.content.clientCases) {
                               setClientCases(clientsContent.content.clientCases);
 
-                              // Cache the client cases for 15 minutes
                               sessionStorage.setItem('clientCases', JSON.stringify({
                                    data: clientsContent.content.clientCases,
                                    timestamp: Date.now()
@@ -607,11 +587,8 @@ export default function HomePage() {
           const testimonial = availableTestimonials.find(t => t._id === testimonialId);
           if (!testimonial) return null;
 
-          // Add safety check for testimonial properties
           const avatar = testimonial?.avatar || '';
           const name = testimonial?.name || '';
-
-          // Check if avatar is a URL (starts with http or /)
           if (avatar && (avatar.startsWith('http') || avatar.startsWith('/'))) {
                return (
                     <Image
@@ -623,7 +600,6 @@ export default function HomePage() {
                     />
                );
           } else {
-               // Use initials
                const initials = name.split(' ').map(n => n[0]).join('');
                return (
                     <div className="w-10 h-10 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-secondary)] rounded-full flex items-center justify-center">
@@ -633,8 +609,6 @@ export default function HomePage() {
           }
      };
 
-     // Split apps into 3 columns for timelines with priority for most demanded modules
-     // Get existing apps from data and filter out modules without icons
      const existingApps = homePageData?.platformSection?.apps || [];
      const appsWithIcons = existingApps.filter(app =>
           app.icon &&
@@ -644,17 +618,11 @@ export default function HomePage() {
           !app.icon.includes('placeholder')
      );
 
-     // Create timelines with prominently marked apps appearing more frequently
-     // Add prominent apps at different positions to distribute them evenly
      const prominentApps = appsWithIcons.filter(app => app.showProminently);
 
-     // Create base timeline and insert prominent apps at different positions
      const createTimelineWithProminent = (apps: any[], offset: number) => {
-          // Create a base timeline with all apps
           const timeline = [...apps];
 
-          // Create different arrangements by rotating the array based on offset
-          // This ensures no duplicates while creating variety
           const rotatedTimeline: any[] = [];
           for (let i = 0; i < timeline.length; i++) {
                const index = (i + offset) % timeline.length;
@@ -679,7 +647,6 @@ export default function HomePage() {
           if (filteredTestimonials.length > 1) {
                setCurrentTestimonialIndex((prev) => {
                     const nextIndex = prev + 1;
-                    // If we reach the end, loop back to the beginning
                     return nextIndex >= filteredTestimonials.length ? 0 : nextIndex;
                });
           }
@@ -689,18 +656,15 @@ export default function HomePage() {
           if (filteredTestimonials.length > 1) {
                setCurrentTestimonialIndex((prev) => {
                     const prevIndex = prev - 1;
-                    // If we go below 0, loop to the end
                     return prevIndex < 0 ? filteredTestimonials.length - 1 : prevIndex;
                });
           }
      };
 
-     // Add safety check for homePageData and location loading
      if (!homePageData || locationLoading) {
           return <Loader />;
      }
 
-     // Progressive rendering loading indicator
      if (renderPhase === 'critical') {
           return (
                <div className="min-h-screen bg-white overflow-hidden">
