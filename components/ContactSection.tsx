@@ -47,6 +47,7 @@ import RegionalContactInfo from "./RegionalContactInfo";
 import { useToast } from "@/hooks/use-toast";
 import CountryCodeSelector from "./CountryCodeSelector";
 import { useGeolocation } from "@/hooks/useGeolocation";
+import { useFormSubmit, StandardFormData } from "@/hooks/use-form-submit";
 
 interface Country {
      code: string;
@@ -87,6 +88,7 @@ interface ContactSectionProps {
  * @returns Contact form with user behavior tracking and partial lead storage
  */
 export default function ContactSection({ contactData }: ContactSectionProps) {
+     const { submitForm } = useFormSubmit();
      const [formData, setFormData] = useState({
           name: '',
           firstname: '',
@@ -1892,9 +1894,17 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           setSubmitError('');
 
           try {
-               const submissionData = {
-                    ...formData,
+               // Create standardized form data
+               const standardFormData: StandardFormData = {
+                    name: formData.name || `${formData.firstname || ''} ${formData.lastname || ''}`.trim(),
+                    company: formData.company,
+                    email: formData.email,
                     phone: ensurePhoneWithCountryCode(formData.phone),
+                    message: formData.message
+               };
+
+               // Additional data for tracking
+               const additionalData = {
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
                     city: city || '',
@@ -1907,39 +1917,19 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     lastname: formData.lastname || ''
                };
 
-               console.log('Submitting form data:', submissionData);
-               console.log('Name fields - firstname:', formData.firstname, 'lastname:', formData.lastname, 'combined:', formData.name);
-               console.log('Phone formatting - original:', formData.phone, 'formatted:', submissionData.phone, 'country code:', selectedCountry.dialCode);
-               console.log('Phone formatting helper result:', ensurePhoneWithCountryCode(formData.phone));
-               let response;
-               try {
-                    response = await fetch(`/api/contact`, {
-                         method: 'POST',
-                         headers: {
-                              'Content-Type': 'application/json',
-                         },
-                         body: JSON.stringify(submissionData),
-                    });
-               } catch (fetchError) {
-                    console.error('Fetch error:', fetchError);
-                    try {
-                         response = await fetch(`/api/test-contact`, {
-                              method: 'POST',
-                              headers: {
-                                   'Content-Type': 'application/json',
-                              },
-                              body: JSON.stringify(submissionData),
-                         });
+               console.log('Standardized form data:', standardFormData);
+               console.log('Additional data:', additionalData);
 
-                    } catch (testError) {
-                         console.error('Test endpoint also failed:', testError);
-                         throw fetchError;
-                    }
-               }
+               // Use the standardized form submission
+               const result = await submitForm(
+                    standardFormData,
+                    additionalData,
+                    '/api/contact',
+                    'contact_form'
+               );
 
-               if (response.ok) {
-                    const result = await response.json();
-                    console.log('Contact form submitted successfully:', result);
+               if (result.success) {
+                    console.log('Contact form submitted successfully:', result.data);
 
                     if (partialLeadTimer.current) {
                          clearTimeout(partialLeadTimer.current);
@@ -1977,9 +1967,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          duration: 5000,
                     });
                } else {
-                    const errorData = await response.json();
-                    console.error('Form submission failed:', errorData);
-                    const errorMessage = errorData.error || 'Une erreur s\'est produite. Veuillez réessayer.';
+                    console.error('Form submission failed:', result.error);
+                    const errorMessage = 'Une erreur s\'est produite. Veuillez réessayer.';
                     setSubmitError(errorMessage);
 
                     toast({

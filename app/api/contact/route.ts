@@ -12,8 +12,23 @@ export async function POST(req: Request) {
     const body = await req.json()
     console.log('Request body received:', body);
     
+    // Handle both old and new standardized format
+    let formData, additionalData;
+    
+    if (body.event === 'formSubmit' && body.formData) {
+      // New standardized format
+      formData = body.formData;
+      additionalData = body.additionalData || {};
+      console.log('Using new standardized format');
+    } else {
+      // Legacy format - backward compatibility
+      formData = body;
+      additionalData = body;
+      console.log('Using legacy format for backward compatibility');
+    }
+    
     // Validate required fields for complete submission
-    if (!body.email) {
+    if (!formData.email) {
       console.log('Validation failed: Email is required')
       return NextResponse.json(
         { error: "Email est requis" },
@@ -21,7 +36,7 @@ export async function POST(req: Request) {
       )
     }
     
-    if (!body.firstname || !body.lastname) {
+    if (!formData.name && !formData.firstname) {
       console.log('Validation failed: Name is required')
       return NextResponse.json(
         { error: "Le nom est requis" },
@@ -29,7 +44,7 @@ export async function POST(req: Request) {
       )
     }
     
-    if (!body.phone) {
+    if (!formData.phone) {
       console.log('Validation failed: Phone is required')
       return NextResponse.json(
         { error: "Le téléphone est requis" },
@@ -39,13 +54,13 @@ export async function POST(req: Request) {
 
     // Prepare contact data for HubSpot
     const contactData: any = {
-      email: body.email,
-      firstname: body.firstname || body.name?.split(' ')[0] || '',
-      lastname: body.lastname || body.name?.split(' ').slice(1).join(' ') || '',
-      phone: body.phone || '',
-      company: body.company || '',
-      message: body.message || '',
-      brief_description: body.brief_description || '',
+      email: formData.email,
+      firstname: formData.firstname || formData.name?.split(' ')[0] || '',
+      lastname: formData.lastname || formData.name?.split(' ').slice(1).join(' ') || '',
+      phone: formData.phone || '',
+      company: formData.company || '',
+      message: formData.message || '',
+      brief_description: additionalData.brief_description || '',
       
       // Website Analytics Properties (writable)
       hs_analytics_source: 'DIRECT_TRAFFIC',
@@ -73,18 +88,18 @@ export async function POST(req: Request) {
     console.log('Body countryCode field:', body.countryCode);
 
     // Only add geographic properties if we have real data
-    if (body.countryCode) {
-      contactData.country = body.countryCode;
-      contactData.hs_country_region_code = body.countryCode;
+    if (additionalData.countryCode) {
+      contactData.country = additionalData.countryCode;
+      contactData.hs_country_region_code = additionalData.countryCode;
     }
     
-    if (body.city) {
-      contactData.city = body.city;
+    if (additionalData.city) {
+      contactData.city = additionalData.city;
     }
     
-    if (body.state) {
-      contactData.state = body.state;
-      contactData.hs_state_code = body.state;
+    if (additionalData.state) {
+      contactData.state = additionalData.state;
+      contactData.hs_state_code = additionalData.state;
     }
 
     // Check if we already have a submission for this user (partial OR complete)
