@@ -1868,6 +1868,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     phone: ensurePhoneWithCountryCode(formData.phone),
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
+                    // Add geolocation data
+                    city: city || '',
                     // Add source information for tracking - use dynamic values
                     source: 'website_contact_form',
                     page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
