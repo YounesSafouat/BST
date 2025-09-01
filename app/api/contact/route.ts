@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     }
 
     // Prepare contact data for HubSpot
-    const contactData = {
+    const contactData: any = {
       email: body.email,
       firstname: body.firstname || body.name?.split(' ')[0] || '',
       lastname: body.lastname || body.name?.split(' ').slice(1).join(' ') || '',
@@ -58,7 +58,14 @@ export async function POST(req: Request) {
       contact_status: 'new lead',
       submission_count: '1',
       first_submission_date: new Date().toISOString().split('T')[0],
-      last_submission_date: new Date().toISOString().split('T')[0]
+      last_submission_date: new Date().toISOString().split('T')[0],
+      
+      // Geographic properties (will be populated conditionally)
+      country: undefined,
+      hs_country_region_code: undefined,
+      city: undefined,
+      state: undefined,
+      hs_state_code: undefined
     };
 
     console.log('Initial contactData:', contactData);

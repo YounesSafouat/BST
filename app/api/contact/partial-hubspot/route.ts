@@ -69,7 +69,7 @@ export async function POST(req: Request) {
     }
     
     // Prepare contact data for HubSpot
-    const contactData = {
+    const contactData: any = {
       email: email || '',
       firstname: body.firstname || body.name?.split(' ')[0] || '',
       lastname: body.lastname || body.name?.split(' ').slice(1).join(' ') || '',
