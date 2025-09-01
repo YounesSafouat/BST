@@ -1610,7 +1610,21 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           // Full validation: name, email, and phone are all valid
           const fullValid = basicValid && hasValidPhone;
 
-          return basicValid; // Allow submission with just name and email
+          // Check if geolocation is loaded (city should be available)
+          const geolocationReady = !geolocationLoading && city;
+
+          console.log('Form validation check:', {
+               hasValidName,
+               hasValidEmail,
+               hasValidPhone,
+               basicValid,
+               fullValid,
+               geolocationReady,
+               city,
+               geolocationLoading
+          });
+
+          return basicValid && geolocationReady; // Require geolocation to be ready
      };
 
      // Start 30-minute timer for partial lead (changed from 1 minute for production)
