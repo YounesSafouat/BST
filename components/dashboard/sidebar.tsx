@@ -125,6 +125,12 @@ const menuGroups = [
         color: "from-orange-200 to-orange-100 text-orange-700",
       },
       {
+        title: "Structured Data",
+        href: "/dashboard/structured-data",
+        icon: Code,
+        color: "from-emerald-200 to-emerald-100 text-emerald-700",
+      },
+      {
         title: "Appearance",
         href: "/dashboard/appearance",
         icon: PaletteIcon,

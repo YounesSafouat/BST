@@ -1,3 +1,38 @@
+/**
+ * ServicesSection.tsx
+ * 
+ * Services section component that displays company services and expertise
+ * with interactive features and dynamic content loading. This component
+ * showcases the company's core services with visual elements and CTAs.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/components/home/HomePage.tsx) - Services showcase section
+ * - About page and other pages that need services display
+ * - Company expertise and service offerings presentation
+ * 
+ * KEY FEATURES:
+ * - Dynamic service data loading from CMS or fallback data
+ * - Interactive service selection with visual feedback
+ * - Service descriptions with relevant images
+ * - Call-to-action buttons for each service
+ * - Responsive design with mobile optimization
+ * - Smooth animations and transitions
+ * - Service categorization and organization
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements framer-motion for animations
+ * - Dynamic icon mapping for service icons
+ * - Fallback data when CMS content is unavailable
+ * - Uses Tailwind CSS for responsive design
+ * - Implements state management for active service
+ * - Smooth scrolling to contact section
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 
 import React, { useState } from "react";

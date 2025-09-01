@@ -1,3 +1,37 @@
+/**
+ * footer.tsx
+ * 
+ * Main website footer component with dynamic content, regional contact information,
+ * and comprehensive site navigation. This footer automatically adapts to user
+ * location and displays region-specific contact details and services.
+ * 
+ * WHERE IT'S USED:
+ * - All pages via layout.tsx - Global footer across the entire website
+ * - Automatically included in every page through the root layout
+ * 
+ * KEY FEATURES:
+ * - Dynamic content loading from CMS API
+ * - Automatic region detection and contact info adaptation
+ * - Newsletter subscription functionality
+ * - Social media links and company information
+ * - Quick links to important pages and services
+ * - Regional contact details (phone, email, address)
+ * - Certification badges and legal links
+ * - Mobile-responsive design with proper spacing
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses Next.js client-side rendering for dynamic content
+ * - Integrates with geolocation API for region detection
+ * - Fetches footer content from /api/content endpoint
+ * - Implements responsive design with Tailwind CSS
+ * - Button click analytics tracking for user interactions
+ * - Automatic content fallbacks for missing data
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
@@ -146,11 +180,11 @@ export default function Footer() {
       } else {
         // Not on home page, navigate to home page first, then scroll to section
         router.push('/');
-        
+
         // Wait for navigation to complete and DOM to be ready, then scroll to section
         let retryCount = 0;
         const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
-        
+
         const waitForSection = () => {
           const element = document.querySelector(url);
           if (element) {
@@ -166,7 +200,7 @@ export default function Footer() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         };
-        
+
         // Start waiting for the section with a longer initial delay
         setTimeout(waitForSection, 500);
       }
@@ -220,39 +254,39 @@ export default function Footer() {
                   {regionalContact.phone && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                                             <a 
-                         href={`tel:${regionalContact.phone}`} 
-                         className="hover:text-white transition-colors"
-                         onClick={() => trackButtonClick('footer_phone')}
-                       >
-                         {regionalContact.phone}
-                       </a>
+                      <a
+                        href={`tel:${regionalContact.phone}`}
+                        className="hover:text-white transition-colors"
+                        onClick={() => trackButtonClick('footer_phone')}
+                      >
+                        {regionalContact.phone}
+                      </a>
                     </div>
                   )}
                   {regionalContact.email && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                                             <a 
-                         href={`mailto:${regionalContact.email}`} 
-                         className="hover:text-white transition-colors"
-                         onClick={() => trackButtonClick('footer_email')}
-                       >
-                         {regionalContact.email}
-                       </a>
+                      <a
+                        href={`mailto:${regionalContact.email}`}
+                        className="hover:text-white transition-colors"
+                        onClick={() => trackButtonClick('footer_email')}
+                      >
+                        {regionalContact.email}
+                      </a>
                     </div>
                   )}
                   {regionalContact.whatsapp && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                                             <a
-                         href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
-                         target="_blank"
-                         rel="noopener noreferrer"
-                         className="hover:text-white transition-colors"
-                         onClick={() => trackButtonClick('footer_whatsapp')}
-                       >
-                         {regionalContact.whatsapp}
-                       </a>
+                      <a
+                        href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-white transition-colors"
+                        onClick={() => trackButtonClick('footer_whatsapp')}
+                      >
+                        {regionalContact.whatsapp}
+                      </a>
                     </div>
                   )}
                   {regionalContact.address && (
@@ -277,13 +311,13 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               {quickLinks.links && Array.isArray(quickLinks.links) && quickLinks.links.map((link: any, index: number) => (
                 <li key={index}>
-                                     <button
-                     onClick={() => {
-                       handleLinkClick(link.url);
-                       trackButtonClick(`footer_link_${link.text.toLowerCase().replace(/\s+/g, '_')}`);
-                     }}
-                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-xs sm:text-sm w-full text-left"
-                   >
+                  <button
+                    onClick={() => {
+                      handleLinkClick(link.url);
+                      trackButtonClick(`footer_link_${link.text.toLowerCase().replace(/\s+/g, '_')}`);
+                    }}
+                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 text-xs sm:text-sm w-full text-left"
+                  >
                     <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-[var(--color-secondary)] rounded-full"></div>
                     {link.text}
                   </button>

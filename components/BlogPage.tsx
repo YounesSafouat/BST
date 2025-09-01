@@ -1,3 +1,38 @@
+/**
+ * BlogPage.tsx
+ * 
+ * Main blog page component that displays blog posts with filtering, search,
+ * and regional content adaptation. This component handles blog post listing,
+ * categorization, and user interaction features.
+ * 
+ * WHERE IT'S USED:
+ * - Blog page route (/app/blog/page.tsx) - Main blog listing page
+ * - Displays all published blog posts with filtering capabilities
+ * 
+ * KEY FEATURES:
+ * - Dynamic blog post loading from API
+ * - Category-based filtering and search functionality
+ * - Regional content adaptation based on user location
+ * - Pagination for large numbers of posts
+ * - Scheduled post release management
+ * - Responsive design with mobile optimization
+ * - SEO-friendly URL structure
+ * - Content scheduling and publication control
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements pagination with configurable page sizes
+ * - Integrates with geolocation API for regional content
+ * - Fetches blog data from /api/blog endpoint
+ * - Implements search and filter functionality
+ * - Uses Tailwind CSS for responsive design
+ * - Handles scheduled post publishing logic
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -27,7 +62,6 @@ function isBlogReleased(post: any): boolean {
 }
 
 export default function BlogPage() {
-  // All hooks at the top!
   const [blogData, setBlogData] = useState<any>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
   const [loading, setLoading] = useState(true);
@@ -68,8 +102,6 @@ export default function BlogPage() {
         const res = await fetch(apiUrl);
         const data = await res.json();
         setBlogData({ content: { blogPosts: data } });
-
-
       } catch (err) {
         console.error("Failed to fetch blog data", err);
       } finally {
@@ -97,10 +129,8 @@ export default function BlogPage() {
 
     let filtered = (blogData.content?.blogPosts || []).filter((post: any) => isBlogReleased(post));
 
-    // Filter by user region
     filtered = filtered.filter((post: any) => shouldShowContent(post, userRegion));
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(
         (post: any) =>
@@ -109,22 +139,19 @@ export default function BlogPage() {
       )
     }
 
-    // Filter by category
     if (selectedCategory !== "Tous") {
       filtered = filtered.filter((post: any) => post.category === selectedCategory)
     }
 
     setFilteredPosts(filtered)
-    setCurrentPage(1); // Reset to first page on filter/search change
+    setCurrentPage(1);
   }, [blogData, searchTerm, selectedCategory, userRegion])
 
-  // Function to get category color
   const getCategoryColor = (categoryName: any) => {
     const category = blogData.content?.categories?.items?.find((cat: any) => cat.name === categoryName)
     return category?.color || "var(--color-main)"
   }
 
-  // Helper to get the correct image URL
   const getImageUrl = (img: string): string => {
     if (!img) return '/placeholder.svg';
     if (img.startsWith('/https://') || img.startsWith('/http://')) return img.slice(1);
@@ -147,11 +174,9 @@ export default function BlogPage() {
   if (loading) return <Loader />;
   if (!blogData) return <div>Erreur de chargement du blog.</div>;
 
-  // Extract categories and posts from dynamic data
   const blogCategories = blogData.content?.categories?.items?.map((cat: any) => ({ name: cat.name, count: undefined })) || [];
   const blogPosts = blogData.content?.blogPosts || [];
 
-  // Generate categories from region-filtered blog posts
   const generateCategoriesFromPosts = () => {
     const categoryCounts: { [key: string]: number } = {};
     filteredPosts.forEach((post: any) => {
@@ -160,7 +185,6 @@ export default function BlogPage() {
       }
     });
 
-    // Add "Tous" (All) category with total count
     const allCategories = [
       {
         name: "Tous",
@@ -177,10 +201,8 @@ export default function BlogPage() {
     return allCategories;
   };
 
-  // Get categories from filtered posts
   const actualCategories = generateCategoriesFromPosts();
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredPosts.length / pageSize);
   const paginatedPosts = filteredPosts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
@@ -198,8 +220,7 @@ export default function BlogPage() {
             </p>
           </div>
 
-          {/* Search Section */}
-          <div className="max-w-2xl mx-auto mb-12">
+                     <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-color-gray" />
               <input
@@ -216,8 +237,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Featured Post */}
-      {filteredPosts.find((post: any) => post.featured) && (
+             {filteredPosts.find((post: any) => post.featured) && (
         <section className="pb-16 px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
 
@@ -285,14 +305,11 @@ export default function BlogPage() {
         </section>
       )}
 
-      {/* Main Content */}
-      <section className="pb-20 px-6 lg:px-8">
+             <section className="pb-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters Sidebar */}
-            <div className="lg:w-80 space-y-8">
-              {/* Categories Filter */}
-              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
+                         <div className="lg:w-80 space-y-8">
+               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-6">
                   <Filter className="w-5 h-5 text-color-gray" />
                   <h3 className="text-lg font-bold text-color-black">Catégories</h3>
@@ -328,8 +345,7 @@ export default function BlogPage() {
 
 
 
-              {/* Newsletter - Static only, no functionality */}
-              <div className="bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-2xl p-6 text-white">
+                             <div className="bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-2xl p-6 text-white">
                 <div className="flex items-center gap-3 mb-4">
                   <BookOpen className="w-5 h-5 text-white" />
                   <h3 className="text-lg font-bold">Newsletter</h3>
@@ -346,8 +362,7 @@ export default function BlogPage() {
               </div>
             </div>
 
-            {/* Blog Posts Grid */}
-            <div className="flex-1">
+                         <div className="flex-1">
               <div className="mb-6">
                 <h2 className="text-2xl font-bold text-black">
                   {filteredPosts.length} Article{filteredPosts.length > 1 ? "s" : ""}{" "}
@@ -361,8 +376,8 @@ export default function BlogPage() {
                     <Search className="w-8 h-8 text-color-gray" />
                   </div>
                   <h3 className="text-xl font-bold text-color-black mb-2">
-                    {searchTerm || selectedCategory !== "Tous" 
-                      ? "Aucun article trouvé" 
+                    {searchTerm || selectedCategory !== "Tous"
+                      ? "Aucun article trouvé"
                       : "Aucun article disponible pour votre région"
                     }
                   </h3>
@@ -421,7 +436,7 @@ export default function BlogPage() {
                           {post.title}
                         </h3>
                         <p className="text-gray-500 mb-4 flex-1">{post.excerpt}</p>
-                        
+
                         {/* Bottom Row: Lire link right-aligned */}
                         <div className="flex items-center justify-end mt-auto">
                           <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1 text-color-main font-medium hover:underline text-sm">

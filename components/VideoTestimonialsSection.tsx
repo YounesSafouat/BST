@@ -1,3 +1,38 @@
+/**
+ * VideoTestimonialsSection.tsx
+ * 
+ * Video testimonials section component that displays client video testimonials
+ * with interactive video controls and regional content filtering. This component
+ * showcases client success stories through video content.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/components/home/HomePage.tsx) - Video testimonials section
+ * - About page and other pages that need client testimonials
+ * - Client success stories and credibility building
+ * 
+ * KEY FEATURES:
+ * - Interactive video player with custom controls
+ * - Regional content filtering based on user location
+ * - Fullscreen video support
+ * - Video progress tracking and time display
+ * - Mute/unmute functionality
+ * - Responsive design with mobile optimization
+ * - Fallback content when no testimonials available
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements custom video controls and state management
+ * - Integrates with geolocation API for regional filtering
+ * - Uses HTML5 video API for advanced functionality
+ * - Implements fullscreen API for enhanced viewing
+ * - Responsive design with Tailwind CSS
+ * - Complex state management for multiple videos
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import React, { useState, useRef, useEffect } from 'react';

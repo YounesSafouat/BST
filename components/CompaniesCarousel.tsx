@@ -1,3 +1,38 @@
+/**
+ * CompaniesCarousel.tsx
+ * 
+ * Companies carousel component that displays client logos in a continuous
+ * scrolling animation. This component showcases company partnerships and
+ * client relationships with smooth scrolling effects.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/components/home/HomePage.tsx) - Client showcase section
+ * - About page and other pages that need client display
+ * - Company credibility through client partnerships
+ * 
+ * KEY FEATURES:
+ * - Continuous scrolling animation for company logos
+ * - Hover pause functionality for better user interaction
+ * - Responsive design with adaptive sizing
+ * - Gradient overlays for smooth edge transitions
+ * - Configurable scroll speed and company data
+ * - Fallback content when no companies provided
+ * - Seamless infinite scrolling effect
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements CSS animations for smooth scrolling
+ * - Uses Next.js Image component for optimization
+ * - Hover state management for animation control
+ * - Responsive design with Tailwind CSS
+ * - Dynamic width calculations for smooth animation
+ * - Triple company list for seamless looping
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';

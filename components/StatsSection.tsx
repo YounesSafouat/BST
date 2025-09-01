@@ -1,3 +1,36 @@
+/**
+ * StatsSection.tsx
+ * 
+ * Statistics section component that displays key company metrics and achievements
+ * with animated counters and visual appeal. This component showcases company
+ * performance indicators and success metrics.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/components/home/HomePage.tsx) - Company statistics display
+ * - About page and other pages that need metrics showcase
+ * - Company credibility and performance demonstration
+ * 
+ * KEY FEATURES:
+ * - Animated statistics display with framer-motion
+ * - Company performance metrics showcase
+ * - Responsive grid layout for different screen sizes
+ * - Hover effects and visual feedback
+ * - Staggered animation timing for visual appeal
+ * - Glassmorphism design with backdrop blur
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript
+ * - Implements framer-motion for animations
+ * - Responsive design with Tailwind CSS
+ * - Staggered animation delays for visual flow
+ * - Glassmorphism effects with backdrop-blur
+ * - Hover state management and transitions
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 import React from "react";
 import { motion } from "framer-motion";
 

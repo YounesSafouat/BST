@@ -1,3 +1,37 @@
+/**
+ * header.tsx
+ * 
+ * Main website header component with dynamic content and regional contact information.
+ * This header automatically adapts to user location and displays region-specific
+ * contact details, navigation menu, and call-to-action buttons.
+ * 
+ * WHERE IT'S USED:
+ * - All pages via layout.tsx - Global header across the entire website
+ * - Automatically included in every page through the root layout
+ * 
+ * KEY FEATURES:
+ * - Dynamic content loading from CMS API
+ * - Automatic region detection and contact info adaptation
+ * - Mobile-responsive navigation menu with hamburger toggle
+ * - Regional phone numbers and WhatsApp contacts
+ * - Smooth animations and transitions using framer-motion
+ * - Button click analytics tracking
+ * - Page visibility detection for performance optimization
+ * - Automatic language/region adaptation based on user location
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses Next.js client-side rendering for dynamic content
+ * - Integrates with geolocation API for region detection
+ * - Fetches header content from /api/content endpoint
+ * - Implements responsive design with Tailwind CSS
+ * - Uses framer-motion for smooth animations
+ * - Tracks user interactions for analytics
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import React, { useState, useEffect } from "react";
@@ -169,11 +203,11 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       // Not on home page, navigate to home page with hash
       // Use the correct approach: navigate to home page first, then scroll to section
       router.push('/');
-      
+
       // Wait for navigation to complete and DOM to be ready, then scroll to section
       let retryCount = 0;
       const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
-      
+
       const waitForSection = () => {
         const element = document.querySelector(href);
         if (element) {
@@ -189,7 +223,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       };
-      
+
       // Start waiting for the section with a longer initial delay
       setTimeout(waitForSection, 500);
     }

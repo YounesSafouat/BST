@@ -1,3 +1,38 @@
+/**
+ * FAQSection.tsx
+ * 
+ * FAQ section component that displays frequently asked questions with
+ * expandable/collapsible functionality. This component provides answers
+ * to common questions about services and company offerings.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/components/home/HomePage.tsx) - FAQ section display
+ * - About page and other pages that need FAQ information
+ * - Customer support and information provision
+ * 
+ * KEY FEATURES:
+ * - Expandable/collapsible FAQ items
+ * - Dynamic content loading from props or fallback data
+ * - Smooth animations for item transitions
+ * - Responsive design with mobile optimization
+ * - Interactive question/answer interface
+ * - Fallback content when no data provided
+ * - Clean and organized information display
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements state management for open/closed items
+ * - Uses framer-motion for smooth animations
+ * - Responsive design with Tailwind CSS
+ * - Implements toggle functionality for FAQ items
+ * - Fallback data system for content availability
+ * - Clean component architecture with proper interfaces
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import React, { useState } from 'react';

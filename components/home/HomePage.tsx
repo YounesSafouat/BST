@@ -1,3 +1,39 @@
+/**
+ * HomePage.tsx
+ * 
+ * Main homepage component that renders all sections of the website's landing page.
+ * This component orchestrates the entire homepage experience including hero section,
+ * services, testimonials, pricing, and contact forms with performance optimization.
+ * 
+ * WHERE IT'S USED:
+ * - Main homepage (/app/page.tsx) - Renders the complete homepage
+ * - Entry point for all homepage content and sections
+ * 
+ * KEY FEATURES:
+ * - Hero section with main value proposition and CTAs
+ * - Services overview with interactive elements
+ * - Customer testimonials and case studies
+ * - Pricing section with regional adaptation
+ * - Contact form for lead generation
+ * - Company statistics and achievements
+ * - Video testimonials and company carousel
+ * - FAQ section and Odoo certification display
+ * - Performance monitoring and optimization
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements lazy loading for non-critical components
+ * - Preloads critical resources (images, fonts) for performance
+ * - Integrates with geolocation API for regional content
+ * - Uses framer-motion for animations and transitions
+ * - Implements performance monitoring and analytics
+ * - Responsive design with Tailwind CSS
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 // Preload critical resources
@@ -719,128 +755,128 @@ export default function HomePage() {
                                              </p>
                                         </div>
 
-                              {/* Timeline 1 - Scrolling Up */}
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[600px] relative">
+                                        {/* Timeline 1 - Scrolling Up */}
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-[600px] relative">
 
-                                   <div className="relative overflow-hidden rounded-2xl timeline-container">
-                                        <div className="flex flex-col space-y-6 animate-scroll-up">
-                                             {[...timeline1, ...timeline1].map((app, index) => {
-                                                  const cardKey = `timeline1-${index}`;
-                                                  if (hiddenTimelineCards.has(cardKey)) return null;
+                                             <div className="relative overflow-hidden rounded-2xl timeline-container">
+                                                  <div className="flex flex-col space-y-6 animate-scroll-up">
+                                                       {[...timeline1, ...timeline1].map((app, index) => {
+                                                            const cardKey = `timeline1-${index}`;
+                                                            if (hiddenTimelineCards.has(cardKey)) return null;
 
-                                                  return (
-                                                       <div
-                                                            key={cardKey}
-                                                            className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
-                                                       >
-                                                            <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                                                                 <img
-                                                                      src={app.icon}
-                                                                      alt={app.title}
-                                                                      className="w-12 h-12 object-contain"
-                                                                      onError={() => handleTimelineCardError(cardKey)}
-                                                                 />
-                                                            </div>
-                                                            <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
-                                                            <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
-                                                                 {app.description}
-                                                            </p>
-                                                            <div className="space-y-2">
-                                                                 {app.features.slice(0, 2).map((feature, i) => (
-                                                                      <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
-                                                                           <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                                           {feature}
+                                                            return (
+                                                                 <div
+                                                                      key={cardKey}
+                                                                      className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                                                                 >
+                                                                      <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
+                                                                           <img
+                                                                                src={app.icon}
+                                                                                alt={app.title}
+                                                                                className="w-12 h-12 object-contain"
+                                                                                onError={() => handleTimelineCardError(cardKey)}
+                                                                           />
                                                                       </div>
-                                                                 ))}
-                                                            </div>
-                                                       </div>
-                                                  );
-                                             })}
+                                                                      <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
+                                                                      <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
+                                                                           {app.description}
+                                                                      </p>
+                                                                      <div className="space-y-2">
+                                                                           {app.features.slice(0, 2).map((feature, i) => (
+                                                                                <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
+                                                                                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
+                                                                                     {feature}
+                                                                                </div>
+                                                                           ))}
+                                                                      </div>
+                                                                 </div>
+                                                            );
+                                                       })}
+                                                  </div>
+                                             </div>
+
+
+                                             <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
+                                                  <div className="flex flex-col space-y-6 animate-scroll-down">
+                                                       {[...timeline2, ...timeline2].map((app, index) => {
+                                                            const cardKey = `timeline2-${index}`;
+                                                            if (hiddenTimelineCards.has(cardKey)) return null;
+
+                                                            return (
+                                                                 <div
+                                                                      key={cardKey}
+                                                                      className="timeline-card bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                                                                 >
+                                                                      <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
+                                                                           <img
+                                                                                src={app.icon}
+                                                                                alt={app.title}
+                                                                                className="w-12 h-12 object-contain"
+                                                                                onError={() => handleTimelineCardError(cardKey)}
+                                                                           />
+                                                                      </div>
+                                                                      <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
+                                                                      <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
+                                                                           {app.description}
+                                                                      </p>
+                                                                      <div className="space-y-2">
+                                                                           {app.features.slice(0, 2).map((feature, i) => (
+                                                                                <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
+                                                                                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
+                                                                                     {feature}
+                                                                                </div>
+                                                                           ))}
+                                                                      </div>
+                                                                 </div>
+                                                            );
+                                                       })}
+                                                  </div>
+                                             </div>
+
+
+                                             <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
+                                                  <div className="flex flex-col space-y-6 animate-scroll-up-slow">
+                                                       {[...timeline3, ...timeline3].map((app, index) => {
+                                                            const cardKey = `timeline3-${index}`;
+                                                            if (hiddenTimelineCards.has(cardKey)) return null;
+
+                                                            return (
+                                                                 <div
+                                                                      key={cardKey}
+                                                                      className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
+                                                                 >
+                                                                      <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
+                                                                           <img
+                                                                                src={app.icon}
+                                                                                alt={app.title}
+                                                                                className="w-12 h-12 object-contain"
+                                                                                onError={() => handleTimelineCardError(cardKey)}
+                                                                           />
+                                                                      </div>
+                                                                      <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
+                                                                      <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
+                                                                           {app.description}
+                                                                      </p>
+                                                                      <div className="space-y-2">
+                                                                           {app.features.slice(0, 2).map((feature, i) => (
+                                                                                <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
+                                                                                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
+                                                                                     {feature}
+                                                                                </div>
+                                                                           ))}
+                                                                      </div>
+                                                                 </div>
+                                                            );
+                                                       })}
+                                                  </div>
+                                             </div>
+
+
+                                             <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none"></div>
+                                             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none"></div>
                                         </div>
                                    </div>
-
-
-                                   <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
-                                        <div className="flex flex-col space-y-6 animate-scroll-down">
-                                             {[...timeline2, ...timeline2].map((app, index) => {
-                                                  const cardKey = `timeline2-${index}`;
-                                                  if (hiddenTimelineCards.has(cardKey)) return null;
-
-                                                  return (
-                                                       <div
-                                                            key={cardKey}
-                                                            className="timeline-card bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
-                                                       >
-                                                            <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                                                                 <img
-                                                                      src={app.icon}
-                                                                      alt={app.title}
-                                                                      className="w-12 h-12 object-contain"
-                                                                      onError={() => handleTimelineCardError(cardKey)}
-                                                                 />
-                                                            </div>
-                                                            <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
-                                                            <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
-                                                                 {app.description}
-                                                            </p>
-                                                            <div className="space-y-2">
-                                                                 {app.features.slice(0, 2).map((feature, i) => (
-                                                                      <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
-                                                                           <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                                           {feature}
-                                                                      </div>
-                                                                 ))}
-                                                            </div>
-                                                       </div>
-                                                  );
-                                             })}
-                                        </div>
-                                   </div>
-
-
-                                   <div className="relative overflow-hidden rounded-2xl timeline-container hidden md:block">
-                                        <div className="flex flex-col space-y-6 animate-scroll-up-slow">
-                                             {[...timeline3, ...timeline3].map((app, index) => {
-                                                  const cardKey = `timeline3-${index}`;
-                                                  if (hiddenTimelineCards.has(cardKey)) return null;
-
-                                                  return (
-                                                       <div
-                                                            key={cardKey}
-                                                            className="timeline-card bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 hover:border-[var(--color-secondary)] transition-all duration-300 hover:shadow-lg group min-h-[200px] flex flex-col text-center"
-                                                       >
-                                                            <div className="mb-4 group-hover:scale-110 transition-transform duration-300 flex justify-center">
-                                                                 <img
-                                                                      src={app.icon}
-                                                                      alt={app.title}
-                                                                      className="w-12 h-12 object-contain"
-                                                                      onError={() => handleTimelineCardError(cardKey)}
-                                                                 />
-                                                            </div>
-                                                            <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
-                                                            <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
-                                                                 {app.description}
-                                                            </p>
-                                                            <div className="space-y-2">
-                                                                 {app.features.slice(0, 2).map((feature, i) => (
-                                                                      <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
-                                                                           <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                                           {feature}
-                                                                      </div>
-                                                                 ))}
-                                                            </div>
-                                                       </div>
-                                                  );
-                                             })}
-                                        </div>
-                                   </div>
-
-
-                                   <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none"></div>
-                                   <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent z-10 pointer-events-none"></div>
-                              </div>
-                         </div>
-                    </section>
+                              </section>
                          </>
                     )}
 
@@ -848,263 +884,263 @@ export default function HomePage() {
                     {renderPhase === 'below-fold' && (
                          <>
 
-                    {/* SECTION 3: Video Testimonials - HomePage */}
+                              {/* SECTION 3: Video Testimonials - HomePage */}
 
-                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
+                              <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
 
-                    {/* SECTION 4: Services Section - HomePage */}
-                    <ServicesSection servicesData={homePageData?.services} />
+                              {/* SECTION 4: Services Section - HomePage */}
+                              <ServicesSection servicesData={homePageData?.services} />
 
-                    {/* SECTION 5: Odoo Certification - HomePage */}
-                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                         <LazyOdooCertificationSection certificationData={homePageData?.certification} />
-                    </Suspense>
+                              {/* SECTION 5: Odoo Certification - HomePage */}
+                              <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                                   <LazyOdooCertificationSection certificationData={homePageData?.certification} />
+                              </Suspense>
 
-                    {/* SECTION 6: Pricing Section - HomePage */}
-                    <section id="pricing">
-                         <PricingSection pricingData={homePageData?.pricing} />
-                    </section>
-                    {/* SECTION 7: Our Agency - HomePage */}
-                    <section className="py-20 bg-white" id="team">
-                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                              <div className="text-center mb-12">
-                                   <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">Blackswan technology </div>
-                                   <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                        {homePageData?.partnership?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
-                                   </h2>
-                                   <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                        {homePageData?.partnership?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
-                                   </p>
-                              </div>
-                              <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
-
-                                   <div className="relative w-full md:w-1/2 flex justify-center group">
-                                        <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg transform transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:-rotate-1">
-                                             <div className="relative overflow-hidden">
-                                                  <Image
-                                                       src={homePageData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
-                                                       alt="Notre équipe"
-                                                       width={600}
-                                                       height={350}
-                                                       className="object-cover w-full h-72 md:h-80 transition-transform duration-700 group-hover:scale-110"
-                                                       onError={(e) => {
-                                                            e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
-                                                       }}
-                                                  />
-                                                  {/* Gradient overlay on hover */}
-                                                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                                  {/* Subtle border glow */}
-                                                  <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-[var(--color-secondary)]/30 transition-all duration-500"></div>
-                                             </div>
-                                        </div>
-                                   </div>
-
-                                   <div className="w-full md:w-1/2 flex flex-col gap-6">
-                                        {homePageData?.partnership?.features ? (
-                                             homePageData.partnership.features.map((feature: any, index: number) => (
-                                                  <div key={index} className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                                       {feature.icon === 'BadgeCheck' && <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />}
-                                                       {feature.icon === 'Users' && <Users className="w-8 h-8 text-[var(--color-secondary)]" />}
-                                                       {feature.icon === 'Clock' && <Clock className="w-8 h-8 text-[var(--color-secondary)]" />}
-                                                       {feature.icon === 'Star' && <Star className="w-8 h-8 text-[var(--color-secondary)]" />}
-                                                       <div>
-                                                            <div className="font-bold text-lg text-gray-900">{feature.title}</div>
-                                                            <div className="text-gray-500 text-sm">{feature.description}</div>
-                                                       </div>
-                                                  </div>
-                                             ))
-                                        ) : (
-                                             <>
-                                                  <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                                       <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />
-                                                       <div>
-                                                            <div className="font-bold text-lg text-gray-900">Partenaire Silver Odoo</div>
-                                                       </div>
-                                                  </div>
-                                                  <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                                       <Users className="w-8 h-8 text-[var(--color-secondary)]" />
-                                                       <div>
-                                                            <div className="font-bold text-lg text-gray-900">Équipe certifiée</div>
-                                                            <div className="text-gray-500 text-sm">100% de nos consultants sont certifiés Odoo</div>
-                                                       </div>
-                                                  </div>
-                                                  <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                                       <Clock className="w-8 h-8 text-[var(--color-secondary)]" />
-                                                       <div>
-                                                            <div className="font-bold text-lg text-gray-900">Support réactif</div>
-                                                            <div className="text-gray-500 text-sm">Réponse garantie sous 4h en journée</div>
-                                                       </div>
-                                                  </div>
-                                                  <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
-                                                       <Star className="w-8 h-8 text-[var(--color-secondary)]" />
-                                                       <div>
-                                                            <div className="font-bold text-lg text-gray-900">Excellence reconnue</div>
-                                                            <div className="text-gray-500 text-sm">99% de satisfaction client sur tous nos projets</div>
-                                                       </div>
-                                                  </div>
-                                             </>
-                                        )}
-                                   </div>
-                              </div>
-
-                         </div>
-                    </section>
-
-                    {/* SECTION 8: Testimonials - HomePage */}
-                    {homePageData &&
-                         homePageData.testimonials &&
-                         Array.isArray(homePageData.testimonials) &&
-                         homePageData.testimonials.length > 0 &&
-                         filteredTestimonials.length > 0 &&
-                         availableTestimonials.length > 0 && (
-                              <section className="py-20 bg-white" id="testimonials">
+                              {/* SECTION 6: Pricing Section - HomePage */}
+                              <section id="pricing">
+                                   <PricingSection pricingData={homePageData?.pricing} />
+                              </section>
+                              {/* SECTION 7: Our Agency - HomePage */}
+                              <section className="py-20 bg-white" id="team">
                                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                                         <div className="text-center mb-12">
-                                             <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
+                                             <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">Blackswan technology </div>
                                              <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                                                  {homePageData?.testimonialsSection?.description || 'Nos clients témoignent'}
+                                                  {homePageData?.partnership?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
                                              </h2>
-                                             <p className="text-lg text-gray-600">
-                                                  {homePageData?.testimonialsSection?.subdescription || 'Découvrez pourquoi nos clients nous recommandent'}
+                                             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                                  {homePageData?.partnership?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
                                              </p>
                                         </div>
+                                        <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
 
-                                        {/* Navigation and Content Container */}
-                                        <div className="relative">
-                                             {/* Navigation Buttons - Only show when there are multiple testimonials */}
-                                             {filteredTestimonials.length > 1 && (
-                                                  <>
-                                                       <div className="absolute top-1/2 left-0 -translate-y-1/2 z-10">
-                                                            <button
-                                                                 onClick={prevTestimonial}
-                                                                 className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
-                                                                 aria-label="Témoignages précédents"
-                                                            >
-                                                                 <ChevronLeft className="w-6 h-6 text-gray-600" />
-                                                            </button>
+                                             <div className="relative w-full md:w-1/2 flex justify-center group">
+                                                  <div className="rounded-2xl overflow-hidden shadow-xl w-full max-w-lg transform transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:-rotate-1">
+                                                       <div className="relative overflow-hidden">
+                                                            <Image
+                                                                 src={homePageData?.partnership?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"}
+                                                                 alt="Notre équipe"
+                                                                 width={600}
+                                                                 height={350}
+                                                                 className="object-cover w-full h-72 md:h-80 transition-transform duration-700 group-hover:scale-110"
+                                                                 onError={(e) => {
+                                                                      e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
+                                                                 }}
+                                                            />
+                                                            {/* Gradient overlay on hover */}
+                                                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                                            {/* Subtle border glow */}
+                                                            <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-[var(--color-secondary)]/30 transition-all duration-500"></div>
                                                        </div>
-
-                                                       <div className="absolute top-1/2 right-0 -translate-y-1/2 z-10">
-                                                            <button
-                                                                 onClick={nextTestimonial}
-                                                                 className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
-                                                                 aria-label="Témoignages suivants"
-                                                            >
-                                                                 <ChevronRight className="w-6 h-6 text-gray-600" />
-                                                            </button>
-                                                       </div>
-                                                  </>
-                                             )}
-
-                                             {/* Content Area with Proper Padding for Buttons */}
-                                             <div className={filteredTestimonials.length > 1 ? "px-16 md:px-20" : "px-4"}>
-                                                  {/* Desktop: Show 3 testimonials */}
-                                                  <div className="hidden md:grid grid-cols-3 gap-6 lg:gap-8">
-                                                       {filteredTestimonials.length > 0 ? [0, 1, 2].map((offset) => {
-                                                            if (filteredTestimonials.length === 0) return null;
-                                                            const testimonialIndex = (currentTestimonialIndex + offset) % filteredTestimonials.length;
-                                                            const testimonial = filteredTestimonials[testimonialIndex];
-                                                            if (!testimonial) return null;
-
-                                                            return (
-                                                                 <div
-                                                                      key={`desktop-${testimonial._id}-${currentTestimonialIndex}-${offset}`}
-                                                                      className="bg-white rounded-xl p-6 lg:p-8 flex flex-col shadow-lg border border-gray-200 h-full transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
-                                                                 >
-                                                                      {/* Stars */}
-                                                                      <div className="flex items-center mb-4">
-                                                                           {[...Array(5)].map((_, i) => (
-                                                                                <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
-                                                                           ))}
-                                                                      </div>
-
-                                                                      {/* Quote */}
-                                                                      <blockquote className="italic text-gray-900 mb-6 flex-1 leading-relaxed">"{testimonial.quote}"</blockquote>
-
-                                                                      <div className="border-t border-gray-100 my-4"></div>
-
-                                                                      {/* Author */}
-                                                                      <div className="flex items-center gap-4 mt-auto">
-                                                                           {testimonial._id && renderAvatar(testimonial._id)}
-                                                                           <div className="flex-1 min-w-0">
-                                                                                <div className="flex items-center gap-2 flex-wrap">
-                                                                                     <div className="font-bold text-gray-900 truncate">{testimonial.name}</div>
-                                                                                     <div className="text-sm text-gray-500">•</div>
-                                                                                     <div className="text-sm text-gray-500 truncate">{testimonial.role}</div>
-                                                                                </div>
-                                                                                {testimonial.company && (
-                                                                                     <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1 truncate">{testimonial.company}</div>
-                                                                                )}
-                                                                           </div>
-                                                                      </div>
-                                                                 </div>
-                                                            );
-                                                       }) : (
-                                                            <div className="col-span-3 text-center py-12">
-                                                                 <p className="text-gray-500">Aucun témoignage disponible pour votre région.</p>
-                                                            </div>
-                                                       )}
-                                                  </div>
-
-                                                  {/* Mobile: Show 1 testimonial */}
-                                                  <div className="md:hidden">
-                                                       {filteredTestimonials.length > 0 ? (() => {
-                                                            if (filteredTestimonials.length === 0 || currentTestimonialIndex >= filteredTestimonials.length) return null;
-                                                            const testimonial = filteredTestimonials[currentTestimonialIndex];
-                                                            if (!testimonial) return null;
-
-                                                            return (
-                                                                 <div
-                                                                      key={`mobile-${testimonial._id}-${currentTestimonialIndex}`}
-                                                                      className="bg-white rounded-xl p-6 flex flex-col shadow-lg border border-gray-200 w-full max-w-lg mx-auto"
-                                                                 >
-                                                                      {/* Stars */}
-                                                                      <div className="flex items-center mb-4">
-                                                                           {[...Array(5)].map((_, i) => (
-                                                                                <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
-                                                                           ))}
-                                                                      </div>
-
-                                                                      {/* Quote */}
-                                                                      <blockquote className="italic text-gray-900 mb-6 leading-relaxed">"{testimonial.quote}"</blockquote>
-
-                                                                      <div className="border-t border-gray-100 my-4"></div>
-
-                                                                      {/* Author */}
-                                                                      <div className="flex items-center gap-4 mt-auto">
-                                                                           {testimonial._id && renderAvatar(testimonial._id)}
-                                                                           <div className="flex-1 min-w-0">
-                                                                                <div className="flex items-center gap-2 flex-wrap">
-                                                                                     <div className="font-bold text-gray-900 truncate">{testimonial.name}</div>
-                                                                                     <div className="text-sm text-gray-500">•</div>
-                                                                                     <div className="text-sm text-gray-500 truncate">{testimonial.role}</div>
-                                                                                </div>
-                                                                                {testimonial.company && (
-                                                                                     <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1 truncate">{testimonial.company}</div>
-                                                                                )}
-                                                                           </div>
-                                                                      </div>
-                                                                 </div>
-                                                            );
-                                                       })() : (
-                                                            <div className="text-center py-12">
-                                                                 <p className="text-gray-500">Aucun témoignage disponible pour votre région.</p>
-                                                            </div>
-                                                       )}
                                                   </div>
                                              </div>
+
+                                             <div className="w-full md:w-1/2 flex flex-col gap-6">
+                                                  {homePageData?.partnership?.features ? (
+                                                       homePageData.partnership.features.map((feature: any, index: number) => (
+                                                            <div key={index} className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                                 {feature.icon === 'BadgeCheck' && <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                                 {feature.icon === 'Users' && <Users className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                                 {feature.icon === 'Clock' && <Clock className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                                 {feature.icon === 'Star' && <Star className="w-8 h-8 text-[var(--color-secondary)]" />}
+                                                                 <div>
+                                                                      <div className="font-bold text-lg text-gray-900">{feature.title}</div>
+                                                                      <div className="text-gray-500 text-sm">{feature.description}</div>
+                                                                 </div>
+                                                            </div>
+                                                       ))
+                                                  ) : (
+                                                       <>
+                                                            <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                                 <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                                 <div>
+                                                                      <div className="font-bold text-lg text-gray-900">Partenaire Silver Odoo</div>
+                                                                 </div>
+                                                            </div>
+                                                            <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                                 <Users className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                                 <div>
+                                                                      <div className="font-bold text-lg text-gray-900">Équipe certifiée</div>
+                                                                      <div className="text-gray-500 text-sm">100% de nos consultants sont certifiés Odoo</div>
+                                                                 </div>
+                                                            </div>
+                                                            <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                                 <Clock className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                                 <div>
+                                                                      <div className="font-bold text-lg text-gray-900">Support réactif</div>
+                                                                      <div className="text-gray-500 text-sm">Réponse garantie sous 4h en journée</div>
+                                                                 </div>
+                                                            </div>
+                                                            <div className="bg-white rounded-xl shadow p-6 flex items-start gap-4">
+                                                                 <Star className="w-8 h-8 text-[var(--color-secondary)]" />
+                                                                 <div>
+                                                                      <div className="font-bold text-lg text-gray-900">Excellence reconnue</div>
+                                                                      <div className="text-gray-500 text-sm">99% de satisfaction client sur tous nos projets</div>
+                                                                 </div>
+                                                            </div>
+                                                       </>
+                                                  )}
+                                             </div>
                                         </div>
+
                                    </div>
                               </section>
-                         )}
 
-                    {/* SECTION 9: Contact Section - HomePage */}
-                    <ContactSection contactData={homePageData?.contact} />
+                              {/* SECTION 8: Testimonials - HomePage */}
+                              {homePageData &&
+                                   homePageData.testimonials &&
+                                   Array.isArray(homePageData.testimonials) &&
+                                   homePageData.testimonials.length > 0 &&
+                                   filteredTestimonials.length > 0 &&
+                                   availableTestimonials.length > 0 && (
+                                        <section className="py-20 bg-white" id="testimonials">
+                                             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                                                  <div className="text-center mb-12">
+                                                       <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">TÉMOIGNAGES</div>
+                                                       <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                                                            {homePageData?.testimonialsSection?.description || 'Nos clients témoignent'}
+                                                       </h2>
+                                                       <p className="text-lg text-gray-600">
+                                                            {homePageData?.testimonialsSection?.subdescription || 'Découvrez pourquoi nos clients nous recommandent'}
+                                                       </p>
+                                                  </div>
 
-                    {/* SECTION 10: FAQ Section - HomePage */}
-                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                         <LazyFAQSection faqData={homePageData?.faq} />
-                    </Suspense>
+                                                  {/* Navigation and Content Container */}
+                                                  <div className="relative">
+                                                       {/* Navigation Buttons - Only show when there are multiple testimonials */}
+                                                       {filteredTestimonials.length > 1 && (
+                                                            <>
+                                                                 <div className="absolute top-1/2 left-0 -translate-y-1/2 z-10">
+                                                                      <button
+                                                                           onClick={prevTestimonial}
+                                                                           className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
+                                                                           aria-label="Témoignages précédents"
+                                                                      >
+                                                                           <ChevronLeft className="w-6 h-6 text-gray-600" />
+                                                                      </button>
+                                                                 </div>
+
+                                                                 <div className="absolute top-1/2 right-0 -translate-y-1/2 z-10">
+                                                                      <button
+                                                                           onClick={nextTestimonial}
+                                                                           className="w-12 h-12 bg-white rounded-full shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all duration-300 hover:scale-110 hover:shadow-xl flex-shrink-0"
+                                                                           aria-label="Témoignages suivants"
+                                                                      >
+                                                                           <ChevronRight className="w-6 h-6 text-gray-600" />
+                                                                      </button>
+                                                                 </div>
+                                                            </>
+                                                       )}
+
+                                                       {/* Content Area with Proper Padding for Buttons */}
+                                                       <div className={filteredTestimonials.length > 1 ? "px-16 md:px-20" : "px-4"}>
+                                                            {/* Desktop: Show 3 testimonials */}
+                                                            <div className="hidden md:grid grid-cols-3 gap-6 lg:gap-8">
+                                                                 {filteredTestimonials.length > 0 ? [0, 1, 2].map((offset) => {
+                                                                      if (filteredTestimonials.length === 0) return null;
+                                                                      const testimonialIndex = (currentTestimonialIndex + offset) % filteredTestimonials.length;
+                                                                      const testimonial = filteredTestimonials[testimonialIndex];
+                                                                      if (!testimonial) return null;
+
+                                                                      return (
+                                                                           <div
+                                                                                key={`desktop-${testimonial._id}-${currentTestimonialIndex}-${offset}`}
+                                                                                className="bg-white rounded-xl p-6 lg:p-8 flex flex-col shadow-lg border border-gray-200 h-full transform transition-all duration-700 ease-out hover:shadow-xl hover:-translate-y-2"
+                                                                           >
+                                                                                {/* Stars */}
+                                                                                <div className="flex items-center mb-4">
+                                                                                     {[...Array(5)].map((_, i) => (
+                                                                                          <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
+                                                                                     ))}
+                                                                                </div>
+
+                                                                                {/* Quote */}
+                                                                                <blockquote className="italic text-gray-900 mb-6 flex-1 leading-relaxed">"{testimonial.quote}"</blockquote>
+
+                                                                                <div className="border-t border-gray-100 my-4"></div>
+
+                                                                                {/* Author */}
+                                                                                <div className="flex items-center gap-4 mt-auto">
+                                                                                     {testimonial._id && renderAvatar(testimonial._id)}
+                                                                                     <div className="flex-1 min-w-0">
+                                                                                          <div className="flex items-center gap-2 flex-wrap">
+                                                                                               <div className="font-bold text-gray-900 truncate">{testimonial.name}</div>
+                                                                                               <div className="text-sm text-gray-500">•</div>
+                                                                                               <div className="text-sm text-gray-500 truncate">{testimonial.role}</div>
+                                                                                          </div>
+                                                                                          {testimonial.company && (
+                                                                                               <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1 truncate">{testimonial.company}</div>
+                                                                                          )}
+                                                                                     </div>
+                                                                                </div>
+                                                                           </div>
+                                                                      );
+                                                                 }) : (
+                                                                      <div className="col-span-3 text-center py-12">
+                                                                           <p className="text-gray-500">Aucun témoignage disponible pour votre région.</p>
+                                                                      </div>
+                                                                 )}
+                                                            </div>
+
+                                                            {/* Mobile: Show 1 testimonial */}
+                                                            <div className="md:hidden">
+                                                                 {filteredTestimonials.length > 0 ? (() => {
+                                                                      if (filteredTestimonials.length === 0 || currentTestimonialIndex >= filteredTestimonials.length) return null;
+                                                                      const testimonial = filteredTestimonials[currentTestimonialIndex];
+                                                                      if (!testimonial) return null;
+
+                                                                      return (
+                                                                           <div
+                                                                                key={`mobile-${testimonial._id}-${currentTestimonialIndex}`}
+                                                                                className="bg-white rounded-xl p-6 flex flex-col shadow-lg border border-gray-200 w-full max-w-lg mx-auto"
+                                                                           >
+                                                                                {/* Stars */}
+                                                                                <div className="flex items-center mb-4">
+                                                                                     {[...Array(5)].map((_, i) => (
+                                                                                          <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
+                                                                                     ))}
+                                                                                </div>
+
+                                                                                {/* Quote */}
+                                                                                <blockquote className="italic text-gray-900 mb-6 leading-relaxed">"{testimonial.quote}"</blockquote>
+
+                                                                                <div className="border-t border-gray-100 my-4"></div>
+
+                                                                                {/* Author */}
+                                                                                <div className="flex items-center gap-4 mt-auto">
+                                                                                     {testimonial._id && renderAvatar(testimonial._id)}
+                                                                                     <div className="flex-1 min-w-0">
+                                                                                          <div className="flex items-center gap-2 flex-wrap">
+                                                                                               <div className="font-bold text-gray-900 truncate">{testimonial.name}</div>
+                                                                                               <div className="text-sm text-gray-500">•</div>
+                                                                                               <div className="text-sm text-gray-500 truncate">{testimonial.role}</div>
+                                                                                          </div>
+                                                                                          {testimonial.company && (
+                                                                                               <div className="text-sm text-[var(--color-secondary)] font-semibold mt-1 truncate">{testimonial.company}</div>
+                                                                                          )}
+                                                                                     </div>
+                                                                                </div>
+                                                                           </div>
+                                                                      );
+                                                                 })() : (
+                                                                      <div className="text-center py-12">
+                                                                           <p className="text-gray-500">Aucun témoignage disponible pour votre région.</p>
+                                                                      </div>
+                                                                 )}
+                                                            </div>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        </section>
+                                   )}
+
+                              {/* SECTION 9: Contact Section - HomePage */}
+                              <ContactSection contactData={homePageData?.contact} />
+
+                              {/* SECTION 10: FAQ Section - HomePage */}
+                              <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                                   <LazyFAQSection faqData={homePageData?.faq} />
+                              </Suspense>
                          </>
                     )}
 

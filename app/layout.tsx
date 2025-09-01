@@ -1,8 +1,45 @@
+/**
+ * layout.tsx
+ * 
+ * Root layout component for the entire Next.js application. This is the main
+ * wrapper that provides global context, providers, and structure for all pages.
+ * It includes SEO metadata, performance monitoring, and global components.
+ * 
+ * WHERE IT'S USED:
+ * - Automatically wraps ALL pages in the application
+ * - Required by Next.js App Router architecture
+ * - Cannot be bypassed or disabled
+ * 
+ * KEY FEATURES:
+ * - Global SEO metadata and Open Graph tags
+ * - Performance monitoring and analytics
+ * - Theme provider for dark/light mode
+ * - Loading animations and route transitions
+ * - Structured data for search engines
+ * - Google Business Profile integration
+ * - Favicon and meta tag management
+ * - Global CSS and font optimization
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses Next.js App Router with TypeScript
+ * - Implements comprehensive SEO metadata
+ * - Includes performance monitoring components
+ * - Provides global context providers
+ * - Handles font loading optimization
+ * - Implements structured data for SEO
+ * - Supports internationalization (French locale)
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 import type { Metadata } from 'next'
 import './globals.css'
 import LayoutWrapper from '@/components/layout-wrapper'
 import { LoaderProvider, LoaderRouteListener } from '@/components/LoaderProvider'
-import StructuredData from '@/components/structured-data'
+import EnhancedStructuredData from '@/components/enhanced-structured-data'
+import GoogleBusinessProfile from '@/components/GoogleBusinessProfile'
 import { ThemeProvider } from '@/components/theme-provider'
 import FaviconProvider from '@/components/FaviconProvider'
 import SnippetsInjector from '@/components/SnippetsInjector'
@@ -99,11 +136,12 @@ export default function RootLayout({
         {/* Optimized font loading - only essential fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" 
-          rel="stylesheet" 
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
         />
-        <StructuredData />
+        <EnhancedStructuredData />
+        <GoogleBusinessProfile />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2563eb" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

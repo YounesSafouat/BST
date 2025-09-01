@@ -1,3 +1,40 @@
+/**
+ * ContactSection.tsx
+ * 
+ * Main contact form component with advanced lead tracking and user behavior analysis.
+ * This component is the core contact form used across the website for lead generation
+ * and customer inquiries. It automatically detects user location and provides
+ * country-specific phone number formatting and validation.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/app/page.tsx) - Main contact section
+ * - About page (/app/about/page.tsx) - Contact form section
+ * - Odoo page (/app/odoo-article/page.tsx) - Contact form section
+ * - Any other page that needs a contact form
+ * 
+ * KEY FEATURES:
+ * - Multi-country phone number support with automatic geolocation detection
+ * - Real-time form validation with country-specific phone rules
+ * - Partial lead storage - saves user progress as they type
+ * - User behavior tracking (scroll depth, time on page, button clicks, mouse movements)
+ * - Automatic partial lead submission to HubSpot after 30 minutes of inactivity
+ * - LocalStorage progress persistence for better user experience
+ * - Smart lead qualification based on user engagement metrics
+ * - Automatic country detection based on IP geolocation
+ * - Support for 50+ countries with proper phone formatting
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses framer-motion for smooth animations
+ * - Integrates with HubSpot CRM via API endpoints
+ * - Stores partial leads in MongoDB database
+ * - Implements progressive form completion tracking
+ * - Handles form abandonment scenarios intelligently
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 import React, { useState, useEffect, useRef, useCallback } from "react"
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -44,6 +81,11 @@ interface ContactSectionProps {
      contactData?: ContactData;
 }
 
+/**
+ * ContactSection - Main contact form component with lead tracking
+ * @param contactData - Optional contact form configuration data
+ * @returns Contact form with user behavior tracking and partial lead storage
+ */
 export default function ContactSection({ contactData }: ContactSectionProps) {
      const [formData, setFormData] = useState({
           name: '',
@@ -68,11 +110,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      const [submitError, setSubmitError] = useState('');
      const { toast } = useToast();
 
-     // Performance-optimized timer system
      const partialLeadTimer = useRef<NodeJS.Timeout | null>(null);
      const localStorageKey = 'contact_progress';
 
-     // User behavior tracking for better lead qualification
      const [userBehavior, setUserBehavior] = useState({
           pagesVisited: [] as string[],
           timeOnPage: 0,
@@ -87,7 +127,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
      const { region, country, loading: geolocationLoading, countryCode, city } = useGeolocation();
 
-     // Debug: Monitor geolocation data
      useEffect(() => {
           console.log('=== GEOLOCATION DEBUG ===');
           console.log('Geolocation data changed:', { region, country, geolocationLoading, countryCode, city });
@@ -96,7 +135,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           console.log('========================');
      }, [region, country, geolocationLoading, countryCode, city, selectedCountry]);
 
-     // Cleanup timer on component unmount to prevent memory leaks
      useEffect(() => {
           return () => {
                if (partialLeadTimer.current) {
@@ -106,16 +144,13 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           };
      }, []);
 
-     // Debug: Monitor form data changes
      useEffect(() => {
           console.log('Form data changed:', formData);
      }, [formData]);
 
-     // Force re-render when form data changes
      const [, forceUpdate] = useState({});
      const triggerReRender = () => forceUpdate({});
 
-     // Track user behavior for better lead qualification
      useEffect(() => {
           // Track current page
           const currentPage = window.location.pathname;
@@ -149,18 +184,16 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                form.addEventListener('focus', trackFormInteraction);
           }
 
-          // Load existing progress from LocalStorage on page refresh
           try {
                const existingProgress = localStorage.getItem(localStorageKey);
                if (existingProgress) {
                     const progress = JSON.parse(existingProgress);
                     console.log('Found existing progress in LocalStorage:', progress);
 
-                    // If form was completed, clear the progress and reset form
                     if (progress.formCompleted) {
                          console.log('Form was previously completed, clearing progress and resetting form');
                          clearProgressFromLocalStorage();
-                         setIsSubmitted(false); // Ensure form is not marked as submitted
+                         setIsSubmitted(false);
                          setFormData({
                               name: '',
                               firstname: '',
@@ -172,10 +205,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                               countryCode: 'MA'
                          });
                     } else {
-                         // If form was not completed, restore the data but keep inputs editable
                          console.log('Restoring partial progress, keeping inputs editable');
 
-                         // Create a new form data object with existing progress
                          const restoredFormData = {
                               name: progress.name || '',
                               firstname: progress.firstname || (progress.name ? progress.name.split(' ')[0] : '') || '',
@@ -190,7 +221,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          console.log('Restoring form data:', restoredFormData);
                          setFormData(restoredFormData);
 
-                         // If phone number exists, ensure it has the correct country code
                          if (progress.phone && !progress.phone.startsWith(selectedCountry.dialCode)) {
                               console.log('Fixing phone number country code');
                               const phoneWithoutCountry = progress.phone.replace(/^\+?\d+\s*/, '');
@@ -198,7 +228,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                               setFormData(prev => ({ ...prev, phone: correctedPhone }));
                          }
 
-                         // Also update LocalStorage with current timestamp
                          const updatedProgress = {
                               ...progress,
                               timestamp: Date.now()
@@ -209,35 +238,29 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           } catch (error) {
                console.log('Error loading LocalStorage progress:', error);
                clearProgressFromLocalStorage();
-               setIsSubmitted(false); // Ensure form is not marked as submitted
+               setIsSubmitted(false);
           }
 
-          // Track button clicks globally
           const trackButtonClick = (event: MouseEvent) => {
                const target = event.target as HTMLElement;
                let buttonText = target.textContent?.trim() || target.getAttribute('aria-label') || '';
 
-               // Only track if it's actually a button or link
                const isButton = target.closest('button') || target.closest('a') || target.closest('[role="button"]');
                if (!isButton) return;
 
-               // Clean up button text - remove excessive whitespace and limit length
                buttonText = buttonText.replace(/\s+/g, ' ').trim();
 
-               // Skip if button text is too long (likely page content, not a button)
                if (buttonText.length > 100) return;
 
-               // Skip if button text is empty
                if (!buttonText) return;
 
                const currentPage = window.location.pathname;
 
-               // Track specific button types
                let buttonType = 'other';
                if (buttonText.toLowerCase().includes('appel') || buttonText.toLowerCase().includes('call') || target.closest('a[href^="tel:"]')) {
                     buttonType = 'call';
                } else if (buttonText.toLowerCase().includes('whatsapp') || target.closest('a[href*="wa.me"]')) {
-                    buttonType = 'whatsapp';
+                    buttonType = 'navigation';
                } else if (target.closest('button') || target.closest('a')) {
                     buttonType = 'navigation';
                }
@@ -255,7 +278,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                }));
           };
 
-          // Track scroll depth
           const trackScroll = () => {
                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -268,11 +290,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                }));
           };
 
-          // Track mouse movements (engagement indicator)
           let mouseMoveCount = 0;
           const trackMouseMove = () => {
                mouseMoveCount++;
-               if (mouseMoveCount % 10 === 0) { // Update every 10 movements to avoid spam
+               if (mouseMoveCount % 10 === 0) {
                     setUserBehavior(prev => ({
                          ...prev,
                          mouseMovements: mouseMoveCount,
@@ -281,12 +302,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                }
           };
 
-          // Add event listeners
           document.addEventListener('click', trackButtonClick);
           document.addEventListener('scroll', trackScroll);
           document.addEventListener('mousemove', trackMouseMove);
 
-          // Cleanup
           return () => {
                clearInterval(interval);
                if (form) {
@@ -299,13 +318,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           };
      }, []);
 
-     // Clear phone input when country changes
      useEffect(() => {
           setFormData(prev => ({ ...prev, phone: '' }));
           setErrors(prev => ({ ...prev, phone: '' }));
      }, [selectedCountry.code]);
 
-     // Auto-detect country based on geolocation
      useEffect(() => {
           console.log('=== COUNTRY DETECTION DEBUG ===');
           console.log('Country detection useEffect triggered:', { geolocationLoading, countryCode, region, city });
@@ -1179,7 +1196,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      }, [countryCode, geolocationLoading, region, city]);
 
-     // LocalStorage management for partial leads
+     /**
+      * Saves form progress to localStorage
+      * @param field - Field name to save
+      * @param value - Field value to save
+      */
      const saveProgressToLocalStorage = (field: string, value: string) => {
           try {
                console.log(`saveProgressToLocalStorage called for ${field}:`, value);
@@ -1212,21 +1233,22 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
-     // Generate French description of user behavior for sales team
+     /**
+      * Generates French description of user behavior for sales team
+      * @returns Formatted behavior analysis string
+      */
      const generateBehaviorDescription = () => {
           const minutes = Math.floor(userBehavior.timeOnPage / 60000);
           const seconds = Math.floor((userBehavior.timeOnPage % 60000) / 1000);
 
           let description = `**Analyse détaillée du comportement utilisateur :**\n\n`;
 
-          // Time spent
           if (minutes > 0) {
                description += `⏱️ **Temps passé sur le site :** ${minutes} minute${minutes > 1 ? 's' : ''} et ${seconds} seconde${seconds > 1 ? 's' : ''}\n\n`;
           } else {
                description += `⏱️ **Temps passé sur le site :** ${seconds} seconde${seconds > 1 ? 's' : ''}\n\n`;
           }
 
-          // Pages visited with timestamps
           if (userBehavior.pagesVisited.length > 1) {
                const pageNames = userBehavior.pagesVisited.map(page => {
                     switch (page) {
@@ -1242,38 +1264,30 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                description += `📄 **Page consultée :** ${userBehavior.pagesVisited[0] === '/' ? 'Page d\'accueil' : userBehavior.pagesVisited[0]}\n\n`;
           }
 
-          // Form interactions
           if (userBehavior.formInteractions > 0) {
                description += `🎯 **Interactions avec le formulaire :** ${userBehavior.formInteractions} interaction${userBehavior.formInteractions > 1 ? 's' : ''}\n\n`;
           }
 
-          // Button clicks analysis
           if (userBehavior.buttonClicks.length > 0) {
                description += `🔘 **Boutons cliqués :** ${userBehavior.buttonClicks.length} clic${userBehavior.buttonClicks.length > 1 ? 's' : ''}\n`;
 
-               // Call button clicks
                if (userBehavior.callButtonClicks > 0) {
                     description += `📞 **Bouton d'appel utilisé :** ${userBehavior.callButtonClicks} fois - Utilisateur très intéressé !\n\n`;
                }
 
-               // WhatsApp button clicks
                if (userBehavior.whatsappButtonClicks > 0) {
                     description += `💬 **Bouton WhatsApp utilisé :** ${userBehavior.whatsappButtonClicks} fois - Préfère la communication directe\n\n`;
                }
 
-               // Recent button clicks (last 3) - Clean up the text
                const recentClicks = userBehavior.buttonClicks.slice(-3);
                if (recentClicks.length > 0) {
                     const clickDetails = recentClicks.map(click => {
-                         // Clean up button text - remove HTML-like content and long text
                          let cleanButtonText = click.button;
 
-                         // Remove very long button texts that seem like page content
                          if (cleanButtonText.length > 50) {
                               cleanButtonText = cleanButtonText.substring(0, 50) + '...';
                          }
 
-                         // Remove HTML-like content
                          cleanButtonText = cleanButtonText.replace(/<[^>]*>/g, '');
 
                          return `${cleanButtonText} (${click.page})`;
@@ -1283,7 +1297,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                }
           }
 
-          // Scroll depth analysis
           if (userBehavior.scrollDepth > 0) {
                if (userBehavior.scrollDepth > 80) {
                     description += `📜 **Profondeur de défilement :** ${userBehavior.scrollDepth}% - Utilisateur très engagé, a lu tout le contenu\n\n`;
@@ -1294,24 +1307,22 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                }
           }
 
-          // Mouse movements (engagement indicator)
           if (userBehavior.mouseMovements > 100) {
                description += `🖱️ **Mouvements de souris :** ${userBehavior.mouseMovements} - Utilisateur très actif et engagé\n\n`;
           } else if (userBehavior.mouseMovements > 50) {
                description += `🖱️ **Mouvements de souris :** ${userBehavior.mouseMovements} - Utilisateur modérément actif\n\n`;
           }
 
-          // Engagement level based on multiple factors
           let engagementScore = 0;
-          if (userBehavior.timeOnPage > 300000) engagementScore += 3; // 5+ minutes
-          else if (userBehavior.timeOnPage > 120000) engagementScore += 2; // 2+ minutes
+          if (userBehavior.timeOnPage > 300000) engagementScore += 3;
+          else if (userBehavior.timeOnPage > 120000) engagementScore += 2;
           else engagementScore += 1;
 
           if (userBehavior.scrollDepth > 80) engagementScore += 2;
           else if (userBehavior.scrollDepth > 50) engagementScore += 1;
 
-          if (userBehavior.callButtonClicks > 0) engagementScore += 3; // High intent
-          if (userBehavior.whatsappButtonClicks > 0) engagementScore += 2; // Medium intent
+          if (userBehavior.callButtonClicks > 0) engagementScore += 3;
+          if (userBehavior.whatsappButtonClicks > 0) engagementScore += 2;
           if (userBehavior.formInteractions > 5) engagementScore += 2;
 
           if (engagementScore >= 8) {
@@ -1324,7 +1335,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                description += `🔥 **Niveau d'engagement :** Faible - Utilisateur peu engagé\n`;
           }
 
-          // Last activity
           const lastActivityMinutes = Math.floor((Date.now() - userBehavior.lastActivity) / 60000);
           if (lastActivityMinutes < 5) {
                description += `🕐 **Dernière activité :** Il y a ${lastActivityMinutes} minute${lastActivityMinutes > 1 ? 's' : ''} - Utilisateur actuellement actif\n`;
@@ -1332,10 +1342,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                description += `🕐 **Dernière activité :** Il y a ${lastActivityMinutes} minutes - Utilisateur récemment actif\n`;
           }
 
-          // Sales recommendations
           description += `\n💡 **Recommandations commerciales :**\n`;
 
-          // Always provide at least one recommendation based on engagement level
           if (userBehavior.callButtonClicks > 0) {
                description += `• Appeler rapidement - Utilisateur a montré un intérêt immédiat\n`;
           } else if (userBehavior.whatsappButtonClicks > 0) {
@@ -1355,28 +1363,27 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           return description;
      };
 
-     // Store partial contact info for API calls
+     /**
+      * Stores partial contact info for API calls and lead tracking
+      * @param field - Field being updated
+      * @param value - New field value
+      */
      const storePartialContact = async (field: string, value: string) => {
           if (!value.trim()) return;
 
-          // Store for ALL fields, not just email and phone
           if (field !== 'firstname' && field !== 'lastname' && field !== 'email' && field !== 'phone' && field !== 'company' && field !== 'message') return;
 
-          // For email, ONLY store when it's completely valid (not partial)
           if (field === 'email') {
-               // Wait for complete email with proper domain
                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
                     console.log('Email not complete yet, skipping partial storage');
                     return;
                }
-               // Additional validation to ensure it's a real email format
                if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)) {
                     console.log('Email format not valid, skipping partial storage');
                     return;
                }
           }
 
-          // For phone, validate format
           if (field === 'phone' && !isPhoneValid(value)) {
                console.log('Phone not valid yet, skipping partial storage');
                return;
@@ -1384,25 +1391,20 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
           console.log(`Storing partial contact info for ${field}:`, value);
 
-          // Save to LocalStorage for immediate user experience
           saveProgressToLocalStorage(field, value);
 
-          // Update the combined name field when firstname or lastname changes
           if (field === 'firstname' || field === 'lastname') {
                const newName = `${formData.firstname || ''} ${formData.lastname || ''}`.trim();
                setFormData(prev => ({ ...prev, name: newName }));
 
-               // Also save the combined name to LocalStorage
                const existing = localStorage.getItem(localStorageKey);
                const progress = existing ? JSON.parse(existing) : {};
                progress.name = newName;
                localStorage.setItem(localStorageKey, JSON.stringify(progress));
           }
 
-          // Get current progress from LocalStorage
           const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
 
-          // Only call the API if we have email OR phone (required for lead tracking)
           if (!progress.email && !progress.phone) {
                console.log('No email or phone yet - saving to LocalStorage only, will call API later');
                return;
@@ -1412,23 +1414,18 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
           try {
                const partialData = {
-                    // Include ALL current data from Local Storage, not just the single field
-                    ...progress,  // This includes firstname, lastname, phone, etc.
-                    [field]: value,  // Update the specific field being changed
-                    // Ensure phone is properly formatted with country code
+                    ...progress,
+                    [field]: value,
                     phone: progress.phone ? ensurePhoneWithCountryCode(progress.phone) : progress.phone,
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
-                    // Add geolocation data
                     city: city || '',
                     source: 'website_contact_form',
                     page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
                     timestamp: Date.now(),
-                    // Include brief_description for better lead qualification
                     brief_description: generateBehaviorDescription()
                };
 
-               // Remove the old email/phone inclusion since we're now including everything from progress
                console.log('Sending partial data to API:', partialData);
 
                const response = await fetch('/api/contact/partial', {
@@ -1441,9 +1438,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     const result = await response.json();
                     console.log(`Partial contact info stored successfully for ${field}:`, result);
 
-                    // Check if we have enough data to start the 1-minute timer
                     if (progress.email || progress.phone) {
-                         // Start 1-minute timer for partial lead
                          startPartialLeadTimer();
                     }
                } else {
@@ -1454,7 +1449,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
-     // Fallback data if no data is provided
      const fallbackContactData: ContactData = {
           headline: "TRANSFORMONS ENSEMBLE",
           description: "Prêt à révolutionner votre entreprise ?",
@@ -1491,6 +1485,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
      const data = contactData || fallbackContactData;
 
+     /**
+      * Validates all form fields
+      * @returns true if form is valid, false otherwise
+      */
      const validateForm = () => {
           const newErrors: { [key: string]: string } = {};
 
@@ -1564,6 +1562,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           return Object.keys(newErrors).length === 0;
      };
 
+     /**
+      * Validates phone number format for selected country
+      * @param phoneNumber - Phone number to validate
+      * @returns true if valid, false otherwise
+      */
      const isPhoneValid = (phoneNumber: string) => {
           if (!phoneNumber.trim()) return false;
 
@@ -1588,6 +1591,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                /^[0-9\s\-\(\)]+$/.test(phoneWithoutCountry);
      };
 
+     /**
+      * Checks if form has minimum required data for submission
+      * @returns true if form can be submitted, false otherwise
+      */
      const isFormValid = () => {
           // Only require essential fields: name and email for basic submission
           const hasValidName = formData.name.trim().length >= 2;
@@ -1627,7 +1634,9 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           return basicValid && geolocationReady; // Require geolocation to be ready
      };
 
-     // Start 30-minute timer for partial lead (changed from 1 minute for production)
+     /**
+      * Starts 30-minute timer for partial lead tracking
+      */
      const startPartialLeadTimer = useCallback(() => {
           if (!isFormValid()) return;
 
@@ -1651,17 +1660,14 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                last_submission_date: new Date().toISOString().split('T')[0]
           };
 
-          // Clear existing timer to prevent memory leaks
           if (partialLeadTimer.current) {
                clearTimeout(partialLeadTimer.current);
           }
 
-          // Set 30-minute timer (30 * 60 * 1000 ms) for production
           partialLeadTimer.current = setTimeout(async () => {
                try {
                     console.log('30-minute timer expired, checking if form was completed...');
 
-                    // Check if form was already completed (safety check)
                     const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
                     if (progress.formCompleted) {
                          console.log('Form was already completed, skipping partial lead send');
@@ -1681,7 +1687,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          const result = await response.json();
                          console.log('Partial lead sent to HubSpot successfully:', result);
 
-                         // Update the existing database record to mark it as sent to HubSpot
                          if (result.submission && result.submission._id) {
                               try {
                                    const updateResponse = await fetch(`/api/contact/${result.submission._id}`, {
@@ -1705,7 +1710,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                               }
                          }
 
-                         // Clear LocalStorage after successful HubSpot sync
                          clearProgressFromLocalStorage();
                     } else {
                          const errorData = await response.json();
@@ -1717,7 +1721,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }, 30 * 60 * 1000);
      }, [formData, countryCode, city, isFormValid]);
 
-     // Helper function to ensure phone is properly formatted with country code
+     /**
+      * Ensures phone number has proper country code format
+      * @param phone - Phone number to format
+      * @returns Formatted phone number with country code
+      */
      const ensurePhoneWithCountryCode = (phone: string) => {
           if (!phone) return '';
 
@@ -1736,14 +1744,16 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           return `${selectedCountry.dialCode} ${phone}`;
      };
 
+     /**
+      * Handles country selection change
+      * @param country - Selected country object
+      */
      const handleCountryChange = (country: Country) => {
           setSelectedCountry(country);
 
-          // Clear phone input when country changes to avoid confusion
           setFormData(prev => ({ ...prev, phone: '' }));
           setErrors(prev => ({ ...prev, phone: '' }));
 
-          // Clear phone from LocalStorage when country changes
           try {
                const existing = localStorage.getItem(localStorageKey);
                if (existing) {
@@ -1756,17 +1766,19 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
+     /**
+      * Formats phone number with proper spacing
+      * @param value - Raw phone number input
+      * @returns Formatted phone number string
+      */
      const formatPhoneNumber = (value: string) => {
-          // Remove country code if it's already there
           let phoneNumber = value;
           if (phoneNumber.startsWith(selectedCountry.dialCode)) {
                phoneNumber = phoneNumber.substring(selectedCountry.dialCode.length);
           }
 
-          // Remove all non-digit characters
           const digits = phoneNumber.replace(/\D/g, '');
 
-          // Format based on length
           if (digits.length <= 2) {
                return digits;
           } else if (digits.length <= 4) {
@@ -1780,12 +1792,15 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
+     /**
+      * Handles phone number input changes with validation
+      * @param value - New phone number value
+      */
      const handlePhoneChange = (value: string) => {
           const formatted = formatPhoneNumber(value);
           const fullNumber = selectedCountry.dialCode + ' ' + formatted;
           handleInputChange('phone', fullNumber);
 
-          // Real-time validation for phone
           if (fullNumber.trim()) {
                if (!isPhoneValid(fullNumber)) {
                     const phoneWithoutCountry = fullNumber.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
@@ -1825,10 +1840,13 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
+     /**
+      * Handles form submission with validation and API calls
+      * @param e - Form submit event
+      */
      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
 
-          // Re-validate all fields before submission
           if (!validateForm()) {
                toast({
                     variant: "destructive",
@@ -1838,7 +1856,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                return;
           }
 
-          // Double-check phone validation right before submission
           if (!isPhoneValid(formData.phone)) {
                const phoneWithoutCountry = formData.phone.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
                let errorMessage = 'Le numéro de téléphone est invalide';
@@ -1875,24 +1892,17 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           setSubmitError('');
 
           try {
-               // Prepare the data for submission
                const submissionData = {
                     ...formData,
-                    // Ensure phone is properly formatted with country code
                     phone: ensurePhoneWithCountryCode(formData.phone),
                     countryCode: selectedCountry.code,
                     countryName: selectedCountry.name,
-                    // Add geolocation data
                     city: city || '',
-                    // Add source information for tracking - use dynamic values
                     source: 'website_contact_form',
                     page: window.location.pathname === '/' ? 'home' : window.location.pathname.replace('/', ''),
                     submitted_at: new Date().toISOString(),
-                    // Add user behavior data for better lead qualification
                     userBehavior: generateBehaviorDescription(),
-                    // Always include brief_description for HubSpot
                     brief_description: generateBehaviorDescription(),
-                    // Use separate firstname and lastname fields
                     firstname: formData.firstname || '',
                     lastname: formData.lastname || ''
                };
@@ -1901,7 +1911,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                console.log('Name fields - firstname:', formData.firstname, 'lastname:', formData.lastname, 'combined:', formData.name);
                console.log('Phone formatting - original:', formData.phone, 'formatted:', submissionData.phone, 'country code:', selectedCountry.dialCode);
                console.log('Phone formatting helper result:', ensurePhoneWithCountryCode(formData.phone));
-               // Use relative URL for better compatibility with different environments
                let response;
                try {
                     response = await fetch(`/api/contact`, {
@@ -1913,7 +1922,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     });
                } catch (fetchError) {
                     console.error('Fetch error:', fetchError);
-                    // Try test endpoint as fallback
                     try {
                          response = await fetch(`/api/test-contact`, {
                               method: 'POST',
@@ -1933,14 +1941,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     const result = await response.json();
                     console.log('Contact form submitted successfully:', result);
 
-                    // Clear partial lead timer and LocalStorage on successful submission
                     if (partialLeadTimer.current) {
                          clearTimeout(partialLeadTimer.current);
                          partialLeadTimer.current = null;
                          console.log('1-minute timer cleared - form completed successfully');
                     }
 
-                    // Mark form as completed in LocalStorage before clearing
                     try {
                          const progress = JSON.parse(localStorage.getItem(localStorageKey) || '{}');
                          progress.formCompleted = true;
@@ -1997,6 +2003,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           }
      };
 
+     /**
+      * Handles input field changes with validation and storage
+      * @param field - Field name being changed
+      * @param value - New field value
+      */
      const handleInputChange = (field: string, value: string) => {
           console.log(`=== INPUT CHANGE DEBUG ===`);
           console.log(`Field: ${field}`);
@@ -2009,12 +2020,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
           setFormData(newFormData);
 
-          // Clear error for this field if it exists
           if (errors[field]) {
                setErrors(prev => ({ ...prev, [field]: '' }));
           }
 
-          // Save to LocalStorage immediately
           try {
                const existing = localStorage.getItem(localStorageKey);
                const progress = existing ? JSON.parse(existing) : {};
@@ -2030,7 +2039,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                console.log(`Saving to LocalStorage:`, progress);
                localStorage.setItem(localStorageKey, JSON.stringify(progress));
 
-               // Verify save
                const saved = localStorage.getItem(localStorageKey);
                console.log(`Verification - saved:`, saved);
 
@@ -2038,7 +2046,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                console.error('LocalStorage error:', error);
           }
 
-          // Store partial contact info for API calls
           if (value.trim() && (field === 'name' || field === 'email' || field === 'phone' || field === 'company' || field === 'message')) {
                storePartialContact(field, value);
           }
@@ -2168,7 +2175,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                            console.log('Country changed to:', country);
                                                                            handleCountryChange(country);
 
-                                                                           // Store partial contact info for country change
                                                                            storePartialContact('countryCode', country.code);
                                                                       }}
                                                                  />

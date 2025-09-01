@@ -1,3 +1,37 @@
+/**
+ * PricingSection.tsx
+ * 
+ * Pricing section component that displays service plans and pricing information
+ * with regional adaptation. This component automatically filters pricing plans
+ * based on user location and displays region-specific offers.
+ * 
+ * WHERE IT'S USED:
+ * - Homepage (/components/home/HomePage.tsx) - Pricing section display
+ * - About page and other pages that need pricing information
+ * - Regional pricing adaptation for different markets
+ * 
+ * KEY FEATURES:
+ * - Dynamic pricing plan loading from props
+ * - Automatic region detection and plan filtering
+ * - Regional pricing adaptation (Morocco, France, International)
+ * - Responsive design with mobile optimization
+ * - Loading states and error handling
+ * - Call-to-action buttons for each plan
+ * - Feature list display for each pricing tier
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and hooks
+ * - Integrates with geolocation API for region detection
+ * - Implements framer-motion for animations
+ * - Uses Tailwind CSS for responsive design
+ * - Handles loading states and fallbacks
+ * - Implements conditional rendering based on user region
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";

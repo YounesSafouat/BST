@@ -1,3 +1,38 @@
+/**
+ * BlogPost.tsx
+ * 
+ * Individual blog post component that renders a single blog post with full content,
+ * navigation, and social sharing features. This component handles the display of
+ * blog post content, metadata, and related posts.
+ * 
+ * WHERE IT'S USED:
+ * - Blog post detail pages (/app/blog/[slug]/page.tsx) - Individual blog post view
+ * - Renders complete blog post content with formatting
+ * 
+ * KEY FEATURES:
+ * - Full blog post content rendering with HTML styling
+ * - Social media sharing functionality
+ * - Related posts navigation
+ * - Reading time estimation
+ * - Author information display
+ * - Category and tag management
+ * - Responsive image handling
+ * - SEO-optimized content structure
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements custom CSS-in-JS styling for blog content
+ * - Integrates with framer-motion for animations
+ * - Handles image URL processing and fallbacks
+ * - Implements social sharing functionality
+ * - Uses Next.js Link for navigation
+ * - Responsive design with Tailwind CSS
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"
