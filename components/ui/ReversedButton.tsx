@@ -12,10 +12,10 @@ interface ReversedButtonProps {
   icon?: React.ReactNode;
 }
 
-const ReversedButton: React.FC<ReversedButtonProps> = ({ 
-  text, 
-  onClick, 
-  className = '', 
+const ReversedButton: React.FC<ReversedButtonProps> = ({
+  text,
+  onClick,
+  className = '',
   type = 'button',
   width = '80px',
   height = '40px',
@@ -25,7 +25,7 @@ const ReversedButton: React.FC<ReversedButtonProps> = ({
   return (
     <StyledWrapper className={className}>
       <div>
-        <svg style={{position: 'absolute', width: 0, height: 0}}>
+        <svg style={{ position: 'absolute', width: 0, height: 0 }}>
           <filter width="3000%" x="-1000%" height="3000%" y="-1000%" id="unopaq">
             <feColorMatrix values="1 0 0 0 0 
             0 1 0 0 0 
@@ -34,11 +34,12 @@ const ReversedButton: React.FC<ReversedButtonProps> = ({
           </filter>
         </svg>
         <div className="backdrop" />
-        <button 
-          className="button" 
-          onClick={onClick} 
+        <button
+          className="button"
+          onClick={onClick}
           type={type}
           style={{ width, height, fontSize }}
+          aria-label={text || 'Bouton'}
         >
           <div className="a l" />
           <div className="a r" />
