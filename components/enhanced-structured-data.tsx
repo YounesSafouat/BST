@@ -1,3 +1,37 @@
+/**
+ * enhanced-structured-data.tsx
+ * 
+ * Enhanced structured data component that provides comprehensive Schema.org
+ * markup for different page types. This component automatically detects
+ * page context and generates appropriate structured data for SEO optimization.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Global structured data for all pages
+ * - Automatically included in every page through the root layout
+ * - Provides page-specific schema markup based on route
+ * 
+ * KEY FEATURES:
+ * - Automatic page type detection (home, blog, about, contact, services)
+ * - Dynamic structured data generation based on page context
+ * - Comprehensive business information schema markup
+ * - Service-specific structured data for Odoo and HubSpot pages
+ * - Contact information and business hours markup
+ * - Social media and service area integration
+ * - SEO optimization for search engines
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements Schema.org structured data markup
+ * - Dynamic page type detection using window.location
+ * - Fetches business data from /api/structured-data endpoint
+ * - Injects JSON-LD script tags for search engines
+ * - Handles multiple page types with appropriate schemas
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 
 import { useEffect, useState } from 'react';

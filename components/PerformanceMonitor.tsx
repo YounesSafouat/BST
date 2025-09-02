@@ -1,3 +1,36 @@
+/**
+ * PerformanceMonitor.tsx
+ * 
+ * Performance monitoring component that tracks Core Web Vitals and other
+ * performance metrics in development mode. This component provides real-time
+ * performance insights for developers.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Global performance monitoring
+ * - Automatically included in every page through the root layout
+ * - Only active in development environment
+ * 
+ * KEY FEATURES:
+ * - Core Web Vitals monitoring (FCP, LCP, FID, CLS, TTFB)
+ * - Real-time performance metrics display
+ * - Keyboard shortcut toggle (Ctrl+Shift+P)
+ * - Development-only activation
+ * - Performance threshold color coding
+ * - Overlay display with metrics
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements Performance Observer API for metrics collection
+ * - Tracks navigation timing and Core Web Vitals
+ * - Keyboard event handling for toggle functionality
+ * - Conditional rendering based on environment
+ * - Performance threshold evaluation and color coding
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -21,7 +54,7 @@ export default function PerformanceMonitor() {
     const measurePerformance = () => {
       if ('performance' in window) {
         const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        
+
         // Measure Core Web Vitals
         const observer = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
@@ -37,7 +70,7 @@ export default function PerformanceMonitor() {
         // Measure other metrics
         const fcp = perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart;
         const ttfb = perfData.responseStart - perfData.requestStart;
-        
+
         setMetrics(prev => prev ? { ...prev, fcp, ttfb } : { fcp, lcp: 0, fid: 0, cls: 0, ttfb });
       }
     };
@@ -83,7 +116,7 @@ export default function PerformanceMonitor() {
           ×
         </button>
       </div>
-      
+
       {metrics && (
         <div className="space-y-2 text-xs">
           <div className="flex justify-between">
@@ -106,7 +139,7 @@ export default function PerformanceMonitor() {
           </div>
         </div>
       )}
-      
+
       <div className="mt-3 text-xs text-gray-500">
         Press Ctrl+Shift+P to toggle
       </div>

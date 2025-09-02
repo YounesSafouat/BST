@@ -1,3 +1,37 @@
+/**
+ * BottomNavigation.tsx
+ * 
+ * Bottom navigation component that provides quick access to key actions
+ * on mobile devices. This component includes contact buttons, blog access,
+ * and client case studies with regional contact information.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Mobile bottom navigation
+ * - Automatically included in every page through the root layout
+ * - Only visible on mobile devices (hidden on desktop)
+ * 
+ * KEY FEATURES:
+ * - Quick access to phone and WhatsApp contact
+ * - Blog and client case studies navigation
+ * - Regional contact number selection based on location
+ * - Analytics tracking for user interactions
+ * - Responsive design with hover effects
+ * - Fixed bottom positioning for easy access
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Integrates with geolocation API for regional content
+ * - Fetches contact data from CMS API
+ * - Implements analytics tracking for user interactions
+ * - Uses Next.js Link for navigation
+ * - Responsive design with Tailwind CSS
+ * - Handles fallback contact information
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import { Phone, FileText, Users } from "lucide-react"

@@ -1,3 +1,36 @@
+/**
+ * LoaderProvider.tsx
+ * 
+ * Global loader provider component that manages loading states across the
+ * application. This component provides a centralized loading system with
+ * minimum duration enforcement and route change handling.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Global loader provider
+ * - Automatically included in every page through the root layout
+ * - Provides loading context for all components
+ * 
+ * KEY FEATURES:
+ * - Global loading state management
+ * - Minimum duration enforcement (800ms)
+ * - Route change detection and loader hiding
+ * - Context-based loading control
+ * - Automatic cleanup and timeout handling
+ * - Smooth loading transitions
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React Context API for global loading state
+ * - Implements minimum duration logic for better UX
+ * - Tracks route changes with usePathname hook
+ * - Manages timeouts and cleanup automatically
+ * - Provides showLoader and hideLoader functions
+ * - Integrates with custom Loader component
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 import React, { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
 import Loader from "@/components/home/Loader";

@@ -1,3 +1,38 @@
+/**
+ * MobileHeader.tsx
+ * 
+ * Mobile header component that provides navigation and contact functionality
+ * for mobile devices. This component includes responsive design, regional
+ * contact information, and smooth navigation features.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Mobile navigation header
+ * - Automatically included in every page through the root layout
+ * - Only visible on mobile devices (hidden on desktop)
+ * 
+ * KEY FEATURES:
+ * - Responsive mobile navigation with hamburger menu
+ * - Regional contact information (phone, WhatsApp)
+ * - Dynamic logo and branding from CMS
+ * - Smooth scrolling to page sections
+ * - Meeting scheduling integration
+ * - Location-based contact number selection
+ * - Analytics tracking for user interactions
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements framer-motion for smooth animations
+ * - Integrates with geolocation API for regional content
+ * - Fetches header and contact data from CMS APIs
+ * - Handles navigation between pages and sections
+ * - Uses Next.js router for page navigation
+ * - Implements responsive design with Tailwind CSS
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client"
 
 import Link from "next/link"
@@ -167,11 +202,11 @@ export default function MobileHeader() {
       // Not on home page, navigate to home page with hash
       // Use the correct approach: navigate to home page first, then scroll to section
       router.push('/');
-      
+
       // Wait for navigation to complete and DOM to be ready, then scroll to section
       let retryCount = 0;
       const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
-      
+
       const waitForSection = () => {
         const element = document.querySelector(href);
         if (element) {
@@ -187,7 +222,7 @@ export default function MobileHeader() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       };
-      
+
       // Start waiting for the section with a longer initial delay
       setTimeout(waitForSection, 500);
       setIsMenuOpen(false);

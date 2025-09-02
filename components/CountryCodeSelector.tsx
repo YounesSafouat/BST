@@ -1,3 +1,36 @@
+/**
+ * CountryCodeSelector.tsx
+ * 
+ * Country code selector component that provides a searchable dropdown
+ * for international phone number formatting. This component includes
+ * comprehensive country data with flags, dial codes, and names.
+ * 
+ * WHERE IT'S USED:
+ * - ContactSection.tsx - Phone number input with country selection
+ * - Any form that requires international phone number input
+ * - Regional contact information display
+ * 
+ * KEY FEATURES:
+ * - Comprehensive list of 80+ countries with flags and dial codes
+ * - Searchable dropdown interface for easy country selection
+ * - Automatic phone number formatting based on selected country
+ * - Flag emojis and localized country names
+ * - Keyboard navigation and accessibility support
+ * - Mobile-responsive design
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and hooks
+ * - Implements search functionality with filtering
+ * - Includes comprehensive country data array
+ * - Handles keyboard navigation and focus management
+ * - Uses Lucide React icons for UI elements
+ * - Implements proper accessibility attributes
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Search } from 'lucide-react';
 

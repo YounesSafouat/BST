@@ -1,3 +1,38 @@
+/**
+ * GoogleBusinessProfile.tsx
+ * 
+ * Google Business Profile integration component that generates and injects
+ * structured data for Google Business Profile verification and enhanced
+ * local search results. This component provides comprehensive business
+ * information for search engines.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Global business profile data
+ * - Automatically included in every page through the root layout
+ * - Provides business schema markup for all pages
+ * 
+ * KEY FEATURES:
+ * - Google Business Profile verification code injection
+ * - Comprehensive business structured data (Schema.org)
+ * - Business hours, contact information, and location data
+ * - Service areas and business attributes
+ * - Social media integration and business details
+ * - Dynamic data loading from API
+ * - SEO optimization for local search
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React with TypeScript and client-side rendering
+ * - Implements Schema.org structured data markup
+ * - Fetches business data from /api/structured-data endpoint
+ * - Injects JSON-LD script tags for search engines
+ * - Handles business verification and profile management
+ * - Implements comprehensive business information schema
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 
 import { useEffect, useState } from 'react';

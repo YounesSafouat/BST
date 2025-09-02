@@ -1,3 +1,37 @@
+/**
+ * theme-provider.tsx
+ * 
+ * Theme provider component that manages dynamic appearance settings
+ * and CSS custom properties for the entire application. This component
+ * provides theme context and applies visual styling from CMS data.
+ * 
+ * WHERE IT'S USED:
+ * - Root layout (/app/layout.tsx) - Global theme provider
+ * - Automatically included in every page through the root layout
+ * - Provides theme context for all components
+ * 
+ * KEY FEATURES:
+ * - Dynamic theme loading from CMS API
+ * - CSS custom properties management
+ * - Color system and typography control
+ * - Spacing and effects customization
+ * - Theme caching and refresh functionality
+ * - shadcn/ui variables integration
+ * - Responsive design support
+ * 
+ * TECHNICAL DETAILS:
+ * - Uses React Context API for global theme state
+ * - Implements CSS custom properties for dynamic styling
+ * - Fetches theme data from /api/content endpoint
+ * - Applies theme variables to document root
+ * - Includes shadcn/ui component variables
+ * - Handles theme caching and persistence
+ * 
+ * @author younes safouat
+ * @version 1.0.0
+ * @since 2025
+ */
+
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
@@ -7,7 +41,7 @@ interface AppearanceSettings {
   name: string;
   description: string;
   isActive: boolean;
-  
+
   // Simplified Color System
   colorMain: string;      // Orange
   colorSecondary: string; // Purple
@@ -16,14 +50,14 @@ interface AppearanceSettings {
   colorWhite: string;     // White
   colorGray: string;      // Gray
   colorGreen: string;     // Green
-  
+
   // Typography
   fontFamily: string;
   headingFontFamily: string;
   fontSize: string;
   headingFontSize: string;
   lineHeight: string;
-  
+
   // Spacing & Effects
   borderRadius: string;
   spacing: string;
@@ -38,7 +72,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: null,
-  refreshTheme: () => {},
+  refreshTheme: () => { },
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -49,7 +83,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const applyTheme = (appearance: AppearanceSettings) => {
     const root = document.documentElement;
-    
+
     // Apply simplified color system
     root.style.setProperty('--color-main', appearance.colorMain);
     root.style.setProperty('--color-secondary', appearance.colorSecondary);
@@ -58,20 +92,20 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.style.setProperty('--color-white', appearance.colorWhite);
     root.style.setProperty('--color-gray', appearance.colorGray);
     root.style.setProperty('--color-green', appearance.colorGreen);
-    
+
     // Apply typography
     root.style.setProperty('--font-family', `${appearance.fontFamily}, sans-serif`);
     root.style.setProperty('--heading-font-family', `${appearance.headingFontFamily}, sans-serif`);
     root.style.setProperty('--font-size', appearance.fontSize);
     root.style.setProperty('--heading-font-size', appearance.headingFontSize);
     root.style.setProperty('--line-height', appearance.lineHeight);
-    
+
     // Apply spacing & effects
     root.style.setProperty('--border-radius', appearance.borderRadius);
     root.style.setProperty('--spacing', appearance.spacing);
     root.style.setProperty('--shadow-color', appearance.shadowColor);
     root.style.setProperty('--shadow-size', appearance.shadowSize);
-    
+
     // Apply shadcn/ui variables for dropdown menus and switch components
     root.style.setProperty('--background', '0 0% 100%'); // white
     root.style.setProperty('--foreground', '222.2 47.4% 11.2%'); // black
@@ -104,7 +138,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         setTheme(parsedTheme);
         applyTheme(parsedTheme);
         setIsLoading(false);
-        
+
         // Fetch fresh data in background
         fetch('/api/appearance/active')
           .then(res => res.json())
@@ -115,7 +149,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
               localStorage.setItem('bst-theme', JSON.stringify(freshTheme));
             }
           })
-          .catch(() => {}); // Silent fail for background refresh
+          .catch(() => { }); // Silent fail for background refresh
         return;
       }
 

@@ -122,6 +122,12 @@ export const metadata: Metadata = {
     google: '-1nA_9mXSq4HQbclHCPYAHNjSdpGwbCjR-qbVQrstyQ',
     yandex: 'ad9c44fd82c550c8',
   },
+  other: {
+    'geo.region': 'MA',
+    'geo.country': 'Morocco',
+    'geo.placename': 'Casablanca',
+    'ICBM': '33.5731, -7.5898',
+  },
 }
 
 export default function RootLayout({
@@ -149,6 +155,11 @@ export default function RootLayout({
         <link rel="icon" href="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST-Favicon.webp" type="image/webp" />
         <meta name="msapplication-TileColor" content="#2563eb" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
+        <meta name="geo.region" content="MA" />
+        <meta name="geo.country" content="Morocco" />
+        <meta name="geo.placename" content="Casablanca" />
+        <meta name="ICBM" content="33.5731, -7.5898" />
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <FaviconProvider />
