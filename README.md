@@ -543,5 +543,53 @@ interface ContactSubmission {
 - **Integration APIs**: Connect with additional CRM and marketing tools
 - **Reporting Dashboard**: Custom reports and analytics views
 
+---
+
+## 📋 **Current Development Tasks**
+
+### **Homepage Improvements**
+
+#### **🎨 Design & UI Updates**
+- [ ] **Certification Section**: Modify and verify certification display
+- [ ] **Logo Morocco/Favicon**: Show photo only in Morocco, replace with transparent favicon for other regions
+- [ ] **Header Logo**: Increase BlackSwan logo size in header
+- [ ] **Top Bar**: Expand header/top bar size
+- [ ] **Font Updates**: Modify Odoo homepage font styling
+
+#### **🎭 Animations & Interactions**
+- [x] **Testimonials Animation**: Implement Instagram-style slide animation
+- [ ] **Company Logos Carousel**: 
+  - [ ] Slow down scroll speed
+  - [ ] Add bordered frames around logos
+  - [ ] Slightly increase text font size
+  - [ ] Remove "100+ fois" text
+
+#### **📱 Mobile Optimizations**
+- [ ] **Button Sizing**: Increase size of first 2 buttons on mobile (currently too small)
+- [ ] **Logo Removal**: Remove Odoo Silver logo from mobile header
+
+#### **🗂️ Sections & Modules**
+- [ ] **Modules Section**: Reactivate modules section
+- [ ] **Partnership Section**: Update Odoo certification partnership section
+
+#### **📊 Case Studies & Content**
+- [ ] **Case Studies Filter**: Add left sidebar filter (max width)
+- [ ] **Case Study Images**: Use video thumbnail images from testimonial videos
+- [ ] **Featured Case**: Implement featured case study display
+- [ ] **Style Inspiration**: Implement style similar to [Copernic Agency](https://www.agence-copernic.fr/cas-client-orixa-media-migration-pipedrive-hubspot) while maintaining our brand identity
+- [ ] **Client Filter Design**: Keep our style for other client case filters
+
+### **Technical Implementation Notes**
+- **Certification**: ✅ Completed - Updated with new Odoo Silver Partner logo and French certification
+- **Regional Images**: ✅ Completed - Implemented geolocation-based image selection for "Our Agency" section
+- **Testimonials**: ✅ Completed - Added Instagram-style slide animation with center focus and side previews
+- **CMS Integration**: ✅ Completed - All changes manageable via dashboard
+
+### **Priority Levels**
+- 🔴 **High Priority**: Mobile optimizations, testimonials animation
+- 🟡 **Medium Priority**: Logo carousel improvements, case studies
+- 🟢 **Low Priority**: Font adjustments, minor UI tweaks
+
+---
 
 *Official Odoo Partner & Platinum HubSpot Partner in Morocco*
