@@ -49,6 +49,8 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                     const region = countryCode === 'MA' ? 'morocco' : 'france';
                     setUserRegion(region);
                     console.log('💬 TestimonialsSection - Region from localStorage:', region);
+                    // Fetch testimonials immediately after setting region
+                    fetchTestimonials(region);
                } else {
                     // If no localStorage data yet, check again in 100ms
                     setTimeout(checkLocalStorage, 100);
@@ -58,18 +60,14 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
           checkLocalStorage();
      }, []);
 
-     useEffect(() => {
-          if (userRegion) {
-               fetchTestimonials();
-          }
-     }, [userRegion]);
-
-     const fetchTestimonials = async () => {
+     const fetchTestimonials = async (region?: string) => {
           try {
-               const response = await fetch(`/api/testimonials?region=${userRegion}`);
+               const targetRegion = region || userRegion;
+               const response = await fetch(`/api/testimonials?region=${targetRegion}`);
                if (response.ok) {
                     const data = await response.json();
                     setDisplayTestimonials(data || []);
+                    console.log(`💬 TestimonialsSection - Fetched ${data?.length || 0} testimonials for region: ${targetRegion}`);
                }
           } catch (error) {
                console.error('Error fetching testimonials:', error);
