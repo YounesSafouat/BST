@@ -45,24 +45,24 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           switch (size) {
                case 'small':
                     return {
-                         height: '180px', // YouTube-like 16:9 aspect ratio for small cards
-                         titleFontSize: '24px',
-                         textFontSize: '12px',
-                         arrowFontSize: '20px'
+                         height: '220px', // Increased height for better mobile visibility
+                         titleFontSize: '28px',
+                         textFontSize: '13px',
+                         arrowFontSize: '22px'
                     };
                case 'large':
                     return {
-                         height: '400px', // YouTube-like 16:9 aspect ratio for large cards
-                         titleFontSize: '48px',
-                         textFontSize: '16px',
-                         arrowFontSize: '32px'
+                         height: '450px', // Increased height for better mobile visibility
+                         titleFontSize: '52px',
+                         textFontSize: '18px',
+                         arrowFontSize: '36px'
                     };
                default: // medium
                     return {
-                         height: '300px', // YouTube-like 16:9 aspect ratio for medium cards
-                         titleFontSize: '36px',
-                         textFontSize: '14px',
-                         arrowFontSize: '24px'
+                         height: '350px', // Increased height for better mobile visibility
+                         titleFontSize: '40px',
+                         textFontSize: '16px',
+                         arrowFontSize: '28px'
                     };
           }
      };
@@ -85,6 +85,20 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
            border: 1px solid #e5e7eb;
            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
            transition: all 0.3s ease;
+         }
+         
+         @media (max-width: 768px) {
+           .testimonial-card {
+             height: ${size === 'small' ? '120px' : size === 'large' ? '140px' : '130px'};
+             min-height: 120px;
+             max-height: 25vh;
+           }
+           .arrow {
+             font-size: ${size === 'small' ? '10px' : size === 'large' ? '14px' : '12px'};
+           }
+           .arrow-text {
+             font-size: 8px;
+           }
          }
         
         .testimonial-card:hover {

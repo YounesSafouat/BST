@@ -113,11 +113,11 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                          }}
                          loop={true}
                          grabCursor={true}
-                         className="w-full h-[329px] pb-15"
+                         className="w-full min-h-[450px] sm:min-h-[500px] md:min-h-[550px] pb-15"
                     >
                          {displayTestimonials.map((testimonial) => (
                               <SwiperSlide key={testimonial._id}>
-                                   <div className="bg-white flex flex-col gap-4 justify-center shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl h-full">
+                                   <div className="bg-white flex flex-col gap-4 justify-between shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl min-h-[400px] sm:min-h-[450px] md:min-h-[500px]">
                                         <div className="testimonial-rate flex gap-0.5">
                                              <i className="fa-solid fa-star text-[#f9b707]"></i>
                                              <i className="fa-solid fa-star text-[#f9b707]"></i>
