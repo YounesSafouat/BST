@@ -239,11 +239,11 @@ export default function CasClientV2() {
 
 
                          {/* Hero Section - Copernic Style */}
-                         <section className="relative pt-16 pb-20 px-6 lg:px-8">
+                         <section className="relative pt-24 pb-20 px-6 lg:px-8 mt-20">
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
                                         <h2 className="text-sm font-medium text-[var(--color-secondary)] mb-4">Nos cas clients</h2>
-                                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">
+                                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 leading-tight">
                                              Nos clients ont vu leur croissance augmenter, parfois de manière spectaculaire...
                                         </h1>
                                         <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] mx-auto"></div>

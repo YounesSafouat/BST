@@ -150,7 +150,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
          }
         
          .card-text {
-           z-index: 50;
+           z-index: 60;
            position: absolute;
            top: 50%;
            right: 20px;
@@ -159,10 +159,11 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
            opacity: 0;
            font-size: ${sizeStyles.textFontSize};
            letter-spacing: 0.5px;
-           max-width: 300px;
+           max-width: 280px;
            text-align: right;
            line-height: 1.4;
            transition: all 0.3s ease;
+           text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
          }
         
         
