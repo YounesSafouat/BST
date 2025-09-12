@@ -37,7 +37,6 @@
 "use client"
 
 import $ from 'jquery';
-import 'jquery-easing';
 
 const preloadCriticalResources = () => {
      const heroImg = new window.Image();
@@ -682,6 +681,7 @@ export default function HomePage() {
                </section>
                {/* SECTION 7: Our Agency - HomePage */}
                <OurAgencySection
+                    key={userRegion} // Force re-render when region changes
                     partnershipData={homePageData?.partnership}
                     userRegion={userRegion}
                />

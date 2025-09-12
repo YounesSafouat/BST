@@ -19,9 +19,13 @@ class GeolocationService {
   };
   private subscribers: Set<(state: GeolocationState) => void> = new Set();
   private apiCallPromise: Promise<GeolocationData | null> | null = null;
+  private isPageRefresh: boolean = false;
 
   private constructor() {
     this.initializeFromCache();
+    // Always clear cache and force refresh on page load to get fresh data
+    this.clearCache();
+    this.scheduleRefresh();
   }
 
   public static getInstance(): GeolocationService {
@@ -58,6 +62,20 @@ class GeolocationService {
     }
   }
 
+  private scheduleRefresh() {
+    if (typeof window === 'undefined') return;
+    
+    // Force immediate refresh on every page load
+    console.log('📍 Forcing immediate geolocation refresh on page load');
+    this.isPageRefresh = true;
+    
+    // Also schedule a backup refresh after a short delay
+    setTimeout(() => {
+      console.log('📍 Backup geolocation refresh scheduled');
+      this.isPageRefresh = true;
+    }, 1000);
+  }
+
   public subscribe(callback: (state: GeolocationState) => void): () => void {
     this.subscribers.add(callback);
     
@@ -81,9 +99,37 @@ class GeolocationService {
       return;
     }
 
-    // If we already have valid data, don't make another call
-    if (this.state.data && this.state.isFromCache) {
-      return;
+    // If this is a scheduled refresh, always make a fresh call to update localStorage
+    if (this.isPageRefresh) {
+      console.log('📍 Forced refresh: making fresh geolocation call to update localStorage');
+      this.isPageRefresh = false; // Reset the flag
+    } else {
+      // If we already have fresh data (not from cache), don't make another call
+      if (this.state.data && !this.state.isFromCache) {
+        return;
+      }
+
+      // If we have cached data, check if it's still valid
+      if (this.state.data && this.state.isFromCache) {
+        const cached = this.getCachedLocation();
+        if (cached) {
+          const now = Date.now();
+          const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes instead of 24 hours
+          
+          // If cache is still valid, don't make a new call
+          if (now - cached.timestamp < CACHE_DURATION) {
+            return;
+          }
+          
+          // Cache is expired, we'll make a fresh call
+          console.log('📍 Geolocation cache expired, making fresh API call');
+        }
+      }
+
+      // If we don't have any data at all, make a fresh call
+      if (!this.state.data) {
+        console.log('📍 No geolocation data found, making fresh API call');
+      }
     }
 
     this.state.loading = true;
@@ -243,9 +289,20 @@ class GeolocationService {
   }
 
   public forceRefresh(): void {
+    console.log('📍 Force refresh called - clearing cache and making fresh API call');
     this.state.data = null;
     this.state.isFromCache = false;
+    this.isPageRefresh = true;
     this.detectLocation();
+  }
+
+  public clearCache(): void {
+    if (typeof window === 'undefined') return;
+    console.log('📍 Clearing geolocation cache');
+    localStorage.removeItem('bst_geolocation_data');
+    this.state.data = null;
+    this.state.isFromCache = false;
+    this.isPageRefresh = true;
   }
 }
 

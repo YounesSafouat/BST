@@ -30,10 +30,11 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { BadgeCheck, Users, Clock, Star } from 'lucide-react';
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import { getRegionFromCountry } from '@/lib/geolocation';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 
 interface PartnershipData {
      headline?: string;
@@ -57,56 +58,73 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
      partnershipData,
      userRegion = 'international'
 }) => {
-     const [location, setLocation] = useState<any>(null);
-     const [loading, setLoading] = useState(true);
+     // Use singleton geolocation service
+     const { region: detectedRegion, loading: locationLoading, data: locationData } = useGeolocationSingleton();
 
-     useEffect(() => {
-          const detectLocation = async () => {
-               try {
-                    const userLocation = await getUserLocation();
-                    setLocation(userLocation);
-               } catch (error) {
-                    console.error("Error detecting location:", error);
-               } finally {
-                    setLoading(false);
-               }
-          };
-
-          detectLocation();
-     }, []);
+     // Debug logging for region changes
+     React.useEffect(() => {
+          console.log('🏢 OurAgencySection - Region changed:', {
+               userRegion,
+               detectedRegion,
+               finalRegion: detectedRegion || userRegion
+          });
+     }, [userRegion, detectedRegion]);
 
      const getPartnershipImage = (): string => {
-          // Use the passed userRegion if available, otherwise detect from location
-          let region = userRegion;
-
-          if (!userRegion && location?.countryCode) {
-               region = getRegionFromCountry(location.countryCode);
-          }
-
-          // Check if user is in Morocco
-          if (region === 'morocco') {
-               // Use the main image field for Morocco
+          // Simple: read localStorage and check country code
+          const cachedData = localStorage.getItem('bst_geolocation_data');
+          const isMorocco = cachedData ? JSON.parse(cachedData).data?.countryCode === 'MA' : false;
+          
+          if (isMorocco) {
                return partnershipData?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
           } else {
-               // For all other countries, use the imageOtherCountries field if available
                return partnershipData?.imageOtherCountries || partnershipData?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
           }
      };
 
      const getCurrentRegion = (): string => {
-          // Use the passed userRegion if available, otherwise detect from location
-          if (userRegion) {
-               return userRegion;
+          // Read directly from localStorage
+          try {
+               const cachedData = localStorage.getItem('bst_geolocation_data');
+               if (cachedData) {
+                    const parsed = JSON.parse(cachedData);
+                    return parsed.data?.countryCode === 'MA' ? 'morocco' : 'international';
+               }
+          } catch (error) {
+               console.warn('Failed to read geolocation from localStorage:', error);
           }
-
-          if (location?.countryCode) {
-               return getRegionFromCountry(location.countryCode);
-          }
-
           return 'international';
      };
 
-     const isMorocco = getCurrentRegion() === 'morocco';
+     // State to track the image URL and force re-render when localStorage changes
+     const [imageUrl, setImageUrl] = useState<string>('');
+     const [isMorocco, setIsMorocco] = useState<boolean>(false);
+
+     // Read localStorage and set image based on country code
+     React.useEffect(() => {
+          const cachedData = localStorage.getItem('bst_geolocation_data');
+          if (cachedData) {
+               const parsed = JSON.parse(cachedData);
+               const countryCode = parsed.data?.countryCode;
+               const isMoroccoCountry = countryCode === 'MA';
+               
+               setIsMorocco(isMoroccoCountry);
+               
+               if (isMoroccoCountry) {
+                    // Morocco: show team photo
+                    setImageUrl(partnershipData?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg");
+               } else {
+                    // Other countries: show BST logo
+                    setImageUrl(partnershipData?.imageOtherCountries || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20logo.png");
+               }
+               
+               console.log('🏢 OurAgencySection - Country detected:', {
+                    countryCode,
+                    isMorocco: isMoroccoCountry,
+                    imageUrl: isMoroccoCountry ? partnershipData?.image : partnershipData?.imageOtherCountries
+               });
+          }
+     }, [partnershipData]);
 
      const renderIcon = (iconName: string) => {
           switch (iconName) {
@@ -123,7 +141,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
           }
      };
 
-     if (loading) {
+     if (locationLoading) {
           return (
                <section className="py-20 bg-white relative z-10" id="team">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -172,11 +190,10 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                    : 'rounded-none shadow-none hover:shadow-none'
                                    }`}>
                                    <div className="relative overflow-hidden">
-                                        <Image
-                                             src={getPartnershipImage()}
+                                        <img
+                                             key={`agency-image-${isMorocco ? 'morocco' : 'other'}`}
+                                             src={imageUrl}
                                              alt="Notre équipe"
-                                             width={600}
-                                             height={350}
                                              className="object-cover w-full h-72 md:h-80 transition-transform duration-700 group-hover:scale-110"
                                              onError={(e) => {
                                                   e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";

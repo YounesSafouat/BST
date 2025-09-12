@@ -10,8 +10,9 @@ export function useGeolocationSingleton(): GeolocationState {
       setState(newState);
     });
 
-    // If we don't have data yet, trigger detection
-    if (!state.data && !state.loading) {
+    // Only trigger detection if we don't have any data (not even cached)
+    // The geolocation service will handle checking localStorage internally
+    if (!state.data && !state.loading && !state.isFromCache) {
       geolocationService.detectLocation();
     }
 
