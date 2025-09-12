@@ -97,7 +97,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                     <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">{testimonialsSectionData.subdescription}</p>
                </motion.div>
 
-               <div className="relative w-full">
+               <div className="relative w-full px-12">
                     <Swiper
                          modules={[Navigation, Pagination]}
                          spaceBetween={24}
@@ -172,9 +172,9 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                          ))}
                     </Swiper>
 
-                    {/* Navigation Buttons - Inside relative container */}
-                    <div className="swiper-button-prev !absolute !left-1 !top-1/2 !-translate-y-1/2 !w-10 !h-10 !text-[#3758f9] !after:content-['\f053'] !after:font-['Font_Awesome_5_free'] !after:font-black !after:text-lg"></div>
-                    <div className="swiper-button-next !absolute !right-1 !top-1/2 !-translate-y-1/2 !w-10 !h-10 !text-[#3758f9] !after:content-['\f054'] !after:font-['Font_Awesome_5_free'] !after:font-black !after:text-lg"></div>
+                    {/* Navigation Buttons - Positioned with proper spacing */}
+                    <div className="swiper-button-prev !absolute !left-0 !top-1/2 !-translate-y-1/2 !w-10 !h-10 !text-[#3758f9] !after:content-['\f053'] !after:font-['Font_Awesome_5_free'] !after:font-black !after:text-lg !z-10"></div>
+                    <div className="swiper-button-next !absolute !right-0 !top-1/2 !-translate-y-1/2 !w-10 !h-10 !text-[#3758f9] !after:content-['\f054'] !after:font-['Font_Awesome_5_free'] !after:font-black !after:text-lg !z-10"></div>
 
                </div>
 
