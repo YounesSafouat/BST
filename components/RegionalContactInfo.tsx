@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import { getRegionFromCountry } from '@/lib/geolocation';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { Phone, Mail } from 'lucide-react';
 
 interface ContactInfo {
@@ -18,29 +19,12 @@ interface RegionalContactInfoProps {
 export default function RegionalContactInfo({
   className = ""
 }: RegionalContactInfoProps) {
-  const [location, setLocation] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { data: location, loading } = useGeolocationSingleton();
   const [contactData, setContactData] = useState<{
     france: ContactInfo;
     morocco: ContactInfo;
     other: ContactInfo;
   } | null>(null);
-
-  // Detect location using the same logic as pricing section
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        const userLocation = await getUserLocation();
-        setLocation(userLocation);
-      } catch (error) {
-        console.error("Error detecting location:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    detectLocation();
-  }, []);
 
   // Fetch CMS data
   useEffect(() => {

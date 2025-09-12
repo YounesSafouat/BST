@@ -1,66 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
+import dbConnect from '@/lib/mongodb';
 import Content from '@/models/Content';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    await connectDB();
+    await dbConnect();
     
-    // Get settings document using the Content model
-    const settings = await Content.findOne({ type: 'settings' });
+    // Try to find existing settings
+    let settings = await Content.findOne({ type: 'settings' });
     
-    return NextResponse.json({
-      success: true,
-      content: settings?.content || {}
-    });
+    // If no settings exist, create default settings
+    if (!settings) {
+      settings = await Content.create({
+        type: 'settings',
+        title: 'Site Settings',
+        description: 'Global site settings',
+        content: {
+          siteTitle: 'BlackSwan Technology',
+          siteDescription: 'Partenaire Officiel Odoo au Maroc',
+          visualEffects: {
+            showCurvedLines: true
+          },
+          pageVisibility: {
+            home: true,
+            blog: true,
+            hubspot: true,
+            about: true,
+            casClient: true,
+            contact: true
+          }
+        },
+        isActive: true,
+        metadata: { order: 1 }
+      });
+    }
+    
+    return NextResponse.json(settings);
   } catch (error) {
     console.error('Error fetching settings:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch settings' },
+      { error: 'Failed to fetch settings' },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
-    await connectDB();
-    const body = await request.json();
-
-    console.log('Settings update request:', body);
-
-    // Update or create settings using the Content model
+    await dbConnect();
+    
+    const body = await req.json();
+    
+    // Update or create settings
     const settings = await Content.findOneAndUpdate(
       { type: 'settings' },
       {
         type: 'settings',
         title: body.title || 'Site Settings',
-        description: body.description || 'Paramètres globaux du site',
+        description: body.description || 'Global site settings',
         content: body.content,
-        isActive: true,
+        isActive: body.isActive !== undefined ? body.isActive : true,
         metadata: body.metadata || { order: 1 },
         updatedAt: new Date()
       },
-      {
-        new: true,
-        upsert: true
+      { 
+        upsert: true, 
+        new: true 
       }
     );
-
-    console.log('Settings saved:', settings);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Settings updated successfully',
-      result: settings
-    });
+    
+    return NextResponse.json(settings);
   } catch (error) {
-    console.error('Error updating settings:', error);
+    console.error('Error saving settings:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to update settings' },
+      { error: 'Failed to save settings' },
       { status: 500 }
     );
   }
-} 
+}

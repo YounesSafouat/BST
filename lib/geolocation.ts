@@ -8,16 +8,44 @@ export interface GeolocationData {
 
 export type Region = 'france' | 'morocco' | 'international';
 
-// Cache for geolocation data to avoid repeated API calls
-let geolocationCache: { data: GeolocationData; timestamp: number } | null = null;
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const STORAGE_KEY = 'bst_geolocation_data';
+
+// Helper functions for localStorage
+function getCachedLocation(): { data: GeolocationData; timestamp: number } | null {
+  if (typeof window === 'undefined') return null;
+  
+  try {
+    const cached = localStorage.getItem(STORAGE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      return parsed;
+    }
+  } catch (error) {
+    console.warn('Failed to parse cached geolocation data:', error);
+    localStorage.removeItem(STORAGE_KEY);
+  }
+  return null;
+}
+
+function setCachedLocation(data: GeolocationData): void {
+  if (typeof window === 'undefined') return;
+  
+  try {
+    const cacheData = { data, timestamp: Date.now() };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cacheData));
+  } catch (error) {
+    console.warn('Failed to cache geolocation data:', error);
+  }
+}
 
 export async function getUserLocation(): Promise<GeolocationData | null> {
   try {
-    // Check cache first
-    if (geolocationCache && (Date.now() - geolocationCache.timestamp) < CACHE_DURATION) {
-      console.log('📍 Using cached geolocation data');
-      return geolocationCache.data;
+    // Check localStorage cache first
+    const cached = getCachedLocation();
+    if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+      console.log('📍 Using cached geolocation data from localStorage');
+      return cached.data;
     }
 
     // Try the fastest service first (ipinfo.io is usually fastest)
@@ -49,8 +77,8 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
           timezone: data.timezone || 'UTC',
         };
 
-        // Cache the result
-        geolocationCache = { data: result, timestamp: Date.now() };
+        // Cache the result in localStorage
+        setCachedLocation(result);
         return result;
       }
     } catch (fastServiceError) {
@@ -85,8 +113,8 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
           timezone: data.timezone || 'UTC',
         };
 
-        // Cache the result
-        geolocationCache = { data: result, timestamp: Date.now() };
+        // Cache the result in localStorage
+        setCachedLocation(result);
         return result;
       }
     } catch (fallbackError) {
@@ -94,9 +122,10 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
     }
 
     // Return cached data even if expired, or default to international
-    if (geolocationCache) {
+    const expiredCache = getCachedLocation();
+    if (expiredCache) {
       console.log('📍 Using expired cache as fallback');
-      return geolocationCache.data;
+      return expiredCache.data;
     }
 
     // Final fallback
@@ -182,4 +211,23 @@ export function shouldShowContent(content: any, region: Region): boolean {
   }
   
   return content.targetRegions.includes(region) || content.targetRegions.includes('all');
+}
+
+// Get cached location without making API calls
+export function getCachedUserLocation(): GeolocationData | null {
+  const cached = getCachedLocation();
+  if (cached && (Date.now() - cached.timestamp) < CACHE_DURATION) {
+    console.log('📍 Using cached geolocation data from localStorage (no API call)');
+    return cached.data;
+  }
+  return null;
+}
+
+// Get region from cached data or fallback
+export function getCachedRegion(): Region {
+  const cached = getCachedUserLocation();
+  if (cached) {
+    return getRegionFromCountry(cached.countryCode);
+  }
+  return 'international';
 } 

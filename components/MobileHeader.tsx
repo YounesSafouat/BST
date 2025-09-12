@@ -54,6 +54,7 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrollY, setScrollY] = useState(0)
   const [location, setLocation] = useState<any>(null);
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
@@ -62,6 +63,17 @@ export default function MobileHeader() {
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
   const { trackButtonClick } = useButtonAnalytics()
+
+  // Add scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const isScrolled = scrollY > 0;
 
   // Detect user location
   useEffect(() => {
@@ -233,7 +245,10 @@ export default function MobileHeader() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-40 md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-sm"
+      className={`fixed top-0 left-0 right-0 z-40 md:hidden transition-all duration-300 ${isScrolled
+        ? 'bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20'
+        : 'bg-white/20 backdrop-blur-md'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-2">

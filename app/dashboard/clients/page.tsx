@@ -11,6 +11,9 @@ import Loader from "@/components/home/Loader"
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
+// Rich Text Editor Component
+const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), { ssr: false });
+
 // Client case structure based on seedClientsPage.js
 interface ProjectStat {
   label: string;
@@ -39,8 +42,18 @@ export interface ClientCase {
   summary: string;
   sector: string;
   size: string;
+  solution: string;
   migration: string;
   logo: string;
+  videoUrl?: string;
+  videoTitle?: string;
+  heroImage?: string;
+  contentSections: {
+    title: string;
+    content: string; // HTML content like blog
+    image?: string;
+    imageAlt?: string;
+  }[];
   featured: boolean;
   featuredInHeader?: boolean;
   projectStats: ProjectStat[];
@@ -57,8 +70,13 @@ function emptyClient(): ClientCase {
     summary: "",
     sector: "",
     size: "",
+    solution: "",
     migration: "",
     logo: "",
+    videoUrl: "",
+    videoTitle: "",
+    heroImage: "",
+    contentSections: [],
     featured: false,
     featuredInHeader: false,
     projectStats: [],
@@ -264,6 +282,10 @@ export default function ClientsAdminPage() {
                             <Input name="size" value={form.size} onChange={handleChange} />
                           </div>
                           <div>
+                            <Label>Solution</Label>
+                            <Input name="solution" value={form.solution} onChange={handleChange} />
+                          </div>
+                          <div>
                             <Label>Migration</Label>
                             <Input name="migration" value={form.migration} onChange={handleChange} />
                           </div>
@@ -294,6 +316,114 @@ export default function ClientsAdminPage() {
                             <Label htmlFor="featuredInHeader">Mis en avant dans l'en-tête</Label>
                           </div>
                         </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Media & Content */}
+                    <Card>
+                      <CardHeader><CardTitle>Médias et Contenu</CardTitle></CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 gap-4">
+                          <div>
+                            <Label>URL de la vidéo (YouTube embed)</Label>
+                            <Input
+                              name="videoUrl"
+                              value={form.videoUrl || ""}
+                              onChange={handleChange}
+                              placeholder="https://www.youtube.com/embed/..."
+                            />
+                          </div>
+                          <div>
+                            <Label>Titre de la vidéo</Label>
+                            <Input
+                              name="videoTitle"
+                              value={form.videoTitle || ""}
+                              onChange={handleChange}
+                              placeholder="Titre affiché sur la vidéo"
+                            />
+                          </div>
+                          <div>
+                            <Label>Image hero (fallback si pas de vidéo)</Label>
+                            <Input
+                              name="heroImage"
+                              value={form.heroImage || ""}
+                              onChange={handleChange}
+                              placeholder="https://..."
+                            />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Content Sections */}
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Sections de Contenu</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {form.contentSections?.map((section, idx) => (
+                          <div key={idx} className="space-y-4 p-4 border rounded-lg">
+                            <div className="flex gap-2">
+                              <Input
+                                placeholder="Titre de la section"
+                                value={section.title}
+                                onChange={(e) => handleArrayChange("contentSections", idx, "title", e.target.value)}
+                                className="flex-1"
+                              />
+                              <Button
+                                variant="destructive"
+                                size="icon"
+                                onClick={() => removeArrayItem("contentSections", idx)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+
+                            <div>
+                              <Label>Contenu HTML</Label>
+                              <RichTextEditor
+                                value={section.content}
+                                onChange={(value: string) => handleArrayChange("contentSections", idx, "content", value || "")}
+                                height={300}
+                                placeholder="Commencez à écrire le contenu de cette section..."
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                Utilisez l'éditeur riche pour formater votre contenu avec du HTML automatique.
+                              </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <Label>Image de la section (optionnel)</Label>
+                                <Input
+                                  placeholder="https://..."
+                                  value={section.image || ""}
+                                  onChange={(e) => handleArrayChange("contentSections", idx, "image", e.target.value)}
+                                />
+                              </div>
+                              <div>
+                                <Label>Texte alternatif de l'image</Label>
+                                <Input
+                                  placeholder="Description de l'image"
+                                  value={section.imageAlt || ""}
+                                  onChange={(e) => handleArrayChange("contentSections", idx, "imageAlt", e.target.value)}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        <Button
+                          variant="outline"
+                          onClick={() => addArrayItem("contentSections", {
+                            title: "",
+                            content: "",
+                            image: "",
+                            imageAlt: ""
+                          })}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Ajouter une section
+                        </Button>
                       </CardContent>
                     </Card>
 

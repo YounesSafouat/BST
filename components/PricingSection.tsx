@@ -37,7 +37,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CheckCircle, ArrowRight } from "lucide-react";
-import { getUserLocation, getRegionFromCountry } from "@/lib/geolocation";
+import { getRegionFromCountry } from "@/lib/geolocation";
+import { useGeolocationSingleton } from "@/hooks/useGeolocationSingleton";
 
 interface PricingSectionProps {
      pricingData?: {
@@ -58,29 +59,12 @@ interface PricingSectionProps {
 
 /* SECTION: Pricing Section - PricingSection */
 export default function PricingSection({ pricingData }: PricingSectionProps) {
-     const [location, setLocation] = useState<any>(null);
-     const [loading, setLoading] = useState(true);
-
-     useEffect(() => {
-          const detectLocation = async () => {
-               try {
-                    const userLocation = await getUserLocation();
-                    setLocation(userLocation);
-               } catch (error) {
-                    console.error("Error detecting location:", error);
-               } finally {
-                    setLoading(false);
-               }
-          };
-
-          detectLocation();
-     }, []);
+     // Use singleton geolocation service
+     const { data: location, loading, region } = useGeolocationSingleton();
 
 
      const filteredPlans = pricingData?.plans?.filter(plan => {
           if (!location || !location.countryCode) return true;
-
-          const region = getRegionFromCountry(location.countryCode);
 
           if (!plan.targetRegions) return true;
 

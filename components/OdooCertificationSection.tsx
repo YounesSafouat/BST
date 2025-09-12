@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { CheckCircle, Award, Shield, Users } from 'lucide-react';
 
@@ -26,7 +26,6 @@ interface CertificationData {
      partnerTitle: string;
      partnerDescription: string;
      features: CertificationFeature[];
-     certificationImages?: { src: string; alt: string }[]; // Added for CMS data
 }
 
 interface OdooCertificationSectionProps {
@@ -39,9 +38,6 @@ export default function OdooCertificationSection({
      certificationData,
      className = ""
 }: OdooCertificationSectionProps) {
-     // State for managing current image index
-     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-     const [isPaused, setIsPaused] = useState(false);
 
      // Fallback data when no CMS data is provided
      const fallbackData: CertificationData = {
@@ -71,41 +67,12 @@ export default function OdooCertificationSection({
                     description: "Standards Odoo",
                     icon: "Award"
                }
-          ],
-          certificationImages: [
-               {
-                    src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
-                    alt: "Odoo Certification Certificate"
-               },
-               {
-                    src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Blog%205/blog%205%20(1).png",
-                    alt: "Odoo Silver Partner Badge"
-               },
-               {
-                    src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo.png",
-                    alt: "Odoo Official Partner"
-               }
           ]
      };
 
      // Use CMS data if available, otherwise fallback to default data
      const data = certificationData || fallbackData;
 
-     // Array of certification images
-     const certificationImages = data.certificationImages || [];
-
-     // Auto-rotate through images if there are multiple
-     React.useEffect(() => {
-          if (certificationImages.length <= 1 || isPaused) return;
-
-          const interval = setInterval(() => {
-               setCurrentImageIndex((prev) =>
-                    prev === certificationImages.length - 1 ? 0 : prev + 1
-               );
-          }, 5000); // Change image every 5 seconds
-
-          return () => clearInterval(interval);
-     }, [certificationImages.length, isPaused]);
 
 
 
@@ -147,65 +114,41 @@ export default function OdooCertificationSection({
                          transition={{ duration: 0.8, delay: 0.3 }}
                          className="mb-12"
                     >
-                         <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-sm hover:shadow-md transition-shadow">
-                              <div className="grid lg:grid-cols-2 gap-12 items-center">
+                         <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl hover:shadow-3xl transition-shadow relative overflow-hidden">
+                              <div className="grid lg:grid-cols-2 gap-12 items-start justify-items-center relative z-10">
 
-                                   {/* Left Side - Certificate Image */}
-                                   <div className="flex justify-center lg:justify-start relative">
+                                   {/* Left Side - Images Card */}
+                                   <div className="flex justify-center items-center relative h-full">
+                                        <div className="bg-white rounded-2xl p-8 relative overflow-hidden w-full max-w-5xl h-96 flex items-center justify-center mt-20">
 
-                                        {/* Image Container */}
-                                        <div className="relative w-full h-80 lg:h-96">
-                                             <AnimatePresence mode="wait">
-                                                  <motion.div
-                                                       key={currentImageIndex}
-                                                       initial={{ opacity: 0, scale: 0.95 }}
-                                                       animate={{ opacity: 1, scale: 1 }}
-                                                       exit={{ opacity: 0, scale: 0.95 }}
-                                                       transition={{ duration: 0.5, ease: "easeInOut" }}
-                                                       className="w-full h-full flex items-center justify-center"
-                                                  >
+                                             <div className="relative z-10 flex flex-col items-center justify-center space-y-8">
+                                                  {/* Odoo Silver Partner Logo SVG */}
+                                                  <div className="w-48 h-24 flex items-center justify-center">
                                                        <Image
-                                                            src={certificationImages[currentImageIndex].src}
-                                                            alt={certificationImages[currentImageIndex].alt}
-                                                            fill
-                                                            className="object-contain rounded-tl-2xl rounded-bl-2xl"
-                                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                                            src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/oodo-silver-partner-logo.svg"
+                                                            alt="Odoo Silver Partner Logo"
+                                                            width={192}
+                                                            height={96}
+                                                            className="object-contain"
                                                        />
-                                                  </motion.div>
-                                             </AnimatePresence>
-
-                                             {/* Image Counter Indicator */}
-                                             <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm rounded-full px-3 py-1">
-                                                  <span className="text-white text-sm font-medium">
-                                                       {currentImageIndex + 1} / {certificationImages.length}
-                                                  </span>
-                                             </div>
-
-                                             {/* Dots Navigation - Positioned at bottom of image */}
-                                             {certificationImages.length > 1 && (
-                                                  <div
-                                                       className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-2"
-                                                       onMouseEnter={() => setIsPaused(true)}
-                                                       onMouseLeave={() => setIsPaused(false)}
-                                                  >
-                                                       {certificationImages.map((_, index) => (
-                                                            <button
-                                                                 key={index}
-                                                                 onClick={() => setCurrentImageIndex(index)}
-                                                                 className={`w-3 h-3 rounded-full transition-all duration-200 ${index === currentImageIndex
-                                                                      ? 'bg-[var(--color-secondary)] scale-110'
-                                                                      : 'bg-gray-300 hover:bg-gray-400'
-                                                                      }`}
-                                                                 aria-label={`Go to image ${index + 1}`}
-                                                            />
-                                                       ))}
                                                   </div>
-                                             )}
+
+                                                  {/* Certification PNG */}
+                                                  <div className="w-48 h-48 flex items-center justify-center">
+                                                       <Image
+                                                            src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/certification.png"
+                                                            alt="Odoo Certification"
+                                                            width={192}
+                                                            height={192}
+                                                            className="object-contain"
+                                                       />
+                                                  </div>
+                                             </div>
                                         </div>
                                    </div>
 
                                    {/* Right Side - Content */}
-                                   <div className="space-y-6">
+                                   <div className="space-y-6 flex flex-col justify-center h-full">
                                         <div>
                                              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                                                   {data.partnerTitle}
@@ -233,8 +176,8 @@ export default function OdooCertificationSection({
                                    </div>
                               </div>
                          </div>
-                    </motion.div>
-               </div>
-          </section>
+                    </motion.div >
+               </div >
+          </section >
      );
 } 

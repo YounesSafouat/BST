@@ -143,7 +143,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     }
   }, [location, contactData]);
 
-  const isScrolled = scrollY > 50;
+  const isScrolled = scrollY > 0;
 
   // Use CMS navigation data or fallback to default
   const navigation = headerData?.navigation?.main || [
@@ -234,8 +234,8 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled
-        ? 'bg-white/95 backdrop-blur-md shadow-sm'
-        : 'bg-transparent'
+        ? 'bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20'
+        : 'bg-white/20 backdrop-blur-md'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

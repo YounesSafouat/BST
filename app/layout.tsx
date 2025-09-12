@@ -148,6 +148,18 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+        <link rel="preload" href="/fonts/Neon.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @font-face {
+              font-family: 'Neon 80s';
+              src: url('/fonts/Neon.ttf') format('truetype');
+              font-weight: normal;
+              font-style: normal;
+              font-display: swap;
+            }
+          `
+        }} />
         <EnhancedStructuredData />
         <GoogleBusinessProfile />
         <link rel="manifest" href="/manifest.json" />

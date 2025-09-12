@@ -46,7 +46,7 @@ import { Phone, Mail, Calendar, CheckCircle, Award, Zap, Shield, CheckCircle as 
 import RegionalContactInfo from "./RegionalContactInfo";
 import { useToast } from "@/hooks/use-toast";
 import CountryCodeSelector from "./CountryCodeSelector";
-import { useGeolocation } from "@/hooks/useGeolocation";
+import { useGeolocationSingleton } from "@/hooks/useGeolocationSingleton";
 import { useFormSubmit, StandardFormData } from "@/hooks/use-form-submit";
 
 interface Country {
@@ -127,7 +127,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           mouseMovements: 0
      });
 
-     const { region, country, loading: geolocationLoading, countryCode, city } = useGeolocation();
+     const { region, data: locationData, loading: geolocationLoading } = useGeolocationSingleton();
+     const country = locationData?.country || '';
+     const countryCode = locationData?.countryCode || '';
+     const city = locationData?.city || '';
 
      useEffect(() => {
           console.log('=== GEOLOCATION DEBUG ===');
@@ -1164,11 +1167,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           } else {
                console.log('Country detection skipped:', { geolocationLoading, countryCode });
                // Fallback: if geolocation is not working, try to detect from region
-               if (!geolocationLoading && region && region !== 'OTHER') {
+               if (!geolocationLoading && region && region !== 'international') {
                     console.log('Falling back to region-based detection:', region);
                     let fallbackCountry: Country;
                     switch (region) {
-                         case 'FR':
+                         case 'france':
                               fallbackCountry = {
                                    code: 'FR',
                                    name: 'France',
@@ -1176,7 +1179,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                    flag: '🇫🇷'
                               };
                               break;
-                         case 'MA':
+                         case 'morocco':
                               fallbackCountry = {
                                    code: 'MA',
                                    name: 'Maroc',

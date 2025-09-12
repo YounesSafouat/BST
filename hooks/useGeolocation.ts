@@ -20,57 +20,79 @@ export function useGeolocation(): GeolocationData {
   });
 
   useEffect(() => {
+    // Check if we already have data to prevent infinite loops
+    if (geolocationData.loading === false) {
+      return;
+    }
+
     const detectRegion = async () => {
       try {
         console.log('Detecting region...');
         
-        // Try multiple geolocation services with retry logic
+        // Try ipapi.co first (better CORS support)
         let data: any = null;
-        let attempts = 0;
-        const maxAttempts = 3;
         
-        while (attempts < maxAttempts && !data) {
-          attempts++;
+        try {
+          const response = await fetch('https://ipapi.co/json/', {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+          });
+          
+          if (response.ok) {
+            data = await response.json();
+            console.log('Successfully got data from ipapi.co:', data);
+          }
+        } catch (error) {
+          console.log('ipapi.co failed, trying ipinfo.io...');
+        }
+        
+        // Fallback to ipinfo.io if ipapi.co fails
+        if (!data) {
           try {
-            // Try ipinfo.io first (usually more reliable)
-            const response = await fetch('https://ipinfo.io/json');
+            const response = await fetch('https://ipinfo.io/json', {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+              },
+            });
+            
             if (response.ok) {
               data = await response.json();
               console.log('Successfully got data from ipinfo.io:', data);
-              break;
             }
           } catch (error) {
-            console.log(`Attempt ${attempts}: ipinfo.io failed, trying ipapi.co...`);
-          }
-          
-          if (!data) {
-            try {
-              // Try ipapi.co as fallback
-              const response = await fetch('https://ipapi.co/json/');
-              if (response.ok) {
-                data = await response.json();
-                console.log('Successfully got data from ipapi.co:', data);
-                break;
-              }
-            } catch (error) {
-              console.log(`Attempt ${attempts}: ipapi.co failed`);
-            }
-          }
-          
-          // Wait before retry (exponential backoff)
-          if (attempts < maxAttempts) {
-            await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+            console.log('ipinfo.io also failed');
           }
         }
         
         if (!data) {
-          throw new Error('All geolocation services failed');
+          // Use a simple fallback - try to detect from timezone
+          const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          console.log('Using timezone fallback:', timezone);
+          
+          let region: Region = 'OTHER';
+          if (timezone.includes('Paris') || timezone.includes('Europe/Paris')) {
+            region = 'FR';
+          } else if (timezone.includes('Casablanca') || timezone.includes('Africa/Casablanca')) {
+            region = 'MA';
+          }
+          
+          setGeolocationData({
+            region,
+            country: 'Unknown',
+            countryCode: 'XX',
+            city: 'Unknown',
+            loading: false,
+            error: 'Using timezone fallback',
+          });
+          return;
         }
         
         let region: Region = 'OTHER';
         
         // Determine region based on country code
-        // ipinfo.io uses 'country', ipapi.co uses 'country_code'
         const countryCode = data.country_code || data.country;
         
         if (countryCode === 'FR') {
@@ -89,13 +111,6 @@ export function useGeolocation(): GeolocationData {
           loading: false,
         });
         
-        console.log('useGeolocation hook returning:', {
-          region,
-          country: data.country_name || data.country || '',
-          countryCode: countryCode || '',
-          city: data.city,
-          loading: false,
-        });
       } catch (error) {
         console.warn('Geolocation failed, using default region:', error);
         setGeolocationData({
@@ -109,7 +124,7 @@ export function useGeolocation(): GeolocationData {
     };
 
     detectRegion();
-  }, []);
+  }, []); // Empty dependency array to run only once
 
   return geolocationData;
 } 

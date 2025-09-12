@@ -52,7 +52,7 @@ interface CompaniesCarouselProps {
 
 const defaultCompanies: Company[] = [];
 
-export default function CompaniesCarousel({ companies = defaultCompanies, speed = 2000, text }: CompaniesCarouselProps) {
+export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1000, text }: CompaniesCarouselProps) {
      const [isHovered, setIsHovered] = useState(false);
      const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +75,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                {(text && text.trim() !== '') ? (
                     <div className="text-center mb-8">
                          <p
-                              className="text-gray-400 text-lg md:text-sm font-medium bg-white px-4 py-2 rounded-lg shadow-sm"
+                              className="text-gray-400 text-lg md:text-base font-medium bg-white px-4 py-2 rounded-lg shadow-sm"
                               style={{
                                    textRendering: 'optimizeLegibility',
                                    WebkitFontSmoothing: 'antialiased',
@@ -89,7 +89,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                ) : (
                     <div className="text-center mb-8">
                          <p
-                              className="text-gray-400 text-lg md:text-sm font-medium bg-white px-4 py-2 rounded-lg shadow-sm"
+                              className="text-gray-400 text-lg md:text-base font-medium px-4 py-2 rounded-lg shadow-sm"
                               style={{
                                    textRendering: 'optimizeLegibility',
                                    WebkitFontSmoothing: 'antialiased',
@@ -103,8 +103,8 @@ export default function CompaniesCarousel({ companies = defaultCompanies, speed 
                )}
 
                {/* Gradient overlays */}
-               <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-               <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+               <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-transparent to-transparent pointer-events-none"></div>
+               <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-transparent to-transparent pointer-events-none"></div>
 
                <div className="flex">
                     <div

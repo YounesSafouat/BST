@@ -112,33 +112,26 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
     return iconMap[iconName] || <ArrowRight className="w-5 h-5" />;
   };
 
+  // Function to format text with custom Odoo styling
+  const formatTextWithOdoo = (text: string) => {
+    if (!text) return text;
+
+    // Replace "odoo" (case insensitive) with custom styled version
+    const odooRegex = /(\b)(odoo)(\b)/gi;
+    return text.replace(odooRegex, (match, before, odoo, after) => {
+      return `${before}<span style=" font-weight: italic; display: inline-block;"><span style="color: #714B67">O</span><span style="color: #8F8F8F">doo</span></span>${after}`;
+    });
+  };
+
   return (
-    <section id="hero" className="relative overflow-hidden" style={{ marginTop: '-2rem', paddingTop: '0' }}>
-      {/* Background blur elements - hidden on mobile, visible on desktop */}
-      <div className="hidden lg:block absolute -left-10 sm:-left-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
-      <div className="hidden lg:block absolute -top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 bg-white/50 rounded-full filter blur-3xl" />
+    <section id="hero" className="relative overflow-hidden bg-transparent" style={{ marginTop: '-2rem', paddingTop: '0' }}>
+      {/* Removed white blur elements to show bubble effect */}
 
       <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2" style={{ marginTop: '0', paddingTop: '0' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
-          <div className="lg:hidden space-y-6 pt-0 mt-0 -mt-4" style={{ marginTop: '0', paddingTop: '0' }}>
-            {/* 1. Odoo Silver Partner Badge First */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="flex justify-center"
-            >
-              <img
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/oodo-silver-partner-logo.svg"
-                alt="Odoo Silver Partner"
-                className="w-32 h-16 object-contain"
-                onError={(e) => {
-                  console.error('Odoo Silver Partner badge failed to load');
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </motion.div>
+          <div className="lg:hidden space-y-4 sm:space-y-6 pt-0 mt-0 -mt-4 min-h-[80vh] flex flex-col justify-center" style={{ marginTop: '0', paddingTop: '0' }}>
+
 
             {/* 2. Headline Second - Centered and Bigger */}
             <motion.h1
@@ -147,9 +140,10 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               transition={{ delay: 0.2 }}
               className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight tracking-tight text-center"
               style={{ lineHeight: '1.1', marginTop: '0', paddingTop: '0' }}
-            >
-              {heroData?.headline || 'Chargement...'}
-            </motion.h1>
+              dangerouslySetInnerHTML={{
+                __html: formatTextWithOdoo(heroData?.headline || 'Chargement...')
+              }}
+            />
 
             {/* 3. Description Third */}
             <motion.div
@@ -198,25 +192,25 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
               </div>
             </motion.div>
 
-            {/* 5. CTA Buttons Fifth */}
+            {/* 5. CTA Buttons Fifth - Improved for small screens */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-row gap-3 justify-center px-4"
+              className="flex flex-col gap-2 justify-center px-4 max-w-md mx-2"
             >
               <Button
-                size="sm"
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-3 py-1.5 text-xs font-medium rounded-full flex-1 h-8 shadow-sm hover:shadow-md transition-all duration-200"
+                size="lg"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-6 py-2.5 text-sm font-medium rounded-full h-10 shadow-sm hover:shadow-md transition-all duration-200"
                 onClick={() => scrollToSection('#contact')}
               >
                 {heroData?.ctaPrimary?.text || 'Chargement...'}
                 {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
               </Button>
               <Button
-                size="sm"
+                size="lg"
                 variant="outline"
-                className="px-3 py-1.5 text-xs font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full flex-1 h-8 shadow-sm hover:shadow-md transition-all duration-200 bg-white"
+                className="px-6 py-2.5 text-sm font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 shadow-sm hover:shadow-md transition-all duration-200 bg-white"
                 onClick={() => scrollToSection('#modules')}
               >
                 {heroData?.ctaSecondary?.text || 'Chargement...'}
@@ -255,9 +249,10 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                   transition={{ delay: 0.3 }}
                   className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-900 leading-tight tracking-tight"
                   style={{ lineHeight: '1.1' }}
-                >
-                  {heroData?.headline || 'Chargement...'}
-                </motion.h1>
+                  dangerouslySetInnerHTML={{
+                    __html: formatTextWithOdoo(heroData?.headline || 'Chargement...')
+                  }}
+                />
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -277,11 +272,11 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-4"
+                className="flex flex-row gap-4 justify-center max-w-lg mx-auto"
               >
                 <Button
                   size="sm"
-                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold group rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
+                  className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold group rounded-full h-16 sm:h-12 lg:h-14"
                   onClick={() => scrollToSection('#contact')}
                 >
                   {heroData?.ctaPrimary?.text || 'Chargement...'}
@@ -290,7 +285,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
                 <Button
                   size="sm"
                   variant="outline"
-                  className="px-4 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-sm sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full w-full sm:w-auto h-12 sm:h-12 lg:h-14"
+                  className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-16 sm:h-12 lg:h-14"
                   onClick={() => scrollToSection('#expertise')}
                 >
                   {heroData?.ctaSecondary?.text || 'Chargement...'}
@@ -359,11 +354,11 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
       </div>
 
       {/* Companies Carousel */}
-      <div className="hidden lg:block bg-white pt-8 sm:pt-10 md:pt-12 lg:pt-16">
+      <div className="hidden lg:block bg-transparent pt-8 sm:pt-10 md:pt-12 lg:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData?.carousel?.companies}
-            speed={heroData?.carousel?.speed}
+            speed={heroData?.carousel?.speed ? Math.min(heroData.carousel.speed, 100) : 75}
             text={heroData?.carousel?.text}
           />
         </div>

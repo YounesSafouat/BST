@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
-import CasClient from "../../cas-client"
+import CasClient from "../../cas-client-v2"
 import PageVisibilityGuard from '@/components/PageVisibilityGuard';
 
 export const dynamic = "force-dynamic";

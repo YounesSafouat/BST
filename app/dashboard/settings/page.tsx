@@ -51,6 +51,10 @@ interface SiteSettings {
     casClient: boolean;
     contact: boolean;
   };
+  // Visual effects settings
+  visualEffects?: {
+    showCurvedLines: boolean;
+  };
   // Legacy fields for backward compatibility
   contactEmail?: string;
   contactPhone?: string;
@@ -81,6 +85,9 @@ export default function SettingsDashboard() {
       about: true,
       casClient: true,
       contact: true
+    },
+    visualEffects: {
+      showCurvedLines: true
     }
   })
   const [loading, setLoading] = useState(true)
@@ -122,6 +129,9 @@ export default function SettingsDashboard() {
               about: true,
               casClient: true,
               contact: true
+            },
+            visualEffects: data.content.visualEffects || {
+              showCurvedLines: true
             }
           })
         }
@@ -562,6 +572,38 @@ export default function SettingsDashboard() {
                 <p className="text-sm text-blue-800">
                   <strong>Note :</strong> Les pages désactivées ne seront pas accessibles aux visiteurs.
                   La page d'accueil ne peut pas être désactivée car elle est essentielle au fonctionnement du site.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Visual Effects Settings */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Effets Visuels</CardTitle>
+              <p className="text-sm text-gray-600">
+                Contrôlez les effets visuels et animations du site
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 gap-4">
+                {/* Curved Lines Toggle */}
+                <div className="flex items-center justify-between p-4 border rounded-lg">
+                  <div>
+                    <h4 className="font-medium text-gray-900">🎨 Lignes courbes de fond</h4>
+                    <p className="text-sm text-gray-500">Affiche les lignes courbes animées en arrière-plan de la page d'accueil</p>
+                  </div>
+                  <Switch
+                    checked={settings.visualEffects?.showCurvedLines ?? true}
+                    onCheckedChange={(checked) => updateField('visualEffects.showCurvedLines', checked)}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>Note :</strong> Les effets visuels peuvent impacter les performances sur les appareils moins puissants.
+                  Désactivez-les si vous rencontrez des problèmes de performance.
                 </p>
               </div>
             </CardContent>

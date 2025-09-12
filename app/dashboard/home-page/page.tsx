@@ -124,6 +124,7 @@ interface HomePageData {
           modules?: string[];
           expertiseText?: string;
           image?: string;
+          imageOtherCountries?: string;
           features?: Array<{
                title: string;
                description: string;
@@ -1997,6 +1998,65 @@ export default function HomePageDashboard() {
                                                   />
                                              </div>
                                         )}
+                                   </div>
+
+                                   <div>
+                                        <Label>Image autres pays</Label>
+                                        <div className="flex items-center gap-4">
+                                             <Input
+                                                  value={homeData.partnership.imageOtherCountries || ''}
+                                                  onChange={(e) => updateField('partnership.imageOtherCountries', e.target.value)}
+                                                  placeholder="URL de l'image pour les autres pays"
+                                             />
+                                             <input
+                                                  type="file"
+                                                  accept="image/*"
+                                                  onChange={async (e) => {
+                                                       const file = e.target.files?.[0];
+                                                       if (file) {
+                                                            try {
+                                                                 const formData = new FormData();
+                                                                 formData.append('file', file);
+                                                                 const response = await fetch('/api/upload', {
+                                                                      method: 'POST',
+                                                                      body: formData
+                                                                 });
+                                                                 if (response.ok) {
+                                                                      const data = await response.json();
+                                                                      updateField('partnership.imageOtherCountries', data.url);
+                                                                 }
+                                                            } catch (error) {
+                                                                 console.error('Error uploading image:', error);
+                                                            }
+                                                       }
+                                                  }}
+                                                  className="hidden"
+                                                  id="partnership-other-countries-image-upload"
+                                                  title="Choisir une image pour les autres pays"
+                                             />
+                                             <Button
+                                                  type="button"
+                                                  variant="outline"
+                                                  onClick={() => document.getElementById('partnership-other-countries-image-upload')?.click()}
+                                             >
+                                                  Choisir une image
+                                             </Button>
+                                        </div>
+                                        {homeData.partnership.imageOtherCountries && (
+                                             <div className="mt-2">
+                                                  <img
+                                                       src={homeData.partnership.imageOtherCountries}
+                                                       alt="Aperçu de l'image autres pays"
+                                                       className="w-32 h-32 object-cover rounded-lg border"
+                                                       onError={(e) => {
+                                                            e.currentTarget.src = '/placeholder.svg';
+                                                       }}
+                                                  />
+                                             </div>
+                                        )}
+                                        <p className="text-xs text-gray-500 mt-1">
+                                             Cette image sera affichée pour tous les visiteurs sauf ceux du Maroc
+                                        </p>
                                    </div>
 
                                    {/* Partnership Features */}
