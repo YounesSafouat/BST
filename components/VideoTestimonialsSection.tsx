@@ -37,7 +37,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Volume2, Pause, VolumeX, X, Maximize2 } from 'lucide-react';
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import Loader from './home/Loader';
 
 
@@ -79,31 +79,13 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
           wasMuted: boolean;
      } | null>(null);
      const [forceUpdate, setForceUpdate] = useState(0);
-     const [userRegion, setUserRegion] = useState<string>('international');
-     const [locationLoading, setLocationLoading] = useState(true);
      const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
      const fullscreenVideoRef = useRef<HTMLVideoElement | null>(null);
      const sectionRef = useRef<HTMLElement>(null);
      const eventHandlersRef = useRef<Map<string, { play: () => void; pause: () => void }>>(new Map());
 
-     // Detect user location for region-based filtering
-     useEffect(() => {
-          const detectUserLocation = async () => {
-               try {
-                    const location = await getUserLocation();
-                    if (location) {
-                         const region = getRegionFromCountry(location.countryCode);
-                         setUserRegion(region);
-                    }
-               } catch (error) {
-                    console.error('Video Testimonials - Error detecting user location:', error);
-               } finally {
-                    setLocationLoading(false);
-               }
-          };
-
-          detectUserLocation();
-     }, []);
+     // Use the new geolocation singleton service
+     const { data: locationData, loading: locationLoading, region: userRegion } = useGeolocationSingleton();
 
      const fallbackTestimonials: VideoTestimonial[] = [
           {

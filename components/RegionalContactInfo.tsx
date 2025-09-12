@@ -33,7 +33,7 @@ export default function RegionalContactInfo({
         const response = await fetch('/api/content/settings');
         if (response.ok) {
           const data = await response.json();
-          if (data.success && data.content?.regionalContact) {
+          if (data.content?.regionalContact) {
             setContactData(data.content.regionalContact);
           }
         }

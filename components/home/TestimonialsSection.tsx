@@ -8,6 +8,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { motion } from "framer-motion";
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
+import { getRegionFromCountry } from '@/lib/geolocation';
 
 
 interface Testimonial {
@@ -33,32 +35,21 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({ testimonialsSectionData, testimonials }: TestimonialsSectionProps) {
      const [mounted, setMounted] = useState(false);
      const [displayTestimonials, setDisplayTestimonials] = useState<Testimonial[]>([]);
-     const [userRegion, setUserRegion] = useState<string>('morocco'); // Default to morocco
+     
+     // Use the new geolocation singleton service
+     const { data: locationData, loading: geolocationLoading, region: userRegion } = useGeolocationSingleton();
 
      useEffect(() => {
           setMounted(true);
      }, []);
 
-     // Read geolocation from localStorage directly
+     // Fetch testimonials when geolocation is ready
      useEffect(() => {
-          const checkLocalStorage = () => {
-               const cachedData = localStorage.getItem('bst_geolocation_data');
-               if (cachedData) {
-                    const parsed = JSON.parse(cachedData);
-                    const countryCode = parsed.data?.countryCode;
-                    const region = countryCode === 'MA' ? 'morocco' : 'france';
-                    setUserRegion(region);
-                    console.log('💬 TestimonialsSection - Region from localStorage:', region);
-                    // Fetch testimonials immediately after setting region
-                    fetchTestimonials(region);
-               } else {
-                    // If no localStorage data yet, check again in 100ms
-                    setTimeout(checkLocalStorage, 100);
-               }
-          };
-          
-          checkLocalStorage();
-     }, []);
+          if (!geolocationLoading && userRegion) {
+               console.log('💬 TestimonialsSection - Region detected:', userRegion);
+               fetchTestimonials(userRegion);
+          }
+     }, [geolocationLoading, userRegion]);
 
      const fetchTestimonials = async (region?: string) => {
           try {
@@ -74,7 +65,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
           }
      };
 
-     if (!mounted) {
+     if (!mounted || geolocationLoading) {
           return (
                <div className="py-20 bg-[#f9fafb]">
                     <div className="max-w-7xl mx-auto px-4 text-center">

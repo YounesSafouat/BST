@@ -30,6 +30,26 @@ export async function GET() {
             about: true,
             casClient: true,
             contact: true
+          },
+          regionalContact: {
+            france: {
+              phone: '+33 1 23 45 67 89',
+              email: 'contact@blackswantechnology.fr',
+              address: '123 Avenue des Champs-Élysées, 75008 Paris, France',
+              whatsapp: '+33 1 23 45 67 89'
+            },
+            morocco: {
+              phone: '+212 522 123 456',
+              email: 'contact@blackswantechnology.ma',
+              address: '123 Boulevard Mohammed V, Casablanca, Maroc',
+              whatsapp: '+212 522 123 456'
+            },
+            other: {
+              phone: '+212 522 123 456',
+              email: 'contact@blackswantechnology.com',
+              address: '123 Boulevard Mohammed V, Casablanca, Maroc',
+              whatsapp: '+212 522 123 456'
+            }
           }
         },
         isActive: true,
