@@ -8,7 +8,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { motion } from "framer-motion";
-import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 
 
 interface Testimonial {
@@ -34,12 +33,29 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({ testimonialsSectionData, testimonials }: TestimonialsSectionProps) {
      const [mounted, setMounted] = useState(false);
      const [displayTestimonials, setDisplayTestimonials] = useState<Testimonial[]>([]);
-
-     // Use singleton geolocation service
-     const { region: userRegion } = useGeolocationSingleton();
+     const [userRegion, setUserRegion] = useState<string>('morocco'); // Default to morocco
 
      useEffect(() => {
           setMounted(true);
+     }, []);
+
+     // Read geolocation from localStorage directly
+     useEffect(() => {
+          const checkLocalStorage = () => {
+               const cachedData = localStorage.getItem('bst_geolocation_data');
+               if (cachedData) {
+                    const parsed = JSON.parse(cachedData);
+                    const countryCode = parsed.data?.countryCode;
+                    const region = countryCode === 'MA' ? 'morocco' : 'france';
+                    setUserRegion(region);
+                    console.log('💬 TestimonialsSection - Region from localStorage:', region);
+               } else {
+                    // If no localStorage data yet, check again in 100ms
+                    setTimeout(checkLocalStorage, 100);
+               }
+          };
+          
+          checkLocalStorage();
      }, []);
 
      useEffect(() => {
