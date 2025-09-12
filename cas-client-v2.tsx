@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import TestimonialCard from "@/components/ui/TestimonialCard"
-import CurvedLinesBackground from "@/components/ui/CurvedLinesBackground"
 import {
      Search,
      Filter,
@@ -236,9 +235,7 @@ export default function CasClientV2() {
      }
 
      return (
-          <div className="relative min-h-screen">
-               <CurvedLinesBackground>
-                    <div className="relative z-10 min-h-screen bg-transparent text-gray-900 mt-20">
+          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
 
 
                          {/* Hero Section - Copernic Style */}
@@ -480,6 +477,7 @@ export default function CasClientV2() {
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
                                                             slug={client.slug}
+                                                            hidePlayIcon={true}
                                                        />
                                                   ))}
                                              </div>
@@ -497,6 +495,7 @@ export default function CasClientV2() {
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
                                                             slug={client.slug}
+                                                            hidePlayIcon={true}
                                                        />
                                                   ))}
                                              </div>
@@ -514,9 +513,6 @@ export default function CasClientV2() {
                                    </div>
                               </div>
                          </section>
-                    </div>
-               </CurvedLinesBackground>
           </div>
-
      )
 }

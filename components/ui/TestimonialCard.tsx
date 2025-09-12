@@ -13,6 +13,7 @@ interface TestimonialCardProps {
      size?: 'small' | 'medium' | 'large';
      slug?: string;
      onClick?: () => void;
+     hidePlayIcon?: boolean;
 }
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({
@@ -26,7 +27,8 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
      className = "",
      size = 'medium',
      slug,
-     onClick
+     onClick,
+     hidePlayIcon = false
 }) => {
      const router = useRouter();
      const buttonColor = 'var(--color-main)'; // Use CSS variable for primary color
@@ -43,24 +45,24 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           switch (size) {
                case 'small':
                     return {
-                         height: '220px',
-                         titleFontSize: '40px',
-                         textFontSize: '13px',
-                         arrowFontSize: '28px'
+                         height: '180px', // YouTube-like 16:9 aspect ratio for small cards
+                         titleFontSize: '24px',
+                         textFontSize: '12px',
+                         arrowFontSize: '20px'
                     };
                case 'large':
                     return {
-                         height: '280px',
-                         titleFontSize: '64px',
+                         height: '400px', // YouTube-like 16:9 aspect ratio for large cards
+                         titleFontSize: '48px',
                          textFontSize: '16px',
-                         arrowFontSize: '40px'
+                         arrowFontSize: '32px'
                     };
                default: // medium
                     return {
-                         height: '200px',
-                         titleFontSize: '48px',
+                         height: '300px', // YouTube-like 16:9 aspect ratio for medium cards
+                         titleFontSize: '36px',
                          textFontSize: '14px',
-                         arrowFontSize: '32px'
+                         arrowFontSize: '24px'
                     };
           }
      };
@@ -267,9 +269,11 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
       `}</style>
 
                <div className="overlay"></div>
-               <button className="play-button" title="Voir la vidéo" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}>
-                    <div className="play-icon"></div>
-               </button>
+               {!hidePlayIcon && (
+                    <button className="play-button" title="Voir la vidéo" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}>
+                         <div className="play-icon"></div>
+                    </button>
+               )}
                {logo && <div className="logo"></div>}
                <h2 className="card-title">{title}</h2>
                <div className="arrow-container" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}>
