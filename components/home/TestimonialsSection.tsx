@@ -41,8 +41,6 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
 
      useEffect(() => {
           setMounted(true);
-          // Force fetch testimonials on mount to ensure fresh data
-          fetchTestimonials('international');
      }, []);
 
      // Fetch testimonials when geolocation is ready

@@ -48,6 +48,15 @@ export async function GET(request: NextRequest) {
     console.log('🔍 Testimonials API - Found testimonials:', testimonials.length);
     console.log('🔍 Testimonials API - Testimonials regions:', testimonials.map(t => ({ author: t.author, targetRegions: t.targetRegions })));
     
+    // Debug: Check if testimonials actually match the region filter
+    if (region && region !== 'all') {
+      const matchingTestimonials = testimonials.filter(t => 
+        t.targetRegions?.includes(region) || t.targetRegions?.includes('all')
+      );
+      console.log('🔍 Testimonials API - Matching testimonials for region', region, ':', matchingTestimonials.length);
+      console.log('🔍 Testimonials API - Matching testimonials details:', matchingTestimonials.map(t => ({ author: t.author, targetRegions: t.targetRegions })));
+    }
+    
     return NextResponse.json(testimonials);
   } catch (error) {
     console.error('Error fetching testimonials:', error);
