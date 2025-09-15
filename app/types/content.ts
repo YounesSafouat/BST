@@ -21,6 +21,7 @@ export interface Service {
   title: string;
   description: string;
   image: string;
+  buttonText?: string;
 }
 
 export interface ServicesData {
@@ -28,6 +29,7 @@ export interface ServicesData {
   subheadline: string;
   description: string;
   services: Service[];
+  defaultButtonText?: string;
 }
 
 // Odoo Certification Section Types

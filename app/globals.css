@@ -73,6 +73,17 @@ a {
   text-decoration: none;
 }
 
+/* Text selection styling */
+::selection {
+  background-color: var(--color-main);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--color-main);
+  color: white;
+}
+
 /* Utility classes for the two-color system */
 .text-color-main { color: var(--color-main); }
 .text-color-secondary { color: var(--color-secondary); }

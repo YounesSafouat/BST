@@ -53,6 +53,7 @@ interface Service {
   title: string;
   description: string;
   image: string;
+  buttonText?: string;
 }
 
 interface ServicesData {
@@ -60,6 +61,7 @@ interface ServicesData {
   subheadline: string;
   description: string;
   services: Service[];
+  defaultButtonText?: string;
 }
 
 interface ServicesSectionProps {
@@ -82,48 +84,65 @@ const fallbackServices: Service[] = [
     icon: "Settings",
     title: "Implémentation",
     description: "Nous déployons Odoo sur mesure en l'adaptant à vos processus. Migration de données sécurisée et mise en production sans friction.",
-    image: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80&fit=crop"
+    image: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80&fit=crop",
+    buttonText: "Démarrer un projet"
   },
   {
     icon: "Link2",
     title: "Intégration",
     description: "Connectez Odoo à votre écosystème existant (CRM, e-commerce, outils métier) pour une synchronisation temps réel et des processus unifiés.",
-    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80&fit=crop"
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80&fit=crop",
+    buttonText: "Intégrer maintenant"
   },
   {
     icon: "GraduationCap",
     title: "Formation",
     description: "Nous formons vos équipes via des sessions personnalisées pour garantir une adoption rapide et une maîtrise parfaite de votre nouvel environnement Odoo.",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80&fit=crop"
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80&fit=crop",
+    buttonText: "Réserver une formation"
   },
   {
     icon: "Headphones",
     title: "Support & Maintenance",
     description: "Bénéficiez d'une assistance technique réactive et d'une maintenance préventive pour garantir la performance et la pérennité de votre système.",
-    image: "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=800&q=80&fit=crop"
+    image: "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=800&q=80&fit=crop",
+    buttonText: "Obtenir du support"
   },
   {
     icon: "SearchCheck",
     title: "Audit & Optimisation",
     description: "Nos experts analysent vos processus actuels pour identifier les goulots d'étranglement et définir un plan d'action pour maximiser votre ROI.",
-    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop"
+    image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop",
+    buttonText: "Planifier un audit"
   },
   {
     icon: "Lightbulb",
     title: "Conseil Stratégique",
     description: "Nous vous accompagnons dans la définition de votre feuille de route digitale pour faire de la technologie un véritable levier de croissance.",
-    image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=80&fit=crop"
+    image: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=80&fit=crop",
+    buttonText: "Demander conseil"
   }
 ];
 
 export default function ServicesSection({ servicesData }: ServicesSectionProps) {
   const [activeService, setActiveService] = useState(0);
 
+  // Debug: Log the received data
+  console.log('ServicesSection - servicesData:', servicesData);
+  console.log('ServicesSection - servicesData?.services:', servicesData?.services);
+  console.log('ServicesSection - servicesData?.defaultButtonText:', servicesData?.defaultButtonText);
+
   // Use CMS data if available, otherwise fallback to default data
   const services = servicesData?.services || fallbackServices;
   const headline = servicesData?.headline || "Nos Expertises";
   const subheadline = servicesData?.subheadline || "Plus qu'un intégrateur, un partenaire de croissance";
   const description = servicesData?.description || "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.";
+  const defaultButtonText = servicesData?.defaultButtonText || "Discutons-en";
+
+  // Debug: Log the final values
+  console.log('ServicesSection - final services:', services);
+  console.log('ServicesSection - final defaultButtonText:', defaultButtonText);
+  console.log('ServicesSection - active service buttonText:', services[activeService]?.buttonText);
 
   const scrollToContact = () => {
     const contactSection = document.querySelector('#contact');
@@ -211,7 +230,7 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
                     className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white font-semibold group"
                     onClick={scrollToContact}
                   >
-                    Discutons-en
+                    {services[activeService].buttonText || defaultButtonText}
                     <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>

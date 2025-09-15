@@ -164,7 +164,9 @@ interface HomePageData {
                title: string;
                description: string;
                image: string;
+               buttonText?: string;
           }>;
+          defaultButtonText?: string;
      };
      certification: {
           headline: string;

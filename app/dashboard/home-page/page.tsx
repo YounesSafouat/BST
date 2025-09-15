@@ -85,7 +85,9 @@ interface HomePageData {
                title: string;
                description: string;
                image: string;
+               buttonText?: string;
           }>;
+          defaultButtonText?: string;
      };
      certification: {
           headline: string;
@@ -239,6 +241,7 @@ export default function HomePageDashboard() {
                               headline: "NOS SERVICES",
                               subheadline: "De l'audit à la mise en production, nous vous accompagnons à chaque étape",
                               description: "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.",
+                              defaultButtonText: "Discutons-en",
                               services: [
                                    {
                                         icon: "Settings",
@@ -1387,6 +1390,18 @@ export default function HomePageDashboard() {
                                         />
                                    </div>
 
+                                   <div>
+                                        <Label>Texte par défaut du bouton</Label>
+                                        <Input
+                                             value={homeData.services.defaultButtonText || ''}
+                                             onChange={(e) => updateField('services.defaultButtonText', e.target.value)}
+                                             placeholder="Texte par défaut pour tous les boutons (ex: 'Discutons-en')"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                             Texte utilisé pour les services qui n'ont pas de texte personnalisé
+                                        </p>
+                                   </div>
+
                                    {/* Services */}
                                    <div className="space-y-4">
                                         <div className="flex items-center justify-between">
@@ -1396,7 +1411,8 @@ export default function HomePageDashboard() {
                                                        icon: 'Settings',
                                                        title: 'Nouveau service',
                                                        description: 'Description du service',
-                                                       image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80&fit=crop'
+                                                       image: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?w=800&q=80&fit=crop',
+                                                       buttonText: ''
                                                   })}
                                                   size="sm"
                                                   className="flex items-center gap-2"
@@ -1482,6 +1498,18 @@ export default function HomePageDashboard() {
                                                                  />
                                                             </div>
                                                        )}
+                                                  </div>
+
+                                                  <div className="mt-4">
+                                                       <Label>Texte du bouton (optionnel)</Label>
+                                                       <Input
+                                                            value={service.buttonText || ''}
+                                                            onChange={(e) => updateArrayField('services.services', index, 'buttonText', e.target.value)}
+                                                            placeholder="Texte personnalisé du bouton (ex: 'Démarrer un projet')"
+                                                       />
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            Laissez vide pour utiliser le texte par défaut
+                                                       </p>
                                                   </div>
                                              </Card>
                                         ))}
