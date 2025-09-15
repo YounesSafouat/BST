@@ -24,9 +24,9 @@ export function useVisualEffects() {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log('Visual effects settings fetched:', data);
+        
         if (data && data.content && data.content.visualEffects) {
-          console.log('Setting visual effects to:', data.content.visualEffects);
+          
           setSettings(data.content.visualEffects);
         } else {
           console.log('No visual effects settings found, using default');

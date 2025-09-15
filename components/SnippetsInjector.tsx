@@ -55,12 +55,12 @@ export default function SnippetsInjector() {
                     if (data.length > 0) {
                          const snippetsContent = data.find(item => item.type === 'snippets');
                          if (snippetsContent && snippetsContent.content?.snippets) {
-                              console.log('SnippetsInjector - Content snippets:', snippetsContent.content.snippets); // Debug log
+                              
                               // Sort by priority
                               const sortedSnippets = snippetsContent.content.snippets
                                    .filter((snippet: Snippet) => snippet.isActive)
                                    .sort((a: Snippet, b: Snippet) => (a.priority || 0) - (b.priority || 0));
-                              console.log('SnippetsInjector - Sorted snippets:', sortedSnippets); // Debug log
+                              
                               setSnippets(sortedSnippets);
                          } else {
                               console.log('SnippetsInjector - No snippets found in data'); // Debug log

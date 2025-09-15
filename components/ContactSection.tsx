@@ -132,13 +132,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      const countryCode = locationData?.countryCode || '';
      const city = locationData?.city || '';
 
-     useEffect(() => {
-          console.log('=== GEOLOCATION DEBUG ===');
-          console.log('Geolocation data changed:', { region, country, geolocationLoading, countryCode, city });
-          console.log('Current selectedCountry:', selectedCountry);
-          console.log('Type of countryCode:', typeof countryCode, 'Value:', countryCode);
-          console.log('========================');
-     }, [region, country, geolocationLoading, countryCode, city, selectedCountry]);
+;
 
      useEffect(() => {
           return () => {
@@ -149,9 +143,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           };
      }, []);
 
-     useEffect(() => {
-          console.log('Form data changed:', formData);
-     }, [formData]);
+    
 
      const [, forceUpdate] = useState({});
      const triggerReRender = () => forceUpdate({});
@@ -329,12 +321,10 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      }, [selectedCountry.code]);
 
      useEffect(() => {
-          console.log('=== COUNTRY DETECTION DEBUG ===');
-          console.log('Country detection useEffect triggered:', { geolocationLoading, countryCode, region, city });
-          console.log('Current selectedCountry before detection:', selectedCountry);
+         
 
           if (!geolocationLoading && countryCode) {
-               console.log('✅ Geolocation ready, attempting to detect country for countryCode:', countryCode);
+               
                let detectedCountry: Country;
                switch (countryCode) {
                     case 'FR':
@@ -1163,7 +1153,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                }
                setSelectedCountry(detectedCountry);
                console.log('Auto-detected country:', detectedCountry.name);
-               console.log('Setting selectedCountry to:', detectedCountry);
+               
           } else {
                console.log('Country detection skipped:', { geolocationLoading, countryCode });
                // Fallback: if geolocation is not working, try to detect from region

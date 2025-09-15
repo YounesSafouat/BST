@@ -70,7 +70,7 @@ class GeolocationService {
 
   private async verifyCachedLocation() {
     try {
-      console.log('📍 Verifying cached location accuracy...');
+     
       const response = await fetch('https://ipinfo.io/json', {
         method: 'GET',
         headers: { 'Accept': 'application/json' },

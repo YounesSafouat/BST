@@ -61,14 +61,6 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
      // Use singleton geolocation service
      const { region: detectedRegion, loading: locationLoading, data: locationData } = useGeolocationSingleton();
 
-     // Debug logging for region changes
-     React.useEffect(() => {
-          console.log('🏢 OurAgencySection - Region changed:', {
-               userRegion,
-               detectedRegion,
-               finalRegion: detectedRegion || userRegion
-          });
-     }, [userRegion, detectedRegion]);
 
      const getPartnershipImage = (): string => {
           // Simple: read localStorage and check country code
@@ -118,11 +110,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                     setImageUrl(partnershipData?.imageOtherCountries || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20logo.png");
                }
                
-               console.log('🏢 OurAgencySection - Country detected:', {
-                    countryCode,
-                    isMorocco: isMoroccoCountry,
-                    imageUrl: isMoroccoCountry ? partnershipData?.image : partnershipData?.imageOtherCountries
-               });
+              
           }
      }, [partnershipData]);
 
