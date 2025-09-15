@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       query = {
         $or: [
           { targetRegions: 'all' },
-          { targetRegions: region }
+          { targetRegions: { $in: [region] } }
         ]
       };
       console.log('🔍 Testimonials API - Query filter:', JSON.stringify(query));
