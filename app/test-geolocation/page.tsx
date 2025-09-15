@@ -1,33 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import { getRegionFromCountry } from '@/lib/geolocation';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 
 export default function TestGeolocationPage() {
-     const [userRegion, setUserRegion] = useState<string>('detecting...');
-     const [locationData, setLocationData] = useState<any>(null);
      const [testimonials, setTestimonials] = useState<any[]>([]);
-     const [loading, setLoading] = useState(true);
-
-     useEffect(() => {
-          const detectLocation = async () => {
-               try {
-                    const location = await getUserLocation();
-                    if (location) {
-                         const region = getRegionFromCountry(location.countryCode);
-                         setUserRegion(region);
-                         setLocationData(location);
-                    }
-               } catch (error) {
-                    console.error('Error detecting location:', error);
-                    setUserRegion('error');
-               } finally {
-                    setLoading(false);
-               }
-          };
-
-          detectLocation();
-     }, []);
+     const { data: locationData, loading, region: userRegion } = useGeolocationSingleton();
 
      useEffect(() => {
           if (userRegion && userRegion !== 'detecting...' && userRegion !== 'error') {

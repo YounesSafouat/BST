@@ -291,11 +291,6 @@ export default function HomePage() {
      // Use singleton geolocation service
      const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
 
-     // Debug logging
-     useEffect(() => {
-          console.log('HomePage - Visual effects settings:', visualEffectsSettings);
-          console.log('HomePage - Geolocation region:', userRegion, 'from cache:', isFromCache);
-     }, [visualEffectsSettings, userRegion, isFromCache]);
 
      const [hiddenTimelineCards, setHiddenTimelineCards] = useState<Set<string>>(new Set());
 

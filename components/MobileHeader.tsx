@@ -43,7 +43,8 @@ import { useRouter } from "next/navigation"
 import { useButtonAnalytics } from '@/hooks/use-analytics'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from "framer-motion"
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
+import { getRegionFromCountry } from '@/lib/geolocation'
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -55,7 +56,6 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrollY, setScrollY] = useState(0)
-  const [location, setLocation] = useState<any>(null);
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
@@ -63,6 +63,7 @@ export default function MobileHeader() {
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
   const { trackButtonClick } = useButtonAnalytics()
+  const { data: location, loading: locationLoading } = useGeolocationSingleton();
 
   // Add scroll detection
   useEffect(() => {
@@ -74,20 +75,6 @@ export default function MobileHeader() {
   }, [])
 
   const isScrolled = scrollY > 0;
-
-  // Detect user location
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        const userLocation = await getUserLocation();
-        setLocation(userLocation);
-      } catch (error) {
-        console.error("Error detecting location for mobile header:", error);
-      }
-    };
-
-    detectLocation();
-  }, []);
 
   // Fetch header data from CMS
   useEffect(() => {

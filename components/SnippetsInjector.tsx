@@ -50,7 +50,7 @@ export default function SnippetsInjector() {
                const response = await fetch('/api/content/snippets');
                if (response.ok) {
                     const data = await response.json();
-                    console.log('SnippetsInjector - Fetched data:', data); // Debug log
+                    
 
                     if (data.length > 0) {
                          const snippetsContent = data.find(item => item.type === 'snippets');

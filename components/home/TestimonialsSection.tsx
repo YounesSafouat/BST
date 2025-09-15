@@ -41,24 +41,34 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
 
      useEffect(() => {
           setMounted(true);
+          // Force fetch testimonials on mount to ensure fresh data
+          fetchTestimonials('international');
      }, []);
 
      // Fetch testimonials when geolocation is ready
      useEffect(() => {
-          if (!geolocationLoading && userRegion) {
-               console.log('💬 TestimonialsSection - Region detected:', userRegion);
-               fetchTestimonials(userRegion);
+          if (!geolocationLoading) {
+               const region = userRegion || 'international'; // Fallback to international
+               console.log('💬 TestimonialsSection - Region detected:', region);
+               fetchTestimonials(region);
           }
      }, [geolocationLoading, userRegion]);
 
      const fetchTestimonials = async (region?: string) => {
           try {
-               const targetRegion = region || userRegion;
+               const targetRegion = region || userRegion || 'international';
+               console.log('💬 TestimonialsSection - Fetching testimonials for region:', targetRegion);
+               console.log('💬 TestimonialsSection - Current userRegion:', userRegion);
+               console.log('💬 TestimonialsSection - Geolocation loading:', geolocationLoading);
+               
                const response = await fetch(`/api/testimonials?region=${targetRegion}`);
                if (response.ok) {
                     const data = await response.json();
                     setDisplayTestimonials(data || []);
                     console.log(`💬 TestimonialsSection - Fetched ${data?.length || 0} testimonials for region: ${targetRegion}`);
+                    console.log('💬 TestimonialsSection - Testimonials data:', data.map(t => ({ author: t.author, targetRegions: t.targetRegions })));
+               } else {
+                    console.error('💬 TestimonialsSection - API response not ok:', response.status);
                }
           } catch (error) {
                console.error('Error fetching testimonials:', error);
@@ -113,11 +123,11 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                          }}
                          loop={true}
                          grabCursor={true}
-                         className="w-full min-h-[450px] sm:min-h-[500px] md:min-h-[550px] pb-15"
+                         className="w-full min-h-[450px] sm:min-h-[500px] md:min-h-[350px] lg:min-h-[400px] xl:min-h-[450px] pb-15"
                     >
                          {displayTestimonials.map((testimonial) => (
                               <SwiperSlide key={testimonial._id}>
-                                   <div className="bg-white flex flex-col gap-4 justify-between shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl min-h-[400px] sm:min-h-[450px] md:min-h-[500px]">
+                                   <div className="bg-white flex flex-col gap-4 justify-between shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl min-h-[400px] sm:min-h-[450px] md:min-h-[300px] lg:min-h-[350px] xl:min-h-[400px]">
                                         <div className="testimonial-rate flex gap-0.5">
                                              <i className="fa-solid fa-star text-[#f9b707]"></i>
                                              <i className="fa-solid fa-star text-[#f9b707]"></i>

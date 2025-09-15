@@ -6,7 +6,7 @@ interface VisualEffectsSettings {
 
 export function useVisualEffects() {
   const [settings, setSettings] = useState<VisualEffectsSettings>({
-    showCurvedLines: true // Default to true for better UX
+    showCurvedLines: false // Default to true for better UX
   });
   const [loading, setLoading] = useState(true);
 

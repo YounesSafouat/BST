@@ -1625,16 +1625,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           // Check if geolocation is loaded (city should be available)
           const geolocationReady = !geolocationLoading && city;
 
-          console.log('Form validation check:', {
-               hasValidName,
-               hasValidEmail,
-               hasValidPhone,
-               basicValid,
-               fullValid,
-               geolocationReady,
-               city,
-               geolocationLoading
-          });
+         
 
           return basicValid && geolocationReady; // Require geolocation to be ready
      };

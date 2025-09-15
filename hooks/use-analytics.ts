@@ -25,7 +25,7 @@ export function usePageAnalytics() {
     sessionData[pathname] = (sessionData[pathname] || 0) + 1;
     sessionStorage.setItem('pageVisits', JSON.stringify(sessionData));
     
-    console.log(`Page visit tracked: ${pathname} (Session: ${sessionData[pathname]}, Total in DB: +1)`);
+    
   }, [pathname]);
 }
 

@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const region = searchParams.get('region');
     
+    console.log('🔍 Testimonials API - Region requested:', region);
+    
     let query = {};
     if (region && region !== 'all') {
       query = {
@@ -37,9 +39,15 @@ export async function GET(request: NextRequest) {
           { targetRegions: region }
         ]
       };
+      console.log('🔍 Testimonials API - Query filter:', JSON.stringify(query));
+    } else {
+      console.log('🔍 Testimonials API - No region filter, showing all testimonials');
     }
     
     const testimonials = await Testimonial.find(query).lean();
+    console.log('🔍 Testimonials API - Found testimonials:', testimonials.length);
+    console.log('🔍 Testimonials API - Testimonials regions:', testimonials.map(t => ({ author: t.author, targetRegions: t.targetRegions })));
+    
     return NextResponse.json(testimonials);
   } catch (error) {
     console.error('Error fetching testimonials:', error);

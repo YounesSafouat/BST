@@ -39,7 +39,8 @@ import { Button } from "@/components/ui/button"
 import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin, FileText, Award, Users, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { getUserLocation, getRegionFromCountry, shouldShowContent, type Region } from "@/lib/geolocation"
+import { getRegionFromCountry, shouldShowContent, type Region } from "@/lib/geolocation"
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 import {
   Pagination,
   PaginationContent,
@@ -70,27 +71,8 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [userRegion, setUserRegion] = useState<Region>('international');
-  const [locationLoading, setLocationLoading] = useState(true);
   const pageSize = 6;
-
-  useEffect(() => {
-    const detectUserLocation = async () => {
-      try {
-        const location = await getUserLocation();
-        if (location) {
-          const region = getRegionFromCountry(location.countryCode);
-          setUserRegion(region);
-        }
-      } catch (error) {
-        console.error('Blog Page - Error detecting user location:', error);
-      } finally {
-        setLocationLoading(false);
-      }
-    };
-
-    detectUserLocation();
-  }, []);
+  const { data: location, loading: locationLoading, region: userRegion } = useGeolocationSingleton();
 
   useEffect(() => {
     const fetchBlogData = async () => {

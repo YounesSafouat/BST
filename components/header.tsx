@@ -38,7 +38,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation';
+import { getRegionFromCountry } from '@/lib/geolocation';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useRouter } from 'next/navigation';
 import { useButtonAnalytics } from '@/hooks/use-analytics';
@@ -53,26 +54,12 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoaded: boolean }) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [location, setLocation] = useState<any>(null);
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [headerData, setHeaderData] = useState<any>(null);
   const { isPageVisible } = usePageVisibility();
   const { trackButtonClick } = useButtonAnalytics();
-
-  // Detect location using the same logic as other components
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        const userLocation = await getUserLocation();
-        setLocation(userLocation);
-      } catch (error) {
-        console.error("Error detecting location for header:", error);
-      }
-    };
-
-    detectLocation();
-  }, []);
+  const { data: location, loading: locationLoading } = useGeolocationSingleton();
 
   // Fetch header data from CMS
   useEffect(() => {

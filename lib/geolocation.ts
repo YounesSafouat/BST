@@ -146,28 +146,22 @@ export async function getUserLocation(): Promise<GeolocationData | null> {
 export function getRegionFromCountry(countryCode: string): Region {
   const countryCodeUpper = countryCode.toUpperCase();
   
-  console.log('Detecting region for country code:', countryCodeUpper); // Debug log
-  
   // Morocco detection - handle various possible codes
   if (countryCodeUpper === 'MA' || countryCodeUpper === 'MAR' || countryCodeUpper === 'MOROCCO') {
-    console.log('Region detected: Morocco');
     return 'morocco';
   }
   
   // France detection
   if (countryCodeUpper === 'FR' || countryCodeUpper === 'FRA' || countryCodeUpper === 'FRANCE') {
-    console.log('Region detected: France');
     return 'france';
   }
   
   // If we get a valid country code but not France or Morocco, it's international
   if (countryCodeUpper && countryCodeUpper.length >= 2 && countryCodeUpper !== 'XX') {
-    console.log('Region detected: International (country code:', countryCodeUpper, ')');
     return 'international';
   }
   
   // Fallback to international if no valid country code
-  console.log('No valid country code, defaulting to International');
   return 'international';
 }
 

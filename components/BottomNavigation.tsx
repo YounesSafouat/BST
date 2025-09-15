@@ -39,7 +39,8 @@ import { FaWhatsapp } from "react-icons/fa"
 import Link from "next/link"
 import { useButtonAnalytics } from '@/hooks/use-analytics'
 import { useEffect, useState } from 'react'
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
+import { getRegionFromCountry } from '@/lib/geolocation'
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 
 interface BottomNavigationProps {
   headerData?: any
@@ -47,24 +48,10 @@ interface BottomNavigationProps {
 
 export default function BottomNavigation({ headerData }: BottomNavigationProps) {
   const { trackButtonClick } = useButtonAnalytics()
-  const [location, setLocation] = useState<any>(null)
   const [contactData, setContactData] = useState<any>(null)
   const [phoneNumber, setPhoneNumber] = useState<string | null>(null)
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null)
-
-  // Detect location
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        const userLocation = await getUserLocation();
-        setLocation(userLocation);
-      } catch (error) {
-        console.error("Error detecting location for bottom navigation:", error);
-      }
-    };
-
-    detectLocation();
-  }, []);
+  const { data: location, loading: locationLoading } = useGeolocationSingleton();
 
   // Fetch regional contact data
   useEffect(() => {

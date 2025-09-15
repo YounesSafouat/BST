@@ -38,7 +38,8 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "luc
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
-import { getUserLocation, getRegionFromCountry } from '@/lib/geolocation'
+import { getRegionFromCountry } from '@/lib/geolocation'
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 import { useRouter } from 'next/navigation'
 import { useButtonAnalytics } from '@/hooks/use-analytics'
 
@@ -63,27 +64,10 @@ const IconMap = {
 
 export default function Footer() {
   const router = useRouter();
-  const [location, setLocation] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [contactData, setContactData] = useState<any>(null);
   const [footerContent, setFooterContent] = useState<any>(null);
   const { trackButtonClick } = useButtonAnalytics();
-
-  // Detect location using the same logic as pricing section
-  useEffect(() => {
-    const detectLocation = async () => {
-      try {
-        const userLocation = await getUserLocation();
-        setLocation(userLocation);
-      } catch (error) {
-        console.error("Error detecting location for footer:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    detectLocation();
-  }, []);
+  const { data: location, loading } = useGeolocationSingleton();
 
   // Fetch regional contact data
   useEffect(() => {
