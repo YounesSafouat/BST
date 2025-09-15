@@ -178,7 +178,6 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
      useEffect(() => {
           const handleClickOutside = (event: MouseEvent) => {
                if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                    console.log('Click outside dropdown, closing');
                     setIsOpen(false);
                }
           };
@@ -190,17 +189,11 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
      // Focus the search input when dropdown opens
      useEffect(() => {
           if (isOpen && searchInputRef.current) {
-               console.log('Dropdown opened, focusing search input');
                setTimeout(() => {
                     searchInputRef.current?.focus();
                }, 100);
           }
      }, [isOpen]);
-
-     // Debug searchTerm changes
-     useEffect(() => {
-          console.log('searchTerm state changed to:', searchTerm);
-     }, [searchTerm]);
 
      const filteredCountries = countries.filter(country =>
           country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -208,12 +201,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
           country.code.toLowerCase().includes(searchTerm.toLowerCase())
      );
 
-     console.log('Search term:', searchTerm);
-     console.log('Filtered countries count:', filteredCountries.length);
-     console.log('All countries count:', countries.length);
-
      const handleCountrySelect = (country: Country) => {
-          console.log('Country selected:', country);
           onCountryChange(country);
           setIsOpen(false);
           setSearchTerm('');
@@ -221,10 +209,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
 
      const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
           const value = e.target.value;
-          console.log('Search input changed to:', value);
-          console.log('Current searchTerm before update:', searchTerm);
           setSearchTerm(value);
-          console.log('setSearchTerm called with:', value);
      };
 
      return (
@@ -254,24 +239,19 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
                                         defaultValue={searchTerm}
                                         onChange={handleSearchChange}
                                         onFocus={(e) => {
-                                             console.log('Search input focused');
                                              e.stopPropagation();
                                         }}
                                         onClick={(e) => {
-                                             console.log('Search input clicked');
                                              e.stopPropagation();
                                         }}
                                         onKeyDown={(e) => {
-                                             console.log('Search input key pressed:', e.key);
                                              e.stopPropagation();
                                         }}
                                         onMouseDown={(e) => {
-                                             console.log('Search input mouse down');
                                              e.stopPropagation();
                                         }}
                                         onInput={(e) => {
                                              const value = (e.target as HTMLInputElement).value;
-                                             console.log('Search input onInput:', value);
                                              setSearchTerm(value);
                                         }}
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)]"
