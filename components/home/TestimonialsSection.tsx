@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
@@ -35,6 +35,7 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({ testimonialsSectionData, testimonials }: TestimonialsSectionProps) {
      const [mounted, setMounted] = useState(false);
      const [displayTestimonials, setDisplayTestimonials] = useState<Testimonial[]>([]);
+     const lastFetchedRegion = useRef<string | null>(null);
      
      // Use the new geolocation singleton service
      const { data: locationData, loading: geolocationLoading, region: userRegion } = useGeolocationSingleton();
@@ -43,14 +44,14 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
           setMounted(true);
      }, []);
 
-     // Fetch testimonials when geolocation is ready
+     // Fetch testimonials when geolocation is ready or when region changes
      useEffect(() => {
-          if (!geolocationLoading) {
-               const region = userRegion || 'international'; // Fallback to international
-               console.log('💬 TestimonialsSection - Region detected:', region);
-               fetchTestimonials(region);
+          if (mounted && !geolocationLoading && userRegion && lastFetchedRegion.current !== userRegion) {
+               console.log('💬 TestimonialsSection - Region detected:', userRegion);
+               lastFetchedRegion.current = userRegion;
+               fetchTestimonials(userRegion);
           }
-     }, [geolocationLoading, userRegion]);
+     }, [mounted, geolocationLoading, userRegion]);
 
      const fetchTestimonials = async (region?: string) => {
           try {
