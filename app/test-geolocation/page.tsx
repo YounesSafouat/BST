@@ -9,7 +9,7 @@ export default function TestGeolocationPage() {
      const { data: locationData, loading, region: userRegion } = useGeolocationSingleton();
 
      useEffect(() => {
-          if (userRegion && userRegion !== 'detecting...' && userRegion !== 'error') {
+          if (userRegion) {
                fetchTestimonials();
           }
      }, [userRegion]);
@@ -129,24 +129,21 @@ export default function TestGeolocationPage() {
                     <div className="bg-white rounded-lg shadow-md p-6 mt-8">
                          <h3 className="text-lg font-semibold text-gray-900 mb-4">🧪 Tester différentes régions</h3>
                          <p className="text-sm text-gray-600 mb-4">
-                              Testez comment le contenu change selon la région sélectionnée:
+                              La région est détectée automatiquement. Pour tester différentes régions, utilisez un VPN ou changez votre localisation.
                          </p>
                          <div className="flex flex-wrap gap-2">
                               {['france', 'morocco', 'international'].map((region) => (
-                                   <button
+                                   <div
                                         key={region}
-                                        onClick={() => {
-                                             setUserRegion(region);
-                                             fetchTestimonials();
-                                        }}
-                                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${userRegion === region
+                                        className={`px-4 py-2 rounded-lg text-sm font-medium ${userRegion === region
                                              ? 'bg-[var(--color-main)] text-white'
-                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                             : 'bg-gray-100 text-gray-700'
                                              }`}
                                    >
                                         {region === 'france' ? '🇫🇷 France' :
                                              region === 'morocco' ? '🇲🇦 Maroc' : '🌍 International'}
-                                   </button>
+                                        {userRegion === region && ' (Actuel)'}
+                                   </div>
                               ))}
                          </div>
                     </div>
