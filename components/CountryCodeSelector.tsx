@@ -173,10 +173,12 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
      const [isOpen, setIsOpen] = useState(false);
      const [searchTerm, setSearchTerm] = useState('');
      const dropdownRef = useRef<HTMLDivElement>(null);
+     const searchInputRef = useRef<HTMLInputElement>(null);
 
      useEffect(() => {
           const handleClickOutside = (event: MouseEvent) => {
                if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                    console.log('Click outside dropdown, closing');
                     setIsOpen(false);
                }
           };
@@ -185,16 +187,44 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
           return () => document.removeEventListener('mousedown', handleClickOutside);
      }, []);
 
+     // Focus the search input when dropdown opens
+     useEffect(() => {
+          if (isOpen && searchInputRef.current) {
+               console.log('Dropdown opened, focusing search input');
+               setTimeout(() => {
+                    searchInputRef.current?.focus();
+               }, 100);
+          }
+     }, [isOpen]);
+
+     // Debug searchTerm changes
+     useEffect(() => {
+          console.log('searchTerm state changed to:', searchTerm);
+     }, [searchTerm]);
+
      const filteredCountries = countries.filter(country =>
           country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           country.dialCode.includes(searchTerm) ||
           country.code.toLowerCase().includes(searchTerm.toLowerCase())
      );
 
+     console.log('Search term:', searchTerm);
+     console.log('Filtered countries count:', filteredCountries.length);
+     console.log('All countries count:', countries.length);
+
      const handleCountrySelect = (country: Country) => {
+          console.log('Country selected:', country);
           onCountryChange(country);
           setIsOpen(false);
           setSearchTerm('');
+     };
+
+     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.target.value;
+          console.log('Search input changed to:', value);
+          console.log('Current searchTerm before update:', searchTerm);
+          setSearchTerm(value);
+          console.log('setSearchTerm called with:', value);
      };
 
      return (
@@ -210,16 +240,43 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
                </button>
 
                {isOpen && (
-                    <div className="absolute top-full left-0 z-50 w-80 max-h-96 bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden">
+                    <div 
+                         className="absolute top-full left-0 z-50 w-80 max-h-96 bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
+                         onMouseDown={(e) => e.preventDefault()}
+                    >
                          <div className="p-3 border-b border-gray-200">
                               <div className="relative">
-                                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                                    <input
+                                        ref={searchInputRef}
                                         type="text"
                                         placeholder="Rechercher un pays..."
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        defaultValue={searchTerm}
+                                        onChange={handleSearchChange}
+                                        onFocus={(e) => {
+                                             console.log('Search input focused');
+                                             e.stopPropagation();
+                                        }}
+                                        onClick={(e) => {
+                                             console.log('Search input clicked');
+                                             e.stopPropagation();
+                                        }}
+                                        onKeyDown={(e) => {
+                                             console.log('Search input key pressed:', e.key);
+                                             e.stopPropagation();
+                                        }}
+                                        onMouseDown={(e) => {
+                                             console.log('Search input mouse down');
+                                             e.stopPropagation();
+                                        }}
+                                        onInput={(e) => {
+                                             const value = (e.target as HTMLInputElement).value;
+                                             console.log('Search input onInput:', value);
+                                             setSearchTerm(value);
+                                        }}
                                         className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)]"
+                                        autoComplete="off"
+                                        autoFocus
                                    />
                               </div>
                          </div>
