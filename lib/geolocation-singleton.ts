@@ -56,10 +56,43 @@ class GeolocationService {
           };
           console.log('📍 Geolocation service initialized from cache');
           this.notifySubscribers();
+          
+          // Verify the cached location is still accurate after a short delay
+          setTimeout(() => {
+            this.verifyCachedLocation();
+          }, 2000); // 2 second delay to let the page load
         }
       }
     } catch (error) {
       console.warn('Failed to initialize from cache:', error);
+    }
+  }
+
+  private async verifyCachedLocation() {
+    try {
+      console.log('📍 Verifying cached location accuracy...');
+      const response = await fetch('https://ipinfo.io/json', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      
+      if (response.ok) {
+        const currentData = await response.json();
+        const currentCountry = currentData.country;
+        const cachedCountry = this.state.data?.countryCode;
+        
+        console.log('📍 Current location:', currentCountry, 'Cached location:', cachedCountry);
+        
+        if (currentCountry !== cachedCountry) {
+          console.log('📍 Location changed! Clearing cache and making fresh API call');
+          this.clearCache();
+          this.detectLocation();
+        } else {
+          console.log('📍 Cached location is still accurate');
+        }
+      }
+    } catch (error) {
+      console.log('📍 Location verification failed, keeping cached data:', error);
     }
   }
 
