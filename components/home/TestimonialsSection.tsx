@@ -62,9 +62,20 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                const response = await fetch(`/api/testimonials?region=${targetRegion}`);
                if (response.ok) {
                     const data = await response.json();
-                    setDisplayTestimonials(data || []);
                     console.log(`💬 TestimonialsSection - Fetched ${data?.length || 0} testimonials for region: ${targetRegion}`);
                     console.log('💬 TestimonialsSection - Testimonials data:', data.map(t => ({ author: t.author, targetRegions: t.targetRegions })));
+                    
+                    // Client-side filtering as backup
+                    let filteredData = data || [];
+                    if (targetRegion && targetRegion !== 'all') {
+                         filteredData = data.filter(t => 
+                              t.targetRegions?.includes(targetRegion) || t.targetRegions?.includes('all')
+                         );
+                         console.log(`💬 TestimonialsSection - After client-side filtering: ${filteredData.length} testimonials`);
+                         console.log('💬 TestimonialsSection - Filtered testimonials:', filteredData.map(t => ({ author: t.author, targetRegions: t.targetRegions })));
+                    }
+                    
+                    setDisplayTestimonials(filteredData);
                } else {
                     console.error('💬 TestimonialsSection - API response not ok:', response.status);
                }
