@@ -42,26 +42,65 @@ interface Company {
      name: string;
      logo: string;
      url?: string;
+     regions?: string[]; // Array of regions: ['france', 'morocco', 'international']
 }
 
 interface CompaniesCarouselProps {
      companies?: Company[];
+     userRegion?: string;
      speed?: number; // pixels per second
      text?: string;
 }
 
 const defaultCompanies: Company[] = [];
 
-export default function CompaniesCarousel({ companies = defaultCompanies, speed = 1000, text }: CompaniesCarouselProps) {
+export default function CompaniesCarousel({ companies = defaultCompanies, userRegion, speed = 1000, text }: CompaniesCarouselProps) {
      const [isHovered, setIsHovered] = useState(false);
      const scrollRef = useRef<HTMLDivElement>(null);
 
-     // If no companies, use default values for calculation
-     const displayCompanies = companies.length > 0 ? companies : [
-          { name: "Company 1", logo: "" },
-          { name: "Company 2", logo: "" },
-          { name: "Company 3", logo: "" }
-     ];
+     // Filter companies based on user region
+     const getFilteredCompanies = () => {
+          if (!companies || companies.length === 0) {
+               return [
+                    { name: "Company 1", logo: "" },
+                    { name: "Company 2", logo: "" },
+                    { name: "Company 3", logo: "" }
+               ];
+          }
+
+          if (!userRegion) {
+               // If no region detected, show all companies
+               return companies;
+          }
+
+          // Filter companies that include the user's region
+          const filteredCompanies = companies.filter(company => {
+               // If no regions specified, show the company (fallback)
+               if (!company.regions || company.regions.length === 0) {
+                    return true;
+               }
+               return company.regions.includes(userRegion);
+          });
+
+          // If no companies match the region, fall back to all companies
+          return filteredCompanies.length > 0 ? filteredCompanies : companies;
+     };
+
+     const displayCompanies = getFilteredCompanies();
+
+     // Debug logging
+     console.log('🔍 CompaniesCarousel Debug:');
+     console.log('  - userRegion:', userRegion);
+     console.log('  - companies count:', companies.length);
+     console.log('  - companies with regions:', companies.filter(c => c.regions && c.regions.length > 0).length);
+     console.log('  - companies without regions:', companies.filter(c => !c.regions || c.regions.length === 0).length);
+     console.log('  - display companies count:', displayCompanies.length);
+     console.log('  - companies by region:', {
+          france: companies.filter(c => c.regions?.includes('france')).map(c => c.name),
+          morocco: companies.filter(c => c.regions?.includes('morocco')).map(c => c.name),
+          international: companies.filter(c => c.regions?.includes('international')).map(c => c.name),
+          noRegions: companies.filter(c => !c.regions || c.regions.length === 0).map(c => c.name)
+     });
 
      // Calculate animation duration based on content width and speed
      const itemWidth = 120; // max width on desktop

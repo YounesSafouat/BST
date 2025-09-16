@@ -38,6 +38,7 @@ interface HeroData {
       name: string;
       logo: string;
       url?: string;
+      regions?: string[]; // Array of regions: ['france', 'morocco', 'international']
     }>;
     speed?: number;
     text?: string; // Text to display above the carousel
@@ -46,10 +47,11 @@ interface HeroData {
 
 interface HeroSectionProps {
   heroData: HeroData;
+  userRegion?: string;
   isPreview?: boolean;
 }
 
-function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
+function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingType, setLoadingType] = useState<string>('');
@@ -358,6 +360,7 @@ function HeroSection({ heroData, isPreview = false }: HeroSectionProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <CompaniesCarousel
             companies={heroData?.carousel?.companies}
+            userRegion={userRegion}
             speed={heroData?.carousel?.speed ? Math.min(heroData.carousel.speed, 100) : 75}
             text={heroData?.carousel?.text}
           />

@@ -54,7 +54,25 @@ interface HomePageData {
                     name: string;
                     logo: string;
                     url?: string;
+                    regions?: string[]; // Array of regions: ['france', 'morocco', 'international']
                }>;
+               regionalCompanies?: {
+                    france: Array<{
+                         name: string;
+                         logo: string;
+                         url?: string;
+                    }>;
+                    morocco: Array<{
+                         name: string;
+                         logo: string;
+                         url?: string;
+                    }>;
+                    other: Array<{
+                         name: string;
+                         logo: string;
+                         url?: string;
+                    }>;
+               };
                speed?: number;
                text?: string; // Text to display above the carousel
           };
@@ -231,7 +249,21 @@ export default function HomePageDashboard() {
                     if (!contentData.hero.carousel) {
                          contentData.hero.carousel = {
                               companies: [],
+                              regionalCompanies: {
+                                   france: [],
+                                   morocco: [],
+                                   other: []
+                              },
                               speed: 20
+                         };
+                    }
+
+                    // Initialize regionalCompanies if it doesn't exist
+                    if (!contentData.hero.carousel.regionalCompanies) {
+                         contentData.hero.carousel.regionalCompanies = {
+                              france: [],
+                              morocco: [],
+                              other: []
                          };
                     }
 
@@ -510,6 +542,9 @@ export default function HomePageDashboard() {
           let current: any = newData;
 
           for (let i = 0; i < keys.length - 1; i++) {
+               if (current[keys[i]] === undefined || current[keys[i]] === null) {
+                    current[keys[i]] = {};
+               }
                current = current[keys[i]];
           }
 
@@ -984,7 +1019,7 @@ export default function HomePageDashboard() {
                                                        onClick={() => {
                                                             const currentCompanies = homeData.hero.carousel?.companies || [];
                                                             updateField('hero.carousel.companies', [
-                                                                 { name: 'Nouvelle entreprise', logo: '/ref/placeholder.svg', url: '' },
+                                                                 { name: 'Nouvelle entreprise', logo: '/ref/placeholder.svg', url: '', regions: ['france', 'morocco', 'international'] },
                                                                  ...currentCompanies
                                                             ]);
                                                        }}
@@ -1011,6 +1046,15 @@ export default function HomePageDashboard() {
                                                   Ce texte apparaîtra au-dessus du carousel des logos d'entreprises
                                              </p>
                                         </div>
+
+                                        {/* Companies Management */}
+                                        <div className="space-y-4">
+                                             <div className="flex items-center justify-between">
+                                                  <Label className="text-lg font-semibold">Entreprises</Label>
+                                                  <div className="text-sm text-gray-500">
+                                                       Chaque entreprise peut être visible dans différentes régions
+                                                  </div>
+                                             </div>
 
                                         {(homeData.hero.carousel?.companies || []).map((company, index) => (
                                              <Card key={index} className="p-4">
@@ -1120,10 +1164,82 @@ export default function HomePageDashboard() {
                                                                  </div>
                                                             )}
                                                        </div>
+                                                  </div>
 
+                                                  {/* Region Selection */}
+                                                  <div className="mt-4">
+                                                       <Label className="text-sm font-medium">Régions d'affichage</Label>
+                                                       <p className="text-xs text-gray-500 mb-3">Sélectionnez les régions où cette entreprise doit apparaître</p>
+                                                       <div className="flex gap-4">
+                                                            <div className="flex items-center space-x-2">
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      id={`france-${index}`}
+                                                                      checked={company.regions?.includes('france') || false}
+                                                                      onChange={(e) => {
+                                                                           const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                           const updatedCompanies = [...currentCompanies];
+                                                                           const currentRegions = updatedCompanies[index].regions || [];
+                                                                           const newRegions = e.target.checked
+                                                                                ? [...currentRegions, 'france']
+                                                                                : currentRegions.filter(r => r !== 'france');
+                                                                           updatedCompanies[index] = { ...updatedCompanies[index], regions: newRegions };
+                                                                           updateField('hero.carousel.companies', updatedCompanies);
+                                                                      }}
+                                                                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                                 />
+                                                                 <Label htmlFor={`france-${index}`} className="text-sm flex items-center gap-1">
+                                                                      🇫🇷 France
+                                                                 </Label>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      id={`morocco-${index}`}
+                                                                      checked={company.regions?.includes('morocco') || false}
+                                                                      onChange={(e) => {
+                                                                           const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                           const updatedCompanies = [...currentCompanies];
+                                                                           const currentRegions = updatedCompanies[index].regions || [];
+                                                                           const newRegions = e.target.checked
+                                                                                ? [...currentRegions, 'morocco']
+                                                                                : currentRegions.filter(r => r !== 'morocco');
+                                                                           updatedCompanies[index] = { ...updatedCompanies[index], regions: newRegions };
+                                                                           updateField('hero.carousel.companies', updatedCompanies);
+                                                                      }}
+                                                                      className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                                                                 />
+                                                                 <Label htmlFor={`morocco-${index}`} className="text-sm flex items-center gap-1">
+                                                                      🇲🇦 Maroc
+                                                                 </Label>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      id={`international-${index}`}
+                                                                      checked={company.regions?.includes('international') || false}
+                                                                      onChange={(e) => {
+                                                                           const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                           const updatedCompanies = [...currentCompanies];
+                                                                           const currentRegions = updatedCompanies[index].regions || [];
+                                                                           const newRegions = e.target.checked
+                                                                                ? [...currentRegions, 'international']
+                                                                                : currentRegions.filter(r => r !== 'international');
+                                                                           updatedCompanies[index] = { ...updatedCompanies[index], regions: newRegions };
+                                                                           updateField('hero.carousel.companies', updatedCompanies);
+                                                                      }}
+                                                                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                                                                 />
+                                                                 <Label htmlFor={`international-${index}`} className="text-sm flex items-center gap-1">
+                                                                      🌍 International
+                                                                 </Label>
+                                                            </div>
+                                                       </div>
                                                   </div>
                                              </Card>
                                         ))}
+
+                                        </div>
                                    </div>
                               </CardContent>
                          </Card>

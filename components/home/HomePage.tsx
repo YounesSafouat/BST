@@ -132,6 +132,7 @@ interface HomePageData {
                     name: string;
                     logo: string;
                     url?: string;
+                    regions?: string[]; // Array of regions: ['france', 'morocco', 'international']
                }>;
                speed?: number;
                text?: string;
@@ -291,6 +292,13 @@ export default function HomePage() {
 
      // Use singleton geolocation service
      const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
+     
+     // Debug geolocation
+     console.log('🌍 HomePage Geolocation Debug:', {
+          userRegion,
+          locationLoading,
+          isFromCache
+     });
 
 
      const [hiddenTimelineCards, setHiddenTimelineCards] = useState<Set<string>>(new Set());
@@ -333,9 +341,18 @@ export default function HomePage() {
                if (cachedData) {
                     try {
                          const parsed = JSON.parse(cachedData);
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000) { // 5 minutes cache
+                         // Check if cached data has regions field (for backward compatibility)
+                         const hasRegions = parsed.data?.hero?.carousel?.companies?.some((company: any) => company.regions);
+                         
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) { // 5 minutes cache + regions check
+                              console.log('🏠 HomePage - Using cached data:', parsed.data);
+                              console.log('🏠 HomePage - Cached companies data:', parsed.data?.hero?.carousel?.companies);
                               setHomePageData(parsed.data);
                               return;
+                         } else if (!hasRegions) {
+                              console.log('🏠 HomePage - Cached data missing regions field, fetching fresh data');
+                              // Clear the cache to force fresh fetch
+                              sessionStorage.removeItem('homePageData');
                          }
                     } catch (e) {
                          // Cache parse error, fetch fresh data
@@ -358,6 +375,8 @@ export default function HomePage() {
                          const homePageContent = data.find(item => item.type === 'home-page');
 
                          if (homePageContent && homePageContent.content) {
+                              console.log('🏠 HomePage - Raw API data:', homePageContent);
+                              console.log('🏠 HomePage - Companies data:', homePageContent.content?.hero?.carousel?.companies);
                               setHomePageData(homePageContent.content);
 
                               sessionStorage.setItem('homePageData', JSON.stringify({
@@ -501,7 +520,7 @@ export default function HomePage() {
                <div className="h-screen relative bg-transparent">
                     <div className="h-[95vh] flex flex-col justify-center pt-20 relative z-10 bg-transparent">
                          <div>
-                              <HomeHeroSplit heroData={homePageData?.hero} isPreview={false} />
+                              <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
                          </div>
                     </div>
                </div>
@@ -511,6 +530,7 @@ export default function HomePage() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <CompaniesCarousel
                               companies={homePageData?.hero?.carousel?.companies}
+                              userRegion={userRegion}
                               speed={homePageData?.hero?.carousel?.speed ? Math.min(homePageData.hero.carousel.speed, 50) : 25}
                               text={homePageData?.hero?.carousel?.text}
                          />
