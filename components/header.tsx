@@ -38,7 +38,6 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Phone, Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getRegionFromCountry } from '@/lib/geolocation';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useRouter } from 'next/navigation';
@@ -59,7 +58,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const [headerData, setHeaderData] = useState<any>(null);
   const { isPageVisible } = usePageVisibility();
   const { trackButtonClick } = useButtonAnalytics();
-  const { data: location, loading: locationLoading } = useGeolocationSingleton();
+  const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
 
   // Fetch header data from CMS
   useEffect(() => {
@@ -111,11 +110,9 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
 
   // Update WhatsApp number based on detected region
   useEffect(() => {
-    if (location && contactData) {
-      const region = getRegionFromCountry(location.countryCode);
-
+    if (userRegion && contactData) {
       let number: string | null = null;
-      switch (region) {
+      switch (userRegion) {
         case 'france':
           number = contactData.france?.whatsapp || null;
           break;
@@ -128,7 +125,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       }
       setWhatsappNumber(number);
     }
-  }, [location, contactData]);
+  }, [userRegion, contactData]);
 
   const isScrolled = scrollY > 0;
 
@@ -145,9 +142,8 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
 
   // Get meeting link based on detected region
   const getMeetingLink = () => {
-    if (location && contactData) {
-      const region = getRegionFromCountry(location.countryCode);
-      switch (region) {
+    if (userRegion && contactData) {
+      switch (userRegion) {
         case 'france':
           return contactData.france?.meetingLink || 'https://meetings.hubspot.com/france';
         case 'morocco':

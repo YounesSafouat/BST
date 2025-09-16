@@ -38,7 +38,6 @@ import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "luc
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
-import { getRegionFromCountry } from '@/lib/geolocation'
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 import { useRouter } from 'next/navigation'
 import { useButtonAnalytics } from '@/hooks/use-analytics'
@@ -67,7 +66,7 @@ export default function Footer() {
   const [contactData, setContactData] = useState<any>(null);
   const [footerContent, setFooterContent] = useState<any>(null);
   const { trackButtonClick } = useButtonAnalytics();
-  const { data: location, loading } = useGeolocationSingleton();
+  const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
 
   // Fetch regional contact data
   useEffect(() => {
@@ -76,9 +75,15 @@ export default function Footer() {
         const response = await fetch('/api/content/settings');
         if (response.ok) {
           const data = await response.json();
-          if (data.success && data.content?.regionalContact) {
+          console.log('Footer - Settings API response:', data);
+          if (data?.content?.regionalContact) {
             setContactData(data.content.regionalContact);
+            console.log('Footer - Contact data set:', data.content.regionalContact);
+          } else {
+            console.log('Footer - No regional contact data found in response');
           }
+        } else {
+          console.error('Footer - Settings API response not ok:', response.status);
         }
       } catch (error) {
         console.error('Error fetching contact data for footer:', error);
@@ -119,14 +124,15 @@ export default function Footer() {
 
   // Get regional contact info
   const getRegionalContactInfo = () => {
-    if (!location || !contactData) {
+    console.log('Footer - getRegionalContactInfo called with:', { userRegion, contactData });
+    
+    if (!userRegion || !contactData) {
+      console.log('Footer - Missing data:', { userRegion, contactData });
       return null;
     }
 
-    const region = getRegionFromCountry(location.countryCode);
-
     let selectedData;
-    switch (region) {
+    switch (userRegion) {
       case 'france':
         selectedData = contactData.france;
         break;
@@ -138,6 +144,7 @@ export default function Footer() {
         break;
     }
 
+    console.log('Footer - Selected contact data:', selectedData);
     return selectedData;
   };
 

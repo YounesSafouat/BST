@@ -96,7 +96,6 @@ import OdooCertificationSection from '../OdooCertificationSection';
 import OurAgencySection from './OurAgencySection';
 import { Button } from '@/components/ui/button';
 import CurvedLinesBackground from '@/components/ui/CurvedLinesBackground';
-import { getRegionFromCountry } from '@/lib/geolocation';
 import PerformanceMonitor from '../PerformanceMonitor';
 import { useVisualEffects } from '@/hooks/use-visual-effects';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';

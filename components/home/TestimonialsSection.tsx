@@ -9,7 +9,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { motion } from "framer-motion";
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
-import { getRegionFromCountry } from '@/lib/geolocation';
 
 
 interface Testimonial {

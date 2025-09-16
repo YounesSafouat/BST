@@ -33,7 +33,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { BadgeCheck, Users, Clock, Star } from 'lucide-react';
-import { getRegionFromCountry } from '@/lib/geolocation';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 
 interface PartnershipData {
