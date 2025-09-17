@@ -12,6 +12,7 @@
  * 
  * KEY FEATURES:
  * - Complete legal information for both French and Moroccan entities
+ * - Dynamic content based on user geolocation
  * - GDPR compliance documentation
  * - User rights and contact information
  * - Professional layout matching website design
@@ -21,15 +22,30 @@
  * @since 2025
  */
 
-import { Metadata } from 'next';
+"use client";
 
-export const metadata: Metadata = {
-  title: 'Politique de Confidentialité - BlackSwan Technology',
-  description: 'Politique de confidentialité et protection des données personnelles de BlackSwan Technology, partenaire officiel Odoo et HubSpot.',
-  robots: 'index, follow',
-};
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
+import Loader from '@/components/home/Loader';
+import { useState, useEffect } from 'react';
 
 export default function PolitiqueConfidentialite() {
+  const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render until component is mounted to avoid hydration mismatch
+  if (!mounted) {
+    return <Loader />;
+  }
+  
+  // Show loader while determining location
+  if (locationLoading) {
+    return <Loader />;
+  }
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Header Section */}
@@ -55,24 +71,33 @@ export default function PolitiqueConfidentialite() {
             </h2>
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <p>
-                Le présent site est édité conjointement par les entités suivantes :
+                Le présent site est édité {userRegion === 'morocco' ? 'par l\'entité suivante' : 'conjointement par les entités suivantes'} :
               </p>
               
-              <p>
-                <strong className="text-[var(--color-secondary)]">Blackswan Security</strong>, société par actions simplifiée à associé unique (SASU), au capital social de 1 000 euros, immatriculée au Registre du Commerce et des Sociétés de Paris sous le numéro 921 407 045, dont le siège social est situé au 38 avenue de Wagram, 75008 Paris, France.<br />
-                Adresse e-mail : <a href="mailto:contact@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact@blackswantechnology.fr</a><br />
-                Numéro de TVA intracommunautaire : FR22921407045<br />
-                Directeur de la publication : Rubens Valensi, Président de <strong className="text-[var(--color-secondary)]">Blackswan Security</strong>.
-              </p>
+              {/* Show Blackswan Security for France and International */}
+              {userRegion !== 'morocco' && (
+                <p>
+                  <strong className="text-[var(--color-secondary)]">Blackswan Security</strong>, société par actions simplifiée à associé unique (SASU), au capital social de 1 000 euros, immatriculée au Registre du Commerce et des Sociétés de Paris sous le numéro 921 407 045, dont le siège social est situé au 38 avenue de Wagram, 75008 Paris, France.<br />
+                  Adresse e-mail : <a href="mailto:contact@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact@blackswantechnology.fr</a><br />
+                  Numéro de TVA intracommunautaire : FR22921407045<br />
+                  Directeur de la publication : Rubens Valensi, Président de <strong className="text-[var(--color-secondary)]">Blackswan Security</strong>.
+                </p>
+              )}
+
+              {/* Show Rinalink for Morocco */}
+              {userRegion === 'morocco' && (
+                <p>
+                  <strong className="text-[var(--color-secondary)]">Rinalink</strong>, société par actions simplifiée à associé unique (SASU), au capital social de 10 000 dirhams, immatriculée au Registre du Commerce de Casablanca sous le numéro 641047 et identifiée à l'ICE sous le numéro 003520134000086, dont le siège social est situé 202, Boulevard Brahim Roudani, Angle Rue de Bruyère, 2e étage (Extension Maarif), Casablanca – Maroc.<br />
+                  Adresse e-mail : <a href="mailto:contact-ma@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact-ma@blackswantechnology.fr</a><br />
+                  Représentée légalement par son Président, Warren Ohnona.
+                </p>
+              )}
 
               <p>
-                <strong className="text-[var(--color-secondary)]">Rinalink</strong>, société par actions simplifiée à associé unique (SASU), au capital social de 10 000 dirhams, immatriculée au Registre du Commerce de Casablanca sous le numéro 641047 et identifiée à l'ICE sous le numéro 003520134000086, dont le siège social est situé 202, Boulevard Brahim Roudani, Angle Rue de Bruyère, 2e étage (Extension Maarif), Casablanca – Maroc.<br />
-                Adresse e-mail : <a href="mailto:contact-ma@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact-ma@blackswantechnology.fr</a><br />
-                Représentée légalement par son Président, Warren Ohnona.
-              </p>
-
-              <p>
-                Les deux sociétés coéditrices exercent leurs activités respectives sous le nom commercial commun « <strong className="text-[var(--color-secondary)]">Blackswan Technology</strong> », marque utilisée pour désigner l'ensemble des services numériques et informatiques proposés via le présent site.
+                {userRegion === 'morocco' 
+                  ? 'Cette société exerce ses activités sous le nom commercial « '
+                  : 'Les deux sociétés coéditrices exercent leurs activités respectives sous le nom commercial commun « '
+                }<strong className="text-[var(--color-secondary)]">Blackswan Technology</strong> », marque utilisée pour désigner l'ensemble des services numériques et informatiques proposés via le présent site.
               </p>
             </div>
           </section>
@@ -130,20 +155,33 @@ export default function PolitiqueConfidentialite() {
                   sur les données personnelles le concernant. Il peut exercer ses droits :
                 </p>
                 <ul className="space-y-2">
-                  <li>
-                    <strong>Par e-mail France :</strong> 
-                    <a href="mailto:contact@blackswantechnology.fr" 
-                       className="text-[var(--color-main)] hover:underline ml-2">
-                      contact@blackswantechnology.fr
-                    </a>
-                  </li>
-                  <li>
-                    <strong>Par e-mail Maroc :</strong> 
-                    <a href="mailto:contact-ma@blackswantechnology.fr" 
-                       className="text-[var(--color-main)] hover:underline ml-2">
-                      contact-ma@blackswantechnology.fr
-                    </a>
-                  </li>
+                  {userRegion !== 'morocco' && (
+                    <li>
+                      <strong>Par e-mail France :</strong> 
+                      <a href="mailto:contact@blackswantechnology.fr" 
+                         className="text-[var(--color-main)] hover:underline ml-2">
+                        contact@blackswantechnology.fr
+                      </a>
+                    </li>
+                  )}
+                  {userRegion === 'morocco' && (
+                    <li>
+                      <strong>Par e-mail Maroc :</strong> 
+                      <a href="mailto:contact-ma@blackswantechnology.fr" 
+                         className="text-[var(--color-main)] hover:underline ml-2">
+                        contact-ma@blackswantechnology.fr
+                      </a>
+                    </li>
+                  )}
+                  {userRegion === 'international' && (
+                    <li>
+                      <strong>Par e-mail Maroc :</strong> 
+                      <a href="mailto:contact-ma@blackswantechnology.fr" 
+                         className="text-[var(--color-main)] hover:underline ml-2">
+                        contact-ma@blackswantechnology.fr
+                      </a>
+                    </li>
+                  )}
                   <li>
                     <strong>Via le formulaire de contact</strong> disponible sur le site
                   </li>
@@ -173,21 +211,39 @@ export default function PolitiqueConfidentialite() {
             <h2 className="text-2xl font-semibold text-[var(--color-main)] mb-6">
               Nous contacter
             </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="font-semibold text-[var(--color-secondary)] mb-3">France</h3>
-                <p className="text-gray-700">
-                  <strong>Email :</strong> contact@blackswantechnology.fr<br />
-                  <strong>Adresse :</strong> 38 avenue de Wagram, 75008 Paris, France
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-[var(--color-secondary)] mb-3">Maroc</h3>
-                <p className="text-gray-700">
-                  <strong>Email :</strong> contact-ma@blackswantechnology.fr<br />
-                  <strong>Adresse :</strong> 202, Boulevard Brahim Roudani, Casablanca, Maroc
-                </p>
-              </div>
+            <div className={userRegion === 'morocco' ? 'max-w-md' : 'grid md:grid-cols-2 gap-6'}>
+              {/* Show France contact for France and International users */}
+              {userRegion !== 'morocco' && (
+                <div>
+                  <h3 className="font-semibold text-[var(--color-secondary)] mb-3">France</h3>
+                  <p className="text-gray-700">
+                    <strong>Email :</strong> <a href="mailto:contact@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact@blackswantechnology.fr</a><br />
+                    <strong>Adresse :</strong> 38 avenue de Wagram, 75008 Paris, France
+                  </p>
+                </div>
+              )}
+              
+              {/* Show Morocco contact for Moroccan users */}
+              {userRegion === 'morocco' && (
+                <div>
+                  <h3 className="font-semibold text-[var(--color-secondary)] mb-3">Maroc</h3>
+                  <p className="text-gray-700">
+                    <strong>Email :</strong> <a href="mailto:contact-ma@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact-ma@blackswantechnology.fr</a><br />
+                    <strong>Adresse :</strong> 202, Boulevard Brahim Roudani, Casablanca, Maroc
+                  </p>
+                </div>
+              )}
+              
+              {/* Show both contacts for International users */}
+              {userRegion === 'international' && (
+                <div>
+                  <h3 className="font-semibold text-[var(--color-secondary)] mb-3">Maroc</h3>
+                  <p className="text-gray-700">
+                    <strong>Email :</strong> <a href="mailto:contact-ma@blackswantechnology.fr" className="text-[var(--color-main)] hover:underline">contact-ma@blackswantechnology.fr</a><br />
+                    <strong>Adresse :</strong> 202, Boulevard Brahim Roudani, Casablanca, Maroc
+                  </p>
+                </div>
+              )}
             </div>
           </section>
 
