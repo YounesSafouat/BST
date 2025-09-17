@@ -526,7 +526,7 @@ export default function HomePage() {
                </div>
 
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
-               <div className="lg:hidden bg-transparent py-8 -mt-20 pt-20 relative z-10 companies-carousel-transparent">
+               <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <CompaniesCarousel
                               companies={homePageData?.hero?.carousel?.companies}
@@ -538,7 +538,7 @@ export default function HomePage() {
                </div>
 
                {/* SECTION 2: Platform Modules Timeline - Overlapping with fade */}
-               <section className="py-12 bg-white overflow-hidden -mt-20 pt-20 relative z-30" id="modules">
+               <section className="py-12 bg-white overflow-hidden pt-20 relative z-30" id="modules">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{homePageData?.platformSection?.headline}</div>

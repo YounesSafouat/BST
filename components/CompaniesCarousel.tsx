@@ -111,12 +111,12 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
      return (
           <div className="relative w-full">
                {/* Transparent Background Container */}
-               <div className="relative bg-transparent p-6 lg:p-8 mx-auto max-w-6xl">
+               <div className="relative bg-transparent p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
                     {/* Text above carousel */}
-                    <div className="text-center mb-8">
+                    <div className="text-center mb-6 sm:mb-8 lg:mb-10">
                          {(text && text.trim() !== '') ? (
                               <h3
-                                   className="text-gray-600 text-lg lg:text-xl font-semibold mb-4"
+                                   className="text-gray-600 text-base sm:text-lg lg:text-xl font-semibold mb-2 sm:mb-4"
                                    style={{
                                         textRendering: 'optimizeLegibility',
                                         WebkitFontSmoothing: 'antialiased',
@@ -128,7 +128,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                               </h3>
                          ) : (
                               <h3
-                                   className="text-gray-600 text-lg lg:text-xl font-semibold mb-4"
+                                   className="text-gray-600 text-base sm:text-lg lg:text-xl font-semibold mb-2 sm:mb-4"
                                    style={{
                                         textRendering: 'optimizeLegibility',
                                         WebkitFontSmoothing: 'antialiased',
@@ -150,7 +150,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                          <div className="flex">
                               <div
                                    ref={scrollRef}
-                                   className="flex gap-6 sm:gap-8 md:gap-12 lg:gap-16 whitespace-nowrap animate-scroll"
+                                   className="flex gap-4 sm:gap-6 md:gap-10 lg:gap-16 whitespace-nowrap animate-scroll"
                                    style={{
                                         animationPlayState: isHovered ? 'paused' : 'running',
                                    }}
@@ -161,7 +161,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                                    {[...displayCompanies, ...displayCompanies, ...displayCompanies].map((company, index) => (
                                         <div
                                              key={`company-${index}`}
-                                             className="flex items-center justify-center min-w-[80px] sm:min-w-[100px] md:min-w-[120px] lg:min-w-[140px] h-12 sm:h-14 md:h-16 w-[80px] sm:w-[100px] md:w-[120px] lg:w-[140px] flex-shrink-0"
+                                             className="flex items-center justify-center min-w-[70px] sm:min-w-[90px] md:min-w-[110px] lg:min-w-[140px] h-10 sm:h-12 md:h-14 lg:h-16 w-[70px] sm:w-[90px] md:w-[110px] lg:w-[140px] flex-shrink-0"
                                         >
                                              {company.logo ? (
                                                   <div className="w-full h-full flex items-center justify-center">
