@@ -110,13 +110,13 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
 
      return (
           <div className="relative w-full">
-               {/* Solid Background Container - Like the reference image */}
-               <div className="relative bg-[var(--color-main)] rounded-2xl lg:rounded-3xl p-6 lg:p-8 mx-auto max-w-6xl">
+               {/* Transparent Background Container */}
+               <div className="relative bg-transparent p-6 lg:p-8 mx-auto max-w-6xl">
                     {/* Text above carousel */}
                     <div className="text-center mb-8">
                          {(text && text.trim() !== '') ? (
                               <h3
-                                   className="text-white text-lg lg:text-xl font-semibold mb-4"
+                                   className="text-gray-600 text-lg lg:text-xl font-semibold mb-4"
                                    style={{
                                         textRendering: 'optimizeLegibility',
                                         WebkitFontSmoothing: 'antialiased',
@@ -128,7 +128,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                               </h3>
                          ) : (
                               <h3
-                                   className="text-white text-lg lg:text-xl font-semibold mb-4"
+                                   className="text-gray-600 text-lg lg:text-xl font-semibold mb-4"
                                    style={{
                                         textRendering: 'optimizeLegibility',
                                         WebkitFontSmoothing: 'antialiased',
@@ -144,8 +144,8 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                     {/* Carousel Container */}
                     <div className="relative overflow-hidden">
                          {/* Gradient overlays */}
-                         <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-[var(--color-main)] to-transparent pointer-events-none"></div>
-                         <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-[var(--color-main)] to-transparent pointer-events-none"></div>
+                         <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+                         <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
 
                          <div className="flex">
                               <div
@@ -170,12 +170,12 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                                                             alt={company.name}
                                                             width={140}
                                                             height={60}
-                                                            className="max-w-full max-h-full w-auto h-auto object-contain filter brightness-0 invert opacity-80 hover:opacity-100 transition-opacity duration-300"
+                                                            className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
                                                        />
                                                   </div>
                                              ) : (
                                                   <div className="w-full h-full flex items-center justify-center">
-                                                       <span className="text-white/80 font-semibold text-sm sm:text-base text-center px-2">{company.name}</span>
+                                                       <span className="text-gray-400 font-semibold text-sm sm:text-base text-center px-2">{company.name}</span>
                                                   </div>
                                              )}
                                         </div>

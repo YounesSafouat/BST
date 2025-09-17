@@ -132,7 +132,7 @@ interface HomePageData {
                     name: string;
                     logo: string;
                     url?: string;
-                    regions?: string[]; // Array of regions: ['france', 'morocco', 'international']
+                    regions?: string[];      
                }>;
                speed?: number;
                text?: string;
