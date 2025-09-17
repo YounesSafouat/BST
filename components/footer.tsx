@@ -373,11 +373,12 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-500 text-xs sm:text-sm mb-4 md:mb-0">{legal?.copyright || "© 2024 Black Swan Technology. Tous droits réservés."}</p>
           <div className="flex gap-4 sm:gap-6">
-            {legal?.links && Array.isArray(legal.links) && legal.links.map((link: any, index: number) => (
-              <a key={index} href={link.url} className="text-gray-500 hover:text-white text-xs sm:text-sm transition-colors duration-200">
-                {link.text}
-              </a>
-            ))}
+            <button
+              onClick={() => handleLinkClick('/politique-confidentialite')}
+              className="text-gray-500 hover:text-white text-xs sm:text-sm transition-colors duration-200"
+            >
+              Politique de confidentialité
+            </button>
           </div>
         </div>
       </div>
