@@ -1,393 +1,460 @@
+/**
+ * AboutUs.tsx
+ * 
+ * Visually engaging About Us component with interactive storytelling.
+ * Features dynamic animations, visual elements, and engaging interactions.
+ * 
+ * @author younes safouat
+ * @version 9.0.0 - Visual Storytelling Edition
+ * @since 2025
+ */
+
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   ArrowRight,
-  Sparkles,
-  Compass,
+  MessageCircle,
+  CheckCircle,
+  Users,
+  Award,
+  Crown,
+  Target,
+  Lightbulb,
   Rocket,
   Heart,
-  Users,
-  Zap,
-  Target,
-  Coffee,
-  Code,
-  Briefcase,
-  Clock,
-  Star,
-  Award,
   TrendingUp,
-  Shield,
-  Globe,
-  Lightbulb,
-  Building,
-  CheckCircle,
-  MapPin,
-  Phone,
-  Mail,
-  MessageCircle,
-  BarChart3,
-  Crown,
-  ChevronRight,
-  GraduationCap,
-  HeadphonesIcon,
-  Database,
-  PieChart,
-  Workflow,
-  ShoppingCart,
-  Calendar,
+  Zap,
+  Star
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import * as LucideIcons from "lucide-react"
-import Loader from "./Loader"
-
-interface AboutContent {
-  hero: {
-    title: string;
-    subtitle: string;
-    description: string;
-    stats: Array<{
-      title: string;
-      description: string;
-      icon: string;
-    }>;
-  };
-  team: {
-    title: string;
-    subtitle: string;
-    description: string;
-    members: Array<{
-      name: string;
-      role: string;
-      description: string;
-      avatar: string;
-      icon: string;
-    }>;
-  };
-  values: {
-    title: string;
-    subtitle: string;
-    description: string;
-    items: Array<{
-      title: string;
-      description: string;
-      icon: string;
-    }>;
-  };
-  mission: {
-    title: string;
-    subtitle: string;
-    description: string;
-    cta: {
-      text: string;
-      url: string;
-    };
-  };
-}
-
-function getIconComponent(name: string) {
-  const IconComponent = LucideIcons[name as keyof typeof LucideIcons] || LucideIcons.Star;
-  return IconComponent as React.ComponentType<any>;
-}
+import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 export default function AboutUs() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [scrollY, setScrollY] = useState(0)
-  const [currentYear] = useState(new Date().getFullYear())
-  const [aboutContent, setAboutContent] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const isVisible = true
+  const [hoveredStat, setHoveredStat] = useState<number | null>(null)
   const router = useRouter()
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("scroll", handleScroll)
-    setIsLoaded(true)
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
-
-  useEffect(() => {
-    const fetchAboutContent = async () => {
-      try {
-        const response = await fetch("/api/content?type=about")
-        if (response.ok) {
-          const data = await response.json()
-          if (data.length > 0) {
-            const aboutContent = data.find(item => item.type === 'about');
-            if (aboutContent && aboutContent.content) {
-              setAboutContent(aboutContent.content);
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching about content:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchAboutContent()
-  }, [])
-
-  const handleMissionClick = () => {
-    router.push(aboutContent?.mission?.cta?.url || '/#contact')
-  }
-
-  const handleProjectsClick = () => {
+  const handleContactClick = () => {
     router.push('/#contact')
   }
 
-  if (loading) {
-    return <Loader />
-  }
+  const transformationSteps = [
+    {
+      icon: Lightbulb,
+      title: "Analyse",
+      description: "Nous identifions vos points de friction"
+    },
+    {
+      icon: Rocket,
+      title: "Implémentation", 
+      description: "Déploiement progressif et sécurisé"
+    },
+    {
+      icon: Users,
+      title: "Formation",
+      description: "Vos équipes maîtrisent leurs outils"
+    },
+    {
+      icon: TrendingUp,
+      title: "Résultats",
+      description: "Transformation mesurable et durable"
+    }
+  ]
 
-  // If no content is available, show empty state
-  if (!aboutContent) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">Aucun contenu disponible</p>
-        </div>
-      </div>
-    )
-  }
-
-  // Use only database content
-  const heroTitle = aboutContent?.hero?.title || ""
-  const heroSubtitle = aboutContent?.hero?.subtitle || ""
-  const heroDescription = aboutContent?.hero?.description || ""
-  const heroStats = aboutContent?.hero?.stats || []
-
-  const teamTitle = aboutContent?.team?.title || ""
-  const teamDescription = aboutContent?.team?.description || ""
-  const teamMembers = aboutContent?.team?.members || []
-
-  const valuesTitle = aboutContent?.values?.title || ""
-  const valuesDescription = aboutContent?.values?.description || ""
-  const valuesItems = aboutContent?.values?.items || []
-
-  const missionTitle = aboutContent?.mission?.title || ""
-  const missionDescription = aboutContent?.mission?.description || ""
-  const missionCtaText = aboutContent?.mission?.cta?.text || ""
+  const stats = [
+    { number: "3+", label: "Années", detail: "D'expertise terrain", icon: Award },
+    { number: "100+", label: "Clients", detail: "Entreprises transformées", icon: Users },
+    { number: "50+", label: "Projets", detail: "Implémentations réussies", icon: Target },
+    { number: "24h", label: "Réponse", detail: "Garantie de réactivité", icon: Zap }
+  ]
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Enhanced Background Effects */}
-      <div
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{
-          transform: `translateY(${scrollY * 0.4}px)`,
-          background: `
-            radial-gradient(1200px circle at ${mousePosition.x}px ${mousePosition.y}px, 
-              rgba(255, 92, 53, 0.15) 0%, 
-              rgba(113, 75, 103, 0.12) 25%, 
-              rgba(255, 92, 53, 0.08) 50%, 
-              transparent 70%),
-            linear-gradient(135deg, 
-              rgba(255, 92, 53, 0.03) 0%, 
-              rgba(113, 75, 103, 0.05) 50%, 
-              rgba(255, 92, 53, 0.02) 100%)
-          `,
-        }}
-      >
-        {/* Floating Geometric Shapes */}
-        <div
-          className="absolute w-32 h-32 border border-[var(--color-main)]/20 rounded-full animate-pulse"
-          style={{
-            left: mousePosition.x * 0.05 + 100,
-            top: mousePosition.y * 0.08 + 200,
-            animationDuration: "4s",
-          }}
-        />
-        <div
-          className="absolute w-24 h-24 bg-gradient-to-br from-[var(--color-secondary)]/10 to-[var(--color-main)]/10 rounded-2xl rotate-45 animate-pulse"
-          style={{
-            right: mousePosition.x * 0.03 + 150,
-            top: mousePosition.y * 0.06 + 300,
-            animationDuration: "6s",
-            animationDelay: "2s",
-          }}
-        />
-        <div
-          className="absolute w-16 h-16 border-2 border-[var(--color-secondary)]/30 rotate-12 animate-spin"
-          style={{
-            left: mousePosition.x * 0.02 + 300,
-            bottom: mousePosition.y * 0.04 + 200,
-            animationDuration: "20s",
-          }}
-        />
-      </div>
+      
+      {/* Simple Background */}
+      <div className="fixed inset-0 pointer-events-none z-0 bg-gradient-to-br from-white via-gray-50/30 to-white" />
 
-      {/* Animated Grid Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div
-          className="absolute inset-0"
-          style={{
-            transform: `translateY(${scrollY * 0.2}px)`,
-          }}
-        >
-          <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-[var(--color-main)]/30 to-transparent opacity-60 animate-pulse"></div>
-          <div className="absolute top-2/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-[var(--color-secondary)]/40 to-transparent opacity-50 animate-pulse delay-1000"></div>
-          <div className="absolute top-0 left-1/3 w-px h-full bg-gradient-to-b from-transparent via-[var(--color-main)]/20 to-transparent opacity-40 animate-pulse delay-500"></div>
-          <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-[var(--color-secondary)]/30 to-transparent opacity-50 animate-pulse delay-1500"></div>
+      {/* Hero with Large Logo */}
+      <section className="pt-8 pb-20 relative z-10">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[800px]">
+            
+            {/* Left: Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Badge variant="outline" className="mb-6 px-4 py-2 text-[var(--color-main)] border-[var(--color-main)]">
+                🏆 Partenaire Officiel Odoo & HubSpot Platinum
+              </Badge>
+              
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Du <span className="text-[var(--color-main)]">Chaos</span>
+                <br />
+                à la <span className="text-[var(--color-secondary)]">Transformation</span>
+              </h1>
+              
+              <p className="text-xl text-gray-600 leading-relaxed mb-8">
+                L'histoire de comment nous avons transformé notre propre entreprise 
+                et pourquoi nous aidons maintenant les autres à faire de même.
+              </p>
+              
+              <Button
+                onClick={() => {
+                  const nextSection = document.querySelector('#story');
+                  if (nextSection) {
+                    nextSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                size="lg"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-lg font-semibold rounded-full group"
+              >
+                Découvrir Notre Histoire
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </motion.div>
+
+            {/* Right: Extra Large Logo taking full space */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative w-full h-full min-h-[700px] flex items-center justify-center"
+            >
+              <div className="relative w-full h-full max-w-2xl max-h-2xl">
+                <Image
+                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20favIcone%20big.png"
+                  alt="BlackSwan Technology Logo"
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                  priority
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* Hero: The Story Begins */}
-      <section className="relative z-10 px-6 lg:px-8 pt-20 pb-20 mt-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
+      {/* Simple Process Section */}
+      <section id="story" className="py-20 bg-gray-50 relative z-10">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Comment nous <span className="text-[var(--color-main)]">Transformons</span> votre Entreprise
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Un processus simple et éprouvé en 4 étapes
+            </p>
+          </motion.div>
 
-            <h1 className="text-6xl md:text-9xl font-black text-black mb-12 leading-none tracking-tighter">
-              <span className="block">{heroTitle}</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] via-[var(--color-secondary)] to-[var(--color-main)] animate-pulse">
-                {heroSubtitle}
-              </span>
-              <span className="block text-3xl md:text-4xl font-light text-gray-600 mt-8 tracking-normal">
-                {heroDescription}
-              </span>
-            </h1>
+          {/* Simple Steps Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {transformationSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-lg transition-all duration-300 border-gray-200">
+                    <CardContent className="p-8 text-center">
+                      <div className="w-16 h-16 bg-[var(--color-main)]/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <Icon className="w-8 h-8 text-[var(--color-main)]" />
+                      </div>
+                      <div className="w-8 h-8 bg-[var(--color-main)] text-white rounded-full flex items-center justify-center mx-auto mb-4 font-bold">
+                        {index + 1}
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
+                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
-            <div className="max-w-5xl mx-auto mb-20">
+      {/* Interactive Stats */}
+      <section className="py-20 bg-white relative z-10">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Les <span className="text-[var(--color-main)]">Chiffres</span> de Notre Impact
+            </h2>
+            <p className="text-lg text-gray-600">
+              Chaque statistique raconte l'histoire d'une entreprise transformée
+            </p>
+          </motion.div>
 
-
-              <div className="flex flex-wrap items-center justify-center gap-12 text-lg text-gray-600">
-                {heroStats.map((stat: any, index: number) => {
-                  const Icon = getIconComponent(stat.icon);
-                  return (
-                    <div key={index} className="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200/50">
-                      <Icon className="w-6 h-6 text-[var(--color-main)]" />
-                      <span className="font-medium">{stat.title}</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1, type: "spring", bounce: 0.3 }}
+                  className="relative"
+                  onMouseEnter={() => setHoveredStat(index)}
+                  onMouseLeave={() => setHoveredStat(null)}
+                >
+                  <Card className={`text-center p-8 transition-all duration-300 cursor-pointer ${
+                    hoveredStat === index 
+                      ? 'scale-110 shadow-2xl border-[var(--color-main)] bg-[var(--color-main)]/5' 
+                      : 'hover:scale-105 hover:shadow-xl border-gray-200'
+                  }`}>
+                    <Icon className={`w-12 h-12 mx-auto mb-4 transition-colors duration-300 ${
+                      hoveredStat === index ? 'text-[var(--color-main)]' : 'text-gray-400'
+                    }`} />
+                    <div className={`text-4xl font-bold mb-2 transition-colors duration-300 ${
+                      hoveredStat === index ? 'text-[var(--color-main)]' : 'text-[var(--color-secondary)]'
+                    }`}>
+                      {stat.number}
                     </div>
-                  );
-                })}
+                    <div className="text-sm font-semibold text-gray-700 mb-2">{stat.label}</div>
+                    
+                    <AnimatePresence>
+                      {hoveredStat === index && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="text-xs text-gray-600 mt-2"
+                        >
+                          {stat.detail}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Visual Story Section */}
+      <section className="py-20 bg-gray-50 relative z-10">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+            >
+            {/* Timeline Story Design */}
+              <div className="max-w-4xl mx-auto">
+                {/* Header */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="text-center mb-16"
+                >
+                  <Image
+                    src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png"
+                    alt="BlackSwan Technology"
+                    width={80}
+                    height={80}
+                    className="mx-auto mb-6"
+                  />
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Notre Histoire
+                  </h2>
+                  <p className="text-xl text-gray-600">
+                    De l'entreprise en difficulté à votre partenaire de transformation
+                  </p>
+                </motion.div>
+
+                {/* Timeline */}
+                <div className="relative">
+                  {/* Timeline line */}
+                  <div className="absolute left-8 md:left-1/2 md:transform md:-translate-x-0.5 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                  
+                  {/* Timeline items */}
+                  <div className="space-y-12">
+                    {/* Step 1: The Problem */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.1 }}
+                      className="relative flex items-center"
+                    >
+                      <div className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 w-4 h-4 bg-red-500 rounded-full border-4 border-white shadow-lg z-10"></div>
+                      <div className="ml-16 md:ml-0 md:w-1/2 md:pr-8">
+                        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                          <div className="text-sm text-red-500 font-semibold mb-2">Le Chaos</div>
+                          <h3 className="text-xl font-bold text-gray-900 mb-3">Nous étions à votre place</h3>
+                          <p className="text-gray-600 leading-relaxed">
+                            Dizaines de fichiers Excel, clients perdus par manque de suivi, 
+                            nuits blanches à rattraper les erreurs. Nous vivions le chaos quotidien.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 2: The Realization */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2 }}
+                      className="relative flex items-center md:flex-row-reverse"
+                    >
+                      <div className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 w-4 h-4 bg-yellow-500 rounded-full border-4 border-white shadow-lg z-10"></div>
+                      <div className="ml-16 md:ml-0 md:w-1/2 md:pl-8">
+                        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                          <div className="text-sm text-yellow-600 font-semibold mb-2">Le Déclic</div>
+                          <h3 className="text-xl font-bold text-gray-900 mb-3">Il doit y avoir une solution</h3>
+                          <p className="text-gray-600 leading-relaxed">
+                            Le jour où nous avons décidé que ça suffisait. Qu'il devait exister 
+                            une meilleure façon de travailler, plus organisée, plus efficace.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 3: The Solution */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.3 }}
+                      className="relative flex items-center"
+                    >
+                      <div className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 w-4 h-4 bg-[var(--color-main)] rounded-full border-4 border-white shadow-lg z-10"></div>
+                      <div className="ml-16 md:ml-0 md:w-1/2 md:pr-8">
+                        <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+                          <div className="text-sm text-[var(--color-main)] font-semibold mb-2">La Transformation</div>
+                          <h3 className="text-xl font-bold text-gray-900 mb-3">Odoo + HubSpot = Révolution</h3>
+                          <p className="text-gray-600 leading-relaxed">
+                            Nous avons découvert et implémenté les solutions qui ont transformé 
+                            notre entreprise. Fini le chaos, place à l'efficacité.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Step 4: The Mission */}
+                    <motion.div
+                      initial={{ opacity: 0, x: 50 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.4 }}
+                      className="relative flex items-center md:flex-row-reverse"
+                    >
+                      <div className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 w-4 h-4 bg-green-500 rounded-full border-4 border-white shadow-lg z-10"></div>
+                      <div className="ml-16 md:ml-0 md:w-1/2 md:pl-8">
+                        <div className="bg-[var(--color-main)] p-6 rounded-lg shadow-lg text-white">
+                          <div className="text-sm text-white/80 font-semibold mb-2">Notre Mission</div>
+                          <h3 className="text-xl font-bold mb-3">BlackSwan Technology</h3>
+                          <p className="leading-relaxed">
+                            Vous éviter de vivre ce qu'on a vécu. Vous faire gagner le temps qu'on a perdu. 
+                            Transformer votre chaos en système organisé et efficace.
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+          </motion.div>
+        </div>
+      </section>
+      
+      <section className="py-20 bg-white relative z-10">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+            <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-[var(--color-main)]">
+              <p className="font-semibold text-[var(--color-secondary)] italic">
+                "Notre mission ? Vous éviter de vivre ce que nous avons vécu, 
+                et vous faire gagner le temps que nous avons perdu."
+              </p>
+            </div>
+            
+            <p>
+              C'est exactement cette expérience qui fait notre force aujourd'hui. 
+              <span className="font-bold text-[var(--color-main)]">Nos solutions ne sortent pas d'un manuel théorique</span>, 
+              elles naissent de notre vécu.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Results Showcase */}
+      <section className="py-20 bg-white relative z-10">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+              Ce que nos clients obtiennent vraiment
+            </h2>
+            
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <div className="bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                <div className="text-4xl font-bold text-[var(--color-main)] mb-2">-80%</div>
+                <p className="text-gray-700 font-semibold">Temps administratif</p>
+                <p className="text-sm text-gray-600 mt-2">Fini les heures perdues sur Excel</p>
+              </div>
+              <div className="bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                <div className="text-4xl font-bold text-[var(--color-main)] mb-2">+150%</div>
+                <p className="text-gray-700 font-semibold">Efficacité commerciale</p>
+                <p className="text-sm text-gray-600 mt-2">Vos équipes vendent plus et mieux</p>
+              </div>
+              <div className="bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                <div className="text-4xl font-bold text-[var(--color-main)] mb-2">+200%</div>
+                <p className="text-gray-700 font-semibold">Visibilité business</p>
+                <p className="text-sm text-gray-600 mt-2">Vous pilotez enfin à vue</p>
               </div>
             </div>
-          </div>
 
-
-        </div>
-      </section>
-
-
-      {/* The People: Our Soul */}
-      <section className="relative z-10 py-40 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-32">
-            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-main)]/10 to-[var(--color-secondary)]/10 border border-gray-200 mb-12 shadow-lg">
-              <Users className="w-6 h-6 text-[var(--color-main)] mr-4" />
-              <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE ÂME</span>
+            {/* Simple CTA */}
+            <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200 text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Prêt à transformer votre entreprise ?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Parlons de votre situation en 30 minutes
+              </p>
+              
+              <Button
+                onClick={handleContactClick}
+                size="lg"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-300"
+              >
+                Demander un audit gratuit
+              </Button>
+              
+              <p className="text-sm text-gray-500 mt-4">
+                Gratuit • Sans engagement • Réponse rapide
+              </p>
             </div>
-            <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
-              {teamTitle}
-            </h2>
-            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              {teamDescription}
-            </p>
-          </div>
-
-          {/* Team Composition */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
-            {teamMembers.map((member: any, index: number) => {
-              const Icon = getIconComponent(member.icon);
-              return (
-                <div
-                  key={index}
-                  className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-                >
-                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)]"></div>
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[var(--color-main)]/10 to-[var(--color-secondary)]/10">
-                    <Icon className="w-8 h-8 text-[var(--color-main)]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-black mb-2">{member.name}</h3>
-                  <h4 className="text-sm font-medium text-gray-600 mb-4 tracking-wide uppercase">
-                    {member.role}
-                  </h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    {member.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Our Values */}
-      <section className="relative z-10 py-40 px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-32">
-            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-secondary)]/10 to-[var(--color-main)]/10 border border-gray-200 mb-12 shadow-lg">
-              <Heart className="w-6 h-6 text-[var(--color-secondary)] mr-4" />
-              <span className="text-base font-bold text-gray-700 tracking-wider">NOS VALEURS</span>
-            </div>
-            <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
-              {valuesTitle}
-            </h2>
-            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              {valuesDescription}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {valuesItems.map((value: any, index: number) => {
-              const Icon = getIconComponent(value.icon);
-              return (
-                <div
-                  key={index}
-                  className="group relative p-8 rounded-3xl bg-white border border-gray-100 hover:border-gray-200 transition-all duration-500 hover:scale-105 hover:shadow-2xl"
-                >
-                  <div className="absolute top-0 left-0 w-full h-1 rounded-t-3xl bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)]"></div>
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-br from-[var(--color-secondary)]/10 to-[var(--color-main)]/10">
-                    <Icon className="w-8 h-8 text-[var(--color-secondary)]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-black mb-4">{value.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {value.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Mission Section */}
-      <section className="relative z-10 py-40 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center px-8 py-4 rounded-full bg-gradient-to-r from-[var(--color-main)]/10 to-[var(--color-secondary)]/10 border border-gray-200 mb-12 shadow-lg">
-              <Rocket className="w-6 h-6 text-[var(--color-main)] mr-4" />
-              <span className="text-base font-bold text-gray-700 tracking-wider">NOTRE MISSION</span>
-            </div>
-            <h2 className="text-6xl md:text-8xl font-black text-black mb-12 leading-tight">
-              {missionTitle}
-            </h2>
-            <p className="text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-12">
-              {missionDescription}
-            </p>
-            <Button
-              onClick={handleMissionClick}
-              className="group bg-black text-white hover:bg-gray-900 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              {missionCtaText}
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Button>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>
