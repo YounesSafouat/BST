@@ -9,6 +9,8 @@ import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import StatsSection from '../../StatsSection';
 import CompaniesCarousel from '../../CompaniesCarousel';
+import CompaniesCarouselV2 from '../../CompaniesCarouselV2';
+import CompaniesCarouselV3 from '../../CompaniesCarouselV3';
 
 interface HeroData {
   headline: string;
@@ -357,14 +359,15 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
 
       {/* Companies Carousel */}
       <div className="hidden lg:block bg-transparent pt-8 sm:pt-10 md:pt-12 lg:pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CompaniesCarousel
-            companies={heroData?.carousel?.companies}
-            userRegion={userRegion}
-            speed={heroData?.carousel?.speed ? Math.min(heroData.carousel.speed, 100) : 75}
-            text={heroData?.carousel?.text}
-          />
-        </div>
+        <CompaniesCarouselV3
+          companies={heroData?.carousel?.companies}
+          userRegion={userRegion}
+          speed={heroData?.carousel?.speed ? Math.min(heroData.carousel.speed, 100) : 75}
+          text={heroData?.carousel?.text}
+          layout="carousel"
+          theme="modern"
+          showCount={true}
+        />
       </div>
     </section>
   );

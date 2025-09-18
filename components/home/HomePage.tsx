@@ -88,6 +88,8 @@ import PricingSection from '../PricingSection';
 import ContactSection from '../ContactSection';
 import StatsSection from '../StatsSection';
 import CompaniesCarousel from '../CompaniesCarousel';
+import CompaniesCarouselV2 from '../CompaniesCarouselV2';
+import CompaniesCarouselV3 from '../CompaniesCarouselV3';
 import VideoTestimonialsSection from '../VideoTestimonialsSection';
 import TestimonialsSection from './TestimonialsSection';
 import ServicesSection from '../ServicesSection';
@@ -527,14 +529,15 @@ export default function HomePage() {
 
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
                <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                         <CompaniesCarousel
-                              companies={homePageData?.hero?.carousel?.companies}
-                              userRegion={userRegion}
-                              speed={homePageData?.hero?.carousel?.speed ? Math.min(homePageData.hero.carousel.speed, 50) : 25}
-                              text={homePageData?.hero?.carousel?.text}
-                         />
-                    </div>
+                    <CompaniesCarouselV3
+                         companies={homePageData?.hero?.carousel?.companies}
+                         userRegion={userRegion}
+                         speed={homePageData?.hero?.carousel?.speed ? Math.min(homePageData.hero.carousel.speed, 50) : 25}
+                         text={homePageData?.hero?.carousel?.text}
+                         layout="carousel"
+                         theme="light"
+                         showCount={false}
+                    />
                </div>
 
                {/* SECTION 2: Platform Modules Timeline - Overlapping with fade */}
