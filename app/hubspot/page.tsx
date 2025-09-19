@@ -1,7 +1,20 @@
+/**
+ * HubSpot Page
+ * 
+ * Comprehensive HubSpot CRM and Marketing Automation showcase page.
+ * Features BlackSwan Technology's HubSpot Platinum Partner expertise
+ * with regional adaptation, advanced animations, and conversion optimization.
+ * 
+ * @author younes safouat
+ * @version 2.0.0 - Enhanced HubSpot Showcase
+ * @since 2025
+ */
+
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield,
   Check,
@@ -27,10 +40,28 @@ import {
   Settings,
   Briefcase,
   Phone,
-  Mail
+  Mail,
+  MessageCircle,
+  Database,
+  Workflow,
+  PieChart,
+  LineChart,
+  Heart,
+  Sparkles,
+  Megaphone,
+  ShoppingCart,
+  FileText,
+  Clock,
+  UserCheck,
+  Filter
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import Loader from '@/components/home/Loader';
 import PageVisibilityGuard from '@/components/PageVisibilityGuard';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
+import { useButtonAnalytics } from '@/hooks/use-analytics';
+import CompaniesCarouselV3 from '@/components/CompaniesCarouselV3';
 
 interface Testimonial {
   _id: string;
@@ -86,21 +117,116 @@ interface HubSpotData {
   };
 }
 
+// Enhanced HubSpot services data
+const hubspotServices = [
+  {
+    icon: Target,
+    title: "Marketing Automation",
+    description: "Créez des campagnes marketing sophistiquées qui génèrent et qualifient vos leads automatiquement",
+    features: [
+      "Lead scoring automatique",
+      "Email marketing personnalisé", 
+      "Landing pages optimisées",
+      "Workflows d'nurturing"
+    ],
+    color: "from-orange-500 to-red-500"
+  },
+  {
+    icon: Users,
+    title: "CRM & Sales Pipeline",
+    description: "Transformez vos prospects en clients avec un pipeline de vente structuré et automatisé",
+    features: [
+      "Gestion des contacts centralisée",
+      "Suivi des opportunités",
+      "Automatisation des ventes",
+      "Reporting commercial"
+    ],
+    color: "from-blue-500 to-cyan-500"
+  },
+  {
+    icon: MessageCircle,
+    title: "Service Client Excellence",
+    description: "Délivrez un service client exceptionnel avec des outils de support intégrés",
+    features: [
+      "Système de ticketing",
+      "Base de connaissances",
+      "Live chat intégré",
+      "Enquêtes satisfaction"
+    ],
+    color: "from-green-500 to-emerald-500"
+  },
+  {
+    icon: Database,
+    title: "Operations & Intégrations",
+    description: "Connectez tous vos outils business pour une vue unifiée de vos données",
+    features: [
+      "Synchronisation des données",
+      "Intégrations personnalisées",
+      "Workflows automatisés",
+      "Reporting unifié"
+    ],
+    color: "from-purple-500 to-indigo-500"
+  }
+];
+
+// HubSpot transformation journey
+const transformationSteps = [
+  {
+    step: "01",
+    title: "Audit & Stratégie",
+    description: "Analyse complète de vos processus actuels et définition de la roadmap HubSpot",
+    icon: FileText,
+    duration: "1-2 semaines"
+  },
+  {
+    step: "02", 
+    title: "Configuration & Setup",
+    description: "Implémentation technique, migration des données et configuration des workflows",
+    icon: Settings,
+    duration: "2-4 semaines"
+  },
+  {
+    step: "03",
+    title: "Formation & Adoption",
+    description: "Formation complète de vos équipes et accompagnement à l'adoption",
+    icon: Users,
+    duration: "1-2 semaines"
+  },
+  {
+    step: "04",
+    title: "Optimisation Continue",
+    description: "Suivi des performances, optimisations et évolutions selon vos besoins",
+    icon: TrendingUp,
+    duration: "En continu"
+  }
+];
+
+// Success metrics
+const successMetrics = [
+  { metric: "+300%", label: "Génération de leads", icon: Target },
+  { metric: "+150%", label: "Taux de conversion", icon: TrendingUp },
+  { metric: "-70%", label: "Temps administratif", icon: Clock },
+  { metric: "+200%", label: "Visibilité commerciale", icon: BarChart3 }
+];
+
 function HubSpotPageContent() {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeService, setActiveService] = useState(0);
   const [statsVisible, setStatsVisible] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hubspotData, setHubspotData] = useState<HubSpotData | null>(null);
   const [availableTestimonials, setAvailableTestimonials] = useState<Testimonial[]>([]);
+  const [homePageData, setHomePageData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { region: userRegion } = useGeolocationSingleton();
+  const { trackButtonClick } = useButtonAnalytics();
 
   useEffect(() => {
     const timer = setTimeout(() => setStatsVisible(true), 800);
     const loadTimer = setTimeout(() => setIsLoaded(true), 100);
 
-    // Fetch HubSpot data
     fetchHubSpotData();
     fetchTestimonials();
+    fetchHomePageData();
 
     return () => {
       clearTimeout(timer);
@@ -110,8 +236,7 @@ function HubSpotPageContent() {
 
   const fetchHubSpotData = async () => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-      const response = await fetch(`${baseUrl}/api/content?type=hubspot-page`);
+      const response = await fetch('/api/content?type=hubspot-page');
       if (response.ok) {
         const data = await response.json();
         if (data.length > 0) {
@@ -130,11 +255,9 @@ function HubSpotPageContent() {
 
   const fetchTestimonials = async () => {
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-      const response = await fetch(`${baseUrl}/api/testimonials`);
+      const response = await fetch('/api/testimonials');
       if (response.ok) {
         const data = await response.json();
-        // Map the testimonials data to match the expected format
         setAvailableTestimonials(data.map((item: any) => ({
           _id: item._id,
           name: item.author || '',
@@ -150,11 +273,22 @@ function HubSpotPageContent() {
     }
   };
 
-  if (!hubspotData) {
-    return (
-      <Loader />
-    );
-  }
+  const fetchHomePageData = async () => {
+    try {
+      const response = await fetch('/api/content?type=home-page');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0) {
+          const homePageContent = data.find(item => item.type === 'home-page');
+          if (homePageContent && homePageContent.content) {
+            setHomePageData(homePageContent.content);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching home page data:', error);
+    }
+  };
 
   const AnimatedCounter = ({ target, suffix, duration = 2500 }: { target: number, suffix: string, duration?: number }) => {
     const [count, setCount] = useState(0);
@@ -199,256 +333,449 @@ function HubSpotPageContent() {
     return iconMap[iconName] || <Target className="w-8 h-8" />;
   };
 
-  const renderAvatar = (testimonialId: string) => {
-    const testimonial = availableTestimonials.find(t => t._id === testimonialId);
-    if (!testimonial) return null;
-
-    // Check if avatar is a URL (starts with http or /)
-    if (testimonial.avatar && (testimonial.avatar.startsWith('http') || testimonial.avatar.startsWith('/'))) {
-      return (
-        <Image
-          src={testimonial.avatar}
-          alt={testimonial.name}
-          width={40}
-          height={40}
-          className="w-10 h-10 rounded-full object-cover"
-        />
-      );
+  const scrollToContact = () => {
+    const contactSection = document.querySelector('#contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
     } else {
-      // Use initials
-      return (
-        <div className="w-10 h-10 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] rounded-full flex items-center justify-center">
-          <span className="text-white font-bold text-sm">{testimonial.avatar || testimonial.name.split(' ').map(n => n[0]).join('')}</span>
-        </div>
-      );
+      // If not on homepage, navigate there first
+      window.location.href = '/#contact';
     }
+    trackButtonClick('hubspot_contact_cta');
+  };
+
+  const handleMeetingClick = () => {
+    const meetingLink = 'https://meetings-eu1.hubspot.com/yraissi';
+    window.open(meetingLink, '_blank');
+    trackButtonClick('hubspot_meeting_cta');
   };
 
   if (isLoading) {
     return <Loader />;
   }
 
+  // Fallback data if CMS data is not available
+  const fallbackData: HubSpotData = {
+    type: "hubspot-page",
+    title: "HubSpot",
+    hero: {
+      headline: "HubSpot CRM & Marketing Automation",
+      logo: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hubspot.svg",
+      subheadline: "En tant que Partenaire Platinum HubSpot, nous transformons votre chaos commercial en machine de croissance automatisée.",
+      ctaPrimary: { text: "Planifier une Consultation", icon: "Calendar" },
+      ctaSecondary: { text: "Voir Nos Cas d'Étude", icon: "Play" }
+    },
+    trustMetrics: [
+      { number: 100, suffix: "+", label: "Clients HubSpot" },
+      { number: 98, suffix: "%", label: "Taux de Réussite" },
+      { number: 5, suffix: " Ans", label: "Partenariat HubSpot" },
+      { number: 24, suffix: "h", label: "Support Expert" }
+    ],
+    hubspotCapabilities: [
+      { icon: "Target", title: "Marketing Hub", description: "Automatisation marketing complète" },
+      { icon: "Users", title: "Sales Hub", description: "CRM et pipeline de vente" },
+      { icon: "BarChart3", title: "Service Hub", description: "Support client intégré" },
+      { icon: "Zap", title: "Operations Hub", description: "Intégrations et workflows" }
+    ],
+    hubCards: [],
+    partnership: {
+      headline: "Partenaire HubSpot Platinum",
+      description: "Le plus haut niveau d'expertise HubSpot au Maroc",
+      hubs: ["Marketing Hub", "Sales Hub", "Service Hub", "Operations Hub"]
+    },
+    testimonials: [],
+    finalCta: {
+      headline: "Prêt à Transformer Votre Business ?",
+      description: "Laissez nos experts HubSpot concevoir une solution qui génère de vrais résultats."
+    }
+  };
+
+  const data = hubspotData || fallbackData;
+
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[var(--color-main)]/10 via-white to-[var(--color-main)]/10 pb-16 overflow-hidden">
-        {/* Animated Background Elements */}
+    <div className="min-h-screen bg-white">
+      
+      {/* Hero Section - DesignBell Inspired */}
+      <section className="relative min-h-screen bg-white overflow-hidden">
+        
+        {/* Enhanced Orange Design Motifs Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-4 -right-4 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div className="absolute -bottom-8 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+          {/* Large flowing orange shapes */}
+          <div className="absolute -top-40 -right-40 w-[800px] h-[800px] bg-gradient-to-br from-orange-400/15 via-orange-500/10 to-yellow-400/5 rounded-full blur-3xl transform rotate-12"></div>
+          <div className="absolute -bottom-20 -left-60 w-[600px] h-[600px] bg-gradient-to-tr from-orange-300/20 via-orange-400/15 to-orange-500/10 rounded-full blur-2xl transform -rotate-45"></div>
+          
+          {/* Smaller accent shapes */}
+          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-orange-200/30 to-orange-300/20 rounded-full blur-xl transform rotate-45"></div>
+          <div className="absolute bottom-1/3 right-1/3 w-60 h-60 bg-gradient-to-l from-yellow-300/25 to-orange-400/15 rounded-full blur-xl transform -rotate-12"></div>
+          
+          {/* Organic flowing shapes */}
+          <div className="absolute top-1/2 left-10 w-40 h-96 bg-gradient-to-b from-orange-300/20 to-transparent rounded-full blur-2xl transform -rotate-12"></div>
+          <div className="absolute top-20 right-20 w-32 h-80 bg-gradient-to-b from-orange-400/15 to-transparent rounded-full blur-xl transform rotate-45"></div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mt-10 md:mt-[15em]">
-          <div className="text-center">
+        <div className="relative z-10 flex items-center justify-center min-h-screen px-6">
+          <div className="text-center max-w-4xl mx-auto">
+            
+            {/* HubSpot Logo */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="mb-6"
+            >
+              <Image
+                src={data.hero.logo}
+                alt="HubSpot"
+                width={200}
+                height={50}
+                className="h-16 w-auto mx-auto mb-6"
+                priority
+              />
+            </motion.div>
+            
+            {/* Platinum Partner Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center gap-1.5 bg-orange-100 border border-orange-200 text-orange-700 px-3 py-1.5 rounded-full text-xs font-medium mb-8"
+            >
+              <Crown className="w-3 h-3 text-orange-500" />
+              PARTENAIRE PLATINUM
+            </motion.div>
 
             {/* Main Headline */}
-            <h1 className={`text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight transform transition-all duration-1000 delay-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <span className="inline-flex items-center justify-center flex-wrap gap-x-4 gap-y-2">
-                <span className="bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text ">
-                  {hubspotData.hero.headline.split(' ')[0]}
-                </span>
-                <Image
-                  src={hubspotData.hero.logo}
-                  alt="HubSpot Logo"
-                  className="w-32 md:w-60 h-auto align-text-bottom"
-                  width={240}
-                  height={60}
-                  priority
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+            >
+              Libérez le Potentiel de Votre{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
+                Croissance Business
+              </span>
+            </motion.h1>
+            
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-base md:text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed"
+            >
+              Une plateforme. Des résultats illimités. Transformez vos prospects en clients fidèles 
+              avec notre expertise HubSpot et sécurisez votre avantage concurrentiel.
+            </motion.p>
+            
+            {/* Email Input with CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="max-w-lg mx-auto mb-12 relative"
+            >
+              <div className="flex items-center gap-0 bg-white/60 backdrop-blur-xl rounded-full p-1 border border-orange-200/50 shadow-xl">
+                <input
+                  type="email"
+                  placeholder="votre.email@entreprise.com"
+                  className="flex-1 bg-transparent text-gray-900 placeholder-gray-500 px-6 py-4 rounded-full focus:outline-none focus:ring-0 text-base"
                 />
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] bg-clip-text text-transparent animate-gradient">
-                {hubspotData.hero.headline.split(' ').slice(1).join(' ')}
-              </span>
-            </h1>
+                <Button
+                  onClick={handleMeetingClick}
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-4 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shrink-0"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                  Audit Gratuit
+                </Button>
+              </div>
+              
+              {/* Hand-drawn arrow pointing to email input from the side */}
+              <div className="hidden lg:block absolute -left-32 top-1/2 transform -translate-y-1/2">
+                <svg width="120" height="40" viewBox="0 0 120 40" className="text-orange-500">
+                  <path
+                    d="M10 20 Q 60 10 100 20"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M95 15 L 100 20 L 95 25"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </motion.div>
 
-            <p className={`text-lg md:text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed transform transition-all duration-1000 delay-500 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              {hubspotData.hero.subheadline}
-            </p>
+            {/* Companies Carousel - Bottom of Hero */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-16"
+            >
+              <CompaniesCarouselV3
+                companies={homePageData?.hero?.carousel?.companies}
+                userRegion={userRegion}
+                speed={homePageData?.hero?.carousel?.speed ? Math.min(homePageData.hero.carousel.speed, 50) : 25}
+                text={homePageData?.hero?.carousel?.text}
+                layout="carousel"
+                theme="light"
+                showCount={false}
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-            {/* CTA Buttons */}
-            <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-12 transform transition-all duration-1000 delay-700 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <button className="group bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] text-white px-6 py-3 rounded-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center space-x-2 font-bold transform hover:scale-105 hover:-translate-y-1">
-                {getIconComponent(hubspotData.hero.ctaPrimary.icon)}
-                <span>{hubspotData.hero.ctaPrimary.text}</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="group border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:border-[var(--color-main)] hover:text-[var(--color-main)] transition-all duration-300 flex items-center justify-center space-x-2 font-bold transform hover:scale-105 bg-white/80 backdrop-blur-sm">
-                {getIconComponent(hubspotData.hero.ctaSecondary.icon)}
-                <span>{hubspotData.hero.ctaSecondary.text}</span>
-              </button>
+      {/* HubSpot Hubs Section - Basic Layout */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-6 py-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-start">
+            
+            {/* Left Side - Simple Content */}
+            <div>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                  Faire grandir une entreprise est difficile.{" "}
+                  <span className="text-[var(--color-main)]">HubSpot</span> le rend plus facile.
+                </h2>
+                <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                  Des outils déconnectés et des données dispersées vous ralentissent. 
+                  HubSpot connecte tout — et tout le monde — en un seul endroit pour 
+                  faire grandir votre entreprise plus facilement que vous ne le pensez.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button
+                    onClick={handleMeetingClick}
+                    className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-6 py-3 rounded-md font-semibold"
+                  >
+                    Obtenir une démo
+                  </Button>
+                  <Button
+                    onClick={scrollToContact}
+                    variant="outline"
+                    className="border-2 border-[var(--color-main)] text-[var(--color-main)] px-6 py-3 rounded-md hover:bg-[var(--color-main)] hover:text-white"
+                  >
+                    Commencer gratuitement
+                  </Button>
+                </div>
+              </motion.div>
             </div>
 
-            {/* Floating icons animation */}
-            <div className="absolute top-20 left-10 animate-float hidden md:block">
-              <div className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center">
-                <Settings className="w-8 h-8 text-[var(--color-main)] animate-spin-slow" />
-              </div>
-            </div>
-            <div className="absolute top-32 right-10 animate-float-delayed hidden md:block">
-              <div className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center">
-                <Briefcase className="w-6 h-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* Trust Metrics Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {hubspotData.trustMetrics.map((metric, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl md:text-5xl font-black text-[var(--color-main)] mb-2">
-                  <AnimatedCounter target={metric.number} suffix={metric.suffix} />
-                </div>
-                <div className="text-gray-600 font-medium">{metric.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      {/* Final CTA */}
-      <section className="py-16 bg-gradient-to-br from-[var(--color-main)]/10 via-white to-[var(--color-main)]/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-              {hubspotData.finalCta.headline}
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              {hubspotData.finalCta.description}
-            </p>
-          </div>
-
-          {/* HubSpot Cards in CTA */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {hubspotData.hubCards.map((card, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 border border-gray-100 text-left flex flex-col hover:shadow-2xl transition-shadow duration-300">
-                <div className="flex items-center mb-4">
-                  <Image src={card.icon} alt={`${card.title} icon`} width={28} height={28} />
-                  <h3 className="text-2xl font-bold ml-3 text-gray-800">{card.title}</h3>
-                </div>
-                <p className="text-gray-600 mb-6 flex-grow h-24">{card.description}</p>
-                <div className="border-t border-gray-200 pt-6 mb-6">
-                  <h4 className="font-semibold text-gray-800 mb-4">Popular Features</h4>
-                  <ul className="space-y-3">
-                    {card.features.map((feature, fIndex) => (
-                      <li key={fIndex} className="flex items-center text-gray-700">
-                        <div className="w-5 h-5 bg-[var(--color-main)] rounded-full flex items-center justify-center mr-3 flex-shrink-0">
-                          <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                        </div>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <button className="w-full mt-auto bg-[var(--color-main)] text-white font-semibold py-3 px-4 rounded-md hover:bg-[var(--color-main)]/90 transition-colors">
-                  Learn more
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Our HubSpot Services */}
-      <section className="py-16 bg-gradient-to-br from-[var(--color-main)]/10 to-[var(--color-main)]/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-              Implémentation <span className="text-[var(--color-main)]">HubSpot Complète</span>
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Notre certification platinum signifie que nous avons une expertise approfondie dans tous les hubs HubSpot et les fonctionnalités avancées.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {hubspotData.hubspotCapabilities.map((capability, index) => (
-              <div key={index} className="group bg-white rounded-2xl p-6 border-2 border-[var(--color-main)]/20 hover:border-[var(--color-main)]/40 transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl">
-                <div className="flex items-start space-x-5">
-                  <div className="w-14 h-14 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)] rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:animate-bounce">
-                    <div className="text-white">{getIconComponent(capability.icon)}</div>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[var(--color-main)] transition-colors">{capability.title}</h3>
-                    <p className="text-gray-600 leading-relaxed text-sm">{capability.description}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HubSpot Certifications */}
-      <section className="py-16 bg-gradient-to-r from-[var(--color-main)] via-[var(--color-main)] to-[var(--color-main)] relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.1%22%3E%3Ccircle cx=%2230%22 cy=%2230%22 r=%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-4">
-            {hubspotData.partnership.headline}
-          </h2>
-          <p className="text-lg text-[var(--color-main)]/90 mb-10 max-w-3xl mx-auto leading-relaxed">
-            {hubspotData.partnership.description}
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {hubspotData.partnership.hubs.map((hub, index) => (
-              <div key={index} className={`group bg-white/20 backdrop-blur-sm rounded-2xl p-6 border-2 border-white/30 hover:bg-white/30 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 delay-${index * 100}`}>
-                <CheckCircle className="w-10 h-10 text-white mx-auto mb-3 group-hover:animate-bounce" />
-                <div className="text-white font-bold text-base">{hub}</div>
-                <div className="text-[var(--color-main)]/90 text-xs font-semibold">Certifié</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      {hubspotData.testimonials.length > 0 && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4">
-                Approuvé par les <span className="text-[var(--color-main)]">Leaders</span>
-              </h2>
-              <p className="text-lg text-gray-600">
-                Découvrez comment nous avons aidé des entreprises à transformer leur business avec HubSpot
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {hubspotData.testimonials.map((testimonialId, index) => {
-                const testimonial = availableTestimonials.find(t => t._id === testimonialId);
-                if (!testimonial) return null;
-
+            {/* Right Side - Scrolling Cards */}
+            <div className="space-y-12">
+              {[
+                {
+                  name: "Marketing Hub",
+                  description: "Logiciel marketing pour générer du trafic, convertir plus de visiteurs et mener des campagnes inbound complètes à grande échelle.",
+                  icon: Target,
+                  color: "text-[var(--color-main)]",
+                  bgColor: "bg-[var(--color-main)]/10",
+                  features: [
+                    "Attirer et convertir les bons prospects",
+                    "Lancer des campagnes, personnaliser le contenu et tout suivre"
+                  ]
+                },
+                {
+                  name: "Sales Hub",
+                  description: "CRM de vente pour obtenir des insights plus profonds sur vos prospects, automatiser les tâches et conclure plus d'affaires rapidement.",
+                  icon: Users,
+                  color: "text-[var(--color-secondary)]",
+                  bgColor: "bg-[var(--color-secondary)]/10",
+                  features: [
+                    "Générer des prospects qualifiés et conclure plus vite",
+                    "Automatiser la prospection et accélérer la croissance"
+                  ]
+                },
+                {
+                  name: "Service Hub",
+                  description: "Logiciel de service client pour connecter avec vos clients, dépasser leurs attentes et les transformer en promoteurs.",
+                  icon: Heart,
+                  color: "text-[var(--color-main)]",
+                  bgColor: "bg-[var(--color-main)]/10",
+                  features: [
+                    "Support évolutif sans augmenter les coûts",
+                    "Répondre plus vite et automatiser les workflows"
+                  ]
+                },
+                {
+                  name: "Operations Hub",
+                  description: "Logiciel d'opérations qui connecte vos applications, nettoie vos données et automatise les processus.",
+                  icon: Settings,
+                  color: "text-[var(--color-secondary)]",
+                  bgColor: "bg-[var(--color-secondary)]/10",
+                  features: [
+                    "Transformer les données dispersées en intelligence unifiée",
+                    "Nettoyer et activer vos données client"
+                  ]
+                },
+                {
+                  name: "Content Hub",
+                  description: "Système de gestion de contenu qui aide à créer du contenu qui attire votre audience.",
+                  icon: FileText,
+                  color: "text-[var(--color-main)]",
+                  bgColor: "bg-[var(--color-main)]/10",
+                  features: [
+                    "Créer du contenu qui attire votre audience",
+                    "Construire des pages et publier du contenu"
+                  ]
+                },
+                {
+                  name: "Commerce Hub",
+                  description: "Outils e-commerce pour faciliter les paiements et gérer les abonnements de vos clients.",
+                  icon: ShoppingCart,
+                  color: "text-[var(--color-secondary)]",
+                  bgColor: "bg-[var(--color-secondary)]/10",
+                  features: [
+                    "Faciliter les paiements pour vos clients",
+                    "Envoyer des devis et gérer les abonnements"
+                  ]
+                }
+              ].map((hub, index) => {
+                const Icon = hub.icon;
                 return (
-                  <div key={index} className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                    <Quote className="w-10 h-10 text-[var(--color-main)] mb-5 group-hover:animate-pulse" />
-                    <blockquote className="text-base text-gray-800 mb-5 italic leading-relaxed">
-                      "{testimonial.quote}"
-                    </blockquote>
-                    <div className="flex items-center space-x-4">
-                      {renderAvatar(testimonialId)}
-                      <div>
-                        <div className="font-bold text-gray-900">{testimonial.name}</div>
-                        <div className="text-gray-600">{testimonial.role}</div>
-                        {testimonial.result && (
-                          <div className="text-[var(--color-main)] font-semibold">{testimonial.result}</div>
-                        )}
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className={`w-12 h-12 ${hub.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                        <Icon className={`w-6 h-6 ${hub.color}`} />
                       </div>
-                    </div>
-                  </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">{hub.name}</h3>
+                        <p className="text-gray-600 text-sm leading-relaxed mb-4">{hub.description}</p>
+                        <div className="space-y-2">
+                          {hub.features.map((feature, fIndex) => (
+                            <div key={fIndex} className="flex items-center space-x-2">
+                              <Check className={`w-4 h-4 ${hub.color} flex-shrink-0`} />
+                              <span className="text-sm text-gray-700">{feature}</span>
+              </div>
+            ))}
+          </div>
+                        <div className="mt-4">
+                          <button className={`text-sm font-medium ${hub.color} hover:underline flex items-center gap-1`}>
+                            En savoir plus
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                </div>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </div>
+
+      {/* Transformation Journey */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Notre <span className="text-[var(--color-main)]">Méthode</span> de Transformation
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Un processus éprouvé en 4 étapes pour garantir le succès de votre projet HubSpot
+            </p>
+          </motion.div>
+
+          <div className="space-y-8">
+            {transformationSteps.map((step, index) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  className={`flex items-center gap-8 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
+                >
+                  <div className="flex-1">
+                    <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 bg-[var(--color-main)] text-white rounded-xl flex items-center justify-center font-bold text-lg">
+                          {step.step}
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-gray-900">{step.title}</h3>
+                          <div className="text-sm text-[var(--color-main)] font-semibold">{step.duration}</div>
+                        </div>
+                      </div>
+                      <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="w-20 h-20 bg-[var(--color-main)]/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-10 h-10 text-[var(--color-main)]" />
+                </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
 
+      {/* Simple CTA Section - HubSpot Style */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              There's a better way to grow.
+            </h2>
+            <p className="text-xl text-gray-600 mb-12 leading-relaxed">
+              Marketing, sales, and service software that helps your business grow without compromise. Because "good for the business" should also mean "good for the customer."
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                onClick={handleMeetingClick}
+                size="lg"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-8 py-4 text-lg font-medium rounded-md"
+              >
+                Get a demo
+              </Button>
+              <Button
+                onClick={scrollToContact}
+                variant="outline"
+                size="lg"
+                className="border-2 border-[var(--color-main)] text-[var(--color-main)] px-8 py-4 text-lg font-medium rounded-md hover:bg-[var(--color-main)] hover:text-white"
+              >
+                Get started free
+              </Button>
+            </div>
+            
+            <p className="text-sm text-gray-500 mt-6">
+              Get started with FREE tools, and upgrade as you grow.
+            </p>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }
