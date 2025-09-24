@@ -36,11 +36,13 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Search, Calendar, Clock, ChevronRight, ArrowRight, Filter, User, BookOpen, TrendingUp, MapPin, FileText, Award, Users, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { getRegionFromCountry, shouldShowContent, type Region } from "@/lib/geolocation"
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
+import { useButtonAnalytics } from '@/hooks/use-analytics'
 import {
   Pagination,
   PaginationContent,
@@ -73,6 +75,12 @@ export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 6;
   const { data: location, loading: locationLoading, region: userRegion } = useGeolocationSingleton();
+  
+  // Newsletter state
+  const [newsletterEmail, setNewsletterEmail] = useState<string>('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [newsletterMessage, setNewsletterMessage] = useState<string>('');
+  const { trackButtonClick } = useButtonAnalytics();
 
   useEffect(() => {
     const fetchBlogData = async () => {
@@ -150,6 +158,42 @@ export default function BlogPage() {
         return 'International';
       default:
         return 'International';
+    }
+  };
+
+  const handleNewsletterSubmit = async () => {
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterStatus('error');
+      setNewsletterMessage('Veuillez entrer une adresse email valide');
+      return;
+    }
+
+    setNewsletterStatus('loading');
+    setNewsletterMessage('');
+    trackButtonClick('newsletter_submit_blog');
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: newsletterEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setNewsletterStatus('success');
+        setNewsletterMessage('Merci ! Vous êtes maintenant abonné à notre newsletter.');
+        setNewsletterEmail('');
+      } else {
+        setNewsletterStatus('error');
+        setNewsletterMessage(data.error || 'Une erreur est survenue. Veuillez réessayer.');
+      }
+    } catch (error) {
+      setNewsletterStatus('error');
+      setNewsletterMessage('Une erreur est survenue. Veuillez réessayer.');
     }
   };
 
@@ -335,12 +379,33 @@ export default function BlogPage() {
                 <p className="text-white/90 mb-4 text-sm">
                   Restez informé des dernières tendances et conseils pour votre transformation digitale.
                 </p>
-                <input
-                  type="email"
-                  placeholder="Votre email"
-                  className="w-full p-3 rounded-xl bg-white/20 border border-white/30 text-white placeholder:text-white/70 mb-3"
-                />
-                <Button className="w-full bg-white text-[var(--color-secondary)] hover:bg-white/90">S'abonner</Button>
+                <div className="space-y-3">
+                  <Input
+                    type="email"
+                    value={newsletterEmail}
+                    onChange={(e) => setNewsletterEmail(e.target.value)}
+                    placeholder="Votre email"
+                    className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white"
+                    disabled={newsletterStatus === 'loading'}
+                  />
+                  <Button
+                    onClick={handleNewsletterSubmit}
+                    disabled={newsletterStatus === 'loading'}
+                    className="w-full bg-white text-[var(--color-secondary)] hover:bg-white/90 disabled:opacity-50"
+                  >
+                    {newsletterStatus === 'loading' ? 'Abonnement...' : "S'abonner"}
+                  </Button>
+                  
+                  {newsletterMessage && (
+                    <div className={`text-sm text-center p-2 rounded-lg ${
+                      newsletterStatus === 'success' 
+                        ? 'bg-green-500/20 text-green-100' 
+                        : 'bg-red-500/20 text-red-100'
+                    }`}>
+                      {newsletterMessage}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
