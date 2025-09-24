@@ -36,7 +36,8 @@ import {
   XCircle,
   Eye,
   Send,
-  Database
+  Database,
+  Download
 } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
@@ -319,6 +320,46 @@ export default function LeadsPage() {
     setSelectedSubmissions([])
   }
 
+  const exportToCSV = async () => {
+    try {
+      // Build query parameters based on current filters
+      const params = new URLSearchParams({
+        ...(searchTerm && { search: searchTerm }),
+        ...(statusFilter !== 'all' && { status: statusFilter }),
+        ...(hubspotFilter !== 'all' && { hubspot: hubspotFilter }),
+        ...(submissionFilter !== 'all' && { submission: submissionFilter }),
+        ...(countryFilter !== 'all' && { country: countryFilter })
+      });
+
+      const response = await fetch(`/api/leads/export?${params}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to export CSV');
+      }
+
+      // Get the CSV content
+      const csvContent = await response.text();
+      
+      // Create blob and download
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `leads_export_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      console.log('CSV export successful');
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      alert('Erreur lors de l\'export CSV');
+    }
+  }
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'pending': return <Clock className="w-4 h-4 text-yellow-500" />
@@ -507,15 +548,27 @@ export default function LeadsPage() {
         <div className="text-sm text-gray-600">
           {filteredSubmissions.length} leads affichés sur {submissions.length} total
         </div>
-        <Button
-          onClick={fetchSubmissions}
-          variant="outline"
-          size="sm"
-          className="border-gray-200 hover:bg-gray-50 text-gray-700"
-        >
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Actualiser
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={exportToCSV}
+            variant="outline"
+            size="sm"
+            className="border-[var(--color-main)] hover:bg-[var(--color-main)]/10 text-[var(--color-main)]"
+            disabled={filteredSubmissions.length === 0}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Exporter CSV
+          </Button>
+          <Button
+            onClick={fetchSubmissions}
+            variant="outline"
+            size="sm"
+            className="border-gray-200 hover:bg-gray-50 text-gray-700"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Actualiser
+          </Button>
+        </div>
       </div>
 
       {/* Bulk Actions */}
