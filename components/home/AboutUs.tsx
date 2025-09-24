@@ -27,7 +27,8 @@ import {
   Heart,
   TrendingUp,
   Zap,
-  Star
+  Star,
+  Quote
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -73,37 +74,99 @@ export default function AboutUs() {
   ]
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden">
       
-      {/* Simple Background */}
-      <div className="fixed inset-0 pointer-events-none z-0 bg-gradient-to-br from-white via-gray-50/30 to-white" />
+      {/* Modern Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[var(--color-main)]/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[var(--color-secondary)]/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+      </div>
 
-      {/* Hero with Large Logo */}
-      <section className="pt-8 pb-20 relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-8 items-center min-h-[800px]">
+      {/* Hero Section - HubSpot Style */}
+      <section className="relative min-h-screen bg-white overflow-hidden">
+        
+        {/* Enhanced Design Motifs Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Large flowing shapes */}
+          <div className="absolute -top-40 -right-40 w-[800px] h-[800px] bg-gradient-to-br from-[var(--color-main)]/15 via-[var(--color-main)]/10 to-[var(--color-secondary)]/5 rounded-full blur-3xl transform rotate-12"></div>
+          <div className="absolute -bottom-20 -left-60 w-[600px] h-[600px] bg-gradient-to-tr from-[var(--color-secondary)]/20 via-[var(--color-main)]/15 to-[var(--color-secondary)]/10 rounded-full blur-2xl transform -rotate-45"></div>
+          
+          {/* Smaller accent shapes */}
+          <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-[var(--color-main)]/30 to-[var(--color-secondary)]/20 rounded-full blur-xl transform rotate-45"></div>
+          <div className="absolute bottom-1/3 right-1/3 w-60 h-60 bg-gradient-to-l from-[var(--color-secondary)]/25 to-[var(--color-main)]/15 rounded-full blur-xl transform -rotate-12"></div>
+          
+          {/* Organic flowing shapes */}
+          <div className="absolute top-1/2 left-10 w-40 h-96 bg-gradient-to-b from-[var(--color-main)]/20 to-transparent rounded-full blur-2xl transform -rotate-12"></div>
+          <div className="absolute top-20 right-20 w-32 h-80 bg-gradient-to-b from-[var(--color-secondary)]/15 to-transparent rounded-full blur-xl transform rotate-45"></div>
+        </div>
+
+        <div className="relative z-10 flex items-center justify-center min-h-screen px-6">
+          <div className="text-center max-w-4xl mx-auto">
             
-            {/* Left: Content */}
+            {/* BST Logo */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="mb-6"
             >
-              <Badge variant="outline" className="mb-6 px-4 py-2 text-[var(--color-main)] border-[var(--color-main)]">
-                🏆 Partenaire Officiel Odoo & HubSpot Platinum
-              </Badge>
-              
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Du <span className="text-[var(--color-main)]">Chaos</span>
-                <br />
-                à la <span className="text-[var(--color-secondary)]">Transformation</span>
-              </h1>
-              
-              <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                L'histoire de comment nous avons transformé notre propre entreprise 
-                et pourquoi nous aidons maintenant les autres à faire de même.
-              </p>
-              
+              <Image
+                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST_favIcone_big-removebg-preview.png"
+                alt="BlackSwan Technology"
+                width={200}
+                height={200}
+                className="h-24 w-auto mx-auto mb-6"
+                priority
+              />
+            </motion.div>
+            
+            {/* Partner Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="inline-flex items-center gap-1.5 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 text-[var(--color-main)] px-3 py-1.5 rounded-full text-xs font-medium mb-8"
+            >
+              <Award className="w-3 h-3 text-[var(--color-main)]" />
+              PARTENAIRE OFFICIEL ODOO & HUBSPOT PLATINUM
+            </motion.div>
+
+            {/* Main Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+            >
+              Du{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] to-[var(--color-main)]">
+                Chaos
+              </span>
+              {" "}à la{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-secondary)]">
+                Transformation
+              </span>
+            </motion.h1>
+            
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-base md:text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed"
+            >
+              L'histoire de comment nous avons transformé notre propre entreprise 
+              et pourquoi nous aidons maintenant les autres à faire de même.
+            </motion.p>
+            
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="mb-12"
+            >
               <Button
                 onClick={() => {
                   const nextSection = document.querySelector('#story');
@@ -111,29 +174,31 @@ export default function AboutUs() {
                     nextSection.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                size="lg"
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-lg font-semibold rounded-full group"
+                className="bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] hover:from-[var(--color-secondary)] hover:to-[var(--color-main)] text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg mx-auto group"
               >
                 Découvrir Notre Histoire
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
             </motion.div>
 
-            {/* Right: Extra Large Logo taking full space */}
+            {/* Trust Metrics */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative w-full h-full min-h-[700px] flex items-center justify-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
             >
-              <div className="relative w-full h-full max-w-2xl max-h-2xl">
-                <Image
-                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20favIcone%20big.png"
-                  alt="BlackSwan Technology Logo"
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                  priority
-                />
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[var(--color-main)] mb-1">100+</div>
+                <div className="text-sm text-gray-600">Clients</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[var(--color-main)] mb-1">3+</div>
+                <div className="text-sm text-gray-600">Années</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[var(--color-main)] mb-1">50+</div>
+                <div className="text-sm text-gray-600">Projets</div>
               </div>
             </motion.div>
           </div>
@@ -384,24 +449,105 @@ export default function AboutUs() {
         </div>
       </section>
       
-      <section className="py-20 bg-white relative z-10">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
-            <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-[var(--color-main)]">
-              <p className="font-semibold text-[var(--color-secondary)] italic">
-                "Notre mission ? Vous éviter de vivre ce que nous avons vécu, 
-                et vous faire gagner le temps que nous avons perdu."
-              </p>
-            </div>
-            
-            <p>
-              C'est exactement cette expérience qui fait notre force aujourd'hui. 
-              <span className="font-bold text-[var(--color-main)]">Nos solutions ne sortent pas d'un manuel théorique</span>, 
-              elles naissent de notre vécu.
-            </p>
-          </div>
-        </div>
-      </section>
+       {/* Mission Statement - Enhanced Design */}
+       <section className="py-24 bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+         
+         {/* Background Elements */}
+         <div className="absolute inset-0 overflow-hidden">
+           <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+           <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-[var(--color-main)]/3 to-[var(--color-secondary)]/3 rounded-full blur-2xl"></div>
+         </div>
+
+         <div className="relative z-10 max-w-5xl mx-auto px-6">
+           
+           {/* Mission Quote Card */}
+           <motion.div
+             initial={{ opacity: 0, y: 50 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.8 }}
+             viewport={{ once: true }}
+             className="relative mb-16"
+           >
+             {/* Main Quote Card */}
+             <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-2xl border border-white/20 overflow-hidden">
+               
+               {/* Decorative Elements */}
+               <div className="absolute top-6 left-6 w-4 h-4 bg-[var(--color-main)]/20 rounded-full"></div>
+               <div className="absolute top-8 right-8 w-6 h-6 bg-[var(--color-secondary)]/20 rounded-full"></div>
+               <div className="absolute bottom-6 left-8 w-3 h-3 bg-[var(--color-main)]/30 rounded-full"></div>
+               <div className="absolute bottom-8 right-6 w-5 h-5 bg-[var(--color-secondary)]/30 rounded-full"></div>
+               
+               {/* Quote Icon */}
+               <div className="absolute top-8 left-8">
+                 <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-full flex items-center justify-center">
+                   <Quote className="w-6 h-6 text-white" />
+                 </div>
+               </div>
+               
+               {/* Quote Text */}
+               <div className="ml-16">
+                 <blockquote className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-8">
+                   Notre mission ?{" "}
+                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)]">
+                     Vous éviter de vivre ce que nous avons vécu
+                   </span>
+                   , et vous faire gagner le temps que nous avons perdu.
+                 </blockquote>
+                 
+                 {/* Author */}
+                 <div className="flex items-center gap-4">
+                   <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-full flex items-center justify-center">
+                     <span className="text-white font-bold text-lg">W</span>
+                   </div>
+                   <div>
+                     <div className="font-semibold text-gray-900">Warren</div>
+                     <div className="text-sm text-gray-600">CEO</div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </motion.div>
+
+           {/* Supporting Text */}
+           <motion.div
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.8, delay: 0.2 }}
+             viewport={{ once: true }}
+             className="text-center"
+           >
+             <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
+               <p className="text-xl md:text-2xl text-gray-800 leading-relaxed">
+                 C'est exactement cette expérience qui fait notre force aujourd'hui.{" "}
+                 <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)]">
+                   Nos solutions ne sortent pas d'un manuel théorique
+                 </span>
+                 , elles naissent de notre vécu.
+               </p>
+             </div>
+           </motion.div>
+
+           {/* Visual Elements */}
+           <motion.div
+             initial={{ opacity: 0, scale: 0.8 }}
+             whileInView={{ opacity: 1, scale: 1 }}
+             transition={{ duration: 0.8, delay: 0.4 }}
+             viewport={{ once: true }}
+             className="flex justify-center mt-12"
+           >
+             <div className="flex items-center gap-8">
+               <div className="w-16 h-16 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-full flex items-center justify-center">
+                 <Lightbulb className="w-8 h-8 text-white" />
+               </div>
+               <div className="w-1 h-12 bg-gradient-to-b from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
+               <div className="w-16 h-16 bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-full flex items-center justify-center">
+                 <Rocket className="w-8 h-8 text-white" />
+               </div>
+             </div>
+           </motion.div>
+         </div>
+       </section>
 
       {/* Results Showcase */}
       <section className="py-20 bg-white relative z-10">

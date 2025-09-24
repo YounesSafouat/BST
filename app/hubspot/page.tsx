@@ -12,7 +12,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -62,6 +62,7 @@ import PageVisibilityGuard from '@/components/PageVisibilityGuard';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { useButtonAnalytics } from '@/hooks/use-analytics';
 import CompaniesCarouselV3 from '@/components/CompaniesCarouselV3';
+import CountryCodeSelector from '@/components/CountryCodeSelector';
 
 interface Testimonial {
   _id: string;
@@ -71,6 +72,13 @@ interface Testimonial {
   result: string;
   avatar: string;
   company?: string;
+}
+
+interface Country {
+  code: string;
+  name: string;
+  dialCode: string;
+  flag: string;
 }
 
 interface HubSpotData {
@@ -217,8 +225,30 @@ function HubSpotPageContent() {
   const [availableTestimonials, setAvailableTestimonials] = useState<Testimonial[]>([]);
   const [homePageData, setHomePageData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { region: userRegion } = useGeolocationSingleton();
+  const { region: userRegion, data: locationData } = useGeolocationSingleton();
   const { trackButtonClick } = useButtonAnalytics();
+
+  // Email capture and popup form states
+  const [email, setEmail] = useState('');
+  const [showPopupForm, setShowPopupForm] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    phone: '',
+    company: '',
+    message: ''
+  });
+  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({});
+
+  // Country and phone formatting states
+  const [selectedCountry, setSelectedCountry] = useState<Country>({
+    code: 'MA',
+    name: 'Maroc',
+    dialCode: '+212',
+    flag: '🇲🇦'
+  });
+
 
   useEffect(() => {
     const timer = setTimeout(() => setStatsVisible(true), 800);
@@ -233,6 +263,110 @@ function HubSpotPageContent() {
       clearTimeout(loadTimer);
     };
   }, []);
+
+
+  // Auto-detect country based on geolocation
+  useEffect(() => {
+    if (locationData?.countryCode) {
+      const countryCode = locationData.countryCode;
+      const countryName = locationData.country || '';
+      
+      // Map of country codes to country data
+      const countryMap: { [key: string]: Country } = {
+        'MA': { code: 'MA', name: 'Maroc', dialCode: '+212', flag: '🇲🇦' },
+        'FR': { code: 'FR', name: 'France', dialCode: '+33', flag: '🇫🇷' },
+        'US': { code: 'US', name: 'États-Unis', dialCode: '+1', flag: '🇺🇸' },
+        'CA': { code: 'CA', name: 'Canada', dialCode: '+1', flag: '🇨🇦' },
+        'BE': { code: 'BE', name: 'Belgique', dialCode: '+32', flag: '🇧🇪' },
+        'CH': { code: 'CH', name: 'Suisse', dialCode: '+41', flag: '🇨🇭' },
+        'LU': { code: 'LU', name: 'Luxembourg', dialCode: '+352', flag: '🇱🇺' },
+        'TN': { code: 'TN', name: 'Tunisie', dialCode: '+216', flag: '🇹🇳' },
+        'DZ': { code: 'DZ', name: 'Algérie', dialCode: '+213', flag: '🇩🇿' },
+        'SN': { code: 'SN', name: 'Sénégal', dialCode: '+221', flag: '🇸🇳' },
+        'DE': { code: 'DE', name: 'Allemagne', dialCode: '+49', flag: '🇩🇪' },
+        'IT': { code: 'IT', name: 'Italie', dialCode: '+39', flag: '🇮🇹' },
+        'ES': { code: 'ES', name: 'Espagne', dialCode: '+34', flag: '🇪🇸' },
+        'GB': { code: 'GB', name: 'Royaume-Uni', dialCode: '+44', flag: '🇬🇧' },
+        'NL': { code: 'NL', name: 'Pays-Bas', dialCode: '+31', flag: '🇳🇱' },
+        'AT': { code: 'AT', name: 'Autriche', dialCode: '+43', flag: '🇦🇹' },
+        'SE': { code: 'SE', name: 'Suède', dialCode: '+46', flag: '🇸🇪' },
+        'NO': { code: 'NO', name: 'Norvège', dialCode: '+47', flag: '🇳🇴' },
+        'DK': { code: 'DK', name: 'Danemark', dialCode: '+45', flag: '🇩🇰' },
+        'FI': { code: 'FI', name: 'Finlande', dialCode: '+358', flag: '🇫🇮' },
+        'PL': { code: 'PL', name: 'Pologne', dialCode: '+48', flag: '🇵🇱' },
+        'CZ': { code: 'CZ', name: 'République tchèque', dialCode: '+420', flag: '🇨🇿' },
+        'SK': { code: 'SK', name: 'Slovaquie', dialCode: '+421', flag: '🇸🇰' },
+        'HU': { code: 'HU', name: 'Hongrie', dialCode: '+36', flag: '🇭🇺' },
+        'RO': { code: 'RO', name: 'Roumanie', dialCode: '+40', flag: '🇷🇴' },
+        'BG': { code: 'BG', name: 'Bulgarie', dialCode: '+359', flag: '🇧🇬' },
+        'HR': { code: 'HR', name: 'Croatie', dialCode: '+385', flag: '🇭🇷' },
+        'SI': { code: 'SI', name: 'Slovénie', dialCode: '+386', flag: '🇸🇮' },
+        'EE': { code: 'EE', name: 'Estonie', dialCode: '+372', flag: '🇪🇪' },
+        'LV': { code: 'LV', name: 'Lettonie', dialCode: '+371', flag: '🇱🇻' },
+        'LT': { code: 'LT', name: 'Lituanie', dialCode: '+370', flag: '🇱🇹' },
+        'GR': { code: 'GR', name: 'Grèce', dialCode: '+30', flag: '🇬🇷' },
+        'CY': { code: 'CY', name: 'Chypre', dialCode: '+357', flag: '🇨🇾' },
+        'MT': { code: 'MT', name: 'Malte', dialCode: '+356', flag: '🇲🇹' },
+        'IE': { code: 'IE', name: 'Irlande', dialCode: '+353', flag: '🇮🇪' },
+        'IS': { code: 'IS', name: 'Islande', dialCode: '+354', flag: '🇮🇸' },
+        'RU': { code: 'RU', name: 'Russie', dialCode: '+7', flag: '🇷🇺' },
+        'UA': { code: 'UA', name: 'Ukraine', dialCode: '+380', flag: '🇺🇦' },
+        'BY': { code: 'BY', name: 'Biélorussie', dialCode: '+375', flag: '🇧🇾' },
+        'MD': { code: 'MD', name: 'Moldavie', dialCode: '+373', flag: '🇲🇩' },
+        'GE': { code: 'GE', name: 'Géorgie', dialCode: '+995', flag: '🇬🇪' },
+        'AM': { code: 'AM', name: 'Arménie', dialCode: '+374', flag: '🇦🇲' },
+        'AZ': { code: 'AZ', name: 'Azerbaïdjan', dialCode: '+994', flag: '🇦🇿' },
+        'TR': { code: 'TR', name: 'Turquie', dialCode: '+90', flag: '🇹🇷' },
+        'IL': { code: 'IL', name: 'Israël', dialCode: '+972', flag: '🇮🇱' },
+        'LB': { code: 'LB', name: 'Liban', dialCode: '+961', flag: '🇱🇧' },
+        'SY': { code: 'SY', name: 'Syrie', dialCode: '+963', flag: '🇸🇾' },
+        'IQ': { code: 'IQ', name: 'Irak', dialCode: '+964', flag: '🇮🇶' },
+        'IR': { code: 'IR', name: 'Iran', dialCode: '+98', flag: '🇮🇷' },
+        'AF': { code: 'AF', name: 'Afghanistan', dialCode: '+93', flag: '🇦🇫' },
+        'PK': { code: 'PK', name: 'Pakistan', dialCode: '+92', flag: '🇵🇰' },
+        'IN': { code: 'IN', name: 'Inde', dialCode: '+91', flag: '🇮🇳' },
+        'BD': { code: 'BD', name: 'Bangladesh', dialCode: '+880', flag: '🇧🇩' },
+        'LK': { code: 'LK', name: 'Sri Lanka', dialCode: '+94', flag: '🇱🇰' },
+        'NP': { code: 'NP', name: 'Népal', dialCode: '+977', flag: '🇳🇵' },
+        'BT': { code: 'BT', name: 'Bhoutan', dialCode: '+975', flag: '🇧🇹' },
+        'MM': { code: 'MM', name: 'Myanmar', dialCode: '+95', flag: '🇲🇲' },
+        'TH': { code: 'TH', name: 'Thaïlande', dialCode: '+66', flag: '🇹🇭' },
+        'LA': { code: 'LA', name: 'Laos', dialCode: '+856', flag: '🇱🇦' },
+        'KH': { code: 'KH', name: 'Cambodge', dialCode: '+855', flag: '🇰🇭' },
+        'VN': { code: 'VN', name: 'Vietnam', dialCode: '+84', flag: '🇻🇳' },
+        'MY': { code: 'MY', name: 'Malaisie', dialCode: '+60', flag: '🇲🇾' },
+        'SG': { code: 'SG', name: 'Singapour', dialCode: '+65', flag: '🇸🇬' },
+        'ID': { code: 'ID', name: 'Indonésie', dialCode: '+62', flag: '🇮🇩' },
+        'PH': { code: 'PH', name: 'Philippines', dialCode: '+63', flag: '🇵🇭' },
+        'TW': { code: 'TW', name: 'Taïwan', dialCode: '+886', flag: '🇹🇼' },
+        'HK': { code: 'HK', name: 'Hong Kong', dialCode: '+852', flag: '🇭🇰' },
+        'MO': { code: 'MO', name: 'Macao', dialCode: '+853', flag: '🇲🇴' },
+        'CN': { code: 'CN', name: 'Chine', dialCode: '+86', flag: '🇨🇳' },
+        'JP': { code: 'JP', name: 'Japon', dialCode: '+81', flag: '🇯🇵' },
+        'KR': { code: 'KR', name: 'Corée du Sud', dialCode: '+82', flag: '🇰🇷' },
+        'AU': { code: 'AU', name: 'Australie', dialCode: '+61', flag: '🇦🇺' },
+        'NZ': { code: 'NZ', name: 'Nouvelle-Zélande', dialCode: '+64', flag: '🇳🇿' },
+        'BR': { code: 'BR', name: 'Brésil', dialCode: '+55', flag: '🇧🇷' },
+        'AR': { code: 'AR', name: 'Argentine', dialCode: '+54', flag: '🇦🇷' },
+        'CL': { code: 'CL', name: 'Chili', dialCode: '+56', flag: '🇨🇱' },
+        'PE': { code: 'PE', name: 'Pérou', dialCode: '+51', flag: '🇵🇪' },
+        'CO': { code: 'CO', name: 'Colombie', dialCode: '+57', flag: '🇨🇴' },
+        'VE': { code: 'VE', name: 'Venezuela', dialCode: '+58', flag: '🇻🇪' },
+        'EC': { code: 'EC', name: 'Équateur', dialCode: '+593', flag: '🇪🇨' },
+        'BO': { code: 'BO', name: 'Bolivie', dialCode: '+591', flag: '🇧🇴' },
+        'PY': { code: 'PY', name: 'Paraguay', dialCode: '+595', flag: '🇵🇾' },
+        'UY': { code: 'UY', name: 'Uruguay', dialCode: '+598', flag: '🇺🇾' },
+        'GY': { code: 'GY', name: 'Guyana', dialCode: '+592', flag: '🇬🇾' },
+        'SR': { code: 'SR', name: 'Suriname', dialCode: '+597', flag: '🇸🇷' },
+        'FK': { code: 'FK', name: 'Îles Malouines', dialCode: '+500', flag: '🇫🇰' }
+      };
+
+      const detectedCountry = countryMap[countryCode];
+      if (detectedCountry) {
+        setSelectedCountry(detectedCountry);
+      }
+    }
+  }, [locationData]);
 
   const fetchHubSpotData = async () => {
     try {
@@ -348,6 +482,242 @@ function HubSpotPageContent() {
     const meetingLink = 'https://meetings-eu1.hubspot.com/yraissi';
     window.open(meetingLink, '_blank');
     trackButtonClick('hubspot_meeting_cta');
+  };
+
+  // Email capture and form submission functions
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@')) {
+      setFormErrors({ email: 'Veuillez entrer une adresse email valide' });
+      return;
+    }
+
+    setFormErrors({});
+    
+    // Step 1: Save email to database as partial lead
+    try {
+      const response = await fetch('/api/contact/partial', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          source: 'hubspot-page',
+          page: 'hubspot',
+          brief_description: 'Lead généré depuis la page HubSpot - Email capturé'
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Email saved as partial lead:', result);
+        setShowPopupForm(true);
+        trackButtonClick('hubspot_email_capture');
+      } else {
+        console.error('Failed to save email:', await response.json());
+        // Still show popup even if partial save fails
+        setShowPopupForm(true);
+        trackButtonClick('hubspot_email_capture');
+      }
+    } catch (error) {
+      console.error('Error saving email:', error);
+      // Still show popup even if partial save fails
+      setShowPopupForm(true);
+      trackButtonClick('hubspot_email_capture');
+    }
+  };
+
+  const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors: {[key: string]: string} = {};
+    
+    if (!formData.firstname.trim()) {
+      errors.firstname = 'Le prénom est requis';
+    }
+    
+    if (!formData.lastname.trim()) {
+      errors.lastname = 'Le nom est requis';
+    }
+    
+    if (!formData.phone.trim()) {
+      errors.phone = 'Le téléphone est requis';
+    } else if (!isPhoneValid(formData.phone)) {
+      const phoneWithoutCountry = formData.phone.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+      let errorMessage = 'Le numéro de téléphone est invalide';
+      
+      if (selectedCountry.code === 'MA') {
+        if (phoneWithoutCountry.length !== 9) {
+          errorMessage = 'Le numéro de téléphone marocain doit contenir exactement 9 chiffres';
+        } else {
+          errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres';
+        }
+      } else {
+        if (phoneWithoutCountry.length < 8) {
+          errorMessage = 'Le numéro de téléphone doit contenir au moins 8 chiffres';
+        } else if (phoneWithoutCountry.length > 15) {
+          errorMessage = 'Le numéro de téléphone ne peut pas dépasser 15 chiffres';
+        } else {
+          errorMessage = 'Le numéro de téléphone ne peut contenir que des chiffres';
+        }
+      }
+      
+      errors.phone = errorMessage;
+    }
+    
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      // Step 2: Update the existing partial record with complete data and send to HubSpot
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event: 'formSubmit',
+          formData: {
+            email: email,
+            firstname: formData.firstname.trim(),
+            lastname: formData.lastname.trim(),
+            phone: formData.phone.trim(),
+            message: formData.message.trim(),
+            company: formData.company.trim(),
+            name: `${formData.firstname.trim()} ${formData.lastname.trim()}`.trim()
+          },
+          additionalData: {
+            source: 'hubspot-page',
+            page: 'hubspot',
+            brief_description: 'Lead généré depuis la page HubSpot - Formulaire complet',
+            countryCode: selectedCountry.code,
+            countryName: selectedCountry.name,
+            city: locationData?.city || '',
+            state: ''
+          }
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Form submitted successfully:', result);
+        
+        // Reset form and close popup
+        setFormData({
+          firstname: '',
+          lastname: '',
+          phone: '',
+          company: '',
+          message: ''
+        });
+        setEmail('');
+        setShowPopupForm(false);
+        setFormErrors({});
+        
+        // Show success message (you can customize this)
+        alert('Merci ! Votre demande a été envoyée avec succès. Nous vous contacterons bientôt.');
+        
+        trackButtonClick('hubspot_form_submit_success');
+      } else {
+        const errorData = await response.json();
+        console.error('Form submission failed:', errorData);
+        alert('Une erreur est survenue. Veuillez réessayer.');
+        trackButtonClick('hubspot_form_submit_error');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Une erreur est survenue. Veuillez réessayer.');
+      trackButtonClick('hubspot_form_submit_error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const closePopupForm = () => {
+    setShowPopupForm(false);
+    setFormErrors({});
+  };
+
+  // Phone formatting and validation functions
+  const formatPhoneNumber = (value: string) => {
+    let phoneNumber = value;
+    if (phoneNumber.startsWith(selectedCountry.dialCode)) {
+      phoneNumber = phoneNumber.substring(selectedCountry.dialCode.length);
+    }
+
+    const digits = phoneNumber.replace(/\D/g, '');
+
+    if (digits.length <= 2) {
+      return digits;
+    } else if (digits.length <= 4) {
+      return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+    } else if (digits.length <= 6) {
+      return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4)}`;
+    } else if (digits.length <= 8) {
+      return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6)}`;
+    } else {
+      return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 8)} ${digits.slice(8)}`;
+    }
+  };
+
+  const isPhoneValid = (phoneNumber: string) => {
+    if (!phoneNumber.trim()) return false;
+    
+    const phoneWithoutCountry = phoneNumber.replace(selectedCountry.dialCode, '').replace(/\s/g, '');
+    
+    if (selectedCountry.code === 'MA') {
+      return phoneWithoutCountry.length === 9 && /^\d+$/.test(phoneWithoutCountry);
+    } else {
+      return phoneWithoutCountry.length >= 8 && phoneWithoutCountry.length <= 15 && /^\d+$/.test(phoneWithoutCountry);
+    }
+  };
+
+  const handleCountryChange = (country: Country) => {
+    setSelectedCountry(country);
+    // Clear phone field when country changes
+    setFormData(prev => ({ ...prev, phone: '' }));
+  };
+
+  const handlePhoneChange = (value: string) => {
+    const formatted = formatPhoneNumber(value);
+    const fullNumber = selectedCountry.dialCode + ' ' + formatted;
+    
+    setFormData(prev => ({ ...prev, phone: fullNumber }));
+    
+    // Clear error when user starts typing
+    if (formErrors.phone) {
+      setFormErrors(prev => ({
+        ...prev,
+        phone: ''
+      }));
+    }
   };
 
   if (isLoading) {
@@ -475,20 +845,27 @@ function HubSpotPageContent() {
               transition={{ duration: 0.8, delay: 0.5 }}
               className="max-w-lg mx-auto mb-12 relative"
             >
-              <div className="flex items-center gap-0 bg-white/60 backdrop-blur-xl rounded-full p-1 border border-orange-200/50 shadow-xl">
+              <form onSubmit={handleEmailSubmit} className="flex items-center gap-0 bg-white/60 backdrop-blur-xl rounded-full p-1 border border-orange-200/50 shadow-xl">
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="votre.email@entreprise.com"
                   className="flex-1 bg-transparent text-gray-900 placeholder-gray-500 px-6 py-4 rounded-full focus:outline-none focus:ring-0 text-base"
+                  required
                 />
                 <Button
-                  onClick={handleMeetingClick}
-                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-4 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shrink-0"
+                  type="submit"
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-6 py-4 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shrink-0 h-16 group"
                 >
-                  <ArrowRight className="w-4 h-4" />
                   Audit Gratuit
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
-              </div>
+              </form>
+              
+              {formErrors.email && (
+                <p className="text-red-500 text-sm mt-2 text-center">{formErrors.email}</p>
+              )}
               
               {/* Hand-drawn arrow pointing to email input from the side */}
               <div className="hidden lg:block absolute -left-32 top-1/2 transform -translate-y-1/2">
@@ -532,12 +909,12 @@ function HubSpotPageContent() {
         </div>
       </section>
 
-      {/* HubSpot Hubs Section - Basic Layout */}
+      {/* HubSpot Hubs Section */}
       <div className="bg-white">
         <div className="max-w-7xl mx-auto px-6 py-20">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
             
-            {/* Left Side - Simple Content */}
+            {/* Left Side - Content */}
             <div>
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
@@ -571,7 +948,7 @@ function HubSpotPageContent() {
               </motion.div>
             </div>
 
-            {/* Right Side - Scrolling Cards */}
+            {/* Right Side - Cards */}
             <div className="space-y-12">
               {[
                 {
@@ -682,6 +1059,70 @@ function HubSpotPageContent() {
         </div>
       </div>
 
+      {/* Certifications Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Nos <span className="text-[var(--color-main)]">Certifications</span> HubSpot
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Une expertise reconnue et certifiée par HubSpot pour vous accompagner dans votre transformation digitale
+            </p>
+          </motion.div>
+
+          {/* Main Certification Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <div className="bg-white rounded-xl p-8 border border-gray-200 hover:shadow-lg transition-all duration-300 max-w-2xl mx-auto">
+              <Image
+                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Hubspot.webp"
+                alt="Certification HubSpot"
+                width={300}
+                height={200}
+                className="mx-auto mb-6"
+                priority
+              />
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Partenaire Certifié HubSpot
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Certification officielle HubSpot validant notre expertise
+              </p>
+              <div className="flex items-center justify-center gap-2 text-sm text-[var(--color-main)] font-semibold">
+                <CheckCircle className="w-4 h-4" />
+                Certifié et validé par HubSpot
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Trust Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-3 bg-white rounded-full px-6 py-3 border border-gray-200 shadow-sm">
+              <Crown className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm font-semibold text-gray-700">
+                Partenaire Platinum HubSpot depuis 2020
+              </span>
+              <Award className="w-5 h-5 text-[var(--color-main)]" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Transformation Journey */}
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -746,10 +1187,10 @@ function HubSpotPageContent() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              There's a better way to grow.
+              Il existe une meilleure façon de grandir.
             </h2>
             <p className="text-xl text-gray-600 mb-12 leading-relaxed">
-              Marketing, sales, and service software that helps your business grow without compromise. Because "good for the business" should also mean "good for the customer."
+              Logiciel de marketing, vente et service qui aide votre entreprise à grandir sans compromis. Parce que "bon pour l'entreprise" devrait aussi signifier "bon pour le client."
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -758,7 +1199,7 @@ function HubSpotPageContent() {
                 size="lg"
                 className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-8 py-4 text-lg font-medium rounded-md"
               >
-                Get a demo
+                Obtenir une démo
               </Button>
               <Button
                 onClick={scrollToContact}
@@ -766,16 +1207,173 @@ function HubSpotPageContent() {
                 size="lg"
                 className="border-2 border-[var(--color-main)] text-[var(--color-main)] px-8 py-4 text-lg font-medium rounded-md hover:bg-[var(--color-main)] hover:text-white"
               >
-                Get started free
+                Commencer gratuitement
               </Button>
             </div>
             
             <p className="text-sm text-gray-500 mt-6">
-              Get started with FREE tools, and upgrade as you grow.
+              Commencez avec des outils GRATUITS, et évoluez au fur et à mesure de votre croissance.
             </p>
           </motion.div>
         </div>
       </section>
+
+      {/* Popup Form Modal */}
+      <AnimatePresence>
+        {showPopupForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={closePopupForm}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900">Complétez votre demande</h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Quelques informations supplémentaires pour personnaliser votre audit
+                    </p>
+                  </div>
+                  <button
+                    onClick={closePopupForm}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleFormSubmit} className="p-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="firstname" className="block text-sm font-medium text-gray-700 mb-1">
+                      Prénom *
+                    </label>
+                    <input
+                      type="text"
+                      id="firstname"
+                      name="firstname"
+                      value={formData.firstname}
+                      onChange={handleFormInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                      placeholder="Votre prénom"
+                    />
+                    {formErrors.firstname && (
+                      <p className="text-red-500 text-xs mt-1">{formErrors.firstname}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-1">
+                      Nom *
+                    </label>
+                    <input
+                      type="text"
+                      id="lastname"
+                      name="lastname"
+                      value={formData.lastname}
+                      onChange={handleFormInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                      placeholder="Votre nom"
+                    />
+                    {formErrors.lastname && (
+                      <p className="text-red-500 text-xs mt-1">{formErrors.lastname}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                    Téléphone *
+                  </label>
+                  <div className="flex space-x-2">
+                    <CountryCodeSelector
+                      selectedCountry={selectedCountry}
+                      onCountryChange={handleCountryChange}
+                    />
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone.replace(selectedCountry.dialCode, '').trim()}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      className="flex-1 px-3 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors h-11 sm:h-12"
+                      placeholder={selectedCountry.code === 'MA' ? '6 12 34 56 78' : '123 456 789'}
+                    />
+                  </div>
+                  {formErrors.phone && (
+                    <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
+                    Entreprise
+                  </label>
+                  <input
+                    type="text"
+                    id="company"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleFormInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
+                    placeholder="Nom de votre entreprise"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleFormInputChange}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors resize-none"
+                    placeholder="Décrivez brièvement vos besoins en HubSpot..."
+                  />
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-4">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Envoi en cours...
+                      </>
+                    ) : (
+                      <>
+                        <ArrowRight className="w-4 h-4" />
+                        Recevoir mon audit gratuit
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

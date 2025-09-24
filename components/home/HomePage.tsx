@@ -403,10 +403,6 @@ export default function HomePage() {
           }
      };
 
-
-
-
-
      const AnimatedCounter = ({ target, suffix, duration = 2500 }: { target: number, suffix: string, duration?: number }) => {
           const [count, setCount] = useState(0);
 
