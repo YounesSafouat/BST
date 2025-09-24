@@ -129,6 +129,8 @@ export class HubSpotService {
         // Check if this is a partial lead (has message indicating partial status)
         if (contactData.message && contactData.message.includes('Partial lead')) {
           properties.contact_status = 'partial lead';
+        } else if (contactData.contact_status === 'NewsLetter') {
+          properties.contact_status = 'NewsLetter';
         } else {
           properties.contact_status = 're engaged';
         }
@@ -149,9 +151,11 @@ export class HubSpotService {
         properties.first_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
         properties.last_submission_date = new Date().toISOString().split('T')[0]; // Date only, no time
         
-        // Check if this is a partial lead
+        // Check if this is a partial lead or newsletter subscription
         if (contactData.message && contactData.message.includes('Partial lead')) {
           properties.contact_status = 'partial lead';
+        } else if (contactData.contact_status === 'NewsLetter') {
+          properties.contact_status = 'NewsLetter';
         } else {
           properties.contact_status = 'new lead';
         }

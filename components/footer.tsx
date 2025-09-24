@@ -65,6 +65,9 @@ export default function Footer() {
   const router = useRouter();
   const [contactData, setContactData] = useState<any>(null);
   const [footerContent, setFooterContent] = useState<any>(null);
+  const [newsletterEmail, setNewsletterEmail] = useState<string>('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [newsletterMessage, setNewsletterMessage] = useState<string>('');
   const { trackButtonClick } = useButtonAnalytics();
   const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
 
@@ -151,8 +154,43 @@ export default function Footer() {
   const regionalContact = getRegionalContactInfo();
 
   const handleNewsletterSubmit = async () => {
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      setNewsletterStatus('error');
+      setNewsletterMessage('Veuillez entrer une adresse email valide');
+      return;
+    }
+
+    setNewsletterStatus('loading');
+    setNewsletterMessage('');
     trackButtonClick('newsletter_submit');
-    await new Promise(resolve => setTimeout(resolve, 2000))
+
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: newsletterEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setNewsletterStatus('success');
+        setNewsletterMessage(data.message);
+        setNewsletterEmail(''); // Clear the input
+        trackButtonClick('newsletter_success');
+      } else {
+        setNewsletterStatus('error');
+        setNewsletterMessage(data.error || 'Une erreur est survenue');
+        trackButtonClick('newsletter_error');
+      }
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      setNewsletterStatus('error');
+      setNewsletterMessage('Une erreur est survenue lors de l\'abonnement');
+      trackButtonClick('newsletter_error');
+    }
   }
 
   const handleLinkClick = (url: string) => {
@@ -215,16 +253,31 @@ export default function Footer() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Input
                 type="email"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
                 placeholder={newsletter?.placeholder || "Votre email"}
                 className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:border-white h-12 w-full sm:w-80 md:w-96"
+                disabled={newsletterStatus === 'loading'}
               />
               <Button
-                className="bg-white text-[var(--color-secondary)] hover:bg-white/90 h-12 px-6 whitespace-nowrap"
+                className="bg-white text-[var(--color-secondary)] hover:bg-white/90 h-12 px-6 whitespace-nowrap disabled:opacity-50"
                 onClick={handleNewsletterSubmit}
+                disabled={newsletterStatus === 'loading' || !newsletterEmail}
               >
-                {newsletter?.buttonText || "S'abonner"}
+                {newsletterStatus === 'loading' ? 'Abonnement...' : (newsletter?.buttonText || "S'abonner")}
               </Button>
             </div>
+
+            {/* Newsletter Status Messages */}
+            {newsletterMessage && (
+              <div className={`mt-4 text-sm ${
+                newsletterStatus === 'success' ? 'text-green-200' : 
+                newsletterStatus === 'error' ? 'text-red-200' : 
+                'text-white/80'
+              }`}>
+                {newsletterMessage}
+              </div>
+            )}
 
           </div>
         </div>

@@ -64,7 +64,7 @@ const contactSubmissionSchema = new mongoose.Schema({
   // Existing status field for CRM workflow
   status: {
     type: String,
-    enum: ['pending', 'in-progress', 'completed', 'read', 'replied', 'closed', 'partial_lead_sent', 'archived'],
+    enum: ['pending', 'in-progress', 'completed', 'read', 'replied', 'closed', 'partial_lead_sent', 'archived', 'newsletter'],
     default: 'pending',
   },
   // HubSpot integration tracking
