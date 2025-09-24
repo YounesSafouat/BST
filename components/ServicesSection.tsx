@@ -127,10 +127,7 @@ const fallbackServices: Service[] = [
 export default function ServicesSection({ servicesData }: ServicesSectionProps) {
   const [activeService, setActiveService] = useState(0);
 
-  // Debug: Log the received data
-  console.log('ServicesSection - servicesData:', servicesData);
-  console.log('ServicesSection - servicesData?.services:', servicesData?.services);
-  console.log('ServicesSection - servicesData?.defaultButtonText:', servicesData?.defaultButtonText);
+ 
 
   // Use CMS data if available, otherwise fallback to default data
   const services = servicesData?.services || fallbackServices;
@@ -139,10 +136,7 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
   const description = servicesData?.description || "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.";
   const defaultButtonText = servicesData?.defaultButtonText || "Discutons-en";
 
-  // Debug: Log the final values
-  console.log('ServicesSection - final services:', services);
-  console.log('ServicesSection - final defaultButtonText:', defaultButtonText);
-  console.log('ServicesSection - active service buttonText:', services[activeService]?.buttonText);
+  
 
   const scrollToContact = () => {
     const contactSection = document.querySelector('#contact');

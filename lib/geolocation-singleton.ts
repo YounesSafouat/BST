@@ -54,7 +54,7 @@ class GeolocationService {
             error: null,
             isFromCache: true,
           };
-          console.log('📍 Geolocation service initialized from cache');
+         
           this.notifySubscribers();
           
           // Verify the cached location is still accurate after a short delay
@@ -81,7 +81,7 @@ class GeolocationService {
         const currentCountry = currentData.country;
         const cachedCountry = this.state.data?.countryCode;
         
-        console.log('📍 Current location:', currentCountry, 'Cached location:', cachedCountry);
+      
         
         if (currentCountry !== cachedCountry) {
           console.log('📍 Location changed! Clearing cache and making fresh API call');

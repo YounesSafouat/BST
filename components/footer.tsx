@@ -75,10 +75,10 @@ export default function Footer() {
         const response = await fetch('/api/content/settings');
         if (response.ok) {
           const data = await response.json();
-          console.log('Footer - Settings API response:', data);
+          
           if (data?.content?.regionalContact) {
             setContactData(data.content.regionalContact);
-            console.log('Footer - Contact data set:', data.content.regionalContact);
+            
           } else {
             console.log('Footer - No regional contact data found in response');
           }
@@ -124,10 +124,10 @@ export default function Footer() {
 
   // Get regional contact info
   const getRegionalContactInfo = () => {
-    console.log('Footer - getRegionalContactInfo called with:', { userRegion, contactData });
+   
     
     if (!userRegion || !contactData) {
-      console.log('Footer - Missing data:', { userRegion, contactData });
+     
       return null;
     }
 
@@ -144,7 +144,7 @@ export default function Footer() {
         break;
     }
 
-    console.log('Footer - Selected contact data:', selectedData);
+   
     return selectedData;
   };
 

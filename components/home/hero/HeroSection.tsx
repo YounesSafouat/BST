@@ -134,7 +134,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
       <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2" style={{ marginTop: '0', paddingTop: '0' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
-          <div className="lg:hidden space-y-4 sm:space-y-6 pt-0 mt-0 -mt-4 min-h-[80vh] flex flex-col justify-center" style={{ marginTop: '0', paddingTop: '0' }}>
+          <div className="lg:hidden space-y-4 sm:space-y-6 pt-0 mt-0 -mt-4 min-h-[60vh] flex flex-col justify-center" style={{ marginTop: '0', paddingTop: '0' }}>
 
 
             {/* 2. Headline Second - Centered and Bigger */}
@@ -358,7 +358,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
       </div>
 
       {/* Companies Carousel */}
-      <div className="hidden lg:block bg-transparent pt-8 sm:pt-10 md:pt-12 lg:pt-16">
+      <div className="hidden lg:block bg-transparent pt-4 sm:pt-6 md:pt-8 lg:pt-10 xl:pt-12 2xl:pt-16">
         <CompaniesCarouselV3
           companies={heroData?.carousel?.companies}
           userRegion={userRegion}

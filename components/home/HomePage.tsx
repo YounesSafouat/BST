@@ -56,30 +56,7 @@ if (typeof window !== 'undefined') {
 }
 
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
-import {
-     Calculator,
-     ShoppingCart,
-     Package,
-     Users,
-     CheckCircle,
-     ArrowRight,
-     Quote,
-     Rocket,
-     Check,
-     X,
-     BadgeCheck,
-     Clock,
-     Star,
-     MessageCircle,
-     Settings,
-     CircleCheckBig,
-     Calendar,
-     Shield,
-     Phone,
-     Mail,
-     BarChart3,
-     FileText
-} from 'lucide-react';
+
 import HomeHeroSplit from '@/components/home/hero/HeroSection';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
@@ -295,12 +272,7 @@ export default function HomePage() {
      // Use singleton geolocation service
      const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
      
-     // Debug geolocation
-     console.log('🌍 HomePage Geolocation Debug:', {
-          userRegion,
-          locationLoading,
-          isFromCache
-     });
+    
 
 
      const [hiddenTimelineCards, setHiddenTimelineCards] = useState<Set<string>>(new Set());
@@ -347,8 +319,7 @@ export default function HomePage() {
                          const hasRegions = parsed.data?.hero?.carousel?.companies?.some((company: any) => company.regions);
                          
                          if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) { // 5 minutes cache + regions check
-                              console.log('🏠 HomePage - Using cached data:', parsed.data);
-                              console.log('🏠 HomePage - Cached companies data:', parsed.data?.hero?.carousel?.companies);
+                             
                               setHomePageData(parsed.data);
                               return;
                          } else if (!hasRegions) {
@@ -377,8 +348,7 @@ export default function HomePage() {
                          const homePageContent = data.find(item => item.type === 'home-page');
 
                          if (homePageContent && homePageContent.content) {
-                              console.log('🏠 HomePage - Raw API data:', homePageContent);
-                              console.log('🏠 HomePage - Companies data:', homePageContent.content?.hero?.carousel?.companies);
+                              
                               setHomePageData(homePageContent.content);
 
                               sessionStorage.setItem('homePageData', JSON.stringify({
@@ -518,9 +488,9 @@ export default function HomePage() {
      const renderMainContent = () => (
           <div className="min-h-screen overflow-hidden relative">
 
-               {/* SECTION 1: Hero Section - Only 100vh */}
-               <div className="h-screen relative bg-transparent">
-                    <div className="h-[95vh] flex flex-col justify-center pt-20 relative z-10 bg-transparent">
+               {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
+               <div className="min-h-[70vh] lg:min-h-[75vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
+                    <div className="min-h-[70vh] lg:min-h-[75vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-16 lg:pt-20 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
                          <div>
                               <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
                          </div>
@@ -528,7 +498,7 @@ export default function HomePage() {
                </div>
 
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
-               <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
+               <div className="lg:hidden bg-transparent py-2 -mt-8 relative z-10 companies-carousel-transparent">
                     <CompaniesCarouselV3
                          companies={homePageData?.hero?.carousel?.companies}
                          userRegion={userRegion}
@@ -541,7 +511,7 @@ export default function HomePage() {
                </div>
 
                {/* SECTION 2: Platform Modules Timeline - Overlapping with fade */}
-               <section className="py-12 bg-white overflow-hidden pt-20 relative z-30" id="modules">
+               <section className="py-8 lg:py-12 xl:py-16 2xl:py-20 bg-white overflow-hidden pt-12 lg:pt-16 xl:pt-20 2xl:pt-24 relative z-30" id="modules">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{homePageData?.platformSection?.headline}</div>

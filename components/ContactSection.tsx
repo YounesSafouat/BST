@@ -1152,7 +1152,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          };
                }
                setSelectedCountry(detectedCountry);
-               console.log('Auto-detected country:', detectedCountry.name);
+              
                
           } else {
                console.log('Country detection skipped:', { geolocationLoading, countryCode });
