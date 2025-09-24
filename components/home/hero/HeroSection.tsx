@@ -196,16 +196,16 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
               </div>
             </motion.div>
 
-            {/* 5. CTA Buttons Fifth - Improved for small screens */}
+            {/* 5. CTA Buttons Fifth - Improved for small screens and tablets */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col gap-2 justify-center px-4 max-w-md mx-2"
+              className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center px-4 max-w-md md:max-w-2xl mx-2"
             >
               <Button
                 size="lg"
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-6 py-2.5 text-sm font-medium rounded-full h-10 shadow-sm hover:shadow-md transition-all duration-200"
+                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 flex-1 md:flex-none"
                 onClick={() => scrollToSection('#contact')}
               >
                 {heroData?.ctaPrimary?.text || 'Chargement...'}
@@ -214,7 +214,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
               <Button
                 size="lg"
                 variant="outline"
-                className="px-6 py-2.5 text-sm font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 shadow-sm hover:shadow-md transition-all duration-200 bg-white"
+                className="px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 bg-white flex-1 md:flex-none"
                 onClick={() => scrollToSection('#modules')}
               >
                 {heroData?.ctaSecondary?.text || 'Chargement...'}
