@@ -31,7 +31,7 @@
 ```
 
 ### 3. Google Search Console
-- [ ] **Verify ownership** of agence-blackswan.com
+- [ ] **Verify ownership** of [https://agence-blackswan.com/](https://agence-blackswan.com/)
 - [ ] **Submit sitemap.xml**
 - [ ] **Request indexing** of key pages
 - [ ] **Monitor Core Web Vitals**

@@ -86,6 +86,7 @@ npm run dev:analyze
 
 ### Dashboard (http://localhost:3000/dashboard)
 - **Analytics** - Button clicks, page views, engagement metrics
+- **Traffic Sources** - Google Ads, Meta Ads, LinkedIn, organic search analytics
 - **Content Management** - Edit website content
 - **SEO Settings** - Meta tags and optimization
 - **User Management** - Admin and editor accounts

@@ -36,11 +36,25 @@ export function useButtonAnalytics() {
   const trackButtonClick = (buttonId: string) => {
     if (!pathname || pathname.startsWith('/dashboard') || pathname.startsWith('/auth')) return;
     
+    // Get comprehensive tracking data
+    const trackingData = {
+      buttonId,
+      path: pathname,
+      buttonText: getButtonInfo(buttonId).displayName,
+      buttonType: getButtonInfo(buttonId).type,
+      userAgent: navigator.userAgent,
+      referrer: document.referrer || undefined,
+      device: getDeviceType(),
+      browser: getBrowserName(),
+      os: getOperatingSystem(),
+      url: window.location.href
+    };
+    
     // Track in database (for dashboard analytics)
     fetch('/api/track-button-click', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ buttonId, path: pathname }),
+      body: JSON.stringify(trackingData),
     });
     
     // Track in session storage (for client-side analytics)
@@ -182,6 +196,37 @@ export function useButtonAnalytics() {
       type: 'other',
       userAction: 'clicked_button'
     };
+  };
+
+  const getDeviceType = (): string => {
+    const userAgent = navigator.userAgent;
+    if (/tablet|ipad|playbook|silk/i.test(userAgent)) {
+      return 'tablet';
+    }
+    if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(userAgent)) {
+      return 'mobile';
+    }
+    return 'desktop';
+  };
+
+  const getBrowserName = (): string => {
+    const userAgent = navigator.userAgent;
+    if (userAgent.includes('Chrome')) return 'Chrome';
+    if (userAgent.includes('Firefox')) return 'Firefox';
+    if (userAgent.includes('Safari')) return 'Safari';
+    if (userAgent.includes('Edge')) return 'Edge';
+    if (userAgent.includes('Opera')) return 'Opera';
+    return 'Unknown';
+  };
+
+  const getOperatingSystem = (): string => {
+    const userAgent = navigator.userAgent;
+    if (userAgent.includes('Windows')) return 'Windows';
+    if (userAgent.includes('Mac')) return 'macOS';
+    if (userAgent.includes('Linux')) return 'Linux';
+    if (userAgent.includes('Android')) return 'Android';
+    if (userAgent.includes('iOS')) return 'iOS';
+    return 'Unknown';
   };
 
   return { trackButtonClick };

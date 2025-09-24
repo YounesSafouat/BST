@@ -59,7 +59,7 @@
 - English communication
 - Remote implementation capabilities
 
-This repository contains our company website, content management system, and client project management tools that showcase our expertise and streamline our service delivery.
+This repository contains our company website at [https://agence-blackswan.com/](https://agence-blackswan.com/), content management system, and client project management tools that showcase our expertise and streamline our service delivery.
 
 ## 🏗️ Architecture & Technology Stack
 
@@ -149,6 +149,8 @@ Our design system uses a **clean, professional, two-color approach** for maximum
 
 ### Analytics & Tracking
 - **Custom analytics system** - Button clicks and page view tracking
+- **Traffic source tracking** - Google Ads, Meta Ads, LinkedIn, organic search attribution
+- **UTM parameter detection** - Campaign tracking and lead attribution
 - **Geolocation services** - Region-based content targeting
 - **Performance monitoring** - Real-time performance metrics
 
@@ -276,10 +278,11 @@ BST/
 - `DELETE /api/content?type={type}` - Delete content
 
 ### Analytics & Tracking
-- `POST /api/track-button-click` - Track button interactions
-- `POST /api/track-page-view` - Track page views
+- `POST /api/track-button-click` - Track button interactions with traffic source data
+- `POST /api/track-page-view` - Track page views with traffic source data
 - `GET /api/dashboard/button-clicks` - Get button click analytics
 - `GET /api/dashboard/page-views` - Get page view analytics
+- `GET /api/dashboard/traffic-sources` - Get traffic source analytics (Google Ads, Meta, LinkedIn, etc.)
 
 ### Customer Management
 - `GET /api/testimonials?region={region}` - Get region-specific testimonials
@@ -308,6 +311,7 @@ BST/
 ### Main Dashboard
 - **Overview Analytics** - Key performance indicators
 - **Real-Time Data** - Live button clicks and page views
+- **Traffic Sources Analytics** - Google Ads, Meta Ads, LinkedIn, organic search performance
 - **Performance Charts** - Visual representation of metrics
 - **Global Filters** - Time ranges, devices, countries, button types
 
