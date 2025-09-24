@@ -358,7 +358,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
       </div>
 
       {/* Companies Carousel */}
-      <div className="hidden lg:block bg-transparent pt-2 sm:pt-4 md:pt-6 lg:pt-6 xl:pt-12 2xl:pt-16">
+      <div className="hidden lg:block bg-transparent pt-1 sm:pt-2 md:pt-4 lg:pt-4 xl:pt-12 2xl:pt-16">
         <CompaniesCarouselV3
           companies={heroData?.carousel?.companies}
           userRegion={userRegion}
