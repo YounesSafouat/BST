@@ -489,8 +489,8 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
-               <div className="h-screen lg:min-h-[75vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
-                    <div className="h-[95vh] lg:min-h-[75vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-20 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
+               <div className="h-screen lg:min-h-[65vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
+                    <div className="h-[95vh] lg:min-h-[65vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-16 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
                          <div>
                               <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
                          </div>
@@ -511,7 +511,7 @@ export default function HomePage() {
                </div>
 
                {/* SECTION 2: Platform Modules Timeline - Overlapping with fade */}
-               <section className="py-12 lg:py-12 xl:py-16 2xl:py-20 bg-white overflow-hidden pt-20 lg:pt-16 xl:pt-20 2xl:pt-24 relative z-30" id="modules">
+               <section className="py-12 lg:py-8 xl:py-16 2xl:py-20 bg-white overflow-hidden pt-20 lg:pt-12 xl:pt-20 2xl:pt-24 relative z-30" id="modules">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
                               <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{homePageData?.platformSection?.headline}</div>
