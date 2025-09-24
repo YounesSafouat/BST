@@ -174,13 +174,21 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   };
 
   const scrollToSection = (href: string) => {
+    console.log('scrollToSection called with:', href, 'Current path:', window.location.pathname);
+    
+    // Always close mobile menu first
+    setMobileMenuOpen(false);
+    
     // Check if we're on the home page
     if (window.location.pathname === '/') {
       // On home page, scroll to section
       const element = document.querySelector(href);
+      console.log('Element found:', element);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
-        setMobileMenuOpen(false);
+        console.log('Scrolled to section:', href);
+      } else {
+        console.warn('Section not found:', href);
       }
     } else {
       // Not on home page, navigate to home page with hash
@@ -313,7 +321,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
               {navigation.map((item) => (
                 <button
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
+                  onClick={() => {
+                    console.log('Mobile nav clicked:', item.name, item.href);
+                    scrollToSection(item.href);
+                  }}
                   className="block w-full text-left py-2 text-gray-700 hover:text-[var(--color-main)] transition-colors"
                 >
                   {item.name}
