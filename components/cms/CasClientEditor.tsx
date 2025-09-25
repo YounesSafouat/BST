@@ -946,8 +946,35 @@ const ContentBlockEditor: React.FC<{
 
           {/* Stats blocks */}
           {(block.type === 'image-stats-left' || block.type === 'image-stats-right' || block.type === 'text-stats') && (
-            <div>
-              <Label>Statistiques</Label>
+            <>
+              {/* Image fields for image-stats blocks */}
+              {(block.type === 'image-stats-left' || block.type === 'image-stats-right') && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>URL de l'image</Label>
+                    <Input
+                      value={safeBlock.imageUrl}
+                      onChange={(e) => onUpdate({ 
+                        imageUrl: e.target.value
+                      })}
+                      placeholder="URL de l'image"
+                    />
+                  </div>
+                  <div>
+                    <Label>Texte alternatif</Label>
+                    <Input
+                      value={safeBlock.imageAlt}
+                      onChange={(e) => onUpdate({ 
+                        imageAlt: e.target.value
+                      })}
+                      placeholder="Description de l'image"
+                    />
+                  </div>
+                </div>
+              )}
+              
+              <div>
+                <Label>Statistiques</Label>
               <div className="space-y-2">
                 {(safeBlock.stats || []).map((stat: any, index: number) => (
                   <div key={index} className="grid grid-cols-4 gap-2">
@@ -1002,7 +1029,8 @@ const ContentBlockEditor: React.FC<{
                   Ajouter une statistique
                 </Button>
               </div>
-            </div>
+              </div>
+            </>
           )}
 
           {/* Cards layout */}
@@ -1067,6 +1095,71 @@ const ContentBlockEditor: React.FC<{
                   Ajouter une carte
                 </Button>
               </div>
+            </div>
+          )}
+
+          {/* Video block */}
+          {block.type === 'video' && (
+            <div className="space-y-4">
+              <div>
+                <Label>Type de contenu</Label>
+                <Select
+                  value={safeBlock.videoUrl ? 'video' : 'image'}
+                  onValueChange={(value) => {
+                    if (value === 'image') {
+                      onUpdate({ videoUrl: '', videoThumbnail: '' })
+                    }
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez le type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="video">Vidéo</SelectItem>
+                    <SelectItem value="image">Image</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {safeBlock.videoUrl ? (
+                <>
+                  <div>
+                    <Label>URL de la vidéo</Label>
+                    <Input
+                      value={safeBlock.videoUrl}
+                      onChange={(e) => onUpdate({ videoUrl: e.target.value })}
+                      placeholder="URL YouTube, Vimeo, ou autre vidéo"
+                    />
+                  </div>
+                  <div>
+                    <Label>Miniature de la vidéo (optionnel)</Label>
+                    <Input
+                      value={safeBlock.videoThumbnail || ''}
+                      onChange={(e) => onUpdate({ videoThumbnail: e.target.value })}
+                      placeholder="URL de l'image de miniature"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>URL de l'image</Label>
+                    <Input
+                      value={safeBlock.imageUrl}
+                      onChange={(e) => onUpdate({ imageUrl: e.target.value })}
+                      placeholder="URL de l'image"
+                    />
+                  </div>
+                  <div>
+                    <Label>Texte alternatif</Label>
+                    <Input
+                      value={safeBlock.imageAlt}
+                      onChange={(e) => onUpdate({ imageAlt: e.target.value })}
+                      placeholder="Description de l'image"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
