@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy } from "lucide-react"
+import { ArrowLeft, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
@@ -335,9 +335,14 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      const [error, setError] = useState<string | null>(null)
      const [activeSection, setActiveSection] = useState(0)
      const [isVideoPlaying, setIsVideoPlaying] = useState(false)
+     const [isVideoMuted, setIsVideoMuted] = useState(true)
+     const [videoProgress, setVideoProgress] = useState(0)
+     const [videoCurrentTime, setVideoCurrentTime] = useState(0)
+     const [videoDuration, setVideoDuration] = useState(0)
      const [showSharePopup, setShowSharePopup] = useState(false)
      const [copied, setCopied] = useState(false)
      const [showContactPopup, setShowContactPopup] = useState(false)
+     const videoRef = useRef<HTMLVideoElement | null>(null)
      const router = useRouter()
      useEffect(() => {
           const fetchClientData = async () => {
@@ -407,6 +412,76 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      // Handle contact popup
      const handleContactClick = () => {
           setShowContactPopup(true)
+     }
+
+     // Video control functions
+     const togglePlay = () => {
+          if (videoRef.current) {
+               if (isVideoPlaying) {
+                    videoRef.current.pause()
+               } else {
+                    videoRef.current.play()
+               }
+          }
+     }
+
+     const toggleMute = () => {
+          if (videoRef.current) {
+               videoRef.current.muted = !isVideoMuted
+               setIsVideoMuted(!isVideoMuted)
+          }
+     }
+
+     const handleTimeUpdate = () => {
+          if (videoRef.current) {
+               const currentTime = videoRef.current.currentTime
+               const duration = videoRef.current.duration
+               setVideoCurrentTime(currentTime)
+               setVideoProgress((currentTime / duration) * 100)
+          }
+     }
+
+     const handleLoadedMetadata = () => {
+          if (videoRef.current) {
+               setVideoDuration(videoRef.current.duration)
+          }
+     }
+
+     const handleVideoEnded = () => {
+          setIsVideoPlaying(false)
+          setVideoProgress(0)
+          setVideoCurrentTime(0)
+     }
+
+     const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
+          if (videoRef.current) {
+               const rect = e.currentTarget.getBoundingClientRect()
+               const clickX = e.clientX - rect.left
+               const width = rect.width
+               const percentage = clickX / width
+               const newTime = percentage * videoDuration
+               videoRef.current.currentTime = newTime
+               setVideoCurrentTime(newTime)
+               setVideoProgress(percentage * 100)
+          }
+     }
+
+     const openFullscreen = () => {
+          if (videoRef.current) {
+               if (videoRef.current.requestFullscreen) {
+                    videoRef.current.requestFullscreen()
+               } else if ((videoRef.current as any).webkitRequestFullscreen) {
+                    (videoRef.current as any).webkitRequestFullscreen()
+               } else if ((videoRef.current as any).msRequestFullscreen) {
+                    (videoRef.current as any).msRequestFullscreen()
+               }
+          }
+     }
+
+     const formatTime = (time: number) => {
+          const minutes = Math.floor(time / 60)
+          const seconds = Math.floor(time % 60)
+          return `${minutes}:${seconds.toString().padStart(2, '0')}`
      }
 
      // Loading state
@@ -516,14 +591,88 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                >
                                     <div className="relative aspect-[16/10] bg-gray-900 rounded-2xl overflow-hidden shadow-2xl group">
                                          {clientData.media.heroVideo ? (
-                                              <iframe
-                                                   className="w-full h-full"
-                                                   src={getYouTubeEmbedUrl(clientData.media.heroVideo)}
-                                                   title={clientData.headline}
-                                                   frameBorder="0"
-                                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                   allowFullScreen
-                                              />
+                                              <div
+                                                   className="w-full h-full relative group"
+                                                   onClick={(e) => {
+                                                        // Only toggle if clicking on the container, not on buttons
+                                                        if (e.target === e.currentTarget || e.target === videoRef.current) {
+                                                             togglePlay();
+                                                        }
+                                                   }}
+                                              >
+                                                   <video
+                                                        ref={videoRef}
+                                                        src={clientData.media.heroVideo}
+                                                        poster={clientData.media.heroVideoThumbnail || clientData.media.coverImage}
+                                                        className="w-full h-full object-cover"
+                                                        onTimeUpdate={handleTimeUpdate}
+                                                        onLoadedMetadata={handleLoadedMetadata}
+                                                        onEnded={handleVideoEnded}
+                                                        onPlay={() => setIsVideoPlaying(true)}
+                                                        onPause={() => setIsVideoPlaying(false)}
+                                                        muted={isVideoMuted}
+                                                   />
+
+                                                   {/* Video Controls Overlay */}
+                                                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                                        {/* Play/Pause Button */}
+                                                        <button
+                                                             onClick={(e) => {
+                                                                  e.stopPropagation();
+                                                                  togglePlay();
+                                                             }}
+                                                             className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
+                                                        >
+                                                             {isVideoPlaying ? (
+                                                                  <Pause className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800" />
+                                                             ) : (
+                                                                  <Play className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800 ml-0.5 sm:ml-1" />
+                                                             )}
+                                                        </button>
+
+                                                        {/* Fullscreen Button */}
+                                                        <button
+                                                             onClick={openFullscreen}
+                                                             className="absolute top-2 sm:top-4 right-2 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-black bg-opacity-50 rounded-full flex items-center justify-center hover:bg-opacity-70 transition-all duration-300 opacity-0 group-hover:opacity-100"
+                                                             title="Plein écran"
+                                                             aria-label="Ouvrir la vidéo en plein écran"
+                                                        >
+                                                             <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                                                        </button>
+                                                   </div>
+
+                                                   {/* Bottom Controls */}
+                                                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-3 sm:p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                        {/* Progress Bar */}
+                                                        <div
+                                                             className="w-full h-1 bg-gray-600 rounded-full cursor-pointer mb-2"
+                                                             onClick={handleProgressClick}
+                                                        >
+                                                             <div
+                                                                  className="h-full bg-white rounded-full transition-all duration-100"
+                                                                  style={{ width: `${videoProgress}%` }}
+                                                             />
+                                                        </div>
+
+                                                        <div className="flex items-center justify-between text-white text-xs sm:text-sm">
+                                                             <span>{formatTime(videoCurrentTime)}</span>
+                                                             <div className="flex items-center gap-2">
+                                                                  <button
+                                                                       onClick={toggleMute}
+                                                                       className="hover:bg-white hover:bg-opacity-20 p-1 rounded"
+                                                                  >
+                                                                       {isVideoMuted ? (
+                                                                            <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" />
+                                                                       ) : (
+                                                                            <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                                                                       )}
+                                                                  </button>
+                                                                  <span className="text-gray-300">/</span>
+                                                                  <span>{formatTime(videoDuration)}</span>
+                                                             </div>
+                                                        </div>
+                                                   </div>
+                                              </div>
                                          ) : clientData.media.coverImage ? (
                                               <Image
                                                    src={clientData.media.coverImage}
@@ -540,13 +689,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                    </div>
                                               </div>
                                          )}
-                                         
-                                         {/* Overlay on hover */}
-                                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                                                   <Play className="w-8 h-8 text-white ml-1" />
-                                              </div>
-                                         </div>
                                     </div>
                                </motion.div>
                           </div>

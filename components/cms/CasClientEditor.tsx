@@ -1060,6 +1060,26 @@ const ContentBlockEditor: React.FC<{
                         placeholder="Icône"
                       />
                     </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <Input
+                        value={card.imageUrl || ''}
+                        onChange={(e) => {
+                          const newCards = [...(safeBlock.cards || [])]
+                          newCards[index] = { ...card, imageUrl: e.target.value }
+                          onUpdate({ cards: newCards })
+                        }}
+                        placeholder="URL de l'image (optionnel)"
+                      />
+                      <Input
+                        value={card.imageAlt || ''}
+                        onChange={(e) => {
+                          const newCards = [...(safeBlock.cards || [])]
+                          newCards[index] = { ...card, imageAlt: e.target.value }
+                          onUpdate({ cards: newCards })
+                        }}
+                        placeholder="Texte alternatif de l'image"
+                      />
+                    </div>
                     <Textarea
                       value={card.description || ''}
                       onChange={(e) => {
@@ -1087,7 +1107,7 @@ const ContentBlockEditor: React.FC<{
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    const newCards = [...(safeBlock.cards || []), { title: '', description: '', icon: '' }]
+                    const newCards = [...(safeBlock.cards || []), { title: '', description: '', icon: '', imageUrl: '', imageAlt: '' }]
                     onUpdate({ cards: newCards })
                   }}
                 >
