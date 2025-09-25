@@ -270,6 +270,9 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       return
     }
 
+    // Debug: Log the form data being sent
+    console.log('Form data being sent:', JSON.stringify(formData, null, 2))
+    
     setIsSaving(true)
     try {
       await onSave(formData)

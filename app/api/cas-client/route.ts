@@ -116,6 +116,9 @@ export async function POST(req: NextRequest) {
     await connectDB()
     const body = await req.json()
     
+    // Debug: Log the received body
+    console.log('API received body:', JSON.stringify(body, null, 2))
+    
     // Validate required fields
     const missingFields: string[] = []
     if (!body.slug) missingFields.push('slug')
