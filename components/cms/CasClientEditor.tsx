@@ -270,12 +270,23 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       return
     }
 
+    // Flatten contentBlocks structure before sending
+    const flattenedFormData = {
+      ...formData,
+      contentBlocks: formData.contentBlocks.map(block => ({
+        ...block.data,
+        id: block.id,
+        type: block.type,
+        order: block.order
+      }))
+    }
+    
     // Debug: Log the form data being sent
-    console.log('Form data being sent:', JSON.stringify(formData, null, 2))
+    console.log('Form data being sent:', JSON.stringify(flattenedFormData, null, 2))
     
     setIsSaving(true)
     try {
-      await onSave(formData)
+      await onSave(flattenedFormData)
     } catch (error) {
       console.error('Error saving:', error)
     } finally {
