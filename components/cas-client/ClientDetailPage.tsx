@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Loader from "@/components/home/Loader"
 import { useRouter } from "next/navigation"
+import ContactPopup from "./ContactPopup"
 
 // Extended interface for CMS-managed client cases
 interface ClientCase {
@@ -336,6 +337,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      const [isVideoPlaying, setIsVideoPlaying] = useState(false)
      const [showSharePopup, setShowSharePopup] = useState(false)
      const [copied, setCopied] = useState(false)
+     const [showContactPopup, setShowContactPopup] = useState(false)
      const router = useRouter()
      useEffect(() => {
           const fetchClientData = async () => {
@@ -402,9 +404,9 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      }
 
 
-     // Handle contact redirect
-     const handleContactRedirect = () => {
-          router.push('/#contact')
+     // Handle contact popup
+     const handleContactClick = () => {
+          setShowContactPopup(true)
      }
 
      // Loading state
@@ -493,23 +495,14 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                          {clientData.summary}
                                     </p>
 
-                                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                    <div className="flex justify-center">
                                          <Button
                                               size="sm"
                                               className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-base font-semibold group rounded-full h-16 shadow-lg hover:shadow-xl transition-all duration-300"
-                                              onClick={handleContactRedirect}
+                                              onClick={handleContactClick}
                                          >
                                               <Users className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
                                               Nous Contacter
-                                         </Button>
-                                         <Button
-                                              size="sm"
-                                              variant="outline"
-                                              className="px-8 py-4 text-base font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-16 shadow-lg hover:shadow-xl transition-all duration-300 bg-white"
-                                              onClick={handleContactRedirect}
-                                         >
-                                              <Calendar className="w-5 h-5 mr-3" />
-                                              Planifier un appel
                                          </Button>
                                     </div>
                                </motion.div>
@@ -658,10 +651,10 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                               <div className="border-t border-gray-200 pt-6">
                                                    <Button 
                                                         className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white"
-                                                        onClick={handleContactRedirect}
+                                                        onClick={handleContactClick}
                                                    >
-                                                        <Calendar className="w-4 h-4 mr-2" />
-                                                        Planifier un appel
+                                                        <Users className="w-4 h-4 mr-2" />
+                                                        Nous Contacter
                                                    </Button>
                                               </div>
                                          </div>
@@ -1097,6 +1090,14 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                          </motion.div>
                     )}
                </AnimatePresence>
+
+               {/* Contact Popup */}
+               <ContactPopup
+                    isOpen={showContactPopup}
+                    onClose={() => setShowContactPopup(false)}
+                    clientName={clientData?.name}
+                    clientSlug={clientData?.slug}
+               />
 
           </div>
      )
