@@ -154,6 +154,11 @@ export async function POST(req: NextRequest) {
       const { quote, author } = cleanedBody.testimonial
       if (!quote || !author?.name || !author?.role || !author?.company) {
         cleanedBody.testimonial = undefined
+      } else {
+        // Clean up empty avatar string
+        if (cleanedBody.testimonial.author.avatar === '') {
+          cleanedBody.testimonial.author.avatar = undefined
+        }
       }
     }
 
@@ -165,16 +170,28 @@ export async function POST(req: NextRequest) {
       publishedAt: cleanedBody.published ? new Date() : undefined
     })
 
-    const savedClient = await newClient.save()
-
-    return NextResponse.json(savedClient, {
-      status: 201,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    })
+    console.log('Attempting to save client with data:', JSON.stringify(cleanedBody, null, 2))
+    
+    try {
+      const savedClient = await newClient.save()
+      console.log('Client saved successfully:', savedClient._id)
+      return NextResponse.json(savedClient, {
+        status: 201,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      })
+    } catch (saveError: any) {
+      console.error('Mongoose save error:', saveError)
+      console.error('Validation errors:', saveError.errors)
+      return NextResponse.json({ 
+        error: 'Validation error', 
+        details: saveError.message,
+        validationErrors: saveError.errors 
+      }, { status: 400 })
+    }
   } catch (error: any) {
     console.error('API Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
