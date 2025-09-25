@@ -117,8 +117,26 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     
     // Validate required fields
-    if (!body.slug || !body.name || !body.headline) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    const missingFields = []
+    if (!body.slug) missingFields.push('slug')
+    if (!body.name) missingFields.push('name')
+    if (!body.headline) missingFields.push('headline')
+    if (!body.summary) missingFields.push('summary')
+    if (!body.company?.logo) missingFields.push('company.logo')
+    if (!body.company?.sector) missingFields.push('company.sector')
+    if (!body.company?.size) missingFields.push('company.size')
+    if (!body.project?.solution) missingFields.push('project.solution')
+    if (!body.project?.duration) missingFields.push('project.duration')
+    if (!body.project?.teamSize) missingFields.push('project.teamSize')
+    if (!body.media?.coverImage) missingFields.push('media.coverImage')
+
+    if (missingFields.length > 0) {
+      console.error('Missing required fields:', missingFields)
+      console.error('Received body:', JSON.stringify(body, null, 2))
+      return NextResponse.json({ 
+        error: 'Missing required fields', 
+        missingFields: missingFields 
+      }, { status: 400 })
     }
 
     // Check if slug already exists
