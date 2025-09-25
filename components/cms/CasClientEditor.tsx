@@ -287,8 +287,23 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
     setIsSaving(true)
     try {
       await onSave(flattenedFormData)
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving:', error)
+      
+      // Check if it's a duplicate slug error
+      if (error?.error === 'Client with this slug already exists') {
+        toast({
+          title: "Client déjà existant",
+          description: `Un client avec le slug "${flattenedFormData.slug}" existe déjà. Voulez-vous l'éditer à la place ?`,
+          variant: "destructive"
+        })
+      } else {
+        toast({
+          title: "Erreur",
+          description: error?.error || "Erreur lors de l'enregistrement",
+          variant: "destructive"
+        })
+      }
     } finally {
       setIsSaving(false)
     }

@@ -131,15 +131,23 @@ export default function ClientsAdminPage() {
 
   const handleSaveClient = async (formData: ClientCaseFormData) => {
     try {
-      const response = await fetch("/api/cas-client", {
-        method: 'POST',
+      const isEditing = editingClient && editingClient.slug;
+      const url = isEditing ? `/api/cas-client/${editingClient.slug}` : "/api/cas-client";
+      const method = isEditing ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method: method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
       if (response.ok) {
-        toast({ title: "Succès", description: "Cas client enregistré." });
+        toast({ 
+          title: "Succès", 
+          description: isEditing ? "Cas client mis à jour." : "Cas client créé." 
+        });
         setShowEditor(false);
+        setEditingClient(null);
         fetchClients();
       } else {
         const error = await response.json();
