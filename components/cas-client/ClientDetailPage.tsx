@@ -993,7 +993,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                         <h2 className="text-3xl font-bold mb-6">{block.title}</h2>
                                                    )}
                                                    {block.content && (
-                                                        <div className="mb-6">
+                                                        <div className="mb-6">image.png
                                                              <ClientContent content={block.content} />
                                                         </div>
                                                    )}

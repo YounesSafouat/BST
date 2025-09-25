@@ -631,7 +631,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                       .map((block, index) => (
                         <ContentBlockEditor
                           key={block.id}
-                          block={block.data}
+                          block={block.data || block}
                           onUpdate={(data) => updateContentBlock(block.id, data)}
                           onDelete={() => deleteContentBlock(block.id)}
                           onMoveUp={() => moveContentBlock(block.id, 'up')}
@@ -810,7 +810,7 @@ const getBlockLabel = (type: ContentBlockType) => {
 
 // Content Block Editor Component
 const ContentBlockEditor: React.FC<{
-  block: { id: string; type: ContentBlockType; order: number; data: any }
+  block: ContentBlock
   onUpdate: (data: any) => void
   onDelete: () => void
   onMoveUp: () => void
@@ -818,13 +818,33 @@ const ContentBlockEditor: React.FC<{
   canMoveUp: boolean
   canMoveDown: boolean
 }> = ({ block, onUpdate, onDelete, onMoveUp, onMoveDown, canMoveUp, canMoveDown }) => {
+  // Add null checks to prevent crashes
+  if (!block) {
+    return <div>Error: Block data is missing</div>
+  }
+
+  // Ensure block has required properties with defaults
+  const safeBlock = {
+    title: block.title || '',
+    subtitle: (block as any).subtitle || '',
+    content: block.content || '',
+    imageUrl: block.imageUrl || '',
+    imageAlt: block.imageAlt || '',
+    stats: block.stats || [],
+    cards: block.cards || [],
+    testimonial: block.testimonial || null,
+    cta: block.cta || null,
+    videoUrl: block.videoUrl || '',
+    videoThumbnail: block.videoThumbnail || '',
+    ...block
+  }
   return (
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {getBlockIcon(block.type)}
-            <span className="font-medium">{getBlockLabel(block.type)}</span>
+            {getBlockIcon(safeBlock.type)}
+            <span className="font-medium">{getBlockLabel(safeBlock.type)}</span>
           </div>
           <div className="flex items-center gap-1">
             <Button
@@ -860,7 +880,7 @@ const ContentBlockEditor: React.FC<{
             <div>
               <Label>Titre</Label>
               <Input
-                value={block.data.title || ''}
+                value={safeBlock.title}
                 onChange={(e) => onUpdate({ title: e.target.value })}
                 placeholder="Titre de la section"
               />
@@ -868,7 +888,7 @@ const ContentBlockEditor: React.FC<{
             <div>
               <Label>Sous-titre</Label>
               <Input
-                value={block.data.subtitle || ''}
+                value={safeBlock.subtitle || ''}
                 onChange={(e) => onUpdate({ subtitle: e.target.value })}
                 placeholder="Sous-titre (optionnel)"
               />
@@ -880,7 +900,7 @@ const ContentBlockEditor: React.FC<{
             <div>
               <Label>Contenu</Label>
               <Textarea
-                value={block.data.content || ''}
+                value={safeBlock.content}
                 onChange={(e) => onUpdate({ content: e.target.value })}
                 placeholder="Contenu HTML de la section"
                 rows={6}
@@ -893,7 +913,7 @@ const ContentBlockEditor: React.FC<{
               <div>
                 <Label>Contenu</Label>
                 <Textarea
-                  value={block.data.content || ''}
+                  value={safeBlock.content}
                   onChange={(e) => onUpdate({ content: e.target.value })}
                   placeholder="Contenu HTML de la section"
                   rows={4}
@@ -903,9 +923,9 @@ const ContentBlockEditor: React.FC<{
                 <div>
                   <Label>URL de l'image</Label>
                   <Input
-                    value={block.data.image?.url || ''}
+                    value={safeBlock.imageUrl}
                     onChange={(e) => onUpdate({ 
-                      image: { ...block.data.image, url: e.target.value }
+                      imageUrl: e.target.value
                     })}
                     placeholder="URL de l'image"
                   />
@@ -913,9 +933,9 @@ const ContentBlockEditor: React.FC<{
                 <div>
                   <Label>Texte alternatif</Label>
                   <Input
-                    value={block.data.image?.alt || ''}
+                    value={safeBlock.imageAlt}
                     onChange={(e) => onUpdate({ 
-                      image: { ...block.data.image, alt: e.target.value }
+                      imageAlt: e.target.value
                     })}
                     placeholder="Description de l'image"
                   />
@@ -929,12 +949,12 @@ const ContentBlockEditor: React.FC<{
             <div>
               <Label>Statistiques</Label>
               <div className="space-y-2">
-                {(block.data.stats || []).map((stat: any, index: number) => (
+                {(safeBlock.stats || []).map((stat: any, index: number) => (
                   <div key={index} className="grid grid-cols-4 gap-2">
                     <Input
                       value={stat.label || ''}
                       onChange={(e) => {
-                        const newStats = [...(block.data.stats || [])]
+                        const newStats = [...(safeBlock.stats || [])]
                         newStats[index] = { ...stat, label: e.target.value }
                         onUpdate({ stats: newStats })
                       }}
@@ -943,7 +963,7 @@ const ContentBlockEditor: React.FC<{
                     <Input
                       value={stat.value || ''}
                       onChange={(e) => {
-                        const newStats = [...(block.data.stats || [])]
+                        const newStats = [...(safeBlock.stats || [])]
                         newStats[index] = { ...stat, value: e.target.value }
                         onUpdate({ stats: newStats })
                       }}
@@ -952,7 +972,7 @@ const ContentBlockEditor: React.FC<{
                     <Input
                       value={stat.icon || ''}
                       onChange={(e) => {
-                        const newStats = [...(block.data.stats || [])]
+                        const newStats = [...(safeBlock.stats || [])]
                         newStats[index] = { ...stat, icon: e.target.value }
                         onUpdate({ stats: newStats })
                       }}
@@ -962,7 +982,7 @@ const ContentBlockEditor: React.FC<{
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        const newStats = (block.data.stats || []).filter((_: any, i: number) => i !== index)
+                        const newStats = (safeBlock.stats || []).filter((_: any, i: number) => i !== index)
                         onUpdate({ stats: newStats })
                       }}
                     >
@@ -974,7 +994,7 @@ const ContentBlockEditor: React.FC<{
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    const newStats = [...(block.data.stats || []), { label: '', value: '', icon: '', description: '' }]
+                    const newStats = [...(safeBlock.stats || []), { label: '', value: '', icon: '', description: '' }]
                     onUpdate({ stats: newStats })
                   }}
                 >
@@ -990,13 +1010,13 @@ const ContentBlockEditor: React.FC<{
             <div>
               <Label>Cartes de services</Label>
               <div className="space-y-4">
-                {(block.data.cards || []).map((card: any, index: number) => (
+                {(safeBlock.cards || []).map((card: any, index: number) => (
                   <div key={index} className="border rounded-lg p-4 space-y-2">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       <Input
                         value={card.title || ''}
                         onChange={(e) => {
-                          const newCards = [...(block.data.cards || [])]
+                          const newCards = [...(safeBlock.cards || [])]
                           newCards[index] = { ...card, title: e.target.value }
                           onUpdate({ cards: newCards })
                         }}
@@ -1005,7 +1025,7 @@ const ContentBlockEditor: React.FC<{
                       <Input
                         value={card.icon || ''}
                         onChange={(e) => {
-                          const newCards = [...(block.data.cards || [])]
+                          const newCards = [...(safeBlock.cards || [])]
                           newCards[index] = { ...card, icon: e.target.value }
                           onUpdate({ cards: newCards })
                         }}
@@ -1015,7 +1035,7 @@ const ContentBlockEditor: React.FC<{
                     <Textarea
                       value={card.description || ''}
                       onChange={(e) => {
-                        const newCards = [...(block.data.cards || [])]
+                        const newCards = [...(safeBlock.cards || [])]
                         newCards[index] = { ...card, description: e.target.value }
                         onUpdate({ cards: newCards })
                       }}
@@ -1026,7 +1046,7 @@ const ContentBlockEditor: React.FC<{
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        const newCards = (block.data.cards || []).filter((_: any, i: number) => i !== index)
+                        const newCards = (safeBlock.cards || []).filter((_: any, i: number) => i !== index)
                         onUpdate({ cards: newCards })
                       }}
                     >
@@ -1039,7 +1059,7 @@ const ContentBlockEditor: React.FC<{
                   variant="outline"
                   size="sm"
                   onClick={() => {
-                    const newCards = [...(block.data.cards || []), { title: '', description: '', icon: '' }]
+                    const newCards = [...(safeBlock.cards || []), { title: '', description: '', icon: '' }]
                     onUpdate({ cards: newCards })
                   }}
                 >
