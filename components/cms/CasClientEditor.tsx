@@ -281,8 +281,10 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       }))
     }
     
-    // Debug: Log the form data being sent
-    console.log('Form data being sent:', JSON.stringify(flattenedFormData, null, 2))
+    // Debug: Log the form data being sent (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Form data being sent:', JSON.stringify(flattenedFormData, null, 2))
+    }
     
     setIsSaving(true)
     try {

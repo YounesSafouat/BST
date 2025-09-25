@@ -116,8 +116,10 @@ export async function POST(req: NextRequest) {
     await connectDB()
     const body = await req.json()
     
-    // Debug: Log the received body
-    console.log('API received body:', JSON.stringify(body, null, 2))
+    // Debug: Log the received body (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('API received body:', JSON.stringify(body, null, 2))
+    }
     
     // Validate required fields
     const missingFields: string[] = []
@@ -170,11 +172,16 @@ export async function POST(req: NextRequest) {
       publishedAt: cleanedBody.published ? new Date() : undefined
     })
 
-    console.log('Attempting to save client with data:', JSON.stringify(cleanedBody, null, 2))
+    // Debug: Log save attempt (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Attempting to save client with data:', JSON.stringify(cleanedBody, null, 2))
+    }
     
     try {
       const savedClient = await newClient.save()
-      console.log('Client saved successfully:', savedClient._id)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Client saved successfully:', savedClient._id)
+      }
       return NextResponse.json(savedClient, {
         status: 201,
         headers: {
