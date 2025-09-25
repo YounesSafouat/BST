@@ -135,6 +135,14 @@ export default function ClientsAdminPage() {
       const url = isEditing ? `/api/cas-client/${editingClient.slug}` : "/api/cas-client";
       const method = isEditing ? 'PUT' : 'POST';
       
+      // Debug: Log what we're sending
+      console.log('Sending data to API:', {
+        isEditing,
+        url,
+        method,
+        formData: JSON.stringify(formData, null, 2)
+      });
+      
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
@@ -143,6 +151,8 @@ export default function ClientsAdminPage() {
 
       if (response.ok) {
         const updatedClient = await response.json();
+        console.log('API Response:', updatedClient);
+        
         toast({ 
           title: "Succès", 
           description: isEditing ? "Cas client mis à jour." : "Cas client créé." 
@@ -150,6 +160,7 @@ export default function ClientsAdminPage() {
         
         if (isEditing) {
           // Update the editingClient with fresh data
+          console.log('Updating editingClient with:', updatedClient);
           setEditingClient(updatedClient);
         } else {
           // For new clients, close editor and refresh list
