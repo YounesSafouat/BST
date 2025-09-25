@@ -162,13 +162,13 @@ export default function CasClientV2() {
           const fetchClients = async () => {
                setLoading(true)
                try {
-                    const res = await fetch("/api/content?type=clients-page")
+                    const res = await fetch("/api/cas-client")
                     const data = await res.json()
-                    const page = Array.isArray(data) ? data.find(item => item.type === 'clients-page') : data
-                    const cases = page?.content?.clientCases || []
+                    const cases = data.cases || []
                     setClientsData(cases)
                     setFilteredClients(cases)
                } catch (err) {
+                    console.error("Error fetching clients:", err)
                     setClientsData([])
                     setFilteredClients([])
                } finally {

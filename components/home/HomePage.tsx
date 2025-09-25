@@ -463,6 +463,25 @@ export default function HomePage() {
           }
      };
 
+     // Handle URL hash navigation for smooth scrolling
+     useEffect(() => {
+          const handleHashChange = () => {
+               const hash = window.location.hash.substring(1);
+               if (hash) {
+                    setTimeout(() => {
+                         scrollToSection(hash);
+                    }, 500);
+               }
+          };
+
+          handleHashChange();
+          window.addEventListener('hashchange', handleHashChange);
+
+          return () => {
+               window.removeEventListener('hashchange', handleHashChange);
+          };
+     }, [mounted, homePageData]);
+
 
      if (isDataLoading) {
           return <Loader />;
@@ -485,7 +504,7 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
-               <div className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
+               <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
                     <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-12 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
                          <div>
                               <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
@@ -645,45 +664,54 @@ export default function HomePage() {
                </section>
 
                {/* SECTION 3: Video Testimonials - HomePage */}
-
-               <div className="relative z-10">
+               <div id="video-testimonials" className="relative z-10">
                     <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
                </div>
 
                {/* SECTION 4: Services Section - HomePage */}
-               <div className="relative z-10">
+               <div className="relative z-10" id="services">
                     <ServicesSection servicesData={homePageData?.services} />
                </div>
 
                {/* SECTION 5: Odoo Certification - HomePage */}
-               <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                    <LazyOdooCertificationSection certificationData={homePageData?.certification} />
-               </Suspense>
+               <div id="certification" className="relative z-10">
+                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                         <LazyOdooCertificationSection certificationData={homePageData?.certification} />
+                    </Suspense>
+               </div>
 
                {/* SECTION 6: Pricing Section - HomePage */}
                <section id="pricing" className="relative z-10">
                     <PricingSection pricingData={homePageData?.pricing} />
                </section>
                {/* SECTION 7: Our Agency - HomePage */}
-               <OurAgencySection
-                    key={userRegion} // Force re-render when region changes
-                    partnershipData={homePageData?.partnership}
-                    userRegion={userRegion}
-               />
+               <div id="about">
+                    <OurAgencySection
+                         key={userRegion} // Force re-render when region changes
+                         partnershipData={homePageData?.partnership}
+                         userRegion={userRegion}
+                    />
+               </div>
 
                {/* SECTION 8: Testimonials - HomePage */}
-               <TestimonialsSection
-                    testimonialsSectionData={homePageData?.testimonialsSection}
-                    testimonials={homePageData?.testimonials}
-               />
+               <div id="testimonials">
+                    <TestimonialsSection
+                         testimonialsSectionData={homePageData?.testimonialsSection}
+                         testimonials={homePageData?.testimonials}
+                    />
+               </div>
 
                {/* SECTION 9: Contact Section - HomePage */}
-               <ContactSection contactData={homePageData?.contact} />
+               <div id="contact">
+                    <ContactSection contactData={homePageData?.contact} />
+               </div>
 
                {/* SECTION 10: FAQ Section - HomePage */}
-               <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                    <LazyFAQSection faqData={homePageData?.faq} />
-               </Suspense>
+               <div id="faq">
+                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                         <LazyFAQSection faqData={homePageData?.faq} />
+                    </Suspense>
+               </div>
 
 
                <style jsx>{`

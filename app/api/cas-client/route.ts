@@ -1,0 +1,161 @@
+import { NextRequest, NextResponse } from 'next/server'
+import connectDB from '@/lib/mongodb'
+import CasClient from '@/models/CasClient'
+import { ClientCaseFilters } from '@/lib/types/cas-client'
+
+export const dynamic = 'force-dynamic'
+
+// GET: Get all CAS client cases with filtering and pagination
+export async function GET(req: NextRequest) {
+  try {
+    await connectDB()
+    
+    const { searchParams } = new URL(req.url)
+    const filters: ClientCaseFilters = {
+      search: searchParams.get('search') || '',
+      solution: (searchParams.get('solution') as any) || 'all',
+      sector: searchParams.get('sector') || 'all',
+      tags: searchParams.get('tags')?.split(',') || [],
+      featured: searchParams.get('featured') === 'true',
+      published: searchParams.get('published') !== 'false', // default to true
+      sortBy: (searchParams.get('sortBy') as any) || 'newest'
+    }
+
+    // Build MongoDB query
+    let query: any = {}
+
+    // Apply filters
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase()
+      query.$or = [
+        { name: { $regex: searchTerm, $options: 'i' } },
+        { headline: { $regex: searchTerm, $options: 'i' } },
+        { summary: { $regex: searchTerm, $options: 'i' } },
+        { 'company.sector': { $regex: searchTerm, $options: 'i' } },
+        { tags: { $in: [new RegExp(searchTerm, 'i')] } }
+      ]
+    }
+
+    if (filters.solution && filters.solution !== 'all') {
+      query['project.solution'] = filters.solution
+    }
+
+    if (filters.sector && filters.sector !== 'all') {
+      query['company.sector'] = filters.sector
+    }
+
+    if (filters.tags && filters.tags.length > 0) {
+      query.tags = { $in: filters.tags }
+    }
+
+    if (filters.featured) {
+      query.featured = true
+    }
+
+    if (filters.published !== undefined) {
+      query.published = filters.published
+    }
+
+    // Build sort object
+    let sort: any = {}
+    switch (filters.sortBy) {
+      case 'newest':
+        sort.createdAt = -1
+        break
+      case 'oldest':
+        sort.createdAt = 1
+        break
+      case 'name':
+        sort.name = 1
+        break
+      case 'featured':
+        sort.featured = -1
+        sort.createdAt = -1
+        break
+      default:
+        sort.createdAt = -1
+    }
+
+    // Pagination
+    const pageNum = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '20')
+    const skip = (pageNum - 1) * limit
+
+    // Execute query
+    const [cases, total] = await Promise.all([
+      CasClient.find(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      CasClient.countDocuments(query)
+    ])
+
+    return NextResponse.json({
+      cases,
+      total,
+      page: pageNum,
+      limit,
+      filters
+    }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
+  } catch (error: any) {
+    console.error('API Error:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}
+
+// POST: Create new CAS client case
+export async function POST(req: NextRequest) {
+  try {
+    await connectDB()
+    const body = await req.json()
+    
+    // Validate required fields
+    if (!body.slug || !body.name || !body.headline) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+
+    // Check if slug already exists
+    const existingClient = await CasClient.findOne({ slug: body.slug })
+    if (existingClient) {
+      return NextResponse.json({ error: 'Client with this slug already exists' }, { status: 400 })
+    }
+
+    // Clean up empty testimonial data
+    const cleanedBody = { ...body }
+    if (cleanedBody.testimonial) {
+      const { quote, author } = cleanedBody.testimonial
+      if (!quote || !author?.name || !author?.role || !author?.company) {
+        cleanedBody.testimonial = undefined
+      }
+    }
+
+    // Create new client case
+    const newClient = new CasClient({
+      ...cleanedBody,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      publishedAt: cleanedBody.published ? new Date() : undefined
+    })
+
+    const savedClient = await newClient.save()
+
+    return NextResponse.json(savedClient, {
+      status: 201,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
+  } catch (error: any) {
+    console.error('API Error:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}
