@@ -243,6 +243,32 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
 
   // Handle save
   const handleSave = async () => {
+    // Client-side validation
+    const requiredFields = [
+      { field: 'slug', value: formData.slug, label: 'Slug' },
+      { field: 'name', value: formData.name, label: 'Nom du client' },
+      { field: 'headline', value: formData.headline, label: 'Titre principal' },
+      { field: 'summary', value: formData.summary, label: 'Résumé' },
+      { field: 'company.logo', value: formData.company.logo, label: 'Logo de l\'entreprise' },
+      { field: 'company.sector', value: formData.company.sector, label: 'Secteur' },
+      { field: 'company.size', value: formData.company.size, label: 'Taille de l\'entreprise' },
+      { field: 'project.solution', value: formData.project.solution, label: 'Solution' },
+      { field: 'project.duration', value: formData.project.duration, label: 'Durée du projet' },
+      { field: 'project.teamSize', value: formData.project.teamSize, label: 'Taille de l\'équipe' },
+      { field: 'media.coverImage', value: formData.media.coverImage, label: 'Image de couverture' }
+    ]
+
+    const missingFields = requiredFields.filter(field => !field.value)
+    
+    if (missingFields.length > 0) {
+      toast({
+        title: "Champs requis manquants",
+        description: `Veuillez remplir: ${missingFields.map(f => f.label).join(', ')}`,
+        variant: "destructive"
+      })
+      return
+    }
+
     setIsSaving(true)
     try {
       await onSave(formData)
