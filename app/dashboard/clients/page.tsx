@@ -142,12 +142,21 @@ export default function ClientsAdminPage() {
       });
 
       if (response.ok) {
+        const updatedClient = await response.json();
         toast({ 
           title: "Succès", 
           description: isEditing ? "Cas client mis à jour." : "Cas client créé." 
         });
-        setShowEditor(false);
-        setEditingClient(null);
+        
+        if (isEditing) {
+          // Update the editingClient with fresh data
+          setEditingClient(updatedClient);
+        } else {
+          // For new clients, close editor and refresh list
+          setShowEditor(false);
+          setEditingClient(null);
+        }
+        
         fetchClients();
       } else {
         const error = await response.json();
@@ -191,6 +200,7 @@ export default function ClientsAdminPage() {
   if (showEditor) {
     return (
       <CasClientEditor
+        key={`${editingClient?.slug || 'new'}-${editingClient?.updatedAt || Date.now()}`}
         initialData={editingClient || undefined}
         onSave={handleSaveClient}
         onCancel={handleCancelEditor}
