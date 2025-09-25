@@ -38,6 +38,7 @@ import { Switch } from '@/components/ui/switch'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DynamicClientCase, ClientCaseFormData, ContentBlock, ContentBlockType, CONTENT_BLOCK_TEMPLATES, AVAILABLE_SECTORS, AVAILABLE_TAGS } from '@/lib/types/cas-client'
+import { toast } from '@/components/ui/use-toast'
 import Image from 'next/image'
 
 interface CasClientEditorProps {

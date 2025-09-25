@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     
     // Validate required fields
-    const missingFields = []
+    const missingFields: string[] = []
     if (!body.slug) missingFields.push('slug')
     if (!body.name) missingFields.push('name')
     if (!body.headline) missingFields.push('headline')
