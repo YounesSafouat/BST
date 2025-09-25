@@ -53,6 +53,7 @@ export default function ClientsAdminPage() {
   const [showEditor, setShowEditor] = useState(false);
   const [editingClient, setEditingClient] = useState<DynamicClientCase | null>(null);
   const [editorMode, setEditorMode] = useState<'create' | 'edit'>('create');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Fetch clients from the new API
   useEffect(() => {
@@ -68,9 +69,9 @@ export default function ClientsAdminPage() {
       setFilteredClients(data.cases || []);
     } catch (error) {
       console.error("Error fetching clients:", error);
-      toast({ title: "Erreur", description: "Impossible de charger les cas clients." });
+        toast({ title: "Erreur", description: "Impossible de charger les cas clients." });
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
@@ -120,9 +121,9 @@ export default function ClientsAdminPage() {
       if (response.ok) {
         toast({ title: "Succès", description: "Cas client supprimé." });
         fetchClients();
-      } else {
-        toast({ title: "Erreur", description: "Échec de la suppression." });
-      }
+    } else {
+      toast({ title: "Erreur", description: "Échec de la suppression." });
+    }
     } catch (error) {
       console.error("Error deleting client:", error);
       toast({ title: "Erreur", description: "Erreur lors de la suppression." });
@@ -131,7 +132,7 @@ export default function ClientsAdminPage() {
 
   const handleSaveClient = async (formData: ClientCaseFormData) => {
     try {
-      const isEditing = editingClient && editingClient.slug;
+      const isEditing = !!(editingClient && editingClient.slug);
       const url = isEditing ? `/api/cas-client/${editingClient.slug}` : "/api/cas-client";
       const method = isEditing ? 'PUT' : 'POST';
       
@@ -162,6 +163,7 @@ export default function ClientsAdminPage() {
           // Update the editingClient with fresh data
           console.log('Updating editingClient with:', updatedClient);
           setEditingClient(updatedClient);
+          setRefreshKey(prev => prev + 1); // Force re-render
         } else {
           // For new clients, close editor and refresh list
           setShowEditor(false);
@@ -211,7 +213,7 @@ export default function ClientsAdminPage() {
   if (showEditor) {
     return (
       <CasClientEditor
-        key={`${editingClient?.slug || 'new'}-${editingClient?.updatedAt || Date.now()}`}
+        key={`${editingClient?.slug || 'new'}-${refreshKey}`}
         initialData={editingClient || undefined}
         onSave={handleSaveClient}
         onCancel={handleCancelEditor}
@@ -250,8 +252,8 @@ export default function ClientsAdminPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
-              </div>
-            </div>
+          </div>
+        </div>
 
             {/* Solution Filter */}
             <Select value={selectedSolution} onValueChange={setSelectedSolution}>
@@ -297,25 +299,25 @@ export default function ClientsAdminPage() {
                 className="px-3"
               >
                 <List className="w-4 h-4" />
-              </Button>
-            </div>
+                  </Button>
+                </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card>
+                    <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Users className="w-5 h-5 text-blue-600" />
-              </div>
+                          </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Total</p>
                 <p className="text-2xl font-bold text-gray-900">{clients.length}</p>
-              </div>
-            </div>
+                          </div>
+                        </div>
           </CardContent>
         </Card>
         <Card>
@@ -323,47 +325,47 @@ export default function ClientsAdminPage() {
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-              </div>
+                          </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Publiés</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {clients.filter(c => c.published).length}
                 </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 rounded-lg">
                 <Target className="w-5 h-5 text-yellow-600" />
-              </div>
+                          </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Mis en avant</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {clients.filter(c => c.featured).length}
                 </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Layers className="w-5 h-5 text-purple-600" />
-              </div>
+                            </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Secteurs</p>
                 <p className="text-2xl font-bold text-gray-900">
                   {new Set(clients.map(c => c.company.sector)).size}
-                </p>
-              </div>
-            </div>
+                              </p>
+                            </div>
+                              </div>
           </CardContent>
         </Card>
-      </div>
+                              </div>
 
       {/* Clients List */}
       {filteredClients.length === 0 ? (
@@ -384,12 +386,12 @@ export default function ClientsAdminPage() {
             </p>
             {(!searchTerm && selectedSolution === "all" && selectedSector === "all") && (
               <Button onClick={handleCreateClient} className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white">
-                <Plus className="h-4 w-4 mr-2" />
+                          <Plus className="h-4 w-4 mr-2" />
                 Créer le premier cas client
-              </Button>
+                        </Button>
             )}
-          </CardContent>
-        </Card>
+                      </CardContent>
+                    </Card>
       ) : (
         <div className={viewMode === 'grid' 
           ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
@@ -452,7 +454,7 @@ export default function ClientsAdminPage() {
                     <div className="flex items-center justify-between">
                       <div className="text-xs text-gray-500">
                         Créé le {new Date(client.createdAt).toLocaleDateString('fr-FR')}
-                      </div>
+                          </div>
                       <div className="flex items-center space-x-2">
                         <Button
                           variant="outline"
@@ -476,8 +478,8 @@ export default function ClientsAdminPage() {
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
-                      </div>
-                    </div>
+                            </div>
+                          </div>
                   </>
                 ) : (
                   // List View
@@ -485,13 +487,13 @@ export default function ClientsAdminPage() {
                     <div className="flex items-center space-x-4 flex-1">
                       <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center">
                         {client.company.logo ? (
-                          <Image
+                            <Image
                             src={client.company.logo}
-                            alt={client.name}
+                              alt={client.name}
                             width={32}
                             height={32}
-                            className="object-contain"
-                          />
+                              className="object-contain"
+                            />
                         ) : (
                           <Building className="w-6 h-6 text-gray-400" />
                         )}
@@ -552,10 +554,10 @@ export default function ClientsAdminPage() {
                   </div>
                 )}
               </CardContent>
-            </Card>
+                </Card>
           ))}
-        </div>
+          </div>
       )}
     </div>
   );
-}
+} 

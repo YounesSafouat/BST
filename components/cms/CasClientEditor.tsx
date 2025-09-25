@@ -159,7 +159,12 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
     setFormData(prev => ({
       ...prev,
       contentBlocks: prev.contentBlocks.map(block => 
-        block.id === blockId ? { ...block, data: { ...block.data, ...data } } : block
+        block.id === blockId ? { 
+          ...block, 
+          data: { ...block.data, ...data },
+          // Also update the top-level properties for consistency
+          ...data
+        } : block
       )
     }))
   }
@@ -626,7 +631,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                       .map((block, index) => (
                         <ContentBlockEditor
                           key={block.id}
-                          block={block}
+                          block={block.data}
                           onUpdate={(data) => updateContentBlock(block.id, data)}
                           onDelete={() => deleteContentBlock(block.id)}
                           onMoveUp={() => moveContentBlock(block.id, 'up')}
