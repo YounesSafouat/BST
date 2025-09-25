@@ -23,7 +23,28 @@ interface ContactPopupProps {
 export default function ContactPopup({ isOpen, onClose, clientName, clientSlug }: ContactPopupProps) {
   const { submitForm } = useFormSubmit()
   const { toast } = useToast()
-  const { countryCode, countryName, city } = useGeolocationSingleton()
+  const { data: locationData } = useGeolocationSingleton()
+  
+  const countryCode = locationData?.countryCode || 'MA'
+  const countryName = locationData?.country || 'Morocco'
+  const city = locationData?.city || ''
+
+  // Helper functions for country data
+  const getDialCode = (code: string) => {
+    const dialCodes: { [key: string]: string } = {
+      'MA': '+212', 'FR': '+33', 'US': '+1', 'CA': '+1', 'BE': '+32', 'CH': '+41',
+      'DZ': '+213', 'TN': '+216', 'EG': '+20', 'SN': '+221', 'CI': '+225'
+    }
+    return dialCodes[code] || '+212'
+  }
+
+  const getFlag = (code: string) => {
+    const flags: { [key: string]: string } = {
+      'MA': '🇲🇦', 'FR': '🇫🇷', 'US': '🇺🇸', 'CA': '🇨🇦', 'BE': '🇧🇪', 'CH': '🇨🇭',
+      'DZ': '🇩🇿', 'TN': '🇹🇳', 'EG': '🇪🇬', 'SN': '🇸🇳', 'CI': '🇨🇮'
+    }
+    return flags[code] || '🇲🇦'
+  }
   
   const [formData, setFormData] = useState({
     name: '',
@@ -300,9 +321,13 @@ export default function ContactPopup({ isOpen, onClose, clientName, clientSlug }
                   </Label>
                   <div className="flex gap-2 mt-1">
                     <CountryCodeSelector
-                      value={formData.countryCode}
-                      onChange={(code) => handleInputChange('countryCode', code)}
-                      className="w-32"
+                      selectedCountry={{
+                        code: formData.countryCode,
+                        name: countryName,
+                        dialCode: getDialCode(formData.countryCode),
+                        flag: getFlag(formData.countryCode)
+                      }}
+                      onCountryChange={(country) => handleInputChange('countryCode', country.code)}
                     />
                     <div className="relative flex-1">
                       <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
