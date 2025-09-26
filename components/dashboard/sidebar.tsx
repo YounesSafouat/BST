@@ -29,6 +29,7 @@ import {
   ChevronUp,
   Home,
   Code,
+  Link as LinkIcon,
 } from "lucide-react";
 
 // Grouped menu items
@@ -129,6 +130,12 @@ const menuGroups = [
         href: "/dashboard/structured-data",
         icon: Code,
         color: "from-emerald-200 to-emerald-100 text-emerald-700",
+      },
+      {
+        title: "UTM Generator",
+        href: "/dashboard/utm-generator",
+        icon: LinkIcon,
+        color: "from-blue-200 to-blue-100 text-blue-700",
       },
       {
         title: "Appearance",
