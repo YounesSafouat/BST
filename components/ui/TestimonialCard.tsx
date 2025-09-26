@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface TestimonialCardProps {
      title: string;
@@ -31,7 +32,6 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
      hidePlayIcon = false
 }) => {
      const router = useRouter();
-     const buttonColor = 'var(--color-main)'; // Use CSS variable for primary color
 
      const handleCardClick = () => {
           if (onClick) {
@@ -41,262 +41,74 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           }
      };
 
-     const getSizeStyles = () => {
-          switch (size) {
-               case 'small':
-                    return {
-                         height: '220px', // Increased height for better mobile visibility
-                         titleFontSize: '28px',
-                         textFontSize: '13px',
-                         arrowFontSize: '22px'
-                    };
-               case 'large':
-                    return {
-                         height: '450px', // Increased height for better mobile visibility
-                         titleFontSize: '52px',
-                         textFontSize: '18px',
-                         arrowFontSize: '36px'
-                    };
-               default: // medium
-                    return {
-                         height: '350px', // Increased height for better mobile visibility
-                         titleFontSize: '40px',
-                         textFontSize: '16px',
-                         arrowFontSize: '28px'
-                    };
-          }
-     };
-
-     const sizeStyles = getSizeStyles();
-
      return (
-          <div className={`testimonial-card ${className}`} onClick={handleCardClick}>
-               <style jsx>{`
-         .testimonial-card {
-           position: relative;
-           width: 100%;
-           height: ${sizeStyles.height};
-           background-image: url("https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Screenshot%202025-09-10%20122142.png");
-           background-size: cover;
-           background-position: center;
-           overflow: hidden;
-           margin-bottom: 16px;
-           border-radius: 12px;
-           border: 1px solid #e5e7eb;
-           box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-           transition: all 0.3s ease;
-         }
-         
-         @media (max-width: 768px) {
-           .testimonial-card {
-             height: ${size === 'small' ? '120px' : size === 'large' ? '140px' : '130px'};
-             min-height: 120px;
-             max-height: 25vh;
-           }
-           .arrow {
-             font-size: ${size === 'small' ? '10px' : size === 'large' ? '14px' : '12px'};
-           }
-           .arrow-text {
-             font-size: 8px;
-           }
-         }
-        
-        .testimonial-card:hover {
-          box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          transform: translateY(-2px);
-        }
-        
-        .overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.4);
-          transition: background 0.3s ease;
-          z-index: 10;
-        }
-        
-        
-        .card-title {
-          z-index: 60;
-          font-family: 'Poppins', sans-serif;
-          position: absolute;
-          bottom: 35px;
-          left: 20px;
-          font-size: ${sizeStyles.titleFontSize};
-          font-weight: 700;
-          color: #fff;
-          pointer-events: none;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          display: flex;
-          align-items: center;
-          height: 20px;
-        }
-        
-         .arrow-container {
-           z-index: 60;
-           position: absolute;
-           right: 20px;
-           bottom: 20px;
-           display: flex;
-           align-items: center;
-           gap: 8px;
-           opacity: 0;
-           transform: translateX(-10px);
-           transition: all 0.3s ease;
-         }
-         
-         .arrow {
-           font-size: ${sizeStyles.arrowFontSize};
-           cursor: pointer;
-           color: #fff;
-           transition: color 0.3s ease;
-         }
-         
-         .arrow-text {
-           font-size: 14px;
-           color: #fff;
-           font-weight: 500;
-           cursor: pointer;
-           transition: color 0.3s ease;
-           z-index: 60;
-         }
-        
-         .card-text {
-           z-index: 60;
-           position: absolute;
-           top: 50%;
-           right: 20px;
-           transform: translateY(-50%);
-           color: #fff;
-           opacity: 0;
-           font-size: ${sizeStyles.textFontSize};
-           letter-spacing: 0.5px;
-           max-width: 280px;
-           text-align: right;
-           line-height: 1.4;
-           transition: all 0.3s ease;
-           text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-         }
-        
-        
-        
-         .play-button {
-           position: absolute;
-           top: 50%;
-           left: 50%;
-           transform: translate(-50%, -50%);
-           width: 80px;
-           height: 80px;
-           background-color: rgba(255, 255, 255, 0.2);
-           backdrop-filter: blur(10px);
-           border: 2px solid rgba(255, 255, 255, 0.3);
-           border-radius: 50%;
-           cursor: pointer;
-           outline: none;
-           transition: all 0.3s ease;
-           z-index: 50;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           opacity: 1;
-         }
-         
-         .play-icon {
-           width: 0;
-           height: 0;
-           border-left: 20px solid white;
-           border-top: 12px solid transparent;
-           border-bottom: 12px solid transparent;
-           margin-left: 4px;
-         }
-         
-         .expand-button {
-           position: absolute;
-           right: 14px;
-           bottom: 14px;
-           width: 40px;
-           height: 40px;
-           background-color: ${buttonColor};
-           border: none;
-           border-radius: 40px;
-           cursor: pointer;
-           outline: none;
-           transition: all 0.3s ease;
-           mix-blend-mode: hard-light;
-           z-index: 50;
-         }
-         
-        
-        .logo {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          width: 60px;
-          height: 60px;
-          background-image: url("${logo}");
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: center;
-          z-index: 50;
-          opacity: 0;
-          transition: all 0.3s ease;
-        }
-        
-        
-        
-         .testimonial-card:hover .card-text {
-           opacity: 1;
-           transform: translateY(-50%);
-         }
-        
-         .testimonial-card:hover .arrow-container {
-           opacity: 1;
-           transform: translateX(0);
-         }
-        
-         .testimonial-card:hover .overlay {
-           background: rgba(0, 0, 0, 0.6);
-         }
-         
-         .arrow-container:hover .arrow-text {
-           color: var(--color-secondary);
-         }
-         
-         .arrow-container:hover .arrow {
-           color: var(--color-secondary);
-         }
-         
-         .testimonial-card:hover .play-button {
-           opacity: 0;
-         }
-         
-         .testimonial-card:hover .logo {
-           opacity: 1;
-         }
-         
-         .testimonial-card:hover .expand-button {
-           transform: scale(16.5);
-         }
-         
-        
-      `}</style>
-
-               <div className="overlay"></div>
-               {!hidePlayIcon && (
-                    <button className="play-button" title="Voir la vidéo" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}>
-                         <div className="play-icon"></div>
-                    </button>
-               )}
-               {logo && <div className="logo"></div>}
-               <h2 className="card-title">{title}</h2>
-               <div className="arrow-container" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}>
-                    <span className="arrow-text">Voir la vidéo</span>
-                    <div className="arrow">→</div>
+          <div 
+               className={`relative w-full h-48 sm:h-56 md:h-64 lg:h-72 xl:h-80 bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group ${className}`}
+               onClick={handleCardClick}
+          >
+               {/* Background Image */}
+               <div 
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                    style={{
+                         backgroundImage: `url("https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Screenshot%202025-09-10%20122142.png")`
+                    }}
+               />
+               
+               {/* Always visible logo */}
+               <div className="absolute top-3 left-3 z-10">
+                    {logo && (
+                         <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center shadow-lg overflow-hidden">
+                              <Image
+                                   src={logo}
+                                   alt={title}
+                                   width={48}
+                                   height={48}
+                                   className="w-full h-full object-contain"
+                              />
+                         </div>
+                    )}
                </div>
-               <p className="card-text">{description}</p>
-               <button className="expand-button" title="Voir la vidéo" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}></button>
+               
+               {/* Expanding circle bubble effect */}
+               <div className="absolute inset-0 overflow-hidden">
+                    {/* Expanding circle that becomes background shadow */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0 h-0 bg-white/10 rounded-full group-hover:w-[200%] group-hover:h-[200%] transition-all duration-700 ease-out"></div>
+                    
+                    {/* Content overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-between p-3 sm:p-4 md:p-6">
+                         {/* Content */}
+                         <div className="flex-1 flex flex-col justify-center text-center text-white">
+                              <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold mb-2 sm:mb-3 text-shadow-lg leading-tight">
+                                   {title}
+                              </h3>
+                              <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed opacity-90 text-shadow line-clamp-2 sm:line-clamp-3">
+                                   {description}
+                              </p>
+                         </div>
+                         
+                         {/* Bottom Section */}
+                         <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                   {logo && (
+                                        <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">
+                                             <Image
+                                                  src={logo}
+                                                  alt={title}
+                                                  width={24}
+                                                  height={24}
+                                                  className="w-full h-full object-contain"
+                                             />
+                                        </div>
+                                   )}
+                              </div>
+                              
+                              <div className="flex items-center gap-1 sm:gap-2 bg-white/20 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-2 rounded-full hover:bg-white/30 transition-all duration-300">
+                                   <span className="text-white text-sm sm:text-base">→</span>
+                                   <span className="text-white text-xs sm:text-sm font-medium">Voir la vidéo</span>
+                              </div>
+                         </div>
+                    </div>
+               </div>
           </div>
      );
 };

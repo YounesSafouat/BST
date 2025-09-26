@@ -133,12 +133,12 @@ export async function POST(req: Request) {
       submission.sentToHubSpot = false; // Will be set to true after HubSpot integration
       
       // Update additional fields if provided
-      if (body.countryCode) submission.countryCode = body.countryCode;
-      if (body.countryName) submission.countryName = body.countryName;
-      if (body.source) submission.source = body.source;
-      if (body.page) submission.page = body.page;
+      if (additionalData.countryCode) submission.countryCode = additionalData.countryCode;
+      if (additionalData.countryName) submission.countryName = additionalData.countryName;
+      if (additionalData.source) submission.source = additionalData.source;
+      if (additionalData.page) submission.page = additionalData.page;
       // Always include brief_description for complete submissions
-      if (body.brief_description) submission.brief_description = body.brief_description;
+      if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
       
       // Update comprehensive HubSpot properties
       if (contactData.hs_analytics_source) submission.hs_analytics_source = contactData.hs_analytics_source;
@@ -176,13 +176,13 @@ export async function POST(req: Request) {
           company: !!contactData.company,
           message: !!contactData.message
         },
-        countryCode: body.countryCode,
-        countryName: body.countryName,
-        source: body.source || 'website',
-        page: body.page || 'home',
+        countryCode: additionalData.countryCode,
+        countryName: additionalData.countryName,
+        source: additionalData.source || 'website',
+        page: additionalData.page || 'home',
         userAgent: req.headers.get('user-agent') || '',
         // Always include brief_description for complete submissions
-        brief_description: body.brief_description || '',
+        brief_description: additionalData.brief_description || '',
         
         // Comprehensive HubSpot properties
         hs_analytics_source: contactData.hs_analytics_source,

@@ -2,15 +2,17 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Plus, 
-  Trash2, 
-  Edit, 
-  Eye, 
-  Save, 
-  X, 
-  ArrowUp, 
-  ArrowDown, 
+import {
+  Plus,
+  Trash2,
+  Edit,
+  Eye,
+  Save,
+  X,
+  ArrowUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
   Copy,
   Image as ImageIcon,
   Video,
@@ -27,7 +29,18 @@ import {
   Grid3X3,
   List,
   Clock,
-  MapPin
+  MapPin,
+  Zap,
+  Star,
+  ExternalLink,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  Minus,
+  ChevronDown,
+  Headphones
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,6 +53,45 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DynamicClientCase, ClientCaseFormData, ContentBlock, ContentBlockType, CONTENT_BLOCK_TEMPLATES, AVAILABLE_SECTORS, AVAILABLE_TAGS } from '@/lib/types/cas-client'
 import { toast } from '@/components/ui/use-toast'
 import Image from 'next/image'
+
+// Icon options for dropdowns
+const ICON_OPTIONS = [
+  { value: 'trending-up', label: 'Trending Up', icon: TrendingUp },
+  { value: 'bar-chart-3', label: 'Bar Chart', icon: BarChart3 },
+  { value: 'check-circle', label: 'Check Circle', icon: CheckCircle },
+  { value: 'target', label: 'Target', icon: Target },
+  { value: 'users', label: 'Users', icon: Users },
+  { value: 'building', label: 'Building', icon: Building },
+  { value: 'clock', label: 'Clock', icon: Clock },
+  { value: 'calendar', label: 'Calendar', icon: Calendar },
+  { value: 'award', label: 'Award', icon: Award },
+  { value: 'zap', label: 'Zap', icon: Zap },
+  { value: 'star', label: 'Star', icon: Star },
+  { value: 'quote', label: 'Quote', icon: Quote },
+  { value: 'external-link', label: 'External Link', icon: ExternalLink },
+  { value: 'grid-3x3', label: 'Grid', icon: Grid3X3 },
+  { value: 'list', label: 'List', icon: List },
+  { value: 'map-pin', label: 'Map Pin', icon: MapPin },
+  { value: 'play', label: 'Play', icon: Play },
+  { value: 'pause', label: 'Pause', icon: Pause },
+  { value: 'volume-2', label: 'Volume', icon: Volume2 },
+  { value: 'volume-x', label: 'Volume X', icon: VolumeX },
+  { value: 'maximize-2', label: 'Maximize', icon: Maximize2 },
+  { value: 'copy', label: 'Copy', icon: Copy },
+  { value: 'edit', label: 'Edit', icon: Edit },
+  { value: 'eye', label: 'Eye', icon: Eye },
+  { value: 'save', label: 'Save', icon: Save },
+  { value: 'trash-2', label: 'Trash', icon: Trash2 },
+  { value: 'arrow-up', label: 'Arrow Up', icon: ArrowUp },
+  { value: 'arrow-down', label: 'Arrow Down', icon: ArrowDown },
+  { value: 'arrow-left', label: 'Arrow Left', icon: ArrowLeft },
+  { value: 'arrow-right', label: 'Arrow Right', icon: ArrowRight },
+  { value: 'plus', label: 'Plus', icon: Plus },
+  { value: 'minus', label: 'Minus', icon: Minus },
+  { value: 'x', label: 'X', icon: X },
+  { value: 'chevron-down', label: 'Chevron Down', icon: ChevronDown },
+  { value: 'headphones', label: 'Headphones', icon: Headphones }
+]
 
 interface CasClientEditorProps {
   initialData?: DynamicClientCase
@@ -161,9 +213,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       contentBlocks: prev.contentBlocks.map(block => 
         block.id === blockId ? { 
           ...block, 
-          data: { ...block.data, ...data },
-          // Also update the top-level properties for consistency
-          ...data
+          data: { ...block.data, ...data }
         } : block
       )
     }))
@@ -279,10 +329,10 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
     const flattenedFormData = {
       ...formData,
       contentBlocks: formData.contentBlocks.map(block => ({
-        ...block.data,
         id: block.id,
         type: block.type,
-        order: block.order
+        order: block.order,
+        ...block.data
       }))
     }
     
@@ -828,8 +878,12 @@ const ContentBlockEditor: React.FC<{
     title: block.title || '',
     subtitle: (block as any).subtitle || '',
     content: block.content || '',
+    sectionBadge: block.sectionBadge || '',
+    sectionBadgeIcon: block.sectionBadgeIcon || '',
     imageUrl: block.imageUrl || '',
     imageAlt: block.imageAlt || '',
+    sectionImageUrl: block.sectionImageUrl || '',
+    sectionImageAlt: block.sectionImageAlt || '',
     stats: block.stats || [],
     cards: block.cards || [],
     testimonial: block.testimonial || null,
@@ -875,25 +929,61 @@ const ContentBlockEditor: React.FC<{
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label>Titre</Label>
-              <Input
-                value={safeBlock.title}
-                onChange={(e) => onUpdate({ title: e.target.value })}
-                placeholder="Titre de la section"
-              />
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Titre</Label>
+                <Input
+                  value={safeBlock.title}
+                  onChange={(e) => onUpdate({ title: e.target.value })}
+                  placeholder="Titre de la section"
+                />
+              </div>
+              <div>
+                <Label>Sous-titre</Label>
+                <Input
+                  value={safeBlock.subtitle || ''}
+                  onChange={(e) => onUpdate({ subtitle: e.target.value })}
+                  placeholder="Sous-titre (optionnel)"
+                />
+              </div>
             </div>
-            <div>
-              <Label>Sous-titre</Label>
-              <Input
-                value={safeBlock.subtitle || ''}
-                onChange={(e) => onUpdate({ subtitle: e.target.value })}
-                placeholder="Sous-titre (optionnel)"
-              />
+
+            {/* Section Badge Customization */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Badge de section</Label>
+                <Input
+                  value={safeBlock.sectionBadge || ''}
+                  onChange={(e) => onUpdate({ sectionBadge: e.target.value })}
+                  placeholder="Ex: Section Projet, Statistiques, etc."
+                />
+              </div>
+              <div>
+                <Label>Icône du badge</Label>
+                <Select
+                  value={safeBlock.sectionBadgeIcon || ''}
+                  onValueChange={(value) => onUpdate({ sectionBadgeIcon: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionner une icône" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ICON_OPTIONS.map((iconOption) => {
+                      const IconComponent = iconOption.icon
+                      return (
+                        <SelectItem key={iconOption.value} value={iconOption.value}>
+                          <div className="flex items-center gap-2">
+                            <IconComponent className="w-4 h-4" />
+                            <span>{iconOption.label}</span>
+                          </div>
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
 
           {/* Type-specific fields */}
           {block.type === 'text-only' && (
@@ -996,15 +1086,31 @@ const ContentBlockEditor: React.FC<{
                       }}
                       placeholder="Valeur"
                     />
-                    <Input
+                    <Select
                       value={stat.icon || ''}
-                      onChange={(e) => {
+                      onValueChange={(value) => {
                         const newStats = [...(safeBlock.stats || [])]
-                        newStats[index] = { ...stat, icon: e.target.value }
+                        newStats[index] = { ...stat, icon: value }
                         onUpdate({ stats: newStats })
                       }}
-                      placeholder="Icône"
-                    />
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner une icône" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ICON_OPTIONS.map((iconOption) => {
+                          const IconComponent = iconOption.icon
+                          return (
+                            <SelectItem key={iconOption.value} value={iconOption.value}>
+                              <div className="flex items-center gap-2">
+                                <IconComponent className="w-4 h-4" />
+                                <span>{iconOption.label}</span>
+                              </div>
+                            </SelectItem>
+                          )
+                        })}
+                      </SelectContent>
+                    </Select>
                     <Button
                       variant="outline"
                       size="sm"
@@ -1037,6 +1143,33 @@ const ContentBlockEditor: React.FC<{
           {block.type === 'cards-layout' && (
             <div>
               <Label>Cartes de services</Label>
+              
+              {/* Section Background Image */}
+              <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+                <Label className="text-sm font-medium mb-2 block">Image de fond de la section</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    value={safeBlock.sectionImageUrl || ''}
+                    onChange={(e) => onUpdate({ sectionImageUrl: e.target.value })}
+                    placeholder="URL de l'image de fond de la section"
+                  />
+                  <Input
+                    value={safeBlock.sectionImageAlt || ''}
+                    onChange={(e) => onUpdate({ sectionImageAlt: e.target.value })}
+                    placeholder="Texte alternatif de l'image de fond"
+                  />
+                </div>
+                {safeBlock.sectionImageUrl && (
+                  <div className="mt-3">
+                    <img 
+                      src={safeBlock.sectionImageUrl} 
+                      alt={safeBlock.sectionImageAlt || 'Aperçu de l\'image de fond'}
+                      className="w-full h-32 object-cover rounded border"
+                    />
+                  </div>
+                )}
+              </div>
+              
               <div className="space-y-4">
                 {(safeBlock.cards || []).map((card: any, index: number) => (
                   <div key={index} className="border rounded-lg p-4 space-y-2">
@@ -1050,35 +1183,31 @@ const ContentBlockEditor: React.FC<{
                         }}
                         placeholder="Titre de la carte"
                       />
-                      <Input
+                      <Select
                         value={card.icon || ''}
-                        onChange={(e) => {
+                        onValueChange={(value) => {
                           const newCards = [...(safeBlock.cards || [])]
-                          newCards[index] = { ...card, icon: e.target.value }
+                          newCards[index] = { ...card, icon: value }
                           onUpdate({ cards: newCards })
                         }}
-                        placeholder="Icône"
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      <Input
-                        value={card.imageUrl || ''}
-                        onChange={(e) => {
-                          const newCards = [...(safeBlock.cards || [])]
-                          newCards[index] = { ...card, imageUrl: e.target.value }
-                          onUpdate({ cards: newCards })
-                        }}
-                        placeholder="URL de l'image (optionnel)"
-                      />
-                      <Input
-                        value={card.imageAlt || ''}
-                        onChange={(e) => {
-                          const newCards = [...(safeBlock.cards || [])]
-                          newCards[index] = { ...card, imageAlt: e.target.value }
-                          onUpdate({ cards: newCards })
-                        }}
-                        placeholder="Texte alternatif de l'image"
-                      />
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Sélectionner une icône" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {ICON_OPTIONS.map((iconOption) => {
+                            const IconComponent = iconOption.icon
+                            return (
+                              <SelectItem key={iconOption.value} value={iconOption.value}>
+                                <div className="flex items-center gap-2">
+                                  <IconComponent className="w-4 h-4" />
+                                  <span>{iconOption.label}</span>
+                                </div>
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <Textarea
                       value={card.description || ''}

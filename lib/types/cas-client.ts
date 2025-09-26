@@ -19,10 +19,18 @@ export interface ContentBlock {
   title?: string;
   content?: string; // HTML content for text blocks
   
+  // Section badge customization
+  sectionBadge?: string;
+  sectionBadgeIcon?: string;
+  
   // For text-image blocks
   imageUrl?: string;
   imageAlt?: string;
   imagePosition?: 'left' | 'right';
+  
+  // For section background images (cards-layout)
+  sectionImageUrl?: string;
+  sectionImageAlt?: string;
   
   // For video blocks
   videoUrl?: string;

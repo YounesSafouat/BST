@@ -110,14 +110,14 @@ export default function CasClientV2() {
      // Dynamic filtering functions
      const getSectorCount = (sectorName: string) => {
           if (sectorName === "Tous") return clientsData.length
-          return clientsData.filter(client => client.sector === sectorName).length
+          return clientsData.filter(client => client.company?.sector === sectorName).length
      }
 
      const getSolutionCount = (solutionValue: string) => {
           if (solutionValue === "all") return clientsData.length
 
           return clientsData.filter(client => {
-               const clientSolution = client.solution?.toLowerCase()
+               const clientSolution = client.project?.solution?.toLowerCase()
 
                // Handle different solution value formats
                switch (solutionValue) {
@@ -137,14 +137,14 @@ export default function CasClientV2() {
      }
 
      const getAvailableSectors = () => {
-          const sectors = ["Tous", ...new Set(clientsData.map(client => client.sector).filter(Boolean))]
+          const sectors = ["Tous", ...new Set(clientsData.map(client => client.company?.sector).filter(Boolean))]
           return sectors
      }
 
      // Calculate real statistics
      const getRealStats = () => {
           const totalProjects = clientsData.length
-          const uniqueSectors = new Set(clientsData.map(client => client.sector).filter(Boolean)).size
+          const uniqueSectors = new Set(clientsData.map(client => client.company?.sector).filter(Boolean)).size
 
           // Calculate satisfaction from testimonials or default to high percentage
           const clientsWithTestimonials = clientsData.filter(client => client.testimonial?.quote).length
@@ -193,7 +193,7 @@ export default function CasClientV2() {
           // Filter by solution
           if (selectedSolution !== "all") {
                filtered = filtered.filter((client) => {
-                    const clientSolution = client.solution?.toLowerCase()
+                    const clientSolution = client.project?.solution?.toLowerCase()
 
                     switch (selectedSolution) {
                          case "hubspot":
@@ -213,7 +213,7 @@ export default function CasClientV2() {
 
           // Filter by sector
           if (selectedSector !== "Tous") {
-               filtered = filtered.filter((client) => client.sector === selectedSector)
+               filtered = filtered.filter((client) => client.company?.sector === selectedSector)
           }
 
           setFilteredClients(filtered)
@@ -224,8 +224,8 @@ export default function CasClientV2() {
           if (clientsData.length > 0) {
                console.log("🔍 Client solutions in CMS:", clientsData.map(client => ({
                     name: client.name,
-                    solution: client.solution,
-                    solutionLower: client.solution?.toLowerCase()
+                    solution: client.project?.solution,
+                    solutionLower: client.project?.solution?.toLowerCase()
                })))
           }
      }, [clientsData])
@@ -236,34 +236,53 @@ export default function CasClientV2() {
 
      return (
           <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
-
-
-                         {/* Hero Section - Copernic Style */}
-                         <section className="relative pt-24 pb-20 px-6 lg:px-8 mt-20">
+               {/* Hero Section - Copernic Style */}
+               <section className="relative pt-2 pb-8 px-3 lg:pt-10 lg:pb-20 lg:px-8 mt-20 lg:mt-10">
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
-                                        <h2 className="text-sm font-medium text-[var(--color-secondary)] mb-4">Nos cas clients</h2>
-                                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8 leading-tight">
+                                        <h2 className="text-lg font-medium text-[var(--color-secondary)] mb-4">Nos cas clients</h2>
+                                        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">
                                              Nos clients ont vu leur croissance augmenter, parfois de manière spectaculaire...
                                         </h1>
                                         <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] mx-auto"></div>
                                    </div>
 
                                    {/* Featured Video Testimonials - À la une */}
-                                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 max-w-7xl mx-auto mb-16">
                                         {clientsData.slice(0, 2).map((client, index) => (
-                                             <TestimonialCard
+                                             <Link
                                                   key={client.slug || client.name}
-                                                  title={client.name}
-                                                  description={client.summary}
-                                                  videoThumbnail={client.videoThumbnail}
-                                                  logo={client.logo}
-                                                  solution={client.solution}
-                                                  interviewee={client.interviewee}
-                                                  variant={index === 0 ? 'primary' : 'secondary'}
-                                                  size="large"
-                                                  slug={client.slug}
-                                             />
+                                                  href={`/cas-client/${client.slug}`}
+                                                  className="block"
+                                             >
+                                                  <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer bg-gray-800 w-full">
+                                                       {/* Same design as individual client pages */}
+                                                       <div className="aspect-[16/9] relative overflow-hidden">
+                                                            {client.media?.heroVideoThumbnail || client.media?.coverImage ? (
+                                                                 <>
+                                                                      <Image
+                                                                           src={client.media.heroVideoThumbnail || client.media.coverImage}
+                                                                           alt={client.name}
+                                                                           fill
+                                                                           className="object-contain object-center group-hover:scale-105 transition-transform duration-500"
+                                                                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                                      />
+                                                                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                                           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+                                                                                <Play className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800 ml-0.5 sm:ml-1" />
+                                                                           </div>
+                                                                      </div>
+                                                                 </>
+                                                            ) : (
+                                                                 <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                                                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-600 rounded-full flex items-center justify-center">
+                                                                           <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white ml-0.5 sm:ml-1" />
+                                                                      </div>
+                                                                 </div>
+                                                            )}
+                                                       </div>
+                                                  </div>
+                                             </Link>
                                         ))}
                                    </div>
 
@@ -387,10 +406,6 @@ export default function CasClientV2() {
                                                                            <div className="text-xs text-gray-500">{solution.description}</div>
                                                                       </div>
                                                                  </div>
-                                                                 <div className="text-right">
-                                                                      <div className="text-sm font-bold text-[var(--color-main)]">{count}</div>
-                                                                      <div className="text-xs text-gray-400">projets</div>
-                                                                 </div>
                                                             </button>
                                                        )
                                                   })}
@@ -422,9 +437,6 @@ export default function CasClientV2() {
                                                                       <IconComponent className="w-4 h-4 text-gray-500" />
                                                                       <span className="font-medium text-gray-900">{sectorName}</span>
                                                                  </div>
-                                                                 {count > 0 && (
-                                                                      <div className="text-sm font-bold text-[var(--color-main)]">{count}</div>
-                                                                 )}
                                                             </button>
                                                        )
                                                   })}
@@ -437,7 +449,7 @@ export default function CasClientV2() {
                                         <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                              <div>
                                                   <h2 className="text-3xl font-bold text-gray-900">
-                                                       {filteredClients.length} Études de Cas
+                                                       Études de Cas
                                                   </h2>
                                                   <p className="text-gray-600 mt-1">
                                                        {selectedSolution !== "all" && `Solution: ${solutions.find(s => s.value === selectedSolution)?.label}`}
@@ -445,21 +457,7 @@ export default function CasClientV2() {
                                                   </p>
                                              </div>
 
-                                             {/* Real Stats */}
-                                             <div className="flex items-center gap-8">
-                                                  <div className="text-center">
-                                                       <div className="text-3xl font-bold text-[var(--color-main)]">{getRealStats().projects}</div>
-                                                       <div className="text-xs text-gray-500">Projets</div>
-                                                  </div>
-                                                  <div className="text-center">
-                                                       <div className="text-3xl font-bold text-[var(--color-secondary)]">{getRealStats().satisfaction}%</div>
-                                                       <div className="text-xs text-gray-500">Satisfaction</div>
-                                                  </div>
-                                                  <div className="text-center">
-                                                       <div className="text-3xl font-bold text-[var(--color-main)]">{getRealStats().sectors}</div>
-                                                       <div className="text-xs text-gray-500">Secteurs</div>
-                                                  </div>
-                                             </div>
+                                          
                                         </div>
 
                                         {/* Client Cards Grid/List */}
@@ -472,7 +470,7 @@ export default function CasClientV2() {
                                                             description={client.summary}
                                                             videoThumbnail={client.videoThumbnail}
                                                             logo={client.logo}
-                                                            solution={client.solution}
+                                                            solution={client.project?.solution}
                                                             interviewee={client.interviewee}
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
@@ -490,7 +488,7 @@ export default function CasClientV2() {
                                                             description={client.summary}
                                                             videoThumbnail={client.videoThumbnail}
                                                             logo={client.logo}
-                                                            solution={client.solution}
+                                                            solution={client.project?.solution}
                                                             interviewee={client.interviewee}
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"

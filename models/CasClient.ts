@@ -23,10 +23,18 @@ const ContentBlockSchema = new mongoose.Schema({
   title: { type: String },
   content: { type: String }, // HTML content
   
+  // Section badge customization
+  sectionBadge: { type: String },
+  sectionBadgeIcon: { type: String },
+  
   // For text-image blocks
   imageUrl: { type: String },
   imageAlt: { type: String },
   imagePosition: { type: String, enum: ['left', 'right'] },
+  
+  // For section background images (cards-layout)
+  sectionImageUrl: { type: String },
+  sectionImageAlt: { type: String },
   
   // For video blocks
   videoUrl: { type: String },
@@ -71,7 +79,7 @@ const ContentBlockSchema = new mongoose.Schema({
   backgroundColor: { type: String },
   textColor: { type: String },
   padding: { type: String }
-}, { _id: false })
+}, { _id: false, strict: false })
 
 // Company Schema
 const CompanySchema = new mongoose.Schema({
@@ -176,7 +184,8 @@ const CasClientSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
   publishedAt: { type: Date }
 }, {
-  timestamps: true
+  timestamps: true,
+  strict: false
 })
 
 // Update the updatedAt field before saving

@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react"
+import { ArrowLeft, ArrowRight, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy, Pause, Volume2, VolumeX, Maximize2, Grid3X3, List, Plus, Minus, ChevronDown, Edit, Eye, Save, Trash2, ArrowUp, ArrowDown, Headphones } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
@@ -9,6 +9,48 @@ import { motion, AnimatePresence } from "framer-motion"
 import Loader from "@/components/home/Loader"
 import { useRouter } from "next/navigation"
 import ContactPopup from "./ContactPopup"
+
+// Icon mapping function
+const getIconComponent = (iconName: string) => {
+  const iconMap: { [key: string]: any } = {
+    'trending-up': TrendingUp,
+    'bar-chart-3': BarChart3,
+    'check-circle': CheckCircle,
+    'target': Target,
+    'users': Users,
+    'building': Building,
+    'clock': Clock,
+    'calendar': Calendar,
+    'award': Award,
+    'zap': Zap,
+    'star': Star,
+    'quote': Quote,
+    'external-link': ExternalLink,
+    'grid-3x3': Grid3X3,
+    'list': List,
+    'map-pin': MapPin,
+    'play': Play,
+    'pause': Pause,
+    'volume-2': Volume2,
+    'volume-x': VolumeX,
+    'maximize-2': Maximize2,
+    'copy': Copy,
+    'edit': Edit,
+    'eye': Eye,
+    'save': Save,
+    'trash-2': Trash2,
+    'arrow-up': ArrowUp,
+    'arrow-down': ArrowDown,
+    'arrow-left': ArrowLeft,
+    'arrow-right': ArrowRight,
+    'plus': Plus,
+    'minus': Minus,
+    'x': X,
+    'chevron-down': ChevronDown,
+    'headphones': Headphones
+  }
+  return iconMap[iconName] || TrendingUp // Default to TrendingUp if icon not found
+}
 
 // Extended interface for CMS-managed client cases
 interface ClientCase {
@@ -47,9 +89,13 @@ interface ClientCase {
           order: number
           title?: string
           content?: string
+          sectionBadge?: string
+          sectionBadgeIcon?: string
           imageUrl?: string
           imageAlt?: string
           imagePosition?: 'left' | 'right'
+          sectionImageUrl?: string
+          sectionImageAlt?: string
           videoUrl?: string
           videoThumbnail?: string
           stats?: Array<{
@@ -63,7 +109,7 @@ interface ClientCase {
                description: string
                icon?: string
                imageUrl?: string
-          }>
+     }>
      testimonial?: {
           quote: string
                author: {
@@ -493,7 +539,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      if (error || !clientData) {
           console.log('Error or no client data:', { error, clientData, slug })
           return (
-               <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white">
+               <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center max-w-md mx-auto px-6">
                          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                               <X className="w-12 h-12 text-red-500" />
@@ -513,7 +559,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      }
 
      return (
-          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 mt-10">
+          <div className="min-h-screen mt-10">
                {/* Enhanced Header */}
                <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
                     <div className="max-w-7xl mx-auto px-6 py-6">
@@ -539,57 +585,57 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                     </div>
                </header>
 
-                {/* Enhanced Hero Section */}
-                <section className="relative overflow-hidden">
-                     {/* Background Pattern */}
-                     <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 via-transparent to-[var(--color-secondary)]/5"></div>
-                     <div className="absolute inset-0">
-                          <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--color-main)]/10 rounded-full blur-3xl"></div>
-                          <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/10 rounded-full blur-3xl"></div>
-                     </div>
+               {/* Enhanced Hero Section */}
+               <section className="relative overflow-hidden">
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 via-transparent to-[var(--color-secondary)]/5"></div>
+                    <div className="absolute inset-0">
+                         <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--color-main)]/10 rounded-full blur-3xl"></div>
+                         <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/10 rounded-full blur-3xl"></div>
+                    </div>
 
-                     <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 md:py-24">
-                          <div className="grid lg:grid-cols-2 gap-16 items-center">
-                               {/* Left Content */}
-                               <motion.div
-                                    initial={{ opacity: 0, x: -50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.8 }}
-                                    className="space-y-8"
-                               >
-                                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
-                                         <Award className="w-4 h-4" />
-                                         Cas client
-                                    </div>
+                    <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 md:py-24">
+                         <div className="grid lg:grid-cols-2 gap-16 items-center">
+                              {/* Left Content */}
+                              <motion.div
+                                   initial={{ opacity: 0, x: -50 }}
+                                   animate={{ opacity: 1, x: 0 }}
+                                   transition={{ duration: 0.8 }}
+                                   className="space-y-8"
+                              >
+                                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
+                                        <Award className="w-4 h-4" />
+                                        Cas client
+                                   </div>
 
-                                    <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
-                                         {clientData.headline}
-                                    </h1>
+                                   <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
+                                        {clientData.headline}
+                                   </h1>
 
-                                    <p className="text-xl text-gray-600 leading-relaxed">
-                                         {clientData.summary}
-                                    </p>
+                                   <p className="text-xl text-gray-600 leading-relaxed">
+                                        {clientData.summary}
+                                   </p>
 
-                                    <div className="flex justify-center">
-                                         <Button
-                                              size="sm"
-                                              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-base font-semibold group rounded-full h-16 shadow-lg hover:shadow-xl transition-all duration-300"
+                                    <div className="flex justify-start">
+                                        <Button
+                                             size="sm"
+                                             className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-base font-semibold group rounded-full h-16 shadow-lg hover:shadow-xl transition-all duration-300"
                                               onClick={handleContactClick}
-                                         >
-                                              <Users className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
-                                              Nous Contacter
-                                         </Button>
-                                    </div>
-                               </motion.div>
+                                        >
+                                             <Users className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
+                                             Nous Contacter
+                                        </Button>
+                                   </div>
+                              </motion.div>
 
-                               {/* Right Video/Image */}
-                               <motion.div
-                                    initial={{ opacity: 0, x: 50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="relative"
-                               >
-                                    <div className="relative aspect-[16/10] bg-gray-900 rounded-2xl overflow-hidden shadow-2xl group">
+                              {/* Right Video/Image */}
+                              <motion.div
+                                   initial={{ opacity: 0, x: 50 }}
+                                   animate={{ opacity: 1, x: 0 }}
+                                   transition={{ duration: 0.8, delay: 0.2 }}
+                                   className="relative"
+                              >
+                                   <div className="relative aspect-[16/9] bg-gray-900 rounded-2xl overflow-hidden shadow-2xl group">
                                          {clientData.media.heroVideo ? (
                                               <div
                                                    className="w-full h-full relative group"
@@ -621,7 +667,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                   e.stopPropagation();
                                                                   togglePlay();
                                                              }}
-                                                             className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100"
+                                                             className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all duration-300 transform scale-100"
                                                         >
                                                              {isVideoPlaying ? (
                                                                   <Pause className="w-6 h-6 sm:w-8 sm:h-8 text-gray-800" />
@@ -674,134 +720,134 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                    </div>
                                               </div>
                                          ) : clientData.media.coverImage ? (
-                                              <Image
-                                                   src={clientData.media.coverImage}
-                                                   alt={clientData.name}
-                                                   width={800}
-                                                   height={500}
-                                                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                              />
-                                         ) : (
-                                              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                                                   <div className="text-center text-gray-400">
-                                                        <Play className="w-20 h-20 mx-auto mb-4 opacity-50" />
-                                                        <p className="text-lg font-medium">Aucune vidéo disponible</p>
-                                                   </div>
-                                              </div>
-                                         )}
-                                    </div>
-                               </motion.div>
-                          </div>
-                     </div>
-                </section>
+                                             <Image
+                                                  src={clientData.media.coverImage}
+                                                  alt={clientData.name}
+                                                  width={800}
+                                                  height={500}
+                                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                             />
+                                        ) : (
+                                             <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                                                  <div className="text-center text-gray-400">
+                                                       <Play className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                                                       <p className="text-lg font-medium">Aucune vidéo disponible</p>
+                                                  </div>
+                                             </div>
+                                        )}
+                                   </div>
+                              </motion.div>
+                         </div>
+                    </div>
+               </section>
 
                 {/* Content Section - Matching Your Design */}
                <section className="py-16 md:py-24">
                     <div className="max-w-7xl mx-auto px-6">
                          {/* First Block: Sidebar + Text Content */}
                          <div className="flex flex-col lg:flex-row gap-12 mb-16">
-                               {/* Company Info Sidebar */}
-                               <motion.div
-                                    initial={{ opacity: 0, y: 50 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.4 }}
+                              {/* Company Info Sidebar */}
+                              <motion.div
+                                   initial={{ opacity: 0, y: 50 }}
+                                   animate={{ opacity: 1, y: 0 }}
+                                   transition={{ duration: 0.8, delay: 0.4 }}
                                     className="w-full lg:w-80 flex-shrink-0 lg:sticky lg:top-20 lg:self-start"
-                               >
-                                    {/* Company Card - Enhanced */}
+                              >
+                                   {/* Company Card - Enhanced */}
                                     <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200/50">
-                                         <div className="text-center mb-8">
-                                              <div className="w-24 h-24 mx-auto mb-6 rounded-xl bg-gray-50 flex items-center justify-center">
-                                                   <Image
+                                        <div className="text-center mb-8">
+                                             <div className="w-24 h-24 mx-auto mb-6 rounded-xl bg-gray-50 flex items-center justify-center">
+                                                  <Image
                                                         src={clientData.company.logo}
-                                                        alt={clientData.name}
-                                                        width={70}
-                                                        height={70}
-                                                        className="object-contain"
-                                                   />
-                                              </div>
-                                              <h3 className="text-xl font-bold text-gray-900 mb-2">{clientData.name}</h3>
-                                              <p className="text-sm text-gray-600">{clientData.headline}</p>
-                                         </div>
+                                                       alt={clientData.name}
+                                                       width={70}
+                                                       height={70}
+                                                       className="object-contain"
+                                                  />
+                                             </div>
+                                             <h3 className="text-xl font-bold text-gray-900 mb-2">{clientData.name}</h3>
+                                             <p className="text-sm text-gray-600">{clientData.headline}</p>
+                                        </div>
 
                                          <div className="space-y-6">
-                                              <div className="flex items-center gap-3">
+                                                  <div className="flex items-center gap-3">
                                                    <Building className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
                                                    <div className="min-w-0">
-                                                        <p className="text-sm text-gray-500">Secteur</p>
+                                                            <p className="text-sm text-gray-500">Secteur</p>
                                                         <p className="font-medium text-gray-900">{clientData.company.sector}</p>
-                                                   </div>
-                                              </div>
+                                                       </div>
+                                                  </div>
 
-                                              <div className="flex items-center gap-3">
+                                                  <div className="flex items-center gap-3">
                                                    <Users className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
                                                    <div className="min-w-0">
-                                                        <p className="text-sm text-gray-500">Taille</p>
+                                                            <p className="text-sm text-gray-500">Taille</p>
                                                         <p className="font-medium text-gray-900">{clientData.company.size}</p>
-                                                   </div>
-                                              </div>
+                                                       </div>
+                                                  </div>
 
-                                              <div className="flex items-center gap-3">
+                                                  <div className="flex items-center gap-3">
                                                    <Target className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
                                                    <div className="min-w-0">
-                                                        <p className="text-sm text-gray-500">Solution</p>
+                                                            <p className="text-sm text-gray-500">Solution</p>
                                                         <p className="font-medium text-gray-900">{clientData.project.solution}</p>
-                                                   </div>
-                                              </div>
+                                                       </div>
+                                                  </div>
 
-                                              <div className="flex items-center gap-3">
+                                                       <div className="flex items-center gap-3">
                                                    <Clock className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
                                                    <div className="min-w-0">
                                                         <p className="text-sm text-gray-500">Durée</p>
                                                         <p className="font-medium text-gray-900">{clientData.project.duration}</p>
-                                                   </div>
-                                              </div>
+                                                            </div>
+                                                       </div>
 
                                               {clientData.company.location && (
-                                                   <div className="flex items-center gap-3">
+                                                       <div className="flex items-center gap-3">
                                                         <MapPin className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
                                                         <div className="min-w-0">
-                                                             <p className="text-sm text-gray-500">Localisation</p>
+                                                                 <p className="text-sm text-gray-500">Localisation</p>
                                                              <p className="font-medium text-gray-900">{clientData.company.location}</p>
-                                                        </div>
-                                                   </div>
-                                              )}
+                                                            </div>
+                                                       </div>
+                                                  )}
 
-                                              {/* Project Summary */}
-                                              <div className="border-t border-gray-200 pt-6">
-                                                   <h4 className="text-sm font-semibold text-gray-900 mb-3">Résumé du Projet</h4>
-                                                   <p className="text-sm text-gray-600 leading-relaxed">
-                                                        {clientData.summary}
-                                                   </p>
-                                              </div>
+                                                  {/* Project Summary */}
+                                                  <div className="border-t border-gray-200 pt-6">
+                                                       <h4 className="text-sm font-semibold text-gray-900 mb-3">Résumé du Projet</h4>
+                                                       <p className="text-sm text-gray-600 leading-relaxed">
+                                                            {clientData.summary}
+                                                       </p>
+                                                  </div>
 
-                                              {/* Project Stats */}
+                                                  {/* Project Stats */}
                                               {clientData.quickStats && clientData.quickStats.length > 0 && (
-                                                   <div className="border-t border-gray-200 pt-6">
-                                                        <h4 className="text-sm font-semibold text-gray-900 mb-4">Statistiques</h4>
-                                                        <div className="grid grid-cols-2 gap-3">
+                                                       <div className="border-t border-gray-200 pt-6">
+                                                            <h4 className="text-sm font-semibold text-gray-900 mb-4">Statistiques</h4>
+                                                            <div className="grid grid-cols-2 gap-3">
                                                              {clientData.quickStats.slice(0, 2).map((stat, index) => (
-                                                                  <div key={index} className="text-center p-3 bg-[var(--color-main)]/5 rounded-lg">
-                                                                       <div className="text-lg font-bold text-[var(--color-main)]">{stat.value}</div>
-                                                                       <div className="text-xs text-gray-600">{stat.label}</div>
-                                                                  </div>
-                                                             ))}
-                                                        </div>
-                                                   </div>
-                                              )}
+                                                                      <div key={index} className="text-center p-3 bg-[var(--color-main)]/5 rounded-lg">
+                                                                           <div className="text-lg font-bold text-[var(--color-main)]">{stat.value}</div>
+                                                                           <div className="text-xs text-gray-600">{stat.label}</div>
+                                                                      </div>
+                                                                 ))}
+                                                            </div>
+                                                       </div>
+                                                  )}
 
                                               {/* Contact CTA */}
                                               <div className="border-t border-gray-200 pt-6">
-                                                   <Button 
-                                                        className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white"
+                                                  <Button 
+                                                       className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white"
                                                         onClick={handleContactClick}
-                                                   >
+                                                  >
                                                         <Users className="w-4 h-4 mr-2" />
                                                         Nous Contacter
-                                                   </Button>
-                                              </div>
-                                         </div>
-                                    </div>
-                               </motion.div>
+                                                  </Button>
+                                             </div>
+                                        </div>
+                                   </div>
+                              </motion.div>
 
                                {/* Text Content - Only text-only blocks here */}
                               <div className="flex-1">
@@ -810,24 +856,24 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                     ).map((block, index) => (
                                          <div key={block.id || index} className="mb-16">
                                               {block.title && (
-                                                   <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                                             <h2 className="text-2xl font-bold text-gray-900 mb-6">
                                                         {block.title}
-                                                   </h2>
+                                             </h2>
                                               )}
 
                                               {/* Text Only Block */}
                                               {block.content && (
-                                                   <div className="max-w-none blog-content">
+                                                  <div className="max-w-none blog-content">
                                                         <ClientContent content={block.content} />
-                                                   </div>
-                                              )}
-                                         </div>
-                                    ))}
+                                                  </div>
+                                             )}
                                         </div>
-                                   </div>
+                                   ))}
+                              </div>
+                         </div>
 
                           {/* Second Block: Dynamic Full-width Sections */}
-                          <div className="mb-16">
+                         <div className="mb-16">
                                {clientData.contentBlocks?.sort((a, b) => a.order - b.order).filter(block => 
                                     block.type === 'text-image-left' || block.type === 'text-image-right' ||
                                     block.type === 'image-stats-left' || block.type === 'image-stats-right' || 
@@ -835,235 +881,617 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                     block.type === 'video' || block.type === 'testimonial' || block.type === 'cta'
                                ).map((block, index) => (
                                     <div key={`full-${block.id || index}`} className="w-full mb-16">
-                                         {/* Text + Image Left Block */}
+                                         {/* Text + Image Left Block - Enhanced Section */}
                                          {block.type === 'text-image-left' && (
-                                              <div className="grid md:grid-cols-2 gap-12 items-center">
-                                                   <div className="order-2 md:order-1">
-                                                        {block.imageUrl ? (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
-                                                                  <Image
-                                                                       src={block.imageUrl}
-                                                                       alt={block.imageAlt || block.title || 'Image'}
-                                                                       width={400}
-                                                                       height={300}
-                                                                       className="w-full h-full object-cover"
-                                                                  />
-                                                             </div>
-                                                        ) : (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl flex items-center justify-center">
-                                                                  <div className="text-center text-gray-500">
-                                                                       <Building className="w-16 h-16 mx-auto mb-4" />
-                                                                       <p className="text-lg font-medium">Image du projet</p>
-                                                                       <p className="text-sm">{clientData.name}</p>
-                                                                  </div>
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                                   <div className="order-1 md:order-2">
-                                                        {block.title && (
-                                                             <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
-                                                        )}
-                                                        {block.content && (
-                                                             <div className="blog-content">
-                                                                  <ClientContent content={block.content} />
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                              </div>
+                                        <section className="relative py-16 md:py-24 overflow-hidden">
+                                             <div className="absolute inset-0">
+                                                  <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+                                             </div>
+
+                                             <div className="relative z-10 max-w-7xl mx-auto px-6">
+                                                  <div className="grid lg:grid-cols-2 gap-16 items-center">
+                                                       {/* Image Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: -50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8 }}
+                                                            viewport={{ once: true }}
+                                                            className="order-2 lg:order-1"
+                                                       >
+                                                            <div className="relative group">
+                                                                 {block.imageUrl ? (
+                                                                      <div className="aspect-[4/3] bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200/50">
+                                                                           <Image
+                                                                                src={block.imageUrl}
+                                                                                alt={block.imageAlt || block.title || 'Image'}
+                                                                                width={600}
+                                                                                height={450}
+                                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                                           />
+                                                                      </div>
+                                                                 ) : (
+                                                                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center border border-gray-200/50">
+                                                                           <div className="text-center text-gray-500">
+                                                                                <Building className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                                                                                <p className="text-lg font-medium">Image du projet</p>
+                                                                                <p className="text-sm">{clientData.name}</p>
+                                                                           </div>
+                                                                      </div>
+                                                                 )}
+                                                                 
+                                                                 {/* Decorative Elements */}
+                                                                 <div className="absolute -top-4 -left-4 w-8 h-8 bg-[var(--color-main)]/20 rounded-full"></div>
+                                                                 <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-[var(--color-secondary)]/20 rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+
+                                                       {/* Content Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: 50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8, delay: 0.2 }}
+                                                            viewport={{ once: true }}
+                                                            className="order-1 lg:order-2"
+                                                       >
+                                                            <div className="space-y-8">
+                                                                 {/* Section Badge */}
+                                                                 {(block.sectionBadge || 'Section Projet') && (
+                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
+                                                                           {(() => {
+                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'target')
+                                                                                return <IconComponent className="w-4 h-4" />
+                                                                           })()}
+                                                                           {block.sectionBadge || 'Section Projet'}
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Title */}
+                                                                 {block.title && (
+                                                                      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                                                                           {block.title}
+                                                                      </h2>
+                                                                 )}
+
+                                                                 {/* Content */}
+                                                                 {block.content && (
+                                                                      <div className="blog-content text-lg leading-relaxed">
+                                                                           <ClientContent content={block.content} />
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Decorative Line */}
+                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+                                                  </div>
+                                             </div>
+                                        </section>
                                          )}
 
-                                         {/* Text + Image Right Block */}
+                                         {/* Text + Image Right Block - Enhanced Section */}
                                          {block.type === 'text-image-right' && (
-                                              <div className="grid md:grid-cols-2 gap-12 items-center">
-                                                   <div>
-                                                        {block.title && (
-                                                             <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
-                                                        )}
-                                                        {block.content && (
-                                                             <div className="blog-content">
-                                                                  <ClientContent content={block.content} />
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                                   <div>
-                                                        {block.imageUrl ? (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
-                                                                  <Image
-                                                                       src={block.imageUrl}
-                                                                       alt={block.imageAlt || block.title || 'Image'}
-                                                                       width={400}
-                                                                       height={300}
-                                                                       className="w-full h-full object-cover"
-                                                                  />
-                                                             </div>
-                                                        ) : (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl flex items-center justify-center">
-                                                                  <div className="text-center text-gray-500">
-                                                                       <TrendingUp className="w-16 h-16 mx-auto mb-4" />
-                                                                       <p className="text-lg font-medium">Image du projet</p>
-                                                                       <p className="text-sm">{clientData.name}</p>
-                                                                  </div>
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                              </div>
+                                        <section className="relative py-16 md:py-24 overflow-hidden">
+                                             {/* Background Pattern */}
+                                             <div className="absolute inset-0">
+                                                  <div className="absolute top-20 right-10 w-72 h-72 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 left-10 w-96 h-96 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+                                             </div>
+
+                                             <div className="relative z-10 max-w-7xl mx-auto px-6">
+                                                  <div className="grid lg:grid-cols-2 gap-16 items-center">
+                                                       {/* Content Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: -50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8 }}
+                                                            viewport={{ once: true }}
+                                                       >
+                                                            <div className="space-y-8">
+                                                                 {/* Section Badge */}
+                                                                 {(block.sectionBadge || 'Section Résultats') && (
+                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 rounded-full text-[var(--color-secondary)] text-sm font-medium">
+                                                                           {(() => {
+                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'trending-up')
+                                                                                return <IconComponent className="w-4 h-4" />
+                                                                           })()}
+                                                                           {block.sectionBadge || 'Section Résultats'}
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Title */}
+                                                                 {block.title && (
+                                                                      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                                                                           {block.title}
+                                                                      </h2>
+                                                                 )}
+
+                                                                 {/* Content */}
+                                                                 {block.content && (
+                                                                      <div className="blog-content text-lg leading-relaxed">
+                                                                           <ClientContent content={block.content} />
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Decorative Line */}
+                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+
+                                                       {/* Image Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: 50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8, delay: 0.2 }}
+                                                            viewport={{ once: true }}
+                                                       >
+                                                            <div className="relative group">
+                                                                 {block.imageUrl ? (
+                                                                      <div className="aspect-[4/3] bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200/50">
+                                                                           <Image
+                                                                                src={block.imageUrl}
+                                                                                alt={block.imageAlt || block.title || 'Image'}
+                                                                                width={600}
+                                                                                height={450}
+                                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                                           />
+                                                                      </div>
+                                                                 ) : (
+                                                                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center border border-gray-200/50">
+                                                                           <div className="text-center text-gray-500">
+                                                                                <TrendingUp className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                                                                                <p className="text-lg font-medium">Image du projet</p>
+                                                                                <p className="text-sm">{clientData.name}</p>
+                                                                           </div>
+                                                                      </div>
+                                                                 )}
+                                                                 
+                                                                 {/* Decorative Elements */}
+                                                                 <div className="absolute -top-4 -right-4 w-8 h-8 bg-[var(--color-secondary)]/20 rounded-full"></div>
+                                                                 <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-[var(--color-main)]/20 rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+                                                  </div>
+                                             </div>
+                                        </section>
                                          )}
 
-                                         {/* Image + Stats Left Block */}
+                                         {/* Image + Stats Left Block - Enhanced Statistics Section */}
                                          {block.type === 'image-stats-left' && (
-                                              <div className="grid md:grid-cols-2 gap-12 items-center">
-                                                   <div className="order-2 md:order-1">
-                                                        {block.imageUrl ? (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
-                                                                  <Image
-                                                                       src={block.imageUrl}
-                                                                       alt={block.imageAlt || block.title || 'Image'}
-                                                                       width={400}
-                                                                       height={300}
-                                                                       className="w-full h-full object-cover"
-                                                                  />
-                                                             </div>
-                                                        ) : (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl flex items-center justify-center">
-                                                                  <div className="text-center text-gray-500">
-                                                                       <Building className="w-16 h-16 mx-auto mb-4" />
-                                                                       <p className="text-lg font-medium">Image du projet</p>
-                                                                       <p className="text-sm">{clientData.name}</p>
-                                                                  </div>
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                                   <div className="order-1 md:order-2">
-                                                        {block.title && (
-                                                             <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
-                                                        )}
-                                                        {block.content && (
-                                                             <div className="blog-content mb-6">
-                                                                  <ClientContent content={block.content} />
-                                                             </div>
-                                                        )}
-                                                        {block.stats && block.stats.length > 0 && (
-                                                             <div className="grid grid-cols-2 gap-4">
-                                                                  {block.stats.map((stat, statIndex) => (
-                                                                       <div key={statIndex} className="text-center p-4 bg-[var(--color-main)]/10 rounded-lg">
-                                                                            <div className="text-2xl font-bold text-[var(--color-main)] mb-1">{stat.value}</div>
-                                                                            <div className="text-sm text-gray-600">{stat.label}</div>
-                                                                       </div>
-                                                                  ))}
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                              </div>
+                                        <section className="relative py-16 md:py-24 overflow-hidden">
+                                             {/* Background Pattern */}
+                                             <div className="absolute inset-0">
+                                                  <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--color-main)]/10 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/10 rounded-full blur-3xl"></div>
+                                             </div>
+
+                                             <div className="relative z-10 max-w-7xl mx-auto px-6">
+                                                  <div className="grid lg:grid-cols-2 gap-16 items-center">
+                                                       {/* Image Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: -50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8 }}
+                                                            viewport={{ once: true }}
+                                                            className="order-2 lg:order-1"
+                                                       >
+                                                            <div className="relative group">
+                                                                 {block.imageUrl ? (
+                                                                      <div className="aspect-[4/3] bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200/50">
+                                                                           <Image
+                                                                                src={block.imageUrl}
+                                                                                alt={block.imageAlt || block.title || 'Image'}
+                                                                                width={600}
+                                                                                height={450}
+                                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                                           />
+                                                                      </div>
+                                                                 ) : (
+                                                                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center border border-gray-200/50">
+                                                                           <div className="text-center text-gray-500">
+                                                                                <BarChart3 className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                                                                                <p className="text-lg font-medium">Image du projet</p>
+                                                                                <p className="text-sm">{clientData.name}</p>
+                                                                           </div>
+                                                                      </div>
+                                                                 )}
+                                                                 
+                                                                 {/* Decorative Elements */}
+                                                                 <div className="absolute -top-4 -left-4 w-8 h-8 bg-[var(--color-main)]/20 rounded-full"></div>
+                                                                 <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-[var(--color-secondary)]/20 rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+
+                                                       {/* Stats Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: 50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8, delay: 0.2 }}
+                                                            viewport={{ once: true }}
+                                                            className="order-1 lg:order-2"
+                                                       >
+                                                            <div className="space-y-8">
+                                                                 {/* Section Badge */}
+                                                                 {(block.sectionBadge || 'Statistiques') && (
+                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
+                                                                           {(() => {
+                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'bar-chart-3')
+                                                                                return <IconComponent className="w-4 h-4" />
+                                                                           })()}
+                                                                           {block.sectionBadge || 'Statistiques'}
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Title */}
+                                                                 {block.title && (
+                                                                      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                                                                           {block.title}
+                                                                      </h2>
+                                                                 )}
+
+                                                                 {/* Content */}
+                                                                 {block.content && (
+                                                                      <div className="blog-content text-lg leading-relaxed mb-8">
+                                                                           <ClientContent content={block.content} />
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Enhanced Stats */}
+                                                                 {block.stats && block.stats.length > 0 && (
+                                                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                                           {block.stats.map((stat, statIndex) => (
+                                                                                <motion.div
+                                                                                     key={statIndex}
+                                                                                     initial={{ opacity: 0, y: 20 }}
+                                                                                     whileInView={{ opacity: 1, y: 0 }}
+                                                                                     transition={{ duration: 0.6, delay: statIndex * 0.1 }}
+                                                                                     viewport={{ once: true }}
+                                                                                     className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group"
+                                                                                >
+                                                                                     <div className="flex items-center gap-4">
+                                                                                          <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-xl flex items-center justify-center">
+                                                                                               {(() => {
+                                                                                                    const IconComponent = getIconComponent(stat.icon || 'trending-up')
+                                                                                                    return <IconComponent className="w-6 h-6 text-white" />
+                                                                                               })()}
+                                                                                          </div>
+                                                                                          <div className="flex-1">
+                                                                                               <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                                                                                               <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                                                                                               {stat.description && (
+                                                                                                    <div className="text-xs text-gray-500 mt-1">{stat.description}</div>
+                                                                                               )}
+                                                                                          </div>
+                                                                                     </div>
+                                                                                </motion.div>
+                                                                           ))}
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Decorative Line */}
+                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+                                                  </div>
+                                             </div>
+                                        </section>
                                          )}
 
-                                         {/* Image + Stats Right Block */}
+                                         {/* Image + Stats Right Block - Enhanced Statistics Section */}
                                          {block.type === 'image-stats-right' && (
-                                              <div className="grid md:grid-cols-2 gap-12 items-center">
-                                                   <div>
-                                                        {block.title && (
-                                                             <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
-                                                        )}
-                                                        {block.content && (
-                                                             <div className="blog-content mb-6">
-                                                                  <ClientContent content={block.content} />
-                                                             </div>
-                                                        )}
-                                                        {block.stats && block.stats.length > 0 && (
-                                                             <div className="grid grid-cols-2 gap-4">
-                                                                  {block.stats.map((stat, statIndex) => (
-                                                                       <div key={statIndex} className="text-center p-4 bg-[var(--color-main)]/10 rounded-lg">
-                                                                            <div className="text-2xl font-bold text-[var(--color-main)] mb-1">{stat.value}</div>
-                                                                            <div className="text-sm text-gray-600">{stat.label}</div>
-                                                                       </div>
-                                                                  ))}
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                                   <div>
-                                                        {block.imageUrl ? (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden">
-                                                                  <Image
-                                                                       src={block.imageUrl}
-                                                                       alt={block.imageAlt || block.title || 'Image'}
-                                                                       width={400}
-                                                                       height={300}
-                                                                       className="w-full h-full object-cover"
-                                                                  />
-                                                             </div>
-                                                        ) : (
-                                                             <div className="aspect-[4/3] bg-gray-100 rounded-xl flex items-center justify-center">
-                                                                  <div className="text-center text-gray-500">
-                                                                       <TrendingUp className="w-16 h-16 mx-auto mb-4" />
-                                                                       <p className="text-lg font-medium">Résultats</p>
-                                                                       <p className="text-sm">{clientData.name}</p>
-                                                                  </div>
-                                                             </div>
-                                                        )}
-                                                   </div>
-                                              </div>
+                                        <section className="relative py-16 md:py-24 overflow-hidden">
+                                             {/* Background Pattern */}
+                                             <div className="absolute inset-0">
+                                                  <div className="absolute top-20 right-10 w-72 h-72 bg-[var(--color-secondary)]/10 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 left-10 w-96 h-96 bg-[var(--color-main)]/10 rounded-full blur-3xl"></div>
+                                             </div>
+
+                                             <div className="relative z-10 max-w-7xl mx-auto px-6">
+                                                  <div className="grid lg:grid-cols-2 gap-16 items-center">
+                                                       {/* Stats Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: -50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8 }}
+                                                            viewport={{ once: true }}
+                                                       >
+                                                            <div className="space-y-8">
+                                                                 {/* Section Badge */}
+                                                                 {(block.sectionBadge || 'Métriques') && (
+                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 rounded-full text-[var(--color-secondary)] text-sm font-medium">
+                                                                           {(() => {
+                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'bar-chart-3')
+                                                                                return <IconComponent className="w-4 h-4" />
+                                                                           })()}
+                                                                           {block.sectionBadge || 'Métriques'}
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Title */}
+                                                                 {block.title && (
+                                                                      <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                                                                           {block.title}
+                                                                      </h2>
+                                                                 )}
+
+                                                                 {/* Content */}
+                                                                 {block.content && (
+                                                                      <div className="blog-content text-lg leading-relaxed mb-8">
+                                                                           <ClientContent content={block.content} />
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Enhanced Stats */}
+                                                                 {block.stats && block.stats.length > 0 && (
+                                                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                                           {block.stats.map((stat, statIndex) => (
+                                                                                <motion.div
+                                                                                     key={statIndex}
+                                                                                     initial={{ opacity: 0, y: 20 }}
+                                                                                     whileInView={{ opacity: 1, y: 0 }}
+                                                                                     transition={{ duration: 0.6, delay: statIndex * 0.1 }}
+                                                                                     viewport={{ once: true }}
+                                                                                     className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group"
+                                                                                >
+                                                                                     <div className="flex items-center gap-4">
+                                                                                          <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-xl flex items-center justify-center">
+                                                                                               {(() => {
+                                                                                                    const IconComponent = getIconComponent(stat.icon || 'trending-up')
+                                                                                                    return <IconComponent className="w-6 h-6 text-white" />
+                                                                                               })()}
+                                                                                          </div>
+                                                                                          <div className="flex-1">
+                                                                                               <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                                                                                               <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                                                                                               {stat.description && (
+                                                                                                    <div className="text-xs text-gray-500 mt-1">{stat.description}</div>
+                                                                                               )}
+                                                                                          </div>
+                                                                                     </div>
+                                                                                </motion.div>
+                                                                           ))}
+                                                                      </div>
+                                                                 )}
+
+                                                                 {/* Decorative Line */}
+                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+
+                                                       {/* Image Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: 50 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8, delay: 0.2 }}
+                                                            viewport={{ once: true }}
+                                                       >
+                                                            <div className="relative group">
+                                                                 {block.imageUrl ? (
+                                                                      <div className="aspect-[4/3] bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200/50">
+                                                                           <Image
+                                                                                src={block.imageUrl}
+                                                                                alt={block.imageAlt || block.title || 'Image'}
+                                                                                width={600}
+                                                                                height={450}
+                                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                                           />
+                                                                      </div>
+                                                                 ) : (
+                                                                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center border border-gray-200/50">
+                                                                           <div className="text-center text-gray-500">
+                                                                                <TrendingUp className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                                                                                <p className="text-lg font-medium">Résultats</p>
+                                                                                <p className="text-sm">{clientData.name}</p>
+                                                                           </div>
+                                                                      </div>
+                                                                 )}
+                                                                 
+                                                                 {/* Decorative Elements */}
+                                                                 <div className="absolute -top-4 -right-4 w-8 h-8 bg-[var(--color-secondary)]/20 rounded-full"></div>
+                                                                 <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-[var(--color-main)]/20 rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+                                                  </div>
+                                             </div>
+                                        </section>
                                          )}
 
-                                         {/* Text + Stats Block */}
+                                         {/* Text + Stats Block - Enhanced Metrics Section */}
                                          {block.type === 'text-stats' && (
-                                              <div>
-                                                   {block.title && (
-                                                        <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
-                                                   )}
-                                                   {block.content && (
-                                                        <div className="blog-content mb-6">
-                                                             <ClientContent content={block.content} />
-                                                        </div>
-                                                   )}
-                                                   {block.stats && block.stats.length > 0 && (
-                                                        <div className="bg-gradient-to-r from-[var(--color-main)]/10 to-[var(--color-secondary)]/10 rounded-xl p-6">
-                                                             <h3 className="text-lg font-semibold text-gray-900 mb-3">Bénéfices Clés</h3>
-                                                             <div className="grid grid-cols-1 gap-3">
-                                                                  {block.stats.map((stat, statIndex) => (
-                                                                       <div key={statIndex} className="flex justify-between items-center">
-                                                                            <span className="text-gray-700">{stat.label}</span>
-                                                                            <span className="font-bold text-[var(--color-main)]">{stat.value}</span>
-                                                                       </div>
-                                                                  ))}
-                                                             </div>
-                                                        </div>
-                                                   )}
-                                              </div>
+                                        <section className="relative py-16 md:py-24 overflow-hidden">
+                                             {/* Background Pattern */}
+                                             <div className="absolute inset-0">
+                                                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+                                             </div>
+
+                                             <div className="relative z-10 max-w-7xl mx-auto px-6">
+                                                  <div className="text-center mb-16">
+                                                       {/* Section Badge */}
+                                                       {(block.sectionBadge || 'Impact & Transformation') && (
+                                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium mb-6">
+                                                                 {(() => {
+                                                                      const IconComponent = getIconComponent(block.sectionBadgeIcon || 'trending-up')
+                                                                      return <IconComponent className="w-4 h-4" />
+                                                                 })()}
+                                                                 {block.sectionBadge || 'Impact & Transformation'}
+                                                            </div>
+                                                       )}
+
+                                                       {/* Title */}
+                                                       {block.title && (
+                                                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8">
+                                                                 {block.title}
+                                                             </h2>
+                                                       )}
+
+                                                       {/* Content */}
+                                                       {block.content && (
+                                                            <div className="blog-content text-lg leading-relaxed max-w-4xl mx-auto mb-12">
+                                                                 <ClientContent content={block.content} />
+                                                            </div>
+                                                       )}
+                                                  </div>
+
+                                                  {/* Enhanced Stats Grid */}
+                                                  {block.stats && block.stats.length > 0 && (
+                                                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                                            {block.stats.map((stat, statIndex) => (
+                                                                 <motion.div
+                                                                      key={statIndex}
+                                                                      initial={{ opacity: 0, y: 30 }}
+                                                                      whileInView={{ opacity: 1, y: 0 }}
+                                                                      transition={{ duration: 0.6, delay: statIndex * 0.1 }}
+                                                                      viewport={{ once: true }}
+                                                                      className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group text-center"
+                                                                 >
+                                                                      <div className="space-y-4">
+                                                                           {/* Icon */}
+                                                                           <div className="w-16 h-16 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
+                                                                                {(() => {
+                                                                                     const IconComponent = getIconComponent(stat.icon || 'trending-up')
+                                                                                     return <IconComponent className="w-8 h-8 text-white" />
+                                                                                })()}
+                                                                           </div>
+
+                                                                           {/* Value */}
+                                                                           <div className="text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
+
+                                                                           {/* Label */}
+                                                                           <div className="text-lg text-gray-600 font-medium">{stat.label}</div>
+
+                                                                           {/* Description */}
+                                                                           {stat.description && (
+                                                                                <div className="text-sm text-gray-500 leading-relaxed">{stat.description}</div>
+                                                                           )}
+                                                                      </div>
+                                                                 </motion.div>
+                                                            ))}
+                                                       </div>
+                                                  )}
+
+                                                  {/* Decorative Line */}
+                                                  <div className="flex justify-center mt-16">
+                                                       <div className="w-32 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
+                                                  </div>
+                                             </div>
+                                        </section>
                                          )}
 
-                                         {/* Cards Layout Block */}
+                                         {/* Cards Layout Block - Enhanced Service Showcase Section */}
                                          {block.type === 'cards-layout' && (
-                                              <div>
-                                                   {block.title && (
-                                                        <h2 className="text-3xl font-bold text-gray-900 mb-8">{block.title}</h2>
-                                                   )}
-                                                   {block.content && (
-                                                        <div className="blog-content mb-8">
-                                                             <ClientContent content={block.content} />
-                                                        </div>
-                                                   )}
-                                                   {block.cards && block.cards.length > 0 && (
-                                                        <div className="grid md:grid-cols-2 gap-8">
-                                                             <div className="space-y-6">
-                                                                  {block.cards.map((card, cardIndex) => (
-                                                                       <div key={cardIndex} className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
-                                                                            <h3 className="text-xl font-bold text-gray-900 mb-3">{card.title}</h3>
-                                                                            <p className="text-gray-700">{card.description}</p>
-                                                                       </div>
-                                                                  ))}
-                                                             </div>
-                                                             
-                                                             <div className="flex items-center justify-center">
-                                                                  <div className="w-full h-80 bg-gray-100 rounded-xl flex items-center justify-center">
-                                                                       <div className="text-center text-gray-500">
-                                                                            <Building className="w-16 h-16 mx-auto mb-4" />
-                                                                            <p className="text-lg font-medium">Image du projet</p>
-                                                                            <p className="text-sm">{clientData.name}</p>
-                                                                       </div>
-                                                                  </div>
-                                                             </div>
-                                                        </div>
-                                                   )}
-                                              </div>
+                                        <section className="relative py-16 md:py-24 overflow-hidden">
+                                             {/* Background Pattern */}
+                                             <div className="absolute inset-0">
+                                                  <div className="absolute top-20 left-10 w-72 h-72 bg-[var(--color-main)]/5 rounded-full blur-3xl"></div>
+                                                  <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/5 rounded-full blur-3xl"></div>
+                                                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[var(--color-main)]/3 rounded-full blur-3xl"></div>
+                                             </div>
+
+                                             <div className="relative z-10 max-w-7xl mx-auto px-6">
+                                                  <div className="text-center mb-16">
+                                                       {/* Section Badge */}
+                                                       {(block.sectionBadge || 'Services & Livrables') && (
+                                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium mb-6">
+                                                                 {(() => {
+                                                                      const IconComponent = getIconComponent(block.sectionBadgeIcon || 'grid-3x3')
+                                                                      return <IconComponent className="w-4 h-4" />
+                                                                 })()}
+                                                                 {block.sectionBadge || 'Services & Livrables'}
+                                                            </div>
+                                                       )}
+
+                                                       {/* Title */}
+                                                       {block.title && (
+                                                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-8">
+                                                                 {block.title}
+                                                             </h2>
+                                                       )}
+
+                                                       {/* Content */}
+                                                       {block.content && (
+                                                            <div className="blog-content text-lg leading-relaxed max-w-4xl mx-auto mb-12">
+                                                                 <ClientContent content={block.content} />
+                                                            </div>
+                                                       )}
+                                                  </div>
+
+                                                  <div className="grid lg:grid-cols-2 gap-16 items-center">
+                                                       {/* Cards Section */}
+                                                       <div className="space-y-6">
+                                                            {block.cards && block.cards.length > 0 && (
+                                                                 block.cards.map((card, cardIndex) => (
+                                                                      <motion.div
+                                                                           key={cardIndex}
+                                                                           initial={{ opacity: 0, x: -30 }}
+                                                                           whileInView={{ opacity: 1, x: 0 }}
+                                                                           transition={{ duration: 0.6, delay: cardIndex * 0.1 }}
+                                                                           viewport={{ once: true }}
+                                                                           className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group hover:-translate-y-1"
+                                                                      >
+                                                                           <div className="flex items-start gap-4">
+                                                                                {/* Icon */}
+                                                                                <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                                                                     {(() => {
+                                                                                          const IconComponent = getIconComponent(card.icon || 'check-circle')
+                                                                                          return <IconComponent className="w-6 h-6 text-white" />
+                                                                                     })()}
+                                                                                </div>
+
+                                                                                {/* Content */}
+                                                                                <div className="flex-1">
+                                                                                     <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[var(--color-main)] transition-colors duration-300">{card.title}</h3>
+                                                                                     <p className="text-gray-700 leading-relaxed">{card.description}</p>
+                                                                                </div>
+                                                                           </div>
+                                                                      </motion.div>
+                                                                 ))
+                                                            )}
+                                                       </div>
+                                                       
+                                                       {/* Image Section */}
+                                                       <motion.div
+                                                            initial={{ opacity: 0, x: 30 }}
+                                                            whileInView={{ opacity: 1, x: 0 }}
+                                                            transition={{ duration: 0.8, delay: 0.2 }}
+                                                            viewport={{ once: true }}
+                                                            className="flex items-center justify-center"
+                                                       >
+                                                            <div className="relative group">
+                                                                 {block.sectionImageUrl ? (
+                                                                      <div className="aspect-[4/3] bg-white rounded-2xl overflow-hidden shadow-2xl border border-gray-200/50">
+                                                                           <Image
+                                                                                src={block.sectionImageUrl}
+                                                                                alt={block.sectionImageAlt || block.title || 'Image du projet'}
+                                                                                width={600}
+                                                                                height={450}
+                                                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                                                           />
+                                                                      </div>
+                                                                 ) : (
+                                                                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center border border-gray-200/50">
+                                                                           <div className="text-center text-gray-500">
+                                                                                <Building className="w-20 h-20 mx-auto mb-4 opacity-50" />
+                                                                                <p className="text-lg font-medium">Image du projet</p>
+                                                                                <p className="text-sm">{clientData.name}</p>
+                                                                           </div>
+                                                                      </div>
+                                                                 )}
+                                                                 
+                                                                 {/* Decorative Elements */}
+                                                                 <div className="absolute -top-4 -right-4 w-8 h-8 bg-[var(--color-main)]/20 rounded-full"></div>
+                                                                 <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-[var(--color-secondary)]/20 rounded-full"></div>
+                                                            </div>
+                                                       </motion.div>
+                                                  </div>
+
+                                                  {/* Decorative Line */}
+                                                  <div className="flex justify-center mt-16">
+                                                       <div className="w-32 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
+                                                  </div>
+                                             </div>
+                                        </section>
                                          )}
 
                                          {/* Video Block */}
@@ -1123,30 +1551,27 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
                                          {/* CTA Block */}
                                          {block.type === 'cta' && block.cta && (
-                                              <div className="text-center bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-2xl p-8 text-white">
+                                              <div className="text-center bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
                                                    {block.title && (
-                                                        <h2 className="text-3xl font-bold mb-6">{block.title}</h2>
+                                                        <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
                                                    )}
                                                    {block.content && (
-                                                        <div className="mb-6">image.png
+                                                        <div className="mb-6 text-gray-700">
                                                              <ClientContent content={block.content} />
                                                         </div>
                                                    )}
                                                    <Button
-                                                        className={`px-8 py-4 text-lg font-semibold rounded-full ${
-                                                             block.cta?.style === 'primary' 
-                                                                  ? 'bg-white text-[var(--color-main)] hover:bg-gray-100' 
-                                                                  : 'bg-transparent border-2 border-white text-white hover:bg-white hover:text-[var(--color-main)]'
-                                                        }`}
+                                                        className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                                                         onClick={() => block.cta?.url && window.open(block.cta.url, '_blank')}
                                                    >
                                                         {block.cta?.text}
+                                                        <ArrowRight className="w-5 h-5 ml-2" />
                                                    </Button>
                                               </div>
                                          )}
                                     </div>
                                ))}
-                          </div>
+                         </div>
                     </div>
                </section>
 

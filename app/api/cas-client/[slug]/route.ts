@@ -58,14 +58,11 @@ export async function PUT(
       }
     }
 
-    // Update the case
+    // Update with explicit $set to ensure new fields are added
     const updatedCase = await CasClient.findOneAndUpdate(
       { slug },
-      { 
-        ...cleanedBody,
-        updatedAt: new Date()
-      },
-      { new: true, runValidators: true }
+      { $set: cleanedBody },
+      { new: true, runValidators: false, upsert: false }
     )
 
     if (!updatedCase) {

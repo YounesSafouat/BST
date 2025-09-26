@@ -176,7 +176,20 @@ export default function ContactPopup({ isOpen, onClose, clientName, clientSlug }
         submitted_at: new Date().toISOString(),
         firstname,
         lastname,
-        brief_description: `Contact depuis la page cas client${clientName ? ` - ${clientName}` : ''}`
+        brief_description: `**Contact depuis la page cas client${clientName ? ` - ${clientName}` : ''}**\n\n` +
+          `📋 **Contexte du contact :**\n` +
+          `• Page consultée : Cas client${clientName ? ` - ${clientName}` : ''}\n` +
+          `• Source : Page de référence client\n` +
+          `• Intérêt : Utilisateur intéressé par nos réalisations\n\n` +
+          `🎯 **Analyse du comportement :**\n` +
+          `• Utilisateur a consulté notre portfolio de projets\n` +
+          `• Intérêt confirmé par la soumission du formulaire\n` +
+          `• Lead qualifié - Recherche de solutions similaires\n\n` +
+          `💡 **Recommandations commerciales :**\n` +
+          `• Présenter des cas similaires à ${clientName || 'leur secteur'}\n` +
+          `• Proposer une consultation personnalisée\n` +
+          `• Mettre en avant notre expertise dans leur domaine\n` +
+          `• Contacter rapidement - Lead de haute qualité`
       }
 
       const result = await submitForm(
