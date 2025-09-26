@@ -78,7 +78,7 @@ export default function UTMGeneratorPage() {
       return;
     }
 
-    const baseUrl = 'https://blackswantechnology.com';
+    const baseUrl = 'https://agence-blackswan.com';
     const utmParams = new URLSearchParams();
     
     utmParams.append('utm_source', utmData.source);
