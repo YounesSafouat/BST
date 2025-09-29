@@ -31,8 +31,13 @@ export async function POST(req: NextRequest) {
     
     console.log('Page View Tracking:', {
       path,
+      fullUrl,
       trafficSource: trafficData.trafficSource,
+      utmSource: trafficData.utmSource,
+      utmMedium: trafficData.utmMedium,
       utmCampaign: trafficData.utmCampaign,
+      utmTerm: trafficData.utmTerm,
+      utmContent: trafficData.utmContent,
       referrer: trafficData.referrer
     });
     

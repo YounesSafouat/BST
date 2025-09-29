@@ -62,6 +62,19 @@ export default function Analytics() {
                // Get current URL with UTM parameters
                const currentUrl = window.location.href;
                
+               // Debug: Log UTM parameters
+               const urlParams = new URLSearchParams(window.location.search);
+               const utmParams = {
+                    utm_source: urlParams.get('utm_source'),
+                    utm_medium: urlParams.get('utm_medium'),
+                    utm_campaign: urlParams.get('utm_campaign'),
+                    utm_term: urlParams.get('utm_term'),
+                    utm_content: urlParams.get('utm_content')
+               };
+               
+               console.log('Analytics - UTM Parameters:', utmParams);
+               console.log('Analytics - Current URL:', currentUrl);
+               
                // Prepare tracking data
                const trackingData = {
                     path: pathname,

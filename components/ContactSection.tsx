@@ -1330,12 +1330,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                description += `🔥 **Niveau d'engagement :** Faible - Utilisateur peu engagé\n`;
           }
 
-          const lastActivityMinutes = Math.floor((Date.now() - userBehavior.lastActivity) / 60000);
-          if (lastActivityMinutes < 5) {
-               description += `🕐 **Dernière activité :** Il y a ${lastActivityMinutes} minute${lastActivityMinutes > 1 ? 's' : ''} - Utilisateur actuellement actif\n`;
-          } else if (lastActivityMinutes < 15) {
-               description += `🕐 **Dernière activité :** Il y a ${lastActivityMinutes} minutes - Utilisateur récemment actif\n`;
-          }
 
           description += `\n💡 **Recommandations commerciales :**\n`;
 
