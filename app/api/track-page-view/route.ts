@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
+import connectDB from '@/lib/mongodb';
 import PageView from '@/models/PageView';
 import { detectTrafficSource } from '@/lib/traffic-source-detector';
 
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
-    await dbConnect();
+    await connectDB();
     
     const body = await req.json();
     const { 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     } = body;
     
     // Get the full URL from the request
-    const fullUrl = req.headers.get('referer') || `https://blackswantechnology.com${path}`;
+    const fullUrl = req.headers.get('referer') || `https://agence-blackswan.com${path}`;
     
     // Detect traffic source
     const trafficData = detectTrafficSource(fullUrl, referrer, userAgent);

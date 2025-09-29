@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { initializeButtonTracking } from '@/lib/button-tracking';
 
 export default function Analytics() {
      const pathname = usePathname();
@@ -9,6 +10,9 @@ export default function Analytics() {
      useEffect(() => {
           // Track page view with traffic source data
           trackPageView();
+          
+          // Initialize button click tracking
+          initializeButtonTracking();
           
           // Google Analytics 4
           if (typeof window !== 'undefined' && window.gtag) {

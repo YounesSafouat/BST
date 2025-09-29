@@ -144,17 +144,22 @@ export default function UTMGeneratorPage() {
       {/* Usage Instructions */}
       <Card>
         <CardHeader>
-          <CardTitle>Comment utiliser</CardTitle>
+          <CardTitle>🎯 Comment utiliser le Générateur UTM</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-semibold mb-2 text-blue-900">💡 Objectif</h4>
+              <p className="text-sm text-blue-800">Créer des liens trackables pour vos posts LinkedIn, Instagram, Meta Ads, etc. Quand quelqu'un clique sur votre lien et remplit un formulaire, vous saurez exactement d'où il vient !</p>
+            </div>
+            
             <div>
               <h4 className="font-semibold mb-2">1. Configurer les paramètres UTM</h4>
               <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li><strong>Source :</strong> Sélectionnez la plateforme marketing (LinkedIn, Facebook, Google Ads, etc.)</li>
-                <li><strong>Medium :</strong> Choisissez le type de contenu (post, pub, email, etc.)</li>
-                <li><strong>Campaign :</strong> Entrez un nom de campagne descriptif</li>
-                <li><strong>Terme :</strong> Mot-clé ou sujet optionnel</li>
+                <li><strong>Source :</strong> Plateforme marketing (LinkedIn, Facebook, Google Ads, etc.)</li>
+                <li><strong>Medium :</strong> Type de contenu (post, pub, email, etc.)</li>
+                <li><strong>Campaign :</strong> Nom de campagne descriptif (ex: "odoo-2024", "formation-hubspot")</li>
+                <li><strong>Terme :</strong> Mot-clé optionnel</li>
                 <li><strong>Contenu :</strong> Identifiant de contenu optionnel</li>
               </ul>
             </div>
@@ -163,9 +168,20 @@ export default function UTMGeneratorPage() {
               <h4 className="font-semibold mb-2">2. Générer et utiliser</h4>
               <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                 <li>Cliquez sur "Générer le lien UTM" pour créer votre URL traçable</li>
-                <li>Copiez le lien généré et utilisez-le dans vos campagnes marketing</li>
-                <li>Quand les visiteurs cliquent sur votre lien, ils sont tracés avec les paramètres UTM</li>
-                <li>Suivez le trafic et les conversions dans vos analytics</li>
+                <li>Copiez le lien généré et utilisez-le dans vos posts LinkedIn, Instagram, Meta Ads</li>
+                <li>Quand les visiteurs cliquent sur votre lien et remplissent un formulaire, vous verrez d'où ils viennent !</li>
+                <li>Suivez vos meilleures sources de leads dans l'onglet Analytics</li>
+              </ul>
+            </div>
+            
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <h4 className="font-semibold mb-2 text-green-900">📝 Exemple concret</h4>
+              <p className="text-sm text-green-800">Pour un post LinkedIn sur Odoo :</p>
+              <ul className="list-disc list-inside text-sm text-green-700 mt-2">
+                <li>Source: <strong>linkedin</strong></li>
+                <li>Medium: <strong>post</strong></li>
+                <li>Campaign: <strong>odoo-2024</strong></li>
+                <li>Résultat: <code className="bg-green-100 px-1 rounded">https://agence-blackswan.com?utm_source=linkedin&utm_medium=post&utm_campaign=odoo-2024</code></li>
               </ul>
             </div>
 

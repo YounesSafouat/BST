@@ -44,6 +44,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import FaviconProvider from '@/components/FaviconProvider'
 import SnippetsInjector from '@/components/SnippetsInjector'
 import PerformanceMonitor from '@/components/PerformanceMonitor'
+import Analytics from '@/components/analytics'
 
 export const metadata: Metadata = {
   title: {
@@ -186,6 +187,7 @@ export default function RootLayout({
             </LayoutWrapper>
             <SnippetsInjector />
             <PerformanceMonitor />
+            <Analytics />
           </LoaderProvider>
         </ThemeProvider>
       </body>
