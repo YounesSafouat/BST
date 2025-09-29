@@ -13,6 +13,7 @@ export interface ButtonClickData {
   device: string;
   browser: string;
   os: string;
+  url?: string;
 }
 
 export async function trackButtonClick(
@@ -45,7 +46,8 @@ export async function trackButtonClick(
       referrer,
       device,
       browser,
-      os
+      os,
+      url: window.location.href // Add current URL with UTM parameters
     };
     
     // Send to our tracking API

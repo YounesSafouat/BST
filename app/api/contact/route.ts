@@ -53,12 +53,27 @@ export async function POST(req: Request) {
     }
 
     // Check if we already have a submission for this user (partial OR complete)
+    // First try to find exact match (both email and phone)
     let existingSubmission = await ContactSubmission.findOne({
-      $or: [
+      $and: [
         { email: formData.email },
         { phone: formData.phone }
       ]
     });
+
+    // If no exact match, try to find by email only
+    if (!existingSubmission) {
+      existingSubmission = await ContactSubmission.findOne({
+        email: formData.email
+      });
+    }
+
+    // If still no match, try to find by phone only
+    if (!existingSubmission) {
+      existingSubmission = await ContactSubmission.findOne({
+        phone: formData.phone
+      });
+    }
 
     // Calculate submission count
     let submissionCount = '1';

@@ -25,8 +25,8 @@ export async function POST(req: NextRequest) {
       os 
     } = body;
     
-    // Get the full URL from the request
-    const fullUrl = req.headers.get('referer') || `https://agence-blackswan.com${path}`;
+    // Get the full URL from the request body or headers
+    const fullUrl = body.url || req.headers.get('referer') || `https://agence-blackswan.com${path}`;
     
     // Detect traffic source
     const trafficData = detectTrafficSource(fullUrl, referrer, userAgent);
