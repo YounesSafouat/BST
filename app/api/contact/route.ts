@@ -166,6 +166,22 @@ export async function POST(req: Request) {
         if (contactData.company) submission.company = contactData.company;
         if (contactData.message) submission.message = contactData.message;
         if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
+        
+      } else {
+        // Neither email nor phone match exactly, but we found a submission
+        // This means there's a partial match - update the existing record
+        console.log('Partial match found - updating existing record');
+        submission.email = contactData.email;
+        submission.phone = contactData.phone;
+        submission.submission_count = submissionCount;
+        submission.last_submission_date = contactData.last_submission_date;
+        
+        // Update all fields
+        if (contactData.firstname) submission.firstname = contactData.firstname;
+        if (contactData.lastname) submission.lastname = contactData.lastname;
+        if (contactData.company) submission.company = contactData.company;
+        if (contactData.message) submission.message = contactData.message;
+        if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
       }
       
       // Always update name if provided

@@ -1773,8 +1773,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4)}`;
           } else if (digits.length <= 8) {
                return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6)}`;
-          } else {
+          } else if (digits.length <= 10) {
                return `${digits.slice(0, 2)} ${digits.slice(2, 4)} ${digits.slice(4, 6)} ${digits.slice(6, 8)} ${digits.slice(8)}`;
+          } else {
+               // For longer numbers, just add spaces every 2 digits
+               return digits.match(/.{1,2}/g)?.join(' ') || digits;
           }
      };
 
