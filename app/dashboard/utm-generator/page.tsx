@@ -1,15 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Copy, ExternalLink, Check } from 'lucide-react';
+import { Copy, ExternalLink, Check, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import UTMAnalytics from '@/components/dashboard/UTMAnalytics';
 
 interface UTMData {
   source: string;
@@ -18,6 +17,19 @@ interface UTMData {
   term?: string;
   content?: string;
   generatedUrl: string;
+}
+
+interface StoredUTM {
+  _id: string;
+  source: string;
+  medium: string;
+  campaign: string;
+  term?: string;
+  content?: string;
+  generatedUrl: string;
+  clicks: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export default function UTMGeneratorPage() {
@@ -31,6 +43,49 @@ export default function UTMGeneratorPage() {
   });
 
   const [copied, setCopied] = useState(false);
+  const [storedUTMs, setStoredUTMs] = useState<StoredUTM[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch stored UTMs
+  const fetchUTMs = async () => {
+    try {
+      const response = await fetch('/api/utm');
+      const data = await response.json();
+      if (data.utms) {
+        setStoredUTMs(data.utms);
+      }
+    } catch (error) {
+      console.error('Error fetching UTMs:', error);
+    }
+  };
+
+  // Store UTM in database
+  const storeUTM = async (utmData: UTMData) => {
+    try {
+      const response = await fetch('/api/utm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(utmData),
+      });
+      
+      const data = await response.json();
+      if (data.success) {
+        await fetchUTMs(); // Refresh the list
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error storing UTM:', error);
+      return false;
+    }
+  };
+
+  // Load UTMs on component mount
+  useEffect(() => {
+    fetchUTMs();
+  }, []);
 
   const socialPlatforms = [
     { value: 'linkedin', label: 'LinkedIn' },
@@ -72,11 +127,13 @@ export default function UTMGeneratorPage() {
     }));
   };
 
-  const generateUTM = () => {
+  const generateUTM = async () => {
     if (!utmData.source || !utmData.medium || !utmData.campaign) {
       toast.error('Veuillez remplir tous les champs obligatoires');
       return;
     }
+
+    setLoading(true);
 
     const baseUrl = 'https://agence-blackswan.com';
     const utmParams = new URLSearchParams();
@@ -95,12 +152,26 @@ export default function UTMGeneratorPage() {
 
     const generatedUrl = `${baseUrl}?${utmParams.toString()}`;
     
+    const utmToStore = {
+      ...utmData,
+      generatedUrl
+    };
+    
     setUtmData(prev => ({
       ...prev,
       generatedUrl
     }));
 
-    toast.success('Lien UTM généré avec succès !');
+    // Store UTM in database
+    const stored = await storeUTM(utmToStore);
+    
+    if (stored) {
+      toast.success('Lien UTM généré et sauvegardé avec succès !');
+    } else {
+      toast.success('Lien UTM généré avec succès !');
+    }
+    
+    setLoading(false);
   };
 
   const copyToClipboard = async () => {
@@ -141,62 +212,6 @@ export default function UTMGeneratorPage() {
         </div>
       </div>
 
-      {/* Usage Instructions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>🎯 Comment utiliser le Générateur UTM</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h4 className="font-semibold mb-2 text-blue-900">💡 Objectif</h4>
-              <p className="text-sm text-blue-800">Créer des liens trackables pour vos posts LinkedIn, Instagram, Meta Ads, etc. Quand quelqu'un clique sur votre lien et remplit un formulaire, vous saurez exactement d'où il vient !</p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">1. Configurer les paramètres UTM</h4>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li><strong>Source :</strong> Plateforme marketing (LinkedIn, Facebook, Google Ads, etc.)</li>
-                <li><strong>Medium :</strong> Type de contenu (post, pub, email, etc.)</li>
-                <li><strong>Campaign :</strong> Nom de campagne descriptif (ex: "odoo-2024", "formation-hubspot")</li>
-                <li><strong>Terme :</strong> Mot-clé optionnel</li>
-                <li><strong>Contenu :</strong> Identifiant de contenu optionnel</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2">2. Générer et utiliser</h4>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Cliquez sur "Générer le lien UTM" pour créer votre URL traçable</li>
-                <li>Copiez le lien généré et utilisez-le dans vos posts LinkedIn, Instagram, Meta Ads</li>
-                <li>Quand les visiteurs cliquent sur votre lien et remplissent un formulaire, vous verrez d'où ils viennent !</li>
-                <li>Suivez vos meilleures sources de leads dans l'onglet Analytics</li>
-              </ul>
-            </div>
-            
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="font-semibold mb-2 text-green-900">📝 Exemple concret</h4>
-              <p className="text-sm text-green-800">Pour un post LinkedIn sur Odoo :</p>
-              <ul className="list-disc list-inside text-sm text-green-700 mt-2">
-                <li>Source: <strong>linkedin</strong></li>
-                <li>Medium: <strong>post</strong></li>
-                <li>Campaign: <strong>odoo-2024</strong></li>
-                <li>Résultat: <code className="bg-green-100 px-1 rounded">https://agence-blackswan.com?utm_source=linkedin&utm_medium=post&utm_campaign=odoo-2024</code></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-2">3. Suivre les sources de leads</h4>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                <li>Surveillez les sources de trafic dans le tableau de bord</li>
-                <li>Identifiez quelles campagnes génèrent le plus de leads</li>
-                <li>Quand les leads remplissent des formulaires, vous saurez exactement d'où ils viennent</li>
-                <li>Optimisez votre stratégie marketing basée sur les données</li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* UTM Configuration Form */}
@@ -271,8 +286,8 @@ export default function UTMGeneratorPage() {
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={generateUTM} className="flex-1">
-                Générer le lien UTM
+              <Button onClick={generateUTM} className="flex-1" disabled={loading}>
+                {loading ? 'Génération...' : 'Générer le lien UTM'}
               </Button>
               <Button variant="outline" onClick={resetForm}>
                 Réinitialiser
@@ -358,8 +373,84 @@ export default function UTMGeneratorPage() {
         </Card>
       </div>
 
-      {/* UTM Analytics */}
-      <UTMAnalytics />
+      {/* Stored UTMs Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle>UTMs Générés</CardTitle>
+          <CardDescription>
+            Liste de tous les liens UTM générés et leurs statistiques
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {storedUTMs.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>Aucun UTM généré pour le moment</p>
+              <p className="text-sm">Générez votre premier lien UTM ci-dessus</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2 font-medium">Source</th>
+                    <th className="text-left p-2 font-medium">Medium</th>
+                    <th className="text-left p-2 font-medium">Campaign</th>
+                    <th className="text-left p-2 font-medium">Clics</th>
+                    <th className="text-left p-2 font-medium">Créé le</th>
+                    <th className="text-left p-2 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {storedUTMs.map((utm) => (
+                    <tr key={utm._id} className="border-b hover:bg-gray-50">
+                      <td className="p-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {utm.source}
+                        </span>
+                      </td>
+                      <td className="p-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          {utm.medium}
+                        </span>
+                      </td>
+                      <td className="p-2 font-medium">{utm.campaign}</td>
+                      <td className="p-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          {utm.clicks}
+                        </span>
+                      </td>
+                      <td className="p-2 text-sm text-muted-foreground">
+                        {new Date(utm.createdAt).toLocaleDateString('fr-FR')}
+                      </td>
+                      <td className="p-2">
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              navigator.clipboard.writeText(utm.generatedUrl);
+                              toast.success('Lien copié !');
+                            }}
+                          >
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => window.open(utm.generatedUrl, '_blank')}
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
