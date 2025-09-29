@@ -25,15 +25,31 @@ export async function POST(req: NextRequest) {
       os 
     } = body;
     
+    // Set defaults for missing fields
+    const trackingData = {
+      buttonId: buttonId || 'unknown',
+      path: path || '/',
+      buttonText: buttonText || 'Unknown',
+      buttonType: buttonType || 'button',
+      userAgent: userAgent || 'Unknown',
+      referrer: referrer || undefined,
+      ipAddress: ipAddress || 'Unknown',
+      country: country || 'Unknown',
+      city: city || 'Unknown',
+      device: device || 'Unknown',
+      browser: browser || 'Unknown',
+      os: os || 'Unknown'
+    };
+    
     // Get the full URL from the request body or headers
-    const fullUrl = body.url || req.headers.get('referer') || `https://agence-blackswan.com${path}`;
+    const fullUrl = body.url || req.headers.get('referer') || `https://agence-blackswan.com${trackingData.path}`;
     
     // Detect traffic source
-    const trafficData = detectTrafficSource(fullUrl, referrer, userAgent);
+    const trafficData = detectTrafficSource(fullUrl, trackingData.referrer, trackingData.userAgent);
     
     console.log('Button Click Tracking:', {
-      buttonId,
-      path,
+      buttonId: trackingData.buttonId,
+      path: trackingData.path,
       trafficSource: trafficData.trafficSource,
       utmCampaign: trafficData.utmCampaign,
       referrer: trafficData.referrer
@@ -41,21 +57,21 @@ export async function POST(req: NextRequest) {
     
     // Create or update button click with traffic source data
     const buttonClickData = {
-      buttonId,
-      path,
+      buttonId: trackingData.buttonId,
+      path: trackingData.path,
       count: 1,
       lastClicked: new Date(),
       firstClicked: new Date(),
-      buttonText: buttonText || buttonId,
-      buttonType: buttonType || 'other',
-      userAgent,
+      buttonText: trackingData.buttonText,
+      buttonType: trackingData.buttonType,
+      userAgent: trackingData.userAgent,
       referrer: trafficData.referrer,
-      ipAddress,
-      country,
-      city,
-      device,
-      browser,
-      os,
+      ipAddress: trackingData.ipAddress,
+      country: trackingData.country,
+      city: trackingData.city,
+      device: trackingData.device,
+      browser: trackingData.browser,
+      os: trackingData.os,
       // Traffic source data
       trafficSource: trafficData.trafficSource,
       campaign: trafficData.campaign,
@@ -76,7 +92,7 @@ export async function POST(req: NextRequest) {
     };
     
     await ButtonClick.findOneAndUpdate(
-      { buttonId, path },
+      { buttonId: trackingData.buttonId, path: trackingData.path },
       { 
         $inc: { count: 1 },
         $set: {

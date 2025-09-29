@@ -23,14 +23,28 @@ export async function POST(req: NextRequest) {
       os 
     } = body;
     
+    // Set defaults for missing fields
+    const trackingData = {
+      path: path || '/',
+      page: page || 'Unknown',
+      userAgent: userAgent || 'Unknown',
+      referrer: referrer || undefined,
+      ipAddress: ipAddress || 'Unknown',
+      country: country || 'Unknown',
+      city: city || 'Unknown',
+      device: device || 'Unknown',
+      browser: browser || 'Unknown',
+      os: os || 'Unknown'
+    };
+    
     // Get the full URL from the request body or headers
-    const fullUrl = body.url || req.headers.get('referer') || `https://agence-blackswan.com${path}`;
+    const fullUrl = body.url || req.headers.get('referer') || `https://agence-blackswan.com${trackingData.path}`;
     
     // Detect traffic source
-    const trafficData = detectTrafficSource(fullUrl, referrer, userAgent);
+    const trafficData = detectTrafficSource(fullUrl, trackingData.referrer, trackingData.userAgent);
     
     console.log('Page View Tracking:', {
-      path,
+      path: trackingData.path,
       fullUrl,
       trafficSource: trafficData.trafficSource,
       utmSource: trafficData.utmSource,
@@ -43,19 +57,19 @@ export async function POST(req: NextRequest) {
     
     // Create or update page view with traffic source data
     const pageViewData = {
-      path,
-      page: page || path,
+      path: trackingData.path,
+      page: trackingData.page,
       count: 1,
       lastViewed: new Date(),
       firstViewed: new Date(),
-      userAgent,
+      userAgent: trackingData.userAgent,
       referrer: trafficData.referrer,
-      ipAddress,
-      country,
-      city,
-      device,
-      browser,
-      os,
+      ipAddress: trackingData.ipAddress,
+      country: trackingData.country,
+      city: trackingData.city,
+      device: trackingData.device,
+      browser: trackingData.browser,
+      os: trackingData.os,
       // Traffic source data
       trafficSource: trafficData.trafficSource,
       campaign: trafficData.campaign,
@@ -76,7 +90,7 @@ export async function POST(req: NextRequest) {
     };
     
     await PageView.findOneAndUpdate(
-      { path },
+      { path: trackingData.path },
       { 
         $inc: { count: 1 },
         $set: {
