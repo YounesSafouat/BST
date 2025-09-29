@@ -52,6 +52,23 @@ export async function POST(req: Request) {
       )
     }
 
+    // Check if we already have a submission for this user (partial OR complete)
+    let existingSubmission = await ContactSubmission.findOne({
+      $or: [
+        { email: formData.email },
+        { phone: formData.phone }
+      ]
+    });
+
+    // Calculate submission count
+    let submissionCount = '1';
+    let firstSubmissionDate = new Date().toISOString().split('T')[0];
+    
+    if (existingSubmission) {
+      submissionCount = (parseInt(existingSubmission.submission_count || '1') + 1).toString();
+      firstSubmissionDate = existingSubmission.first_submission_date || new Date().toISOString().split('T')[0];
+    }
+
     // Prepare contact data for HubSpot
     const contactData: any = {
       email: formData.email,
@@ -71,8 +88,8 @@ export async function POST(req: Request) {
       
       // Custom Properties
       contact_status: 'new lead',
-      submission_count: '1',
-      first_submission_date: new Date().toISOString().split('T')[0],
+      submission_count: submissionCount,
+      first_submission_date: firstSubmissionDate,
       last_submission_date: new Date().toISOString().split('T')[0],
       
       // Geographic properties (will be populated conditionally)
@@ -102,33 +119,70 @@ export async function POST(req: Request) {
       contactData.hs_state_code = additionalData.state;
     }
 
-    // Check if we already have a submission for this user (partial OR complete)
-    let submission = await ContactSubmission.findOne({
-      $or: [
-        { email: contactData.email },
-        { phone: contactData.phone }
-      ]
-    });
+    // Use the existing submission we found earlier
+    let submission = existingSubmission;
 
     if (submission) {
-      // Update existing submission (whether partial or complete)
-      console.log(`Updating existing ${submission.submissionStatus} submission to complete...`)
-      submission.name = `${contactData.firstname} ${contactData.lastname}`.trim();
-      submission.firstname = contactData.firstname || '';
-      submission.lastname = contactData.lastname || '';
-      submission.email = contactData.email;
-      submission.phone = contactData.phone;
-      submission.company = contactData.company;
-      submission.message = contactData.message;
+      // Update existing submission with smart logic
+      console.log(`Updating existing ${submission.submissionStatus} submission...`)
+      
+      // Check if both email and phone match
+      const emailMatches = submission.email === contactData.email;
+      const phoneMatches = submission.phone === contactData.phone;
+      
+      if (emailMatches && phoneMatches) {
+        // Both match - just increment submission count
+        console.log('Both email and phone match - incrementing submission count');
+        submission.submission_count = submissionCount;
+        submission.last_submission_date = contactData.last_submission_date;
+        
+        // Update brief_description with latest interaction
+        if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
+        
+      } else if (emailMatches && !phoneMatches) {
+        // Email matches, phone is different - update phone
+        console.log('Email matches, updating phone');
+        submission.phone = contactData.phone;
+        submission.submission_count = submissionCount;
+        submission.last_submission_date = contactData.last_submission_date;
+        
+        // Update other fields if provided
+        if (contactData.firstname) submission.firstname = contactData.firstname;
+        if (contactData.lastname) submission.lastname = contactData.lastname;
+        if (contactData.company) submission.company = contactData.company;
+        if (contactData.message) submission.message = contactData.message;
+        if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
+        
+      } else if (!emailMatches && phoneMatches) {
+        // Phone matches, email is different - update email
+        console.log('Phone matches, updating email');
+        submission.email = contactData.email;
+        submission.submission_count = submissionCount;
+        submission.last_submission_date = contactData.last_submission_date;
+        
+        // Update other fields if provided
+        if (contactData.firstname) submission.firstname = contactData.firstname;
+        if (contactData.lastname) submission.lastname = contactData.lastname;
+        if (contactData.company) submission.company = contactData.company;
+        if (contactData.message) submission.message = contactData.message;
+        if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
+      }
+      
+      // Always update name if provided
+      if (contactData.firstname || contactData.lastname) {
+        submission.name = `${contactData.firstname || submission.firstname} ${contactData.lastname || submission.lastname}`.trim();
+      }
+      
+      // Update submission status to complete
       submission.submissionStatus = 'complete';
       submission.fieldsFilled = {
         name: true,
-        firstname: !!contactData.firstname,
-        lastname: !!contactData.lastname,
+        firstname: !!(contactData.firstname || submission.firstname),
+        lastname: !!(contactData.lastname || submission.lastname),
         email: true,
         phone: true,
-        company: !!contactData.company,
-        message: !!contactData.message
+        company: !!(contactData.company || submission.company),
+        message: !!(contactData.message || submission.message)
       };
       submission.sentToHubSpot = false; // Will be set to true after HubSpot integration
       
@@ -137,17 +191,12 @@ export async function POST(req: Request) {
       if (additionalData.countryName) submission.countryName = additionalData.countryName;
       if (additionalData.source) submission.source = additionalData.source;
       if (additionalData.page) submission.page = additionalData.page;
-      // Always include brief_description for complete submissions
-      if (additionalData.brief_description) submission.brief_description = additionalData.brief_description;
       
       // Update comprehensive HubSpot properties
       if (contactData.hs_analytics_source) submission.hs_analytics_source = contactData.hs_analytics_source;
       if (contactData.lifecyclestage) submission.lifecyclestage = contactData.lifecyclestage;
       if (contactData.hs_lead_status) submission.hs_lead_status = contactData.hs_lead_status;
       if (contactData.contact_status) submission.contact_status = contactData.contact_status;
-      if (contactData.submission_count) submission.submission_count = contactData.submission_count;
-      if (contactData.first_submission_date) submission.first_submission_date = contactData.first_submission_date;
-      if (contactData.last_submission_date) submission.last_submission_date = contactData.last_submission_date;
       if (contactData.country) submission.country = contactData.country;
       if (contactData.hs_country_region_code) submission.hs_country_region_code = contactData.hs_country_region_code;
       if (contactData.city) submission.city = contactData.city;
