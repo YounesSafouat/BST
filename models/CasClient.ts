@@ -113,6 +113,7 @@ const MediaSchema = new mongoose.Schema({
   coverImage: { type: String },
   heroVideo: { type: String },
   heroVideoThumbnail: { type: String },
+  cardBackgroundImage: { type: String }, // New field for card background
   gallery: [{ type: String }]
 }, { _id: false })
 

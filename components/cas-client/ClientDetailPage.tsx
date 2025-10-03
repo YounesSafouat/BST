@@ -756,17 +756,15 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                    {/* Company Card - Enhanced */}
                                     <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200/50">
                                         <div className="text-center mb-8">
-                                             <div className="w-24 h-24 mx-auto mb-6 rounded-xl bg-gray-50 flex items-center justify-center">
+                                             <div className="w-40 h-40 mx-auto mb-6 flex items-center justify-center">
                                                   <Image
-                                                        src={clientData.company.logo}
+                                                       src={clientData.company.logo}
                                                        alt={clientData.name}
-                                                       width={70}
-                                                       height={70}
+                                                       width={160}
+                                                       height={160}
                                                        className="object-contain"
                                                   />
                                              </div>
-                                             <h3 className="text-xl font-bold text-gray-900 mb-2">{clientData.name}</h3>
-                                             <p className="text-sm text-gray-600">{clientData.headline}</p>
                                         </div>
 
                                          <div className="space-y-6">
@@ -812,13 +810,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                        </div>
                                                   )}
 
-                                                  {/* Project Summary */}
-                                                  <div className="border-t border-gray-200 pt-6">
-                                                       <h4 className="text-sm font-semibold text-gray-900 mb-3">Résumé du Projet</h4>
-                                                       <p className="text-sm text-gray-600 leading-relaxed">
-                                                            {clientData.summary}
-                                                       </p>
-                                                  </div>
 
                                                   {/* Project Stats */}
                                               {clientData.quickStats && clientData.quickStats.length > 0 && (

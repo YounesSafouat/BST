@@ -125,6 +125,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       coverImage: '',
       heroVideo: '',
       heroVideoThumbnail: '',
+      cardBackgroundImage: '',
       gallery: []
     },
     contentBlocks: [],
@@ -741,6 +742,15 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                           value={formData.media.heroVideo || ''}
                           onChange={(e) => updateNestedFormData('media', 'heroVideo', e.target.value)}
                           placeholder="URL de la vidéo YouTube"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="card-background">Image de fond pour les cartes</Label>
+                        <Input
+                          id="card-background"
+                          value={formData.media.cardBackgroundImage || ''}
+                          onChange={(e) => updateNestedFormData('media', 'cardBackgroundImage', e.target.value)}
+                          placeholder="URL de l'image de fond pour les cartes"
                         />
                       </div>
                     </div>

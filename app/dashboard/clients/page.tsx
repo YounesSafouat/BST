@@ -66,8 +66,15 @@ export default function ClientsAdminPage() {
       // Fetch ALL clients (both published and unpublished) for admin dashboard
       const response = await fetch("/api/cas-client?published=all");
       const data = await response.json();
-      setClients(data.cases || []);
-      setFilteredClients(data.cases || []);
+      
+      // Ensure published field is boolean (handle string "true"/"false" from API)
+      const normalizedClients = data.cases?.map((client: any) => ({
+        ...client,
+        published: client.published === true || client.published === "true"
+      })) || [];
+      
+      setClients(normalizedClients);
+      setFilteredClients(normalizedClients);
     } catch (error) {
       console.error("Error fetching clients:", error);
         toast({ title: "Erreur", description: "Impossible de charger les cas clients." });
@@ -115,19 +122,36 @@ export default function ClientsAdminPage() {
     if (!window.confirm("Supprimer ce cas client ?")) return;
     
     try {
+      console.log("🗑️ Attempting to delete client with slug:", slug);
       const response = await fetch(`/api/cas-client/${slug}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
       
+      console.log("🗑️ Delete response status:", response.status);
+      console.log("🗑️ Delete response ok:", response.ok);
+      
       if (response.ok) {
+        const result = await response.json();
+        console.log("🗑️ Delete response data:", result);
         toast({ title: "Succès", description: "Cas client supprimé." });
         fetchClients();
-    } else {
-      toast({ title: "Erreur", description: "Échec de la suppression." });
-    }
+      } else {
+        const errorData = await response.json();
+        console.error("🗑️ Delete error response:", errorData);
+        toast({ 
+          title: "Erreur", 
+          description: `Échec de la suppression: ${errorData.error || 'Erreur inconnue'}` 
+        });
+      }
     } catch (error) {
-      console.error("Error deleting client:", error);
-      toast({ title: "Erreur", description: "Erreur lors de la suppression." });
+      console.error("🗑️ Error deleting client:", error);
+      toast({ 
+        title: "Erreur", 
+        description: `Erreur lors de la suppression: ${error instanceof Error ? error.message : 'Erreur inconnue'}` 
+      });
     }
   };
 
@@ -320,7 +344,7 @@ export default function ClientsAdminPage() {
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-600">Publiés</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {clients.filter(c => c.published).length}
+                  {clients.filter(c => Boolean(c.published)).length}
                 </p>
                           </div>
                         </div>

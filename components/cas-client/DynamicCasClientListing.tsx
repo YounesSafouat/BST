@@ -90,7 +90,7 @@ export default function DynamicCasClientListing({ initialCases = [] }: DynamicCa
     const fetchCases = async () => {
       setLoading(true)
       try {
-        const response = await fetch('/api/cas-client')
+        const response = await fetch('/api/cas-client?published=true')
         if (response.ok) {
           const data = await response.json()
           setCases(data.cases || [])

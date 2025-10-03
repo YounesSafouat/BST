@@ -162,7 +162,7 @@ export default function CasClientV2() {
           const fetchClients = async () => {
                setLoading(true)
                try {
-                    const res = await fetch("/api/cas-client")
+                    const res = await fetch("/api/cas-client?published=true")
                     const data = await res.json()
                     const cases = data.cases || []
                     setClientsData(cases)
@@ -249,7 +249,7 @@ export default function CasClientV2() {
 
                                    {/* Featured Video Testimonials - À la une */}
                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 max-w-7xl mx-auto mb-16">
-                                        {clientsData.slice(0, 2).map((client, index) => (
+                                        {clientsData.filter(client => client.featured === true).slice(0, 2).map((client, index) => (
                                              <Link
                                                   key={client.slug || client.name}
                                                   href={`/cas-client/${client.slug}`}
@@ -468,10 +468,10 @@ export default function CasClientV2() {
                                                             key={client.slug || client.name}
                                                             title={client.name}
                                                             description={client.summary}
-                                                            videoThumbnail={client.videoThumbnail}
-                                                            logo={client.logo}
+                                                            videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
+                                                            logo={client.company?.logo}
                                                             solution={client.project?.solution}
-                                                            interviewee={client.interviewee}
+                                                            interviewee={client.testimonial?.author?.name}
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
                                                             slug={client.slug}
@@ -486,10 +486,10 @@ export default function CasClientV2() {
                                                             key={client.slug || client.name}
                                                             title={client.name}
                                                             description={client.summary}
-                                                            videoThumbnail={client.videoThumbnail}
-                                                            logo={client.logo}
+                                                            videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
+                                                            logo={client.company?.logo}
                                                             solution={client.project?.solution}
-                                                            interviewee={client.interviewee}
+                                                            interviewee={client.testimonial?.author?.name}
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
                                                             slug={client.slug}

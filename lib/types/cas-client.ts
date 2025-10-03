@@ -109,6 +109,7 @@ export interface DynamicClientCase {
     coverImage: string
     heroVideo?: string
     heroVideoThumbnail?: string
+    cardBackgroundImage?: string
     gallery?: Array<{
       url: string
       alt: string
@@ -191,6 +192,7 @@ export interface ClientCaseFormData {
     coverImage: string
     heroVideo?: string
     heroVideoThumbnail?: string
+    cardBackgroundImage?: string
     gallery?: Array<{
       url: string
       alt: string

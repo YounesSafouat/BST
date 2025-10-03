@@ -47,27 +47,15 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
                onClick={handleCardClick}
           >
                {/* Background Image */}
-               <div 
-                    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                    style={{
-                         backgroundImage: `url("https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Screenshot%202025-09-10%20122142.png")`
-                    }}
-               />
+               {videoThumbnail && (
+                    <div 
+                         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                         style={{
+                              backgroundImage: `url("${videoThumbnail}")`
+                         }}
+                    />
+               )}
                
-               {/* Always visible logo */}
-               <div className="absolute top-3 left-3 z-10">
-                    {logo && (
-                         <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center shadow-lg overflow-hidden">
-                              <Image
-                                   src={logo}
-                                   alt={title}
-                                   width={48}
-                                   height={48}
-                                   className="w-full h-full object-contain"
-                              />
-                         </div>
-                    )}
-               </div>
                
                {/* Expanding circle bubble effect */}
                <div className="absolute inset-0 overflow-hidden">
@@ -87,21 +75,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
                          </div>
                          
                          {/* Bottom Section */}
-                         <div className="flex justify-between items-center">
-                              <div className="flex items-center gap-2">
-                                   {logo && (
-                                        <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-white rounded flex items-center justify-center text-xs font-bold text-gray-800">
-                                             <Image
-                                                  src={logo}
-                                                  alt={title}
-                                                  width={24}
-                                                  height={24}
-                                                  className="w-full h-full object-contain"
-                                             />
-                                        </div>
-                                   )}
-                              </div>
-                              
+                         <div className="flex justify-end items-center">
                               <div className="flex items-center gap-1 sm:gap-2 bg-white/20 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-2 rounded-full hover:bg-white/30 transition-all duration-300">
                                    <span className="text-white text-sm sm:text-base">→</span>
                                    <span className="text-white text-xs sm:text-sm font-medium">Voir la vidéo</span>

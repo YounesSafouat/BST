@@ -58,10 +58,25 @@ export async function PUT(
       }
     }
 
+    // Handle nested object updates properly
+    const updateData: any = {}
+    
+    // Flatten nested objects for proper MongoDB update
+    Object.keys(cleanedBody).forEach(key => {
+      if (typeof cleanedBody[key] === 'object' && cleanedBody[key] !== null && !Array.isArray(cleanedBody[key])) {
+        // Handle nested objects like media, company, project, seo
+        Object.keys(cleanedBody[key]).forEach(nestedKey => {
+          updateData[`${key}.${nestedKey}`] = cleanedBody[key][nestedKey]
+        })
+      } else {
+        updateData[key] = cleanedBody[key]
+      }
+    })
+
     // Update with explicit $set to ensure new fields are added
     const updatedCase = await CasClient.findOneAndUpdate(
       { slug },
-      { $set: cleanedBody },
+      { $set: updateData },
       { new: true, runValidators: false, upsert: false }
     )
 
