@@ -317,11 +317,16 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
     const missingFields = requiredFields.filter(field => !field.value)
     
     if (missingFields.length > 0) {
+      // Show both toast and alert for better visibility
       toast({
         title: "Champs requis manquants",
         description: `Veuillez remplir: ${missingFields.map(f => f.label).join(', ')}`,
         variant: "destructive"
       })
+      
+      // Also show alert for immediate feedback
+      alert(`❌ Champs requis manquants:\n\n${missingFields.map(f => `• ${f.label}`).join('\n')}\n\nVeuillez remplir ces champs avant de sauvegarder.`)
+      
       return
     }
 
@@ -334,11 +339,6 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
         order: block.order,
         ...block.data
       }))
-    }
-    
-    // Debug: Log the form data being sent (only in development)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Form data being sent:', JSON.stringify(flattenedFormData, null, 2))
     }
     
     setIsSaving(true)

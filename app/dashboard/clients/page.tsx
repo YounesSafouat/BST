@@ -63,7 +63,8 @@ export default function ClientsAdminPage() {
   const fetchClients = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/cas-client");
+      // Fetch ALL clients (both published and unpublished) for admin dashboard
+      const response = await fetch("/api/cas-client?published=all");
       const data = await response.json();
       setClients(data.cases || []);
       setFilteredClients(data.cases || []);
@@ -136,14 +137,6 @@ export default function ClientsAdminPage() {
       const url = isEditing ? `/api/cas-client/${editingClient.slug}` : "/api/cas-client";
       const method = isEditing ? 'PUT' : 'POST';
       
-      // Debug: Log what we're sending
-      console.log('Sending data to API:', {
-        isEditing,
-        url,
-        method,
-        formData: JSON.stringify(formData, null, 2)
-      });
-      
       const response = await fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
@@ -152,7 +145,6 @@ export default function ClientsAdminPage() {
 
       if (response.ok) {
         const updatedClient = await response.json();
-        console.log('API Response:', updatedClient);
         
         toast({ 
           title: "Succès", 
@@ -161,7 +153,6 @@ export default function ClientsAdminPage() {
         
         if (isEditing) {
           // Update the editingClient with fresh data
-          console.log('Updating editingClient with:', updatedClient);
           setEditingClient(updatedClient);
           setRefreshKey(prev => prev + 1); // Force re-render
         } else {

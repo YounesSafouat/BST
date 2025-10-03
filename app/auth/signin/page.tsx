@@ -55,8 +55,8 @@ export default function SignInPage() {
         // Clear sensitive data from memory
         email = "";
         password = "";
-        // Use router.push instead of window.location for security
-        router.push("/dashboard");
+        // Use window.location.href for reliable redirect
+        window.location.href = '/dashboard';
       }
     } catch (error) {
       setError("An error occurred. Please try again.");

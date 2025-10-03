@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       sector: searchParams.get('sector') || 'all',
       tags: searchParams.get('tags')?.split(',') || [],
       featured: searchParams.get('featured') === 'true',
-      published: searchParams.get('published') !== 'false', // default to true
+      published: searchParams.get('published') === 'all' ? undefined : searchParams.get('published') === 'true',
       sortBy: (searchParams.get('sortBy') as any) || 'newest'
     }
 
@@ -137,7 +137,6 @@ export async function POST(req: NextRequest) {
 
     if (missingFields.length > 0) {
       console.error('Missing required fields:', missingFields)
-      console.error('Received body:', JSON.stringify(body, null, 2))
       return NextResponse.json({ 
         error: 'Missing required fields', 
         missingFields: missingFields 
@@ -192,7 +191,6 @@ export async function POST(req: NextRequest) {
       })
     } catch (saveError: any) {
       console.error('Mongoose save error:', saveError)
-      console.error('Validation errors:', saveError.errors)
       return NextResponse.json({ 
         error: 'Validation error', 
         details: saveError.message,
