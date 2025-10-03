@@ -10,10 +10,6 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB()
     
-    // Debug: Log connection status
-    console.log('🔍 Database connected successfully')
-    console.log('🔍 Environment:', process.env.NODE_ENV)
-    console.log('🔍 MongoDB URI exists:', !!process.env.MONGODB_URI)
     
     const { searchParams } = new URL(req.url)
     const filters: ClientCaseFilters = {
@@ -85,13 +81,6 @@ export async function GET(req: NextRequest) {
     const pageNum = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
     const skip = (pageNum - 1) * limit
-    // Debug: Log the query for production debugging
-    console.log('🔍 MongoDB Query:', JSON.stringify(query, null, 2))
-    console.log('🔍 Filters:', JSON.stringify(filters, null, 2))
-    
-    // Test: Try to find any document first
-    const testDoc = await CasClient.findOne({})
-    console.log('🔍 Test Document:', testDoc ? 'Found' : 'Not found')
     
     // Execute query
     const [cases, total] = await Promise.all([
@@ -103,8 +92,6 @@ export async function GET(req: NextRequest) {
       CasClient.countDocuments(query)
     ])
     
-    // Debug: Log results
-    console.log('🔍 Query Results:', { casesCount: cases.length, total })
 
     return NextResponse.json({
       cases,
@@ -112,11 +99,6 @@ export async function GET(req: NextRequest) {
       page: pageNum,
       limit,
       filters,
-      debug: {
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV,
-        query: query
-      }
     }, {
       headers: {
         'Access-Control-Allow-Origin': '*',
