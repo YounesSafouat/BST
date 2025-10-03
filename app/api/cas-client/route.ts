@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       sector: searchParams.get('sector') || 'all',
       tags: searchParams.get('tags')?.split(',') || [],
       featured: searchParams.get('featured') === 'true',
-      published: searchParams.get('published') === 'all' ? undefined : searchParams.get('published') === 'true',
+      published: searchParams.get('published') === 'all' ? undefined : searchParams.get('published') === 'true' ? true : searchParams.get('published') === 'false' ? false : undefined,
       sortBy: (searchParams.get('sortBy') as any) || 'newest'
     }
 
