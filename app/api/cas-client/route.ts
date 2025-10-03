@@ -85,6 +85,10 @@ export async function GET(req: NextRequest) {
     console.log('🔍 MongoDB Query:', JSON.stringify(query, null, 2))
     console.log('🔍 Filters:', JSON.stringify(filters, null, 2))
     
+    // Test: Try to find any document first
+    const testDoc = await CasClient.findOne({})
+    console.log('🔍 Test Document:', testDoc ? 'Found' : 'Not found')
+    
     // Execute query
     const [cases, total] = await Promise.all([
       CasClient.find(query)
