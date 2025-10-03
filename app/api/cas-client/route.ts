@@ -10,6 +10,11 @@ export async function GET(req: NextRequest) {
   try {
     await connectDB()
     
+    // Debug: Log connection status
+    console.log('🔍 Database connected successfully')
+    console.log('🔍 Environment:', process.env.NODE_ENV)
+    console.log('🔍 MongoDB URI exists:', !!process.env.MONGODB_URI)
+    
     const { searchParams } = new URL(req.url)
     const filters: ClientCaseFilters = {
       search: searchParams.get('search') || '',
@@ -80,7 +85,6 @@ export async function GET(req: NextRequest) {
     const pageNum = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
     const skip = (pageNum - 1) * limit
-
     // Debug: Log the query for production debugging
     console.log('🔍 MongoDB Query:', JSON.stringify(query, null, 2))
     console.log('🔍 Filters:', JSON.stringify(filters, null, 2))
