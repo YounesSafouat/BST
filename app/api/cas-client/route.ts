@@ -81,6 +81,10 @@ export async function GET(req: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const skip = (pageNum - 1) * limit
 
+    // Debug: Log the query for production debugging
+    console.log('🔍 MongoDB Query:', JSON.stringify(query, null, 2))
+    console.log('🔍 Filters:', JSON.stringify(filters, null, 2))
+    
     // Execute query
     const [cases, total] = await Promise.all([
       CasClient.find(query)
@@ -90,6 +94,9 @@ export async function GET(req: NextRequest) {
         .lean(),
       CasClient.countDocuments(query)
     ])
+    
+    // Debug: Log results
+    console.log('🔍 Query Results:', { casesCount: cases.length, total })
 
     return NextResponse.json({
       cases,
