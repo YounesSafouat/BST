@@ -62,42 +62,9 @@ const sectorIcons = {
      "Immobilier": Home,
 }
 
-const solutions = [
-     {
-          value: "all",
-          label: "Toutes les solutions",
-          color: "var(--color-secondary)",
-          description: "Voir tous les projets",
-          icon: Layers
-     },
-     {
-          value: "hubspot",
-          label: "HubSpot",
-          color: "var(--color-main)",
-          description: "Gestion de la relation client",
-          icon: null,
-          logoUrl: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hubspot-favicone.webp"
-     },
-     {
-          value: "odoo",
-          label: "Odoo",
-          color: "var(--color-secondary)",
-          description: "Gestion d'entreprise complète",
-          icon: null,
-          logoUrl: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Odoo.svg"
-     },
-     {
-          value: "both",
-          label: "HubSpot + Odoo",
-          color: "var(--color-main)",
-          description: "Solution hybride complète",
-          icon: Circle
-     },
-]
 
 export default function CasClientV2() {
      const [searchTerm, setSearchTerm] = useState("")
-     const [selectedSolution, setSelectedSolution] = useState("all")
      const [selectedSector, setSelectedSector] = useState("Tous")
      const [clientsData, setClientsData] = useState<any[]>([])
      const [filteredClients, setFilteredClients] = useState<any[]>([])
@@ -113,28 +80,6 @@ export default function CasClientV2() {
           return clientsData.filter(client => client.company?.sector === sectorName).length
      }
 
-     const getSolutionCount = (solutionValue: string) => {
-          if (solutionValue === "all") return clientsData.length
-
-          return clientsData.filter(client => {
-               const clientSolution = client.project?.solution?.toLowerCase()
-
-               // Handle different solution value formats
-               switch (solutionValue) {
-                    case "hubspot":
-                         return clientSolution === "hubspot" || clientSolution === "hubspot crm"
-                    case "odoo":
-                         return clientSolution === "odoo" || clientSolution === "odoo erp"
-                    case "both":
-                         return clientSolution === "both" ||
-                              clientSolution === "hubspot + odoo" ||
-                              clientSolution === "hybride" ||
-                              (clientSolution && clientSolution.includes("hubspot") && clientSolution.includes("odoo"))
-                    default:
-                         return clientSolution === solutionValue
-               }
-          }).length
-     }
 
      const getAvailableSectors = () => {
           const sectors = ["Tous", ...new Set(clientsData.map(client => client.company?.sector).filter(Boolean))]
@@ -165,6 +110,13 @@ export default function CasClientV2() {
                     const res = await fetch("/api/cas-client?published=true")
                     const data = await res.json()
                     const cases = data.cases || []
+                    
+                    // Debug: Log published status of cases
+                    console.log("🔍 CAS Client API Response:", {
+                         totalCases: cases.length,
+                         publishedStatus: cases.map(c => ({ name: c.name, published: c.published }))
+                    })
+                    
                     setClientsData(cases)
                     setFilteredClients(cases)
                } catch (err) {
@@ -190,34 +142,17 @@ export default function CasClientV2() {
                )
           }
 
-          // Filter by solution
-          if (selectedSolution !== "all") {
-               filtered = filtered.filter((client) => {
-                    const clientSolution = client.project?.solution?.toLowerCase()
-
-                    switch (selectedSolution) {
-                         case "hubspot":
-                              return clientSolution === "hubspot" || clientSolution === "hubspot crm"
-                         case "odoo":
-                              return clientSolution === "odoo" || clientSolution === "odoo erp"
-                         case "both":
-                              return clientSolution === "both" ||
-                                   clientSolution === "hubspot + odoo" ||
-                                   clientSolution === "hybride" ||
-                                   (clientSolution && clientSolution.includes("hubspot") && clientSolution.includes("odoo"))
-                         default:
-                              return clientSolution === selectedSolution
-                    }
-               })
-          }
 
           // Filter by sector
           if (selectedSector !== "Tous") {
                filtered = filtered.filter((client) => client.company?.sector === selectedSector)
           }
 
+          // Filter by published status (backup filter)
+          filtered = filtered.filter((client) => client.published !== false)
+
           setFilteredClients(filtered)
-     }, [searchTerm, selectedSolution, selectedSector, clientsData])
+     }, [searchTerm, selectedSector, clientsData])
 
      // Debug: Log actual solution values in CMS data
      useEffect(() => {
@@ -237,14 +172,12 @@ export default function CasClientV2() {
      return (
           <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
                {/* Hero Section - Copernic Style */}
-               <section className="relative pt-2 pb-8 px-3 lg:pt-10 lg:pb-20 lg:px-8 mt-20 lg:mt-10">
+               <section className="relative pt-2 pb-8 px-3 lg:pt-4 lg:pb-20 lg:px-8 mt-4 lg:mt-4">
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
-                                        <h2 className="text-lg font-medium text-[var(--color-secondary)] mb-4">Nos cas clients</h2>
-                                        <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-8 leading-tight">
+                                        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight">
                                              Nos clients ont vu leur croissance augmenter, parfois de manière spectaculaire...
                                         </h1>
-                                        <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] mx-auto"></div>
                                    </div>
 
                                    {/* Featured Video Testimonials - À la une */}
@@ -366,51 +299,6 @@ export default function CasClientV2() {
                                              </div>
                                         </div>
 
-                                        {/* Solution Filter */}
-                                        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 p-6">
-                                             <div className="flex items-center gap-3 mb-6">
-                                                  <div className="w-8 h-8 bg-[var(--color-main)]/20 rounded-lg flex items-center justify-center">
-                                                       <Filter className="w-4 h-4 text-[var(--color-main)]" />
-                                                  </div>
-                                                  <h3 className="text-lg font-bold text-gray-900">Solution Implémentée</h3>
-                                             </div>
-                                             <div className="space-y-3">
-                                                  {solutions.map((solution) => {
-                                                       const count = getSolutionCount(solution.value)
-                                                       const IconComponent = solution.icon
-                                                       return (
-                                                            <button
-                                                                 key={solution.value}
-                                                                 onClick={() => setSelectedSolution(solution.value)}
-                                                                 className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-200 ${selectedSolution === solution.value
-                                                                      ? "bg-[var(--color-main)]/20 border-2 border-[var(--color-main)]/30 shadow-lg"
-                                                                      : "hover:bg-gray-100 border-2 border-transparent hover:border-gray-300"
-                                                                      }`}
-                                                            >
-                                                                 <div className="flex items-center gap-3">
-                                                                      <div className="w-8 h-8 bg-[var(--color-main)]/20 rounded-lg flex items-center justify-center">
-                                                                           {solution.logoUrl ? (
-                                                                                <Image
-                                                                                     src={solution.logoUrl}
-                                                                                     alt={solution.label}
-                                                                                     width={24}
-                                                                                     height={24}
-                                                                                     className="object-contain"
-                                                                                />
-                                                                           ) : IconComponent ? (
-                                                                                <IconComponent className="w-6 h-6 text-[var(--color-main)]" />
-                                                                           ) : null}
-                                                                      </div>
-                                                                      <div className="text-left">
-                                                                           <div className="font-medium text-gray-900">{solution.label}</div>
-                                                                           <div className="text-xs text-gray-500">{solution.description}</div>
-                                                                      </div>
-                                                                 </div>
-                                                            </button>
-                                                       )
-                                                  })}
-                                             </div>
-                                        </div>
 
                                         {/* Sector Filter */}
                                         <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 p-6">
@@ -452,8 +340,7 @@ export default function CasClientV2() {
                                                        Études de Cas
                                                   </h2>
                                                   <p className="text-gray-600 mt-1">
-                                                       {selectedSolution !== "all" && `Solution: ${solutions.find(s => s.value === selectedSolution)?.label}`}
-                                                       {selectedSector !== "Tous" && ` • Secteur: ${selectedSector}`}
+                                                       {selectedSector !== "Tous" && `Secteur: ${selectedSector}`}
                                                   </p>
                                              </div>
 
@@ -462,7 +349,7 @@ export default function CasClientV2() {
 
                                         {/* Client Cards Grid/List */}
                                         {viewMode === 'grid' ? (
-                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
                                                   {filteredClients.map((client, index) => (
                                                        <TestimonialCard
                                                             key={client.slug || client.name}
@@ -475,7 +362,7 @@ export default function CasClientV2() {
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
                                                             slug={client.slug}
-                                                            hidePlayIcon={true}
+                                                            hasVideo={!!client.media?.heroVideo}
                                                        />
                                                   ))}
                                              </div>
@@ -493,7 +380,7 @@ export default function CasClientV2() {
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
                                                             slug={client.slug}
-                                                            hidePlayIcon={true}
+                                                            hasVideo={!!client.media?.heroVideo}
                                                        />
                                                   ))}
                                              </div>

@@ -94,17 +94,13 @@ export default function CasClient() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative pt-48 md:pt-56 pb-20 px-6 lg:px-8">
+      <section className="relative pt-20 pb-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-6 py-3 rounded-full bg-gray-50 border border-gray-200 mb-8">
-              <div className="w-2 h-2 bg-black rounded-full mr-3"></div>
-              <span className="text-sm font-medium text-color-gray tracking-wide">NOS RÉUSSITES</span>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-color-black mb-6 tracking-tight">
+            <h1 className="text-6xl md:text-7xl font-bold text-color-black mb-8 tracking-tight">
               Études de <span className="text-color-main">Cas Clients</span>
             </h1>
-            <p className="text-xl text-color-gray max-w-3xl mx-auto leading-relaxed">
+            <p className="text-2xl text-color-gray max-w-3xl mx-auto leading-relaxed">
               Découvrez comment nous avons aidé nos clients à transformer leur entreprise avec nos solutions digitales.
             </p>
           </div>
