@@ -743,12 +743,12 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                    {/* Company Card - Enhanced */}
                                     <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200/50">
                                         <div className="text-center mb-8">
-                                             <div className="w-40 h-40 mx-auto mb-6 flex items-center justify-center">
+                                             <div className="w-56 h-56 mx-auto mb-6 flex items-center justify-center">
                                                   <Image
                                                        src={clientData.company.logo}
                                                        alt={clientData.name}
-                                                       width={160}
-                                                       height={160}
+                                                       width={224}
+                                                       height={224}
                                                        className="object-contain"
                                                   />
                                              </div>
@@ -800,7 +800,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
                                                   {/* Project Stats */}
                                               {clientData.quickStats && clientData.quickStats.length > 0 && (
-                                                       <div className="border-t border-gray-200 pt-6">
+                                                       <div className="pt-6">
                                                             <h4 className="text-sm font-semibold text-gray-900 mb-4">Statistiques</h4>
                                                             <div className="grid grid-cols-2 gap-3">
                                                              {clientData.quickStats.slice(0, 2).map((stat, index) => (
@@ -814,13 +814,13 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                   )}
 
                                               {/* Contact CTA */}
-                                              <div className="border-t border-gray-200 pt-6">
+                                              <div className="pt-6">
                                                   <Button 
                                                        className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white"
                                                         onClick={handleContactClick}
                                                   >
                                                         <Presentation className="w-4 h-4 mr-2" />
-                                                        Demander une démonstration
+                                                        Nous contacter
                                                   </Button>
                                              </div>
                                         </div>
@@ -913,16 +913,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                             className="order-1 lg:order-2"
                                                        >
                                                             <div className="space-y-8">
-                                                                 {/* Section Badge */}
-                                                                 {(block.sectionBadge || 'Section Projet') && (
-                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
-                                                                           {(() => {
-                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'target')
-                                                                                return <IconComponent className="w-4 h-4" />
-                                                                           })()}
-                                                                           {block.sectionBadge || 'Section Projet'}
-                                                                      </div>
-                                                                 )}
 
                                                                  {/* Title */}
                                                                  {block.title && (
@@ -938,8 +928,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                       </div>
                                                                  )}
 
-                                                                 {/* Decorative Line */}
-                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
                                                             </div>
                                                        </motion.div>
                                                   </div>
@@ -966,16 +954,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                             viewport={{ once: true }}
                                                        >
                                                             <div className="space-y-8">
-                                                                 {/* Section Badge */}
-                                                                 {(block.sectionBadge || 'Section Résultats') && (
-                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 rounded-full text-[var(--color-secondary)] text-sm font-medium">
-                                                                           {(() => {
-                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'trending-up')
-                                                                                return <IconComponent className="w-4 h-4" />
-                                                                           })()}
-                                                                           {block.sectionBadge || 'Section Résultats'}
-                                                                      </div>
-                                                                 )}
 
                                                                  {/* Title */}
                                                                  {block.title && (
@@ -991,8 +969,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                       </div>
                                                                  )}
 
-                                                                 {/* Decorative Line */}
-                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] rounded-full"></div>
                                                             </div>
                                                        </motion.div>
 
@@ -1089,16 +1065,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                             className="order-1 lg:order-2"
                                                        >
                                                             <div className="space-y-8">
-                                                                 {/* Section Badge */}
-                                                                 {(block.sectionBadge || 'Statistiques') && (
-                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
-                                                                           {(() => {
-                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'bar-chart-3')
-                                                                                return <IconComponent className="w-4 h-4" />
-                                                                           })()}
-                                                                           {block.sectionBadge || 'Statistiques'}
-                                                                      </div>
-                                                                 )}
 
                                                                  {/* Title */}
                                                                  {block.title && (
@@ -1124,30 +1090,28 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                                      whileInView={{ opacity: 1, y: 0 }}
                                                                                      transition={{ duration: 0.6, delay: statIndex * 0.1 }}
                                                                                      viewport={{ once: true }}
-                                                                                     className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group"
+                                                                                     className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group text-center"
                                                                                 >
-                                                                                     <div className="flex items-center gap-4">
-                                                                                          <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-xl flex items-center justify-center">
+                                                                                     <div className="space-y-4">
+                                                                                          {/* Icon */}
+                                                                                          <div className="w-16 h-16 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
                                                                                                {(() => {
                                                                                                     const IconComponent = getIconComponent(stat.icon || 'trending-up')
-                                                                                                    return <IconComponent className="w-6 h-6 text-white" />
+                                                                                                    return <IconComponent className="w-8 h-8 text-white" />
                                                                                                })()}
                                                                                           </div>
-                                                                                          <div className="flex-1">
-                                                                                               <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                                                                                               <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
-                                                                                               {stat.description && (
-                                                                                                    <div className="text-xs text-gray-500 mt-1">{stat.description}</div>
-                                                                                               )}
-                                                                                          </div>
+                                                                                          
+                                                                                          {/* Value */}
+                                                                                          <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                                                                                          
+                                                                                          {/* Label */}
+                                                                                          <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                                                                                      </div>
                                                                                 </motion.div>
                                                                            ))}
                                                                       </div>
                                                                  )}
 
-                                                                 {/* Decorative Line */}
-                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-main)] to-[var(--color-secondary)] rounded-full"></div>
                                                             </div>
                                                        </motion.div>
                                                   </div>
@@ -1174,16 +1138,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                             viewport={{ once: true }}
                                                        >
                                                             <div className="space-y-8">
-                                                                 {/* Section Badge */}
-                                                                 {(block.sectionBadge || 'Métriques') && (
-                                                                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 rounded-full text-[var(--color-secondary)] text-sm font-medium">
-                                                                           {(() => {
-                                                                                const IconComponent = getIconComponent(block.sectionBadgeIcon || 'bar-chart-3')
-                                                                                return <IconComponent className="w-4 h-4" />
-                                                                           })()}
-                                                                           {block.sectionBadge || 'Métriques'}
-                                                                      </div>
-                                                                 )}
 
                                                                  {/* Title */}
                                                                  {block.title && (
@@ -1209,30 +1163,28 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                                      whileInView={{ opacity: 1, y: 0 }}
                                                                                      transition={{ duration: 0.6, delay: statIndex * 0.1 }}
                                                                                      viewport={{ once: true }}
-                                                                                     className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group"
+                                                                                     className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 group text-center"
                                                                                 >
-                                                                                     <div className="flex items-center gap-4">
-                                                                                          <div className="w-12 h-12 bg-gradient-to-br from-[var(--color-secondary)] to-[var(--color-main)] rounded-xl flex items-center justify-center">
+                                                                                     <div className="space-y-4">
+                                                                                          {/* Icon */}
+                                                                                          <div className="w-16 h-16 bg-gradient-to-br from-[var(--color-main)] to-[var(--color-secondary)] rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
                                                                                                {(() => {
                                                                                                     const IconComponent = getIconComponent(stat.icon || 'trending-up')
-                                                                                                    return <IconComponent className="w-6 h-6 text-white" />
+                                                                                                    return <IconComponent className="w-8 h-8 text-white" />
                                                                                                })()}
                                                                                           </div>
-                                                                                          <div className="flex-1">
-                                                                                               <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                                                                                               <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
-                                                                                               {stat.description && (
-                                                                                                    <div className="text-xs text-gray-500 mt-1">{stat.description}</div>
-                                                                                               )}
-                                                                                          </div>
+                                                                                          
+                                                                                          {/* Value */}
+                                                                                          <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                                                                                          
+                                                                                          {/* Label */}
+                                                                                          <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                                                                                      </div>
                                                                                 </motion.div>
                                                                            ))}
                                                                       </div>
                                                                  )}
 
-                                                                 {/* Decorative Line */}
-                                                                 <div className="w-24 h-1 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] rounded-full"></div>
                                                             </div>
                                                        </motion.div>
 
@@ -1286,16 +1238,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
                                              <div className="relative z-10 max-w-7xl mx-auto px-6">
                                                   <div className="text-center mb-16">
-                                                       {/* Section Badge */}
-                                                       {(block.sectionBadge || 'Impact & Transformation') && (
-                                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium mb-6">
-                                                                 {(() => {
-                                                                      const IconComponent = getIconComponent(block.sectionBadgeIcon || 'trending-up')
-                                                                      return <IconComponent className="w-4 h-4" />
-                                                                 })()}
-                                                                 {block.sectionBadge || 'Impact & Transformation'}
-                                                            </div>
-                                                       )}
 
                                                        {/* Title */}
                                                        {block.title && (
@@ -1339,10 +1281,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                            {/* Label */}
                                                                            <div className="text-lg text-gray-600 font-medium">{stat.label}</div>
 
-                                                                           {/* Description */}
-                                                                           {stat.description && (
-                                                                                <div className="text-sm text-gray-500 leading-relaxed">{stat.description}</div>
-                                                                           )}
                                                                       </div>
                                                                  </motion.div>
                                                             ))}
@@ -1369,16 +1307,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
                                              <div className="relative z-10 max-w-7xl mx-auto px-6">
                                                   <div className="text-center mb-16">
-                                                       {/* Section Badge */}
-                                                       {(block.sectionBadge || 'Services & Livrables') && (
-                                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium mb-6">
-                                                                 {(() => {
-                                                                      const IconComponent = getIconComponent(block.sectionBadgeIcon || 'grid-3x3')
-                                                                      return <IconComponent className="w-4 h-4" />
-                                                                 })()}
-                                                                 {block.sectionBadge || 'Services & Livrables'}
-                                                            </div>
-                                                       )}
 
                                                        {/* Title */}
                                                        {block.title && (
@@ -1522,7 +1450,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                                        </div>
                                                                        
                                                                        <div className="flex-1">
-                                                                            <div className="border-l-4 border-blue-400 pl-6 mb-6">
+                                                                            <div className="pl-6 mb-6">
                                                                                  <Quote className="w-8 h-8 text-blue-500 mb-4" />
                                                                                  <blockquote className="text-lg md:text-xl text-gray-800 leading-relaxed">
                                                                                       "{block.testimonial.quote}"

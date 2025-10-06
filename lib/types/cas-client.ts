@@ -41,7 +41,6 @@ export interface ContentBlock {
   stats?: { 
     label: string; 
     value: string; 
-    description?: string;
     icon?: string;
   }[];
   
@@ -148,7 +147,6 @@ export interface DynamicClientCase {
     label: string
     value: string
     icon?: string
-    description?: string
   }>
   
   // Filtering & Discovery
@@ -237,7 +235,6 @@ export interface ClientCaseFormData {
     label: string
     value: string
     icon?: string
-    description?: string
   }>
   
   // Filtering
@@ -314,9 +311,9 @@ export const CONTENT_BLOCK_TEMPLATES = {
     title: 'Impact & Transformation',
     content: '<p>La transformation digitale de [NOM_CLIENT] a eu un impact significatif sur l\'ensemble de l\'organisation...</p>',
     stats: [
-      { label: 'Efficacité opérationnelle', value: '+90%', icon: 'trending-up', description: 'Amélioration de l\'efficacité' },
-      { label: 'Satisfaction client', value: '+75%', icon: 'heart', description: 'Augmentation de la satisfaction' },
-      { label: 'Réduction des erreurs', value: '-80%', icon: 'check-circle', description: 'Diminution des erreurs' }
+      { label: 'Efficacité opérationnelle', value: '+90%', icon: 'trending-up' },
+      { label: 'Satisfaction client', value: '+75%', icon: 'heart' },
+      { label: 'Réduction des erreurs', value: '-80%', icon: 'check-circle' }
     ]
   },
   'cards-layout': {
@@ -365,7 +362,7 @@ export const CONTENT_BLOCK_TEMPLATES = {
   'contact-form': {
     type: 'contact-form' as const,
     title: 'Intéressé par notre travail?',
-    content: 'Découvrez comment nous pouvons transformer votre entreprise avec des solutions similaires. Contactez-nous pour une consultation gratuite.'
+    
   },
   'cta': {
     type: 'cta' as const,

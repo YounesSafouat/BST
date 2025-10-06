@@ -239,11 +239,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
             <h2 className="text-4xl font-bold text-white mb-4">
               {blockData?.title || `Intéressé par notre travail avec ${clientName}?`}
             </h2>
-            {blockData?.content && (
-              <p className="text-xl text-white/90 max-w-2xl mx-auto">
-                {blockData.content}
-              </p>
-            )}
+           
           </div>
 
           {/* Form */}
