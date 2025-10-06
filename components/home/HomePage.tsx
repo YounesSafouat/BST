@@ -808,13 +808,9 @@ export default function HomePage() {
      return (
           <div>
                <PerformanceMonitor />
-               {visualEffectsSettings?.showCurvedLines === true ? (
-                    <CurvedLinesBackground>
-                         {renderMainContent()}
-                    </CurvedLinesBackground>
-               ) : (
-                    renderMainContent()
-               )}
+               <CurvedLinesBackground>
+                    {renderMainContent()}
+               </CurvedLinesBackground>
           </div>
      );
 }

@@ -224,8 +224,10 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
   }
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 bg-[var(--color-main)] rounded-2xl mx-4 md:mx-6 shadow-2xl border border-white/10 backdrop-blur-sm relative overflow-hidden">
+      {/* Background gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -234,13 +236,14 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
         >
           {/* Header */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-white mb-4">
               {blockData?.title || `Intéressé par notre travail avec ${clientName}?`}
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              {blockData?.content || `Découvrez comment nous pouvons transformer votre entreprise avec des solutions similaires. 
-              Contactez-nous pour une consultation gratuite.`}
-            </p>
+            {blockData?.content && (
+              <p className="text-xl text-white/90 max-w-2xl mx-auto">
+                {blockData.content}
+              </p>
+            )}
           </div>
 
           {/* Form */}
@@ -249,7 +252,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Name */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
                     Nom complet *
                   </label>
                   <Input
@@ -268,7 +271,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
                     Email *
                   </label>
                   <Input
@@ -287,7 +290,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
 
                 {/* Phone */}
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
                     Téléphone *
                   </label>
                   <div className="flex space-x-2">
@@ -313,7 +316,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
 
                 {/* Company */}
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="company" className="block text-sm font-medium text-white mb-2">
                     Entreprise
                   </label>
                   <Input
@@ -328,29 +331,10 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                 </div>
               </div>
 
-              {/* Brief Description */}
-              <div>
-                <label htmlFor="briefDescription" className="block text-sm font-medium text-gray-700 mb-2">
-                  Description de votre demande *
-                </label>
-                <Input
-                  id="briefDescription"
-                  name="briefDescription"
-                  type="text"
-                  value={formData.briefDescription}
-                  onChange={handleInputChange}
-                  placeholder="Ex: Intéressé par notre travail avec [CLIENT]"
-                  className={`h-11 sm:h-12 ${errors.briefDescription ? 'border-red-500' : ''}`}
-                  required
-                />
-                {errors.briefDescription && (
-                  <p className="text-sm text-red-600 mt-1">{errors.briefDescription}</p>
-                )}
-              </div>
 
               {/* Message */}
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
                   Message (optionnel)
                 </label>
                 <textarea
@@ -372,7 +356,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)] h-12 sm:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-white text-[var(--color-main)] hover:bg-gray-100 h-12 sm:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   {isSubmitting ? (
                     <>
@@ -390,7 +374,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
 
               {/* Note about client source */}
               <div className="text-center">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-white/80">
                   En envoyant ce message, vous confirmez votre intérêt pour nos services suite à la découverte de notre travail avec {clientName}.
                 </p>
               </div>

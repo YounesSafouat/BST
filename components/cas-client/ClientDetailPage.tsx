@@ -3,14 +3,13 @@
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import CasClientContactForm from "./CasClientContactForm"
-import { ArrowLeft, ArrowRight, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy, Pause, Volume2, VolumeX, Maximize2, Grid3X3, List, Plus, Minus, ChevronDown, Edit, Eye, Save, Trash2, ArrowUp, ArrowDown, Headphones } from "lucide-react"
+import { ArrowLeft, ArrowRight, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy, Pause, Volume2, VolumeX, Maximize2, Grid3X3, List, Plus, Minus, ChevronDown, Edit, Eye, Save, Trash2, ArrowUp, ArrowDown, Headphones, Presentation } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Loader from "@/components/home/Loader"
 import { useRouter } from "next/navigation"
-import ContactPopup from "./ContactPopup"
 
 // Icon mapping function
 const getIconComponent = (iconName: string) => {
@@ -389,7 +388,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      const [videoDuration, setVideoDuration] = useState(0)
      const [showSharePopup, setShowSharePopup] = useState(false)
      const [copied, setCopied] = useState(false)
-     const [showContactPopup, setShowContactPopup] = useState(false)
      const videoRef = useRef<HTMLVideoElement | null>(null)
      const router = useRouter()
      useEffect(() => {
@@ -457,9 +455,12 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      }
 
 
-     // Handle contact popup
+     // Handle contact scroll to form
      const handleContactClick = () => {
-          setShowContactPopup(true)
+          const contactForm = document.getElementById('contact-form-section')
+          if (contactForm) {
+               contactForm.scrollIntoView({ behavior: 'smooth' })
+          }
      }
 
      // Video control functions
@@ -561,28 +562,17 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      }
 
      return (
-          <div className="min-h-screen mt-10">
+          <div className="min-h-screen pt-20 md:pt-10">
                {/* Enhanced Header */}
                <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
-                    <div className="max-w-7xl mx-auto px-6 py-6">
-                         <div className="flex items-center justify-between">
+                    <div className="max-w-7xl mx-auto px-6 py-1">
+                         <div className="flex items-center justify-start">
                               <Link href="/cas-client">
-                                   <Button variant="ghost" className="text-gray-700 hover:bg-gray-100/50 hover:text-[var(--color-main)] transition-all duration-300">
-                                        <ArrowLeft className="w-4 h-4 mr-2" />
+                                   <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100/50 hover:text-[var(--color-main)] transition-all duration-300 h-8 px-3">
+                                        <ArrowLeft className="w-3 h-3 mr-1" />
                                         Retour aux cas clients
                                    </Button>
                               </Link>
-                              
-                              <div className="flex items-center gap-3">
-                                   <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="rounded-full"
-                                        onClick={() => setShowSharePopup(true)}
-                                   >
-                                        <Share2 className="w-4 h-4 mr-2" /> Partager
-                                   </Button>
-                              </div>
                          </div>
                     </div>
                </header>
@@ -596,7 +586,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                          <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--color-secondary)]/10 rounded-full blur-3xl"></div>
                     </div>
 
-                    <div className="relative z-10 max-w-7xl mx-auto px-6 py-16 md:py-24">
+                    <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 md:py-8">
                          <div className="grid lg:grid-cols-2 gap-16 items-center">
                               {/* Left Content */}
                               <motion.div
@@ -605,11 +595,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                    transition={{ duration: 0.8 }}
                                    className="space-y-8"
                               >
-                                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-main)]/10 border border-[var(--color-main)]/20 rounded-full text-[var(--color-main)] text-sm font-medium">
-                                        <Award className="w-4 h-4" />
-                                        Cas client
-                                   </div>
-
                                    <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
                                         {clientData.headline}
                                    </h1>
@@ -622,10 +607,10 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                         <Button
                                              size="sm"
                                              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-8 py-4 text-base font-semibold group rounded-full h-16 shadow-lg hover:shadow-xl transition-all duration-300"
-                                              onClick={handleContactClick}
+                                             onClick={handleContactClick}
                                         >
-                                             <Users className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
-                                             Nous Contacter
+                                             <Presentation className="w-5 h-5 mr-3 group-hover:translate-x-1 transition-transform" />
+                                             Demander une démonstration
                                         </Button>
                                    </div>
                               </motion.div>
@@ -727,7 +712,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                   alt={clientData.name}
                                                   width={800}
                                                   height={500}
-                                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                              />
                                         ) : (
                                              <div className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
@@ -834,8 +819,8 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                        className="w-full bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white"
                                                         onClick={handleContactClick}
                                                   >
-                                                        <Users className="w-4 h-4 mr-2" />
-                                                        Nous Contacter
+                                                        <Presentation className="w-4 h-4 mr-2" />
+                                                        Demander une démonstration
                                                   </Button>
                                              </div>
                                         </div>
@@ -1521,38 +1506,38 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                              </div>
                                                         )}
                                                         
-                                                        <div className="bg-gray-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+                                                        <div className="bg-white border-2 border-gray-200 rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-lg">
                                                              <div className="relative z-10">
                                                                   <div className="flex flex-col md:flex-row gap-8 items-start">
                                                                        <div className="flex-shrink-0">
-                                                                            <Avatar className="w-20 h-20 md:w-24 md:h-24 border-2 border-white/30">
+                                                                            <Avatar className="w-20 h-20 md:w-24 md:h-24 border-2 border-gray-300">
                                                                                  <AvatarImage 
                                                                                       src={block.testimonial.author.avatar} 
                                                                                       alt={block.testimonial.author.name}
                                                                                  />
-                                                                                 <AvatarFallback className="bg-gray-600/80 text-gray-200 text-2xl md:text-3xl font-bold backdrop-blur-sm border border-white/20 shadow-lg">
+                                                                                 <AvatarFallback className="bg-gray-100 text-gray-700 text-2xl md:text-3xl font-bold border border-gray-200 shadow-lg">
                                                                                       {block.testimonial.author.name.charAt(0).toUpperCase()}
                                                                                  </AvatarFallback>
                                                                             </Avatar>
                                                                        </div>
                                                                        
                                                                        <div className="flex-1">
-                                                                            <div className="border-l-4 border-white/20 pl-6 mb-6">
-                                                                                 <Quote className="w-8 h-8 text-blue-400 mb-4" />
-                                                                                 <blockquote className="text-lg md:text-xl text-gray-100 leading-relaxed">
+                                                                            <div className="border-l-4 border-blue-400 pl-6 mb-6">
+                                                                                 <Quote className="w-8 h-8 text-blue-500 mb-4" />
+                                                                                 <blockquote className="text-lg md:text-xl text-gray-800 leading-relaxed">
                                                                                       "{block.testimonial.quote}"
                                                                                  </blockquote>
                                                                             </div>
                                                                             
-                                                                            <div className="text-sm text-gray-300">
-                                                                                 <p className="font-semibold text-white text-lg">{block.testimonial.author.name}</p>
-                                                                                 <p className="text-gray-300">{block.testimonial.author.role} • {block.testimonial.author.company}</p>
+                                                                            <div className="text-sm text-gray-600">
+                                                                                 <p className="font-semibold text-gray-900 text-lg">{block.testimonial.author.name}</p>
+                                                                                 <p className="text-gray-600">{block.testimonial.author.role} • {block.testimonial.author.company}</p>
                                                                                  {block.testimonial.rating && (
                                                                                       <div className="flex items-center gap-1 mt-2">
                                                                                            {[...Array(5)].map((_, i) => (
                                                                                                 <Star 
                                                                                                      key={i} 
-                                                                                                     className={`w-5 h-5 ${i < (block.testimonial?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-500'}`} 
+                                                                                                     className={`w-5 h-5 ${i < (block.testimonial?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                                                                                                 />
                                                                                            ))}
                                                                                       </div>
@@ -1568,14 +1553,16 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                          
                                          {/* Contact Form Block */}
                                          {block.type === 'contact-form' && (
-                                              <CasClientContactForm 
-                                                   clientName={clientData.name || 'ce client'} 
-                                                   clientSlug={clientData.slug || ''} 
-                                                   blockData={{
-                                                        title: block.title,
-                                                        content: block.content
-                                                   }}
-                                              />
+                                              <div id="contact-form-section">
+                                                   <CasClientContactForm 
+                                                        clientName={clientData.name || 'ce client'} 
+                                                        clientSlug={clientData.slug || ''} 
+                                                        blockData={{
+                                                             title: block.title,
+                                                             content: block.content
+                                                        }}
+                                                   />
+                                              </div>
                                          )}
                                          
                                          {/* CTA Block */}
@@ -1687,13 +1674,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                     )}
                </AnimatePresence>
 
-               {/* Contact Popup */}
-               <ContactPopup
-                    isOpen={showContactPopup}
-                    onClose={() => setShowContactPopup(false)}
-                    clientName={clientData?.name}
-                    clientSlug={clientData?.slug}
-               />
 
           </div>
      )

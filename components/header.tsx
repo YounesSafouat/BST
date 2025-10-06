@@ -145,15 +145,15 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     if (userRegion && contactData) {
       switch (userRegion) {
         case 'france':
-          return contactData.france?.meetingLink || 'https://meetings.hubspot.com/france';
+          return contactData.france?.meetingLink;
         case 'morocco':
-          return contactData.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+          return contactData.morocco?.meetingLink;
         default:
-          return contactData.other?.meetingLink || 'https://meetings.hubspot.com/other';
+          return contactData.other?.meetingLink;
       }
     }
     // Fallback to Morocco if no location detected
-    return contactData?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+    return contactData?.morocco?.meetingLink;
   };
 
   const meetingLink = getMeetingLink();

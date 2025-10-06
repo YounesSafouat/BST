@@ -6,7 +6,7 @@ interface VisualEffectsSettings {
 
 export function useVisualEffects() {
   const [settings, setSettings] = useState<VisualEffectsSettings>({
-    showCurvedLines: false // Default to true for better UX
+    showCurvedLines: true // Default to true for better UX
   });
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +26,6 @@ export function useVisualEffects() {
         const data = await response.json();
         
         if (data && data.content && data.content.visualEffects) {
-          
           setSettings(data.content.visualEffects);
         } else {
           console.log('No visual effects settings found, using default');

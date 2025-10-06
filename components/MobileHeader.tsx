@@ -43,7 +43,6 @@ import { useRouter } from "next/navigation"
 import { useButtonAnalytics } from '@/hooks/use-analytics'
 import { Button } from '@/components/ui/button'
 import { motion, AnimatePresence } from "framer-motion"
-import { getRegionFromCountry } from '@/lib/geolocation'
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 
 // WhatsApp Icon Component
@@ -63,7 +62,7 @@ export default function MobileHeader() {
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
   const { trackButtonClick } = useButtonAnalytics()
-  const { data: location, loading: locationLoading } = useGeolocationSingleton();
+  const { region: userRegion, loading: locationLoading } = useGeolocationSingleton();
 
   // Add scroll detection
   useEffect(() => {
@@ -104,11 +103,14 @@ export default function MobileHeader() {
   useEffect(() => {
     const fetchContactData = async () => {
       try {
-        const response = await fetch('/api/content/settings');
+        const response = await fetch('/api/content?type=settings');
         if (response.ok) {
           const data = await response.json();
-          if (data.success && data.content?.regionalContact) {
-            setContactData(data.content.regionalContact);
+          if (data.length > 0) {
+            const settingsContent = data.find(item => item.type === 'settings');
+            if (settingsContent && settingsContent.content?.regionalContact) {
+              setContactData(settingsContent.content.regionalContact);
+            }
           }
         } else {
           console.error('Failed to fetch contact data for mobile header:', response.status);
@@ -123,13 +125,11 @@ export default function MobileHeader() {
 
   // Update WhatsApp number based on detected region
   useEffect(() => {
-    if (location && contactData) {
-      const region = getRegionFromCountry(location.countryCode);
-
+    if (userRegion && contactData) {
       let whatsapp: string | null = null;
       let phone: string | null = null;
 
-      switch (region) {
+      switch (userRegion) {
         case 'france':
           whatsapp = contactData.france?.whatsapp || null;
           phone = contactData.france?.phone || null;
@@ -146,24 +146,25 @@ export default function MobileHeader() {
       setWhatsappNumber(whatsapp);
       setPhoneNumber(phone);
     }
-  }, [location, contactData]);
+  }, [userRegion, contactData]);
 
   // Get meeting link based on detected region
   const getMeetingLink = () => {
-    if (location && contactData) {
-      const region = getRegionFromCountry(location.countryCode);
-      switch (region) {
+    if (userRegion && contactData) {
+      switch (userRegion) {
         case 'france':
-          return contactData.france?.meetingLink || 'https://meetings.hubspot.com/france';
+          return contactData.france?.meetingLink;
         case 'morocco':
-          return contactData.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+          return contactData.morocco?.meetingLink;
         default:
-          return contactData.other?.meetingLink || 'https://meetings.hubspot.com/other';
+          return contactData.other?.meetingLink;
       }
     }
     // Fallback to Morocco if no location detected
-    return contactData?.morocco?.meetingLink || 'https://meetings-eu1.hubspot.com/yraissi';
+    return contactData?.morocco?.meetingLink;
   };
+
+  const meetingLink = getMeetingLink();
 
   // Function to get logo size class
   const getLogoSizeClass = (size: string) => {
@@ -303,7 +304,7 @@ export default function MobileHeader() {
                 <Button
                   onClick={() => {
                     trackButtonClick('mobile_header_rdv_button');
-                    window.open(getMeetingLink(), '_blank');
+                    window.open(meetingLink, '_blank');
                   }}
                   className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-105"
                 >
