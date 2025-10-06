@@ -38,6 +38,14 @@ import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Mail, Phone, User, Building, MessageSquare, ArrowRight, CheckCircle, Calendar } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import CountryCodeSelector from "../CountryCodeSelector"
+
+interface Country {
+  code: string
+  name: string
+  dialCode: string
+  flag: string
+}
 
 interface CasClientContactFormProps {
   clientName: string
@@ -55,7 +63,15 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
     phone: '',
     company: '',
     message: '',
+    briefDescription: `Intéressé par notre travail avec ${clientName}`,
     clientSource: clientSlug // Track which client they came from
+  })
+  
+  const [selectedCountry, setSelectedCountry] = useState<Country>({
+    code: 'MA',
+    name: 'Maroc',
+    dialCode: '+212',
+    flag: '🇲🇦'
   })
   
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
@@ -76,8 +92,12 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
       newErrors.email = 'L\'email n\'est pas valide'
     }
     
-    if (!formData.message.trim()) {
-      newErrors.message = 'Le message est requis'
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Le téléphone est requis'
+    }
+    
+    if (!formData.briefDescription.trim()) {
+      newErrors.briefDescription = 'La description est requise'
     }
     
     setErrors(newErrors)
@@ -94,13 +114,29 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
     setIsSubmitting(true)
     
     try {
+      // Generate brief description for CAS client inquiry
+      const generateBriefDescription = () => {
+        return `**Demande de contact depuis un cas client :**\n\n` +
+               `🎯 **Client d'intérêt :** ${clientName}\n` +
+               `📄 **Page visitée :** /cas-client/${clientSlug}\n` +
+               `💼 **Type de demande :** ${formData.briefDescription}\n` +
+               `📅 **Date :** ${new Date().toLocaleDateString('fr-FR')}\n` +
+               `⏰ **Heure :** ${new Date().toLocaleTimeString('fr-FR')}\n\n` +
+               `**Message du client :**\n${formData.message || 'Aucun message supplémentaire'}`;
+      };
+
       // Add client source information to the form data
       const submissionData = {
         ...formData,
+        phone: `${selectedCountry.dialCode} ${formData.phone}`,
         source: 'cas-client',
         clientName: clientName,
         clientSlug: clientSlug,
-        formType: 'client-inquiry'
+        formType: 'client-inquiry',
+        countryCode: selectedCountry.code,
+        countryName: selectedCountry.name,
+        brief_description: generateBriefDescription(),
+        clientSource: formData.clientSource
       }
       
       const response = await fetch('/api/contact', {
@@ -125,6 +161,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
           phone: '',
           company: '',
           message: '',
+          briefDescription: `Intéressé par notre travail avec ${clientName}`,
           clientSource: clientSlug
         })
       } else {
@@ -153,7 +190,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
 
   if (isSubmitted) {
     return (
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+      <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -251,17 +288,27 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                 {/* Phone */}
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Téléphone
+                    Téléphone *
                   </label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="+212 6 12 34 56 78"
-                    className="h-11 sm:h-12"
-                  />
+                  <div className="flex space-x-2">
+                    <CountryCodeSelector
+                      selectedCountry={selectedCountry}
+                      onCountryChange={(country) => setSelectedCountry(country)}
+                    />
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="6 12 34 56 78"
+                      className={`flex-1 h-11 sm:h-12 ${errors.phone ? 'border-red-500' : ''}`}
+                      required
+                    />
+                  </div>
+                  {errors.phone && (
+                    <p className="text-sm text-red-600 mt-1">{errors.phone}</p>
+                  )}
                 </div>
 
                 {/* Company */}
@@ -281,10 +328,30 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                 </div>
               </div>
 
+              {/* Brief Description */}
+              <div>
+                <label htmlFor="briefDescription" className="block text-sm font-medium text-gray-700 mb-2">
+                  Description de votre demande *
+                </label>
+                <Input
+                  id="briefDescription"
+                  name="briefDescription"
+                  type="text"
+                  value={formData.briefDescription}
+                  onChange={handleInputChange}
+                  placeholder="Ex: Intéressé par notre travail avec [CLIENT]"
+                  className={`h-11 sm:h-12 ${errors.briefDescription ? 'border-red-500' : ''}`}
+                  required
+                />
+                {errors.briefDescription && (
+                  <p className="text-sm text-red-600 mt-1">{errors.briefDescription}</p>
+                )}
+              </div>
+
               {/* Message */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message *
+                  Message (optionnel)
                 </label>
                 <textarea
                   id="message"
@@ -293,13 +360,8 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                   onChange={handleInputChange}
                   placeholder="Décrivez votre projet, vos besoins ou posez-nous vos questions..."
                   rows={4}
-                  className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent resize-vertical ${
-                    errors.message ? 'border-red-500' : ''
-                  }`}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent resize-vertical"
                 />
-                {errors.message && (
-                  <p className="text-sm text-red-600 mt-1">{errors.message}</p>
-                )}
               </div>
 
               {/* Hidden field for client source */}
