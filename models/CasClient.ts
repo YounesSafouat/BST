@@ -16,6 +16,7 @@ const ContentBlockSchema = new mongoose.Schema({
       'cards-layout',                // Multiple cards like "Le Livrable"
       'video',                       // Video content
       'testimonial',                 // Testimonial block
+      'contact-form',                // Contact form block
       'cta'                          // Call to action
     ]
   },
@@ -86,6 +87,7 @@ const CompanySchema = new mongoose.Schema({
   logo: { type: String, required: true },
   size: { type: String, required: true },
   sector: { type: String, required: true },
+  customSector: { type: String }, // Custom sector when "Autre" is selected
   location: { type: String },
   website: { type: String }
 }, { _id: false })

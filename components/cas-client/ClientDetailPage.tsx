@@ -1,6 +1,8 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import CasClientContactForm from "./CasClientContactForm"
 import { ArrowLeft, ArrowRight, Play, Calendar, Users, Building, Target, TrendingUp, CheckCircle, Star, Quote, ExternalLink, Share2, Clock, MapPin, Award, Zap, BarChart3, X, Linkedin, Copy, Pause, Volume2, VolumeX, Maximize2, Grid3X3, List, Plus, Minus, ChevronDown, Edit, Eye, Save, Trash2, ArrowUp, ArrowDown, Headphones } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -869,7 +871,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                     block.type === 'text-image-left' || block.type === 'text-image-right' ||
                                     block.type === 'image-stats-left' || block.type === 'image-stats-right' || 
                                     block.type === 'text-stats' || block.type === 'cards-layout' || 
-                                    block.type === 'video' || block.type === 'testimonial' || block.type === 'cta'
+                                    block.type === 'video' || block.type === 'testimonial' || block.type === 'contact-form' || block.type === 'cta'
                                ).map((block, index) => (
                                     <div key={`full-${block.id || index}`} className="w-full mb-16">
                                          {/* Text + Image Left Block - Enhanced Section */}
@@ -1511,35 +1513,71 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
                                          {/* Testimonial Block */}
                                          {block.type === 'testimonial' && block.testimonial && (
-                                              <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
-                                                   {block.title && (
-                                                        <h2 className="text-3xl font-bold text-gray-900 mb-6">{block.title}</h2>
-                                                   )}
-                                                   <div className="text-center">
-                                                        <Quote className="w-12 h-12 text-[var(--color-main)] mx-auto mb-6" />
-                                                        <blockquote className="text-xl text-gray-700 mb-6 italic">
-                                                             "{block.testimonial.quote}"
-                                                        </blockquote>
-                                                        <div className="flex items-center justify-center gap-4">
-                                                             {block.testimonial.author.avatar && (
-                                                                  <Image
-                                                                       src={block.testimonial.author.avatar}
-                                                                       alt={block.testimonial.author.name}
-                                                                       width={60}
-                                                                       height={60}
-                                                                       className="rounded-full"
-                                                                  />
-                                                             )}
-                                                             <div className="text-left">
-                                                                  <div className="font-semibold text-gray-900">{block.testimonial.author.name}</div>
-                                                                  <div className="text-sm text-gray-600">{block.testimonial.author.role}</div>
-                                                                  <div className="text-sm text-gray-500">{block.testimonial.author.company}</div>
+                                              <section className="relative py-16 md:py-24 overflow-hidden">
+                                                   <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                                                        {block.title && (
+                                                             <div className="text-center mb-12">
+                                                                  <h2 className="text-4xl font-bold text-gray-900 mb-4">{block.title}</h2>
+                                                             </div>
+                                                        )}
+                                                        
+                                                        <div className="bg-gray-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden">
+                                                             <div className="relative z-10">
+                                                                  <div className="flex flex-col md:flex-row gap-8 items-start">
+                                                                       <div className="flex-shrink-0">
+                                                                            <Avatar className="w-20 h-20 md:w-24 md:h-24 border-2 border-white/30">
+                                                                                 <AvatarImage 
+                                                                                      src={block.testimonial.author.avatar} 
+                                                                                      alt={block.testimonial.author.name}
+                                                                                 />
+                                                                                 <AvatarFallback className="bg-gray-600/80 text-gray-200 text-2xl md:text-3xl font-bold backdrop-blur-sm border border-white/20 shadow-lg">
+                                                                                      {block.testimonial.author.name.charAt(0).toUpperCase()}
+                                                                                 </AvatarFallback>
+                                                                            </Avatar>
+                                                                       </div>
+                                                                       
+                                                                       <div className="flex-1">
+                                                                            <div className="border-l-4 border-white/20 pl-6 mb-6">
+                                                                                 <Quote className="w-8 h-8 text-blue-400 mb-4" />
+                                                                                 <blockquote className="text-lg md:text-xl text-gray-100 leading-relaxed">
+                                                                                      "{block.testimonial.quote}"
+                                                                                 </blockquote>
+                                                                            </div>
+                                                                            
+                                                                            <div className="text-sm text-gray-300">
+                                                                                 <p className="font-semibold text-white text-lg">{block.testimonial.author.name}</p>
+                                                                                 <p className="text-gray-300">{block.testimonial.author.role} • {block.testimonial.author.company}</p>
+                                                                                 {block.testimonial.rating && (
+                                                                                      <div className="flex items-center gap-1 mt-2">
+                                                                                           {[...Array(5)].map((_, i) => (
+                                                                                                <Star 
+                                                                                                     key={i} 
+                                                                                                     className={`w-5 h-5 ${i < (block.testimonial?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-500'}`} 
+                                                                                                />
+                                                                                           ))}
+                                                                                      </div>
+                                                                                 )}
+                                                                            </div>
+                                                                       </div>
+                                                                  </div>
                                                              </div>
                                                         </div>
                                                    </div>
-                                              </div>
+                                              </section>
                                          )}
-
+                                         
+                                         {/* Contact Form Block */}
+                                         {block.type === 'contact-form' && (
+                                              <CasClientContactForm 
+                                                   clientName={clientData.name || 'ce client'} 
+                                                   clientSlug={clientData.slug || ''} 
+                                                   blockData={{
+                                                        title: block.title,
+                                                        content: block.content
+                                                   }}
+                                              />
+                                         )}
+                                         
                                          {/* CTA Block */}
                                          {block.type === 'cta' && block.cta && (
                                               <div className="text-center bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">

@@ -9,6 +9,7 @@ export type ContentBlockType =
   | 'cards-layout'                // Multiple cards like "Le Livrable"
   | 'video'                       // Video content
   | 'testimonial'                 // Testimonial block
+  | 'contact-form'                // Contact form block
   | 'cta'                         // Call to action
 
 export interface ContentBlock {
@@ -90,6 +91,7 @@ export interface DynamicClientCase {
     logo: string
     size: string // e.g., "50-100 employés"
     sector: string
+    customSector?: string // Custom sector when "Autre" is selected
     location?: string
     website?: string
   }
@@ -173,6 +175,7 @@ export interface ClientCaseFormData {
     logo: string
     size: string
     sector: string
+    customSector?: string // Custom sector when "Autre" is selected
     location?: string
     website?: string
   }
@@ -358,6 +361,11 @@ export const CONTENT_BLOCK_TEMPLATES = {
       },
       rating: 5
     }
+  },
+  'contact-form': {
+    type: 'contact-form' as const,
+    title: 'Intéressé par notre travail?',
+    content: 'Découvrez comment nous pouvons transformer votre entreprise avec des solutions similaires. Contactez-nous pour une consultation gratuite.'
   },
   'cta': {
     type: 'cta' as const,

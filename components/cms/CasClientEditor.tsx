@@ -40,7 +40,8 @@ import {
   Maximize2,
   Minus,
   ChevronDown,
-  Headphones
+  Headphones,
+  Mail
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -110,6 +111,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       logo: '',
       size: '',
       sector: '',
+      customSector: '',
       location: '',
       website: ''
     },
@@ -314,6 +316,15 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       { field: 'project.teamSize', value: formData.project.teamSize, label: 'Taille de l\'équipe' },
       { field: 'media.coverImage', value: formData.media.coverImage, label: 'Image de couverture' }
     ]
+
+    // Add custom sector validation when "Autre" is selected
+    if (formData.company.sector === 'Autre' && !formData.company.customSector) {
+      requiredFields.push({ 
+        field: 'company.customSector', 
+        value: formData.company.customSector || '', 
+        label: 'Précisez le secteur' 
+      })
+    }
 
     const missingFields = requiredFields.filter(field => !field.value)
     
@@ -539,6 +550,21 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                           ))}
                         </SelectContent>
                       </Select>
+                      
+                      {/* Custom sector input - appears when "Autre" is selected */}
+                      {formData.company.sector === 'Autre' && (
+                        <div className="mt-3">
+                          <Label htmlFor="company-custom-sector">Précisez le secteur</Label>
+                          <Input
+                            id="company-custom-sector"
+                            type="text"
+                            value={formData.company.customSector || ''}
+                            onChange={(e) => updateNestedFormData('company', 'customSector', e.target.value)}
+                            placeholder="Ex: Immobilier de luxe, Fintech, EdTech..."
+                            className="mt-1"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -847,6 +873,7 @@ const getBlockIcon = (type: ContentBlockType) => {
     'cards-layout': <Grid3X3 className="w-4 h-4" />,
     'video': <Video className="w-4 h-4" />,
     'testimonial': <Quote className="w-4 h-4" />,
+    'contact-form': <Mail className="w-4 h-4" />,
     'cta': <Target className="w-4 h-4" />
   }
   return icons[type] || <Text className="w-4 h-4" />
@@ -863,6 +890,7 @@ const getBlockLabel = (type: ContentBlockType) => {
     'cards-layout': 'Cartes de services',
     'video': 'Vidéo',
     'testimonial': 'Témoignage',
+    'contact-form': 'Formulaire de contact',
     'cta': 'Call to Action'
   }
   return labels[type] || type
@@ -1319,6 +1347,230 @@ const ContentBlockEditor: React.FC<{
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Testimonial block */}
+          {block.type === 'testimonial' && (
+            <div className="space-y-6">
+              <div className="border rounded-lg p-6 bg-gradient-to-br from-gray-50 to-gray-100">
+                <div className="flex items-center gap-2 mb-4">
+                  <Quote className="w-5 h-5 text-blue-600" />
+                  <Label className="text-lg font-semibold text-gray-900">Configuration du témoignage</Label>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Citation du témoignage</Label>
+                    <Textarea
+                      value={safeBlock.testimonial?.quote || ''}
+                      onChange={(e) => onUpdate({ 
+                        testimonial: { 
+                          ...safeBlock.testimonial, 
+                          quote: e.target.value 
+                        } 
+                      })}
+                      placeholder="Entrez le témoignage complet..."
+                      rows={4}
+                      className="resize-none"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Nom de l'auteur</Label>
+                      <Input
+                        value={safeBlock.testimonial?.author?.name || ''}
+                        onChange={(e) => onUpdate({ 
+                          testimonial: { 
+                            ...safeBlock.testimonial, 
+                            author: { 
+                              ...safeBlock.testimonial?.author, 
+                              name: e.target.value 
+                            } 
+                          } 
+                        })}
+                        placeholder="Ex: Sacha Samama"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Poste/Fonction</Label>
+                      <Input
+                        value={safeBlock.testimonial?.author?.role || ''}
+                        onChange={(e) => onUpdate({ 
+                          testimonial: { 
+                            ...safeBlock.testimonial, 
+                            author: { 
+                              ...safeBlock.testimonial?.author, 
+                              role: e.target.value 
+                            } 
+                          } 
+                        })}
+                        placeholder="Ex: Cofondateur & CTO"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Entreprise</Label>
+                      <Input
+                        value={safeBlock.testimonial?.author?.company || ''}
+                        onChange={(e) => onUpdate({ 
+                          testimonial: { 
+                            ...safeBlock.testimonial, 
+                            author: { 
+                              ...safeBlock.testimonial?.author, 
+                              company: e.target.value 
+                            } 
+                          } 
+                        })}
+                        placeholder="Ex: Allisone"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700 mb-2 block">Note (1-5)</Label>
+                      <Select
+                        value={safeBlock.testimonial?.rating?.toString() || ''}
+                        onValueChange={(value) => onUpdate({ 
+                          testimonial: { 
+                            ...safeBlock.testimonial, 
+                            rating: parseInt(value) 
+                          } 
+                        })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Sélectionnez une note" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">1 étoile</SelectItem>
+                          <SelectItem value="2">2 étoiles</SelectItem>
+                          <SelectItem value="3">3 étoiles</SelectItem>
+                          <SelectItem value="4">4 étoiles</SelectItem>
+                          <SelectItem value="5">5 étoiles</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Photo de profil (URL)</Label>
+                    <div className="space-y-3">
+                      <Input
+                        value={safeBlock.testimonial?.author?.avatar || ''}
+                        onChange={(e) => onUpdate({ 
+                          testimonial: { 
+                            ...safeBlock.testimonial, 
+                            author: { 
+                              ...safeBlock.testimonial?.author, 
+                              avatar: e.target.value 
+                            } 
+                          } 
+                        })}
+                        placeholder="URL de la photo de profil"
+                      />
+                      {safeBlock.testimonial?.author?.avatar && (
+                        <div className="flex items-center gap-4 p-3 bg-white rounded-lg border">
+                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200">
+                            <img 
+                              src={safeBlock.testimonial.author.avatar} 
+                              alt="Photo de profil"
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none'
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-600">Aperçu de la photo de profil</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Preview */}
+              {safeBlock.testimonial?.quote && (
+                <div className="border rounded-lg p-6 bg-gray-900 text-white">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Quote className="w-5 h-5 text-blue-400" />
+                    <span className="text-sm font-medium text-gray-300">Aperçu du témoignage</span>
+                  </div>
+                  <div className="flex gap-6">
+                    <div className="flex-shrink-0">
+                      <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/20 bg-gray-700 flex items-center justify-center">
+                        {safeBlock.testimonial?.author?.avatar ? (
+                          <img 
+                            src={safeBlock.testimonial.author.avatar} 
+                            alt="Photo de profil"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none'
+                            }}
+                          />
+                        ) : (
+                          <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                            <span className="text-lg font-semibold text-white">
+                              {(safeBlock.testimonial?.author?.name || 'A').charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="border-l-2 border-white/20 pl-4 mb-4">
+                        <p className="text-gray-100 leading-relaxed text-lg">
+                          "{safeBlock.testimonial.quote}"
+                        </p>
+                      </div>
+                      <div className="text-sm text-gray-300">
+                        <p className="font-semibold">{safeBlock.testimonial.author?.name || 'Nom'}</p>
+                        <p>{safeBlock.testimonial.author?.role || 'Poste'} • {safeBlock.testimonial.author?.company || 'Entreprise'}</p>
+                        {safeBlock.testimonial.rating && (
+                          <div className="flex items-center gap-1 mt-1">
+                            {[...Array(5)].map((_, i) => (
+                              <Star 
+                                key={i} 
+                                className={`w-4 h-4 ${i < (safeBlock.testimonial?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-500'}`} 
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Contact Form block */}
+          {block.type === 'contact-form' && (
+            <div className="space-y-4">
+             
+              
+              {/* Preview */}
+              <div className="border rounded-lg p-6 bg-white">
+                <div className="flex items-center gap-2 mb-4">
+                  <Mail className="w-5 h-5 text-gray-400" />
+                  <span className="text-sm font-medium text-gray-500">Aperçu du formulaire</span>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    {safeBlock.title || 'Intéressé par notre travail?'}
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    {safeBlock.content || 'Découvrez comment nous pouvons transformer votre entreprise...'}
+                  </p>
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-sm text-gray-500">
+                      📝 Formulaire de contact avec champs: Nom, Email, Téléphone, Entreprise, Message
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
