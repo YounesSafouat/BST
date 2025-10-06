@@ -77,12 +77,17 @@ export default function CasClientV2() {
      // Dynamic filtering functions
      const getSectorCount = (sectorName: string) => {
           if (sectorName === "Tous") return clientsData.length
-          return clientsData.filter(client => client.company?.sector === sectorName).length
+          return clientsData.filter(client => {
+               const actualSector = client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector
+               return actualSector === sectorName
+          }).length
      }
 
 
      const getAvailableSectors = () => {
-          const sectors = ["Tous", ...new Set(clientsData.map(client => client.company?.sector).filter(Boolean))]
+          const sectors = ["Tous", ...new Set(clientsData.map(client => 
+               client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector
+          ).filter(Boolean))]
           return sectors
      }
 
@@ -145,7 +150,10 @@ export default function CasClientV2() {
 
           // Filter by sector
           if (selectedSector !== "Tous") {
-               filtered = filtered.filter((client) => client.company?.sector === selectedSector)
+               filtered = filtered.filter((client) => {
+                    const actualSector = client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector
+                    return actualSector === selectedSector
+               })
           }
 
           // Filter by published status (backup filter)
@@ -357,7 +365,7 @@ export default function CasClientV2() {
                                                             description={client.summary}
                                                             videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
                                                             logo={client.company?.logo}
-                                                            solution={client.project?.solution}
+                                                            sector={client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector}
                                                             interviewee={client.testimonial?.author?.name}
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"
@@ -375,7 +383,7 @@ export default function CasClientV2() {
                                                             description={client.summary}
                                                             videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
                                                             logo={client.company?.logo}
-                                                            solution={client.project?.solution}
+                                                            sector={client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector}
                                                             interviewee={client.testimonial?.author?.name}
                                                             variant={index % 2 === 0 ? 'primary' : 'secondary'}
                                                             size="small"

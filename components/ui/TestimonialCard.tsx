@@ -8,6 +8,7 @@ interface TestimonialCardProps {
      videoThumbnail: string;
      logo?: string;
      solution?: string;
+     sector?: string;
      interviewee?: string;
      variant: 'primary' | 'secondary';
      className?: string;
@@ -24,6 +25,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
      videoThumbnail,
      logo,
      solution,
+     sector,
      interviewee,
      variant,
      className = "",
@@ -82,9 +84,9 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
                     <p className="text-xs sm:text-sm text-white/90 mb-3 line-clamp-2 leading-relaxed">
                          {description}
                     </p>
-                    {solution && (
+                    {sector && (
                          <div className="inline-block bg-white/20 text-white text-xs px-2 py-1 rounded-full font-medium">
-                              {solution}
+                              {sector}
                          </div>
                     )}
                </div>
