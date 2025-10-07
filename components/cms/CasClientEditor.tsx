@@ -139,6 +139,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
     },
     testimonial: undefined,
     quickStats: [],
+    sidebarInfo: [],
     tags: [],
     featured: false,
     published: false
@@ -168,6 +169,7 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
         seo: initialData.seo,
         testimonial: initialData.testimonial,
         quickStats: initialData.quickStats || [],
+        sidebarInfo: initialData.sidebarInfo || [],
         tags: initialData.tags,
         featured: initialData.featured,
         published: initialData.published
@@ -280,6 +282,69 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
       ...prev,
       quickStats: prev.quickStats?.filter((_, idx) => idx !== index) || []
     }))
+  }
+
+  // Add sidebar info
+  const addSidebarInfo = () => {
+    setFormData(prev => ({
+      ...prev,
+      sidebarInfo: [...(prev.sidebarInfo || []), {
+        key: '',
+        value: '',
+        icon: 'building',
+        order: prev.sidebarInfo?.length || 0
+      }]
+    }))
+  }
+
+  // Update sidebar info
+  const updateSidebarInfo = (index: number, field: string, value: string | number) => {
+    setFormData(prev => ({
+      ...prev,
+      sidebarInfo: prev.sidebarInfo?.map((info, idx) => 
+        idx === index ? { ...info, [field]: value } : info
+      ) || []
+    }))
+  }
+
+  // Delete sidebar info
+  const deleteSidebarInfo = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      sidebarInfo: prev.sidebarInfo?.filter((_, idx) => idx !== index) || []
+    }))
+  }
+
+  // Move sidebar info up
+  const moveSidebarInfoUp = (index: number) => {
+    if (index === 0) return
+    setFormData(prev => {
+      const newSidebarInfo = [...(prev.sidebarInfo || [])]
+      const temp = newSidebarInfo[index]
+      newSidebarInfo[index] = newSidebarInfo[index - 1]
+      newSidebarInfo[index - 1] = temp
+      // Update order
+      return {
+        ...prev,
+        sidebarInfo: newSidebarInfo.map((info, idx) => ({ ...info, order: idx }))
+      }
+    })
+  }
+
+  // Move sidebar info down
+  const moveSidebarInfoDown = (index: number) => {
+    if (!formData.sidebarInfo || index === formData.sidebarInfo.length - 1) return
+    setFormData(prev => {
+      const newSidebarInfo = [...(prev.sidebarInfo || [])]
+      const temp = newSidebarInfo[index]
+      newSidebarInfo[index] = newSidebarInfo[index + 1]
+      newSidebarInfo[index + 1] = temp
+      // Update order
+      return {
+        ...prev,
+        sidebarInfo: newSidebarInfo.map((info, idx) => ({ ...info, order: idx }))
+      }
+    })
   }
 
   // Add tag
@@ -598,6 +663,131 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                       placeholder="https://www.example.com"
                     />
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Sidebar Info - Dynamic Key-Value Pairs */}
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Informations Sidebar (Personnalisables)</CardTitle>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Ajoutez des informations personnalisées qui apparaîtront sous le logo dans la sidebar de la page du cas client
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={addSidebarInfo}
+                      className="flex items-center gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Ajouter
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {formData.sidebarInfo && formData.sidebarInfo.length > 0 ? (
+                    <div className="space-y-3">
+                      {formData.sidebarInfo.sort((a, b) => (a.order || 0) - (b.order || 0)).map((info, index) => (
+                        <div key={index} className="p-4 border border-gray-200 rounded-lg space-y-3 bg-gray-50">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700">Champ #{index + 1}</span>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => moveSidebarInfoUp(index)}
+                                disabled={index === 0}
+                                className="h-8 w-8 p-0"
+                                title="Monter"
+                              >
+                                <ArrowUp className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => moveSidebarInfoDown(index)}
+                                disabled={index === (formData.sidebarInfo?.length || 0) - 1}
+                                className="h-8 w-8 p-0"
+                                title="Descendre"
+                              >
+                                <ArrowDown className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => deleteSidebarInfo(index)}
+                                className="text-red-500 hover:text-red-700 h-8 w-8 p-0"
+                                title="Supprimer"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <Label>Clé (Titre) *</Label>
+                              <Input
+                                value={info.key}
+                                onChange={(e) => updateSidebarInfo(index, 'key', e.target.value)}
+                                placeholder="Ex: Secteur, Budget, Équipe..."
+                              />
+                            </div>
+                            <div>
+                              <Label>Valeur *</Label>
+                              <Input
+                                value={info.value}
+                                onChange={(e) => updateSidebarInfo(index, 'value', e.target.value)}
+                                placeholder="Ex: Immobilier, 50K€, 5 personnes..."
+                              />
+                            </div>
+                          </div>
+                            <div>
+                              <Label>Icône</Label>
+                              <Select
+                                value={info.icon || 'building'}
+                                onValueChange={(value) => updateSidebarInfo(index, 'icon', value)}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="building">Building (Entreprise)</SelectItem>
+                                  <SelectItem value="users">Users (Équipe)</SelectItem>
+                                  <SelectItem value="target">Target (Objectif)</SelectItem>
+                                  <SelectItem value="clock">Clock (Durée)</SelectItem>
+                                  <SelectItem value="map-pin">Map Pin (Localisation)</SelectItem>
+                                  <SelectItem value="trending-up">Trending Up (Croissance)</SelectItem>
+                                  <SelectItem value="bar-chart-3">Bar Chart (Stats)</SelectItem>
+                                  <SelectItem value="zap">Zap (Performance)</SelectItem>
+                                  <SelectItem value="check-circle">Check Circle (Complété)</SelectItem>
+                                  <SelectItem value="award">Award (Récompense)</SelectItem>
+                                  <SelectItem value="calendar">Calendar (Date)</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
+                      <p className="text-gray-500 mb-3">Aucune information personnalisée</p>
+                      <p className="text-sm text-gray-400 mb-4">
+                        Ajoutez des champs personnalisés pour afficher des informations spécifiques au client (secteur, budget, équipe, etc.)
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={addSidebarInfo}
+                        className="flex items-center gap-2 mx-auto"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Ajouter le premier champ
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

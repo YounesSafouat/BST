@@ -148,6 +148,14 @@ const QuickStatSchema = new mongoose.Schema({
   description: { type: String }
 }, { _id: false })
 
+// Sidebar Info Schema - Dynamic key-value pairs for sidebar
+const SidebarInfoSchema = new mongoose.Schema({
+  key: { type: String, required: true },
+  value: { type: String, required: true },
+  icon: { type: String },
+  order: { type: Number, default: 0 }
+}, { _id: false })
+
 // Main CAS Client Schema
 const CasClientSchema = new mongoose.Schema({
   // Basic Info
@@ -176,6 +184,9 @@ const CasClientSchema = new mongoose.Schema({
 
   // Quick Stats
   quickStats: [QuickStatSchema],
+
+  // Sidebar Info - Dynamic key-value pairs
+  sidebarInfo: [SidebarInfoSchema],
 
   // Filtering
   tags: [{ type: String }],

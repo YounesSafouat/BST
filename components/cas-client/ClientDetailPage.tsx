@@ -151,6 +151,12 @@ interface ClientCase {
           icon?: string
           description?: string
      }>
+     sidebarInfo?: Array<{
+          key: string
+          value: string
+          icon?: string
+          order?: number
+     }>
      tags?: string[]
      featured: boolean
      published: boolean
@@ -755,63 +761,27 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                         </div>
 
                                          <div className="space-y-6">
-                                                  <div className="flex items-center gap-3">
-                                                   <Building className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
-                                                   <div className="min-w-0">
-                                                            <p className="text-sm text-gray-500">Secteur</p>
-                                                        <p className="font-medium text-gray-900">{clientData.company.sector}</p>
-                                                       </div>
-                                                  </div>
+                                              {/* Dynamic Sidebar Info - Customizable from CMS */}
+                                              {clientData.sidebarInfo && clientData.sidebarInfo.length > 0 ? (
+                                                   clientData.sidebarInfo.sort((a, b) => (a.order || 0) - (b.order || 0)).map((info, index) => {
+                                                        const IconComponent = getIconComponent(info.icon || 'building');
+                                                        return (
+                                                             <div key={index} className="flex items-center gap-3">
+                                                                  <IconComponent className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
+                                                                  <div className="min-w-0">
+                                                                       <p className="text-sm text-gray-500">{info.key}</p>
+                                                                       <p className="font-medium text-gray-900">{info.value}</p>
+                                                                  </div>
+                                                             </div>
+                                                        );
+                                                   })
+                                              ) : (
+                                                   <div className="text-center py-8 text-gray-500">
+                                                        <p className="text-sm">Aucune information disponible</p>
+                                                        <p className="text-xs mt-1">Ajoutez des informations dans le CMS</p>
+                                                   </div>
+                                              )}
 
-                                                  <div className="flex items-center gap-3">
-                                                   <Users className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
-                                                   <div className="min-w-0">
-                                                            <p className="text-sm text-gray-500">Taille</p>
-                                                        <p className="font-medium text-gray-900">{clientData.company.size}</p>
-                                                       </div>
-                                                  </div>
-
-                                                  <div className="flex items-center gap-3">
-                                                   <Target className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
-                                                   <div className="min-w-0">
-                                                            <p className="text-sm text-gray-500">Solution</p>
-                                                        <p className="font-medium text-gray-900">{clientData.project.solution}</p>
-                                                       </div>
-                                                  </div>
-
-                                                       <div className="flex items-center gap-3">
-                                                   <Clock className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
-                                                   <div className="min-w-0">
-                                                        <p className="text-sm text-gray-500">Durée</p>
-                                                        <p className="font-medium text-gray-900">{clientData.project.duration}</p>
-                                                            </div>
-                                                       </div>
-
-                                              {clientData.company.location && (
-                                                       <div className="flex items-center gap-3">
-                                                        <MapPin className="w-5 h-5 text-[var(--color-main)] flex-shrink-0" />
-                                                        <div className="min-w-0">
-                                                                 <p className="text-sm text-gray-500">Localisation</p>
-                                                             <p className="font-medium text-gray-900">{clientData.company.location}</p>
-                                                            </div>
-                                                       </div>
-                                                  )}
-
-
-                                                  {/* Project Stats */}
-                                              {clientData.quickStats && clientData.quickStats.length > 0 && (
-                                                       <div className="pt-6">
-                                                            <h4 className="text-sm font-semibold text-gray-900 mb-4">Statistiques</h4>
-                                                            <div className="grid grid-cols-2 gap-3">
-                                                             {clientData.quickStats.slice(0, 2).map((stat, index) => (
-                                                                      <div key={index} className="text-center p-3 bg-[var(--color-main)]/5 rounded-lg">
-                                                                           <div className="text-lg font-bold text-[var(--color-main)]">{stat.value}</div>
-                                                                           <div className="text-xs text-gray-600">{stat.label}</div>
-                                                                      </div>
-                                                                 ))}
-                                                            </div>
-                                                       </div>
-                                                  )}
 
                                               {/* Contact CTA */}
                                               <div className="pt-6">
@@ -822,7 +792,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                         <Presentation className="w-4 h-4 mr-2" />
                                                         Nous contacter
                                                   </Button>
-                                             </div>
+                                              </div>
                                         </div>
                                    </div>
                               </motion.div>

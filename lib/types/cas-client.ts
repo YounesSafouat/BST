@@ -147,6 +147,15 @@ export interface DynamicClientCase {
     label: string
     value: string
     icon?: string
+    description?: string
+  }>
+
+  // Sidebar Info - Dynamic key-value pairs for sidebar
+  sidebarInfo?: Array<{
+    key: string
+    value: string
+    icon?: string
+    order?: number
   }>
   
   // Filtering & Discovery
@@ -235,8 +244,17 @@ export interface ClientCaseFormData {
     label: string
     value: string
     icon?: string
+    description?: string
   }>
-  
+
+  // Sidebar Info - Dynamic key-value pairs for sidebar
+  sidebarInfo?: Array<{
+    key: string
+    value: string
+    icon?: string
+    order?: number
+  }>
+
   // Filtering
   tags: string[]
   featured: boolean
