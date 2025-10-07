@@ -15,7 +15,8 @@ interface Testimonial {
   role: string;
   text: string;
   photo?: string;
-  targetRegions?: string[]; // Add region targeting
+  targetRegions?: string[];
+  clientCasePath?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -26,7 +27,8 @@ function emptyTestimonial(): Testimonial {
     role: "",
     text: "",
     photo: "",
-    targetRegions: [], // Initialize with empty array
+    targetRegions: ['all'],
+    clientCasePath: "",
   };
 }
 
@@ -52,6 +54,7 @@ export default function TestimonialsPage() {
           text: t.text || '',
           photo: t.photo || '',
           targetRegions: t.targetRegions || ['all'],
+          clientCasePath: t.clientCasePath || '',
           createdAt: t.createdAt,
           updatedAt: t.updatedAt,
         }));
@@ -127,7 +130,8 @@ export default function TestimonialsPage() {
             role: form.role,
             text: form.text,
             photo: form.photo,
-            targetRegions: form.targetRegions || ['all']
+            targetRegions: form.targetRegions || ['all'],
+            clientCasePath: form.clientCasePath
           }),
         });
 
@@ -150,7 +154,8 @@ export default function TestimonialsPage() {
               role: form.role,
               text: form.text,
               photo: form.photo,
-              targetRegions: form.targetRegions || ['all']
+              targetRegions: form.targetRegions || ['all'],
+              clientCasePath: form.clientCasePath
             }),
           });
           if (res.ok) {
@@ -265,6 +270,19 @@ export default function TestimonialsPage() {
                       />
                     </div>
 
+                    <div>
+                      <Label>Chemin du cas client (optionnel)</Label>
+                      <Input 
+                        name="clientCasePath" 
+                        value={form.clientCasePath || ''} 
+                        onChange={handleChange} 
+                        placeholder="/allisone"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Exemple: /allisone (redirigera vers {process.env.NEXT_PUBLIC_BASE_URL}/cas-client/allisone)
+                      </p>
+                    </div>
+
                     {/* Region Targeting */}
                     <div>
                       <Label className="block mb-2">Régions cibles</Label>
@@ -365,6 +383,15 @@ export default function TestimonialsPage() {
                     </span>
                   ))}
                 </div>
+
+                {/* Client case path display */}
+                {testimonial.clientCasePath && (
+                  <div className="mt-2">
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800">
+                      📁 {testimonial.clientCasePath}
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Bottom Section: Actions */}

@@ -15,11 +15,21 @@ const TestimonialSchema = new mongoose.Schema({
     default: ['all'], // 'all', 'france', 'morocco', 'international'
     enum: ['all', 'france', 'morocco', 'international']
   },
+  // Client case path (e.g., '/allisone')
+  clientCasePath: {
+    type: String,
+    default: null
+  },
   createdAt: Date,
   updatedAt: Date,
-}, { collection: 'testimonials' });
+}, { collection: 'testimonials', strict: false });
 
-const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial', TestimonialSchema);
+// Delete cached model to ensure schema updates are applied
+if (mongoose.models.Testimonial) {
+  delete mongoose.models.Testimonial;
+}
+
+const Testimonial = mongoose.model('Testimonial', TestimonialSchema);
 
 export async function GET(
   request: NextRequest,
@@ -42,7 +52,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   try {
     await connectDB();
     const body = await request.json();
-    const { author, role, text, photo, targetRegions } = body;
+    const { author, role, text, photo, targetRegions, clientCasePath } = body;
     
     if (!author || !role || !text) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -56,6 +66,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         text,
         photo: photo || null,
         targetRegions: targetRegions || ['all'],
+        clientCasePath: clientCasePath || null,
         updatedAt: new Date()
       },
       { new: true }

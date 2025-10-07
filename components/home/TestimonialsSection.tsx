@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -9,17 +10,19 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { motion } from "framer-motion";
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
+import { ExternalLink } from 'lucide-react';
 
 
 interface Testimonial {
-     _id: string;
-     author: string;
-     role: string;
-     text: string;
-     photo: string;
-     targetRegions: string[];
-     createdAt?: Date;
-     updatedAt?: Date;
+    _id: string;
+    author: string;
+    role: string;
+    text: string;
+    photo: string;
+    targetRegions: string[];
+    clientCasePath?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 interface TestimonialsSectionProps {
@@ -130,52 +133,67 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                          grabCursor={true}
                          className="w-full min-h-[450px] sm:min-h-[500px] md:min-h-[350px] lg:min-h-[400px] xl:min-h-[450px] pb-15"
                     >
-                         {displayTestimonials.map((testimonial) => (
-                              <SwiperSlide key={testimonial._id}>
-                                   <div className="bg-white flex flex-col gap-4 justify-between shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl min-h-[400px] sm:min-h-[450px] md:min-h-[300px] lg:min-h-[350px] xl:min-h-[400px]">
-                                        <div className="testimonial-rate flex gap-0.5">
-                                             <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                             <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                             <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                             <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                             <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                        </div>
+                         {displayTestimonials.map((testimonial) => {
+                              const clientCaseUrl = testimonial.clientCasePath 
+                                   ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
+                                   : `/cas-client`;
 
-                                        <blockquote className="testimonial-quote text-[#637381] text-base">
-                                             "{testimonial.text || 'No testimonial text available.'}"
-                                        </blockquote>
+                              return (
+                                   <SwiperSlide key={testimonial._id}>
+                                        <Link href={clientCaseUrl} className="block h-full">
+                                             <div className="bg-white flex flex-col gap-4 justify-between shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl min-h-[400px] sm:min-h-[450px] md:min-h-[300px] lg:min-h-[350px] xl:min-h-[400px] hover:shadow-[0px_0px_30px_0px_rgba(92,115,160,0.15)] transition-all duration-300 cursor-pointer group">
+                                                  <div className="testimonial-rate flex gap-0.5">
+                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                  </div>
 
-                                        <div className="testimonial-author flex items-center gap-4">
-                                             <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
-                                                  {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
-                                                       <Image
-                                                            src={testimonial.photo}
-                                                            alt={testimonial.author || 'Author'}
-                                                            width={50}
-                                                            height={50}
-                                                            className="w-full h-full object-cover"
-                                                       />
-                                                  ) : (
-                                                       <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
-                                                            <span className="text-white font-bold text-sm">
-                                                                 {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
-                                                            </span>
+                                                  <blockquote className="testimonial-quote text-[#637381] text-base">
+                                                       "{testimonial.text || 'No testimonial text available.'}"
+                                                  </blockquote>
+
+                                                  <div className="space-y-3">
+                                                       <div className="testimonial-author flex items-center gap-4">
+                                                            <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
+                                                                 {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
+                                                                      <Image
+                                                                           src={testimonial.photo}
+                                                                           alt={testimonial.author || 'Author'}
+                                                                           width={50}
+                                                                           height={50}
+                                                                           className="w-full h-full object-cover"
+                                                                      />
+                                                                 ) : (
+                                                                      <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
+                                                                           <span className="text-white font-bold text-sm">
+                                                                                {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
+                                                                           </span>
+                                                                      </div>
+                                                                 )}
+                                                            </div>
+
+                                                            <div className="author-info flex-1">
+                                                                 <h3 className="font-semibold text-sm text-[#111928]">
+                                                                      {testimonial.author || 'Anonymous'}
+                                                                 </h3>
+                                                                 <p className="text-xs text-[#8899a8]">
+                                                                      {testimonial.role || 'Client'}
+                                                                 </p>
+                                                            </div>
                                                        </div>
-                                                  )}
-                                             </div>
 
-                                             <div className="author-info">
-                                                  <h3 className="font-semibold text-sm text-[#111928]">
-                                                       {testimonial.author || 'Anonymous'}
-                                                  </h3>
-                                                  <p className="text-xs text-[#8899a8]">
-                                                       {testimonial.role || 'Client'}
-                                                  </p>
+                                                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] text-white text-xs font-semibold rounded-full group-hover:shadow-lg transition-all duration-300">
+                                                            <span>Lire le cas client</span>
+                                                            <ExternalLink className="w-3 h-3" />
+                                                       </div>
+                                                  </div>
                                              </div>
-                                        </div>
-                                   </div>
-                              </SwiperSlide>
-                         ))}
+                                        </Link>
+                                   </SwiperSlide>
+                              );
+                         })}
                     </Swiper>
 
                     {/* Navigation Buttons - Positioned with proper spacing */}

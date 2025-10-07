@@ -290,7 +290,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                   trackButtonClick('meeting_link');
                 }}
               >
-                <span className="font-semibold">Prendre RDV</span>
+                <span className="font-semibold">Parler à un expert</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </motion.div>
@@ -342,7 +342,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                       trackButtonClick('meeting_link');
                     }}
                   >
-                    <span className="font-semibold">Prendre RDV</span>
+                    <span className="font-semibold">Parler à un expert</span>
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </motion.div>

@@ -205,7 +205,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
             >
               <Button
                 size="lg"
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 flex-1 md:flex-none"
+                className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 flex-1 md:flex-none"
                 onClick={() => scrollToSection('#contact')}
               >
                 {heroData?.ctaPrimary?.text || 'Chargement...'}
