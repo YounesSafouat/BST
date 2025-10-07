@@ -37,7 +37,7 @@
 
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { Menu, X, Phone } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { useGlobalLoader } from "@/components/LoaderProvider"
 import { useRouter } from "next/navigation"
 import { useButtonAnalytics } from '@/hooks/use-analytics'
@@ -57,7 +57,6 @@ export default function MobileHeader() {
   const [scrollY, setScrollY] = useState(0)
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
-  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
   const [headerData, setHeaderData] = useState<any>(null);
   const { showLoader, hideLoader } = useGlobalLoader()
   const router = useRouter()
@@ -127,24 +126,19 @@ export default function MobileHeader() {
   useEffect(() => {
     if (userRegion && contactData) {
       let whatsapp: string | null = null;
-      let phone: string | null = null;
 
       switch (userRegion) {
         case 'france':
           whatsapp = contactData.france?.whatsapp || null;
-          phone = contactData.france?.phone || null;
           break;
         case 'morocco':
           whatsapp = contactData.morocco?.whatsapp || null;
-          phone = contactData.morocco?.phone || null;
           break;
         default:
           whatsapp = contactData.other?.whatsapp || null;
-          phone = contactData.other?.phone || null;
           break;
       }
       setWhatsappNumber(whatsapp);
-      setPhoneNumber(phone);
     }
   }, [userRegion, contactData]);
 
@@ -239,7 +233,7 @@ export default function MobileHeader() {
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-2">
+        <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
@@ -251,37 +245,6 @@ export default function MobileHeader() {
 
           {/* Contact Actions */}
           <div className="flex items-center gap-3 ml-auto mr-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2 touch-manipulation"
-              onClick={() => {
-                trackButtonClick('mobile_header_phone_button');
-                console.log('Mobile call button clicked, phoneNumber:', phoneNumber);
-                if (phoneNumber) {
-                  console.log('Opening tel link:', `tel:${phoneNumber}`);
-                  window.open(`tel:${phoneNumber}`)
-                } else {
-                  console.log('Using fallback number');
-                  // Fallback to default number
-                  window.open('tel:+212783699603')
-                }
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                trackButtonClick('mobile_header_phone_button');
-                console.log('Mobile call button touched, phoneNumber:', phoneNumber);
-                if (phoneNumber) {
-                  console.log('Opening tel link:', `tel:${phoneNumber}`);
-                  window.open(`tel:${phoneNumber}`)
-                } else {
-                  console.log('Using fallback number');
-                  window.open('tel:+212783699603')
-                }
-              }}
-            >
-              <Phone className="w-3 h-3" />
-            </Button>
             <Button
               variant="ghost"
               size="sm"

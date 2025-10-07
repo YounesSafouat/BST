@@ -36,7 +36,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
+import { Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
@@ -137,9 +137,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     { name: 'Témoignages', href: '#testimonials' },
   ];
 
-  // Use contact data from settings (not header)
-  const phoneNumber = contactData?.morocco?.phone || '+212783699603';
-
   // Get meeting link based on detected region
   const getMeetingLink = () => {
     if (userRegion && contactData) {
@@ -230,7 +227,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-2">
+        <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
@@ -255,17 +252,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
 
           {/* Contact Actions */}
           <div className="hidden md:flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2"
-              onClick={() => {
-                window.open(`tel:${phoneNumber}`);
-                trackButtonClick('phone_number');
-              }}
-            >
-              <Phone className="w-4 h-4" />
-            </Button>
             <Button
               variant="ghost"
               size="sm"
