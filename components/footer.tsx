@@ -34,7 +34,7 @@
 
 "use client"
 
-import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
+import { Mail, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
@@ -57,7 +57,6 @@ const IconMap = {
   Instagram,
   WhatsApp: WhatsAppIcon,
   Mail,
-  Phone,
   MapPin
 }
 
@@ -295,18 +294,6 @@ export default function Footer() {
             <div className="space-y-2 sm:space-y-3">
               {regionalContact ? (
                 <>
-                  {regionalContact.phone && (
-                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
-                      <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                      <a
-                        href={`tel:${regionalContact.phone}`}
-                        className="hover:text-white transition-colors"
-                        onClick={() => trackButtonClick('footer_phone')}
-                      >
-                        {regionalContact.phone}
-                      </a>
-                    </div>
-                  )}
                   {regionalContact.email && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
@@ -319,20 +306,6 @@ export default function Footer() {
                       </a>
                     </div>
                   )}
-                  {regionalContact.whatsapp && (
-                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
-                      <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
-                      <a
-                        href={`https://wa.me/${regionalContact.whatsapp.replace(/\D/g, '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-white transition-colors"
-                        onClick={() => trackButtonClick('footer_whatsapp')}
-                      >
-                        {regionalContact.whatsapp}
-                      </a>
-                    </div>
-                  )}
                   {regionalContact.address && (
                     <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-300">
                       <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
@@ -341,7 +314,6 @@ export default function Footer() {
                   )}
                 </>
               ) : (
-                // Show loading or message if no regional data available
                 <div className="text-xs sm:text-sm text-gray-400">
                   Informations de contact en cours de configuration...
                 </div>
