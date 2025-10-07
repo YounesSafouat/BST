@@ -790,7 +790,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                                         onClick={handleContactClick}
                                                   >
                                                         <Presentation className="w-4 h-4 mr-2" />
-                                                        Nous contacter
+                                                        Demander une démonstration
                                                   </Button>
                                               </div>
                                         </div>
