@@ -1426,46 +1426,46 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
                                          {/* Testimonial Block */}
                                          {block.type === 'testimonial' && block.testimonial && (
-                                              <section className="relative py-16 md:py-24 overflow-hidden">
+                                              <section className="relative py-12 md:py-16 lg:py-24 overflow-hidden">
                                                    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                                                         {block.title && (
-                                                             <div className="text-center mb-12">
-                                                                  <h2 className="text-4xl font-bold text-gray-900 mb-4">{block.title}</h2>
+                                                             <div className="text-center mb-8 md:mb-12">
+                                                                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">{block.title}</h2>
                                                              </div>
                                                         )}
                                                         
-                                                        <div className="bg-white border-2 border-gray-200 rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-lg">
+                                                        <div className="bg-white border-2 border-gray-200 rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden shadow-lg">
                                                              <div className="relative z-10">
-                                                                  <div className="flex flex-col md:flex-row gap-8 items-start">
-                                                                       <div className="flex-shrink-0">
-                                                                            <Avatar className="w-20 h-20 md:w-24 md:h-24 border-2 border-gray-300">
+                                                                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-start">
+                                                                       <div className="flex-shrink-0 mx-auto sm:mx-0">
+                                                                            <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 border-2 border-gray-300">
                                                                                  <AvatarImage 
                                                                                       src={block.testimonial.author.avatar} 
                                                                                       alt={block.testimonial.author.name}
                                                                                  />
-                                                                                 <AvatarFallback className="bg-gray-100 text-gray-700 text-2xl md:text-3xl font-bold border border-gray-200 shadow-lg">
+                                                                                 <AvatarFallback className="bg-gray-100 text-gray-700 text-xl sm:text-2xl md:text-3xl font-bold border border-gray-200 shadow-lg">
                                                                                       {block.testimonial.author.name.charAt(0).toUpperCase()}
                                                                                  </AvatarFallback>
                                                                             </Avatar>
                                                                        </div>
                                                                        
-                                                                       <div className="flex-1">
-                                                                            <div className="pl-6 mb-6">
-                                                                                 <Quote className="w-8 h-8 text-blue-500 mb-4" />
-                                                                                 <blockquote className="text-lg md:text-xl text-gray-800 leading-relaxed">
+                                                                       <div className="flex-1 text-center sm:text-left">
+                                                                            <div className="mb-4 sm:mb-6 sm:pl-0 md:pl-6">
+                                                                                 <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-blue-500 mb-3 sm:mb-4 mx-auto sm:mx-0" />
+                                                                                 <blockquote className="text-base sm:text-lg md:text-xl text-gray-800 leading-relaxed">
                                                                                       "{block.testimonial.quote}"
                                                                                  </blockquote>
                                                                             </div>
                                                                             
-                                                                            <div className="text-sm text-gray-600">
-                                                                                 <p className="font-semibold text-gray-900 text-lg">{block.testimonial.author.name}</p>
+                                                                            <div className="text-sm sm:text-base text-gray-600">
+                                                                                 <p className="font-semibold text-gray-900 text-base sm:text-lg">{block.testimonial.author.name}</p>
                                                                                  <p className="text-gray-600">{block.testimonial.author.role} • {block.testimonial.author.company}</p>
                                                                                  {block.testimonial.rating && (
-                                                                                      <div className="flex items-center gap-1 mt-2">
+                                                                                      <div className="flex items-center justify-center sm:justify-start gap-1 mt-2">
                                                                                            {[...Array(5)].map((_, i) => (
                                                                                                 <Star 
                                                                                                      key={i} 
-                                                                                                     className={`w-5 h-5 ${i < (block.testimonial?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                                                                                     className={`w-4 h-4 sm:w-5 sm:h-5 ${i < (block.testimonial?.rating || 0) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                                                                                                 />
                                                                                            ))}
                                                                                       </div>
@@ -1481,7 +1481,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                          
                                          {/* Contact Form Block */}
                                          {block.type === 'contact-form' && (
-                                              <div id="contact-form-section">
+                                              <div id="contact-form-section" className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] sm:w-auto sm:left-auto sm:right-auto sm:-ml-0 sm:-mr-0">
                                                    <CasClientContactForm 
                                                         clientName={clientData.name || 'ce client'} 
                                                         clientSlug={clientData.slug || ''} 

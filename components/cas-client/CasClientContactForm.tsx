@@ -224,10 +224,10 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
   }
 
   return (
-    <section className="py-16 bg-[var(--color-main)] rounded-2xl mx-4 md:mx-6 shadow-2xl border border-white/10 backdrop-blur-sm relative overflow-hidden">
+    <section className="py-8 sm:py-12 md:py-16 bg-[var(--color-main)] rounded-none sm:rounded-xl md:rounded-2xl mx-0 sm:mx-4 md:mx-6 shadow-2xl border border-white/10 backdrop-blur-sm relative overflow-hidden">
       {/* Background gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-4 md:px-6 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -235,17 +235,17 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
           viewport={{ once: true }}
         >
           {/* Header */}
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-4">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 px-2">
               {blockData?.title || `Intéressé par notre travail avec ${clientName}?`}
             </h2>
            
           </div>
 
           {/* Form */}
-          <div className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="w-full max-w-2xl mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
@@ -258,7 +258,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Votre nom complet"
-                    className={`h-11 sm:h-12 ${errors.name ? 'border-red-500' : ''}`}
+                    className={`h-10 sm:h-11 md:h-12 ${errors.name ? 'border-red-500' : ''}`}
                   />
                   {errors.name && (
                     <p className="text-sm text-red-600 mt-1">{errors.name}</p>
@@ -277,7 +277,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="votre@email.com"
-                    className={`h-11 sm:h-12 ${errors.email ? 'border-red-500' : ''}`}
+                    className={`h-10 sm:h-11 md:h-12 ${errors.email ? 'border-red-500' : ''}`}
                   />
                   {errors.email && (
                     <p className="text-sm text-red-600 mt-1">{errors.email}</p>
@@ -301,7 +301,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                       value={formData.phone}
                       onChange={handleInputChange}
                       placeholder="6 12 34 56 78"
-                      className={`flex-1 h-11 sm:h-12 ${errors.phone ? 'border-red-500' : ''}`}
+                      className={`flex-1 h-10 sm:h-11 md:h-12 ${errors.phone ? 'border-red-500' : ''}`}
                       required
                     />
                   </div>
@@ -322,7 +322,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                     value={formData.company}
                     onChange={handleInputChange}
                     placeholder="Votre entreprise"
-                    className="h-11 sm:h-12"
+                    className="h-10 sm:h-11 md:h-12"
                   />
                 </div>
               </div>
@@ -340,7 +340,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                   onChange={handleInputChange}
                   placeholder="Décrivez votre projet, vos besoins ou posez-nous vos questions..."
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent resize-vertical"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-transparent resize-vertical text-sm sm:text-base"
                 />
               </div>
 
@@ -352,7 +352,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-white text-[var(--color-main)] hover:bg-gray-100 h-12 sm:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="w-full bg-white text-[var(--color-main)] hover:bg-gray-100 h-10 sm:h-12 md:h-14 text-sm sm:text-base font-semibold rounded-full group disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   {isSubmitting ? (
                     <>
@@ -361,7 +361,7 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
                     </>
                   ) : (
                     <>
-                      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 mr-2 group-hover:rotate-12 transition-transform" />
                       Commencer ma transformation
                     </>
                   )}
@@ -369,8 +369,8 @@ export default function CasClientContactForm({ clientName, clientSlug, blockData
               </div>
 
               {/* Note about client source */}
-              <div className="text-center">
-                <p className="text-sm text-white/80">
+              <div className="text-center px-2">
+                <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
                   En envoyant ce message, vous confirmez votre intérêt pour nos services suite à la découverte de notre travail avec {clientName}.
                 </p>
               </div>

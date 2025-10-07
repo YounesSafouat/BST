@@ -180,7 +180,7 @@ export default function CasClientV2() {
      return (
           <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900">
                {/* Hero Section - Copernic Style */}
-               <section className="relative pt-2 pb-8 px-3 lg:pt-4 lg:pb-20 lg:px-8 mt-4 lg:mt-4">
+               <section className="relative pt-20 pb-8 px-3 lg:pt-24 lg:pb-20 lg:px-8">
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
                                         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight">
