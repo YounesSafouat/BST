@@ -254,12 +254,28 @@ export default function MobileHeader() {
             <Button
               variant="ghost"
               size="sm"
-              className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2"
+              className="gap-1 text-gray-700 hover:text-[var(--color-main)] h-8 px-2 touch-manipulation"
               onClick={() => {
+                trackButtonClick('mobile_header_phone_button');
+                console.log('Mobile call button clicked, phoneNumber:', phoneNumber);
                 if (phoneNumber) {
+                  console.log('Opening tel link:', `tel:${phoneNumber}`);
                   window.open(`tel:${phoneNumber}`)
                 } else {
+                  console.log('Using fallback number');
                   // Fallback to default number
+                  window.open('tel:+212783699603')
+                }
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                trackButtonClick('mobile_header_phone_button');
+                console.log('Mobile call button touched, phoneNumber:', phoneNumber);
+                if (phoneNumber) {
+                  console.log('Opening tel link:', `tel:${phoneNumber}`);
+                  window.open(`tel:${phoneNumber}`)
+                } else {
+                  console.log('Using fallback number');
                   window.open('tel:+212783699603')
                 }
               }}
