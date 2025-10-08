@@ -58,6 +58,7 @@ if (typeof window !== 'undefined') {
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 import HomeHeroSplit from '@/components/home/hero/HeroSection';
+import HeroBannerBackground from '@/components/ui/HeroBannerBackground';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
@@ -504,13 +505,15 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
-               <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
-                    <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-12 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
-                         <div>
-                              <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+               <HeroBannerBackground opacity={0.8}>
+                    <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
+                         <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-12 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
+                              <div>
+                                   <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+                              </div>
                          </div>
                     </div>
-               </div>
+               </HeroBannerBackground>
 
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
                <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
