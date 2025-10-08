@@ -25,7 +25,7 @@ const HeroBannerBackground: React.FC<HeroBannerBackgroundProps> = ({
         className="absolute inset-0 pointer-events-none"
         style={{ 
           zIndex: -1,
-          backgroundImage: 'url("/Baniere BST.svg")',
+          backgroundImage: 'url("/Baniere-BST.svg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
