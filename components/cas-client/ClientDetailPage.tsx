@@ -605,10 +605,6 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                                         {clientData.headline}
                                    </h1>
 
-                                   <p className="text-xl text-gray-600 leading-relaxed">
-                                        {clientData.summary}
-                                   </p>
-
                                     <div className="flex justify-start">
                                         <Button
                                              size="sm"
