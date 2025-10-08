@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
 
 interface HeaderData {
      logo: {
@@ -18,6 +18,16 @@ interface HeaderData {
           main: Array<{
                name: string;
                href: string;
+               type: 'page' | 'section';
+               order: number;
+               hasSubmenu?: boolean;
+               submenu?: Array<{
+                    name: string;
+                    href: string;
+                    type: 'page' | 'section';
+                    order: number;
+                    description?: string;
+               }>;
           }>;
      };
 }
@@ -31,11 +41,12 @@ export default function HeaderDashboard() {
           },
           navigation: {
                main: [
-                    { name: 'Solutions', href: '#modules' },
-                    { name: 'Tarifs', href: '#pricing' },
-                    { name: 'Notre Agence', href: '#team' },
-                    { name: 'Témoignages', href: '#testimonials' },
-                    { name: 'Contact', href: '#contact' }
+                    { name: 'Solutions', href: '#modules', type: 'section', order: 1 },
+                    { name: 'Tarifs', href: '#pricing', type: 'section', order: 2 },
+                    { name: 'Blog', href: '/blog', type: 'page', order: 3 },
+                    { name: 'Notre Agence', href: '#team', type: 'section', order: 4 },
+                    { name: 'Témoignages', href: '#testimonials', type: 'section', order: 5 },
+                    { name: 'Contact', href: '#contact', type: 'section', order: 6 }
                ]
           }
      });
@@ -142,7 +153,7 @@ export default function HeaderDashboard() {
           }
      };
 
-     const updateNavigationItem = (index: number, field: 'name' | 'href', value: string) => {
+     const updateNavigationItem = (index: number, field: 'name' | 'href' | 'type', value: string) => {
           try {
                const newNavigation = [...headerData.navigation.main];
                newNavigation[index] = { ...newNavigation[index], [field]: value };
@@ -155,7 +166,13 @@ export default function HeaderDashboard() {
 
      const addNavigationItem = () => {
           try {
-               const newNavigation = [...headerData.navigation.main, { name: '', href: '' }];
+               const maxOrder = Math.max(...headerData.navigation.main.map(item => item.order), 0);
+               const newNavigation = [...headerData.navigation.main, { 
+                    name: '', 
+                    href: '', 
+                    type: 'section' as const,
+                    order: maxOrder + 1 
+               }];
                setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
           } catch (error) {
                console.error('Error adding navigation item:', error);
@@ -166,10 +183,37 @@ export default function HeaderDashboard() {
      const removeNavigationItem = (index: number) => {
           try {
                const newNavigation = headerData.navigation.main.filter((_, i) => i !== index);
-               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+               // Reorder remaining items
+               const reorderedNavigation = newNavigation.map((item, idx) => ({
+                    ...item,
+                    order: idx + 1
+               }));
+               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: reorderedNavigation } });
           } catch (error) {
                console.error('Error removing navigation item:', error);
                setError('Failed to remove navigation item.');
+          }
+     };
+
+     const moveNavigationItem = (index: number, direction: 'up' | 'down') => {
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               const targetIndex = direction === 'up' ? index - 1 : index + 1;
+               
+               if (targetIndex < 0 || targetIndex >= newNavigation.length) return;
+               
+               // Swap items
+               [newNavigation[index], newNavigation[targetIndex]] = [newNavigation[targetIndex], newNavigation[index]];
+               
+               // Update order values
+               newNavigation.forEach((item, idx) => {
+                    item.order = idx + 1;
+               });
+               
+               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          } catch (error) {
+               console.error('Error moving navigation item:', error);
+               setError('Failed to move navigation item.');
           }
      };
 
@@ -262,37 +306,112 @@ export default function HeaderDashboard() {
                <Card>
                     <CardHeader>
                          <CardTitle>Navigation</CardTitle>
+                         <p className="text-sm text-gray-600">
+                              Configurez les éléments de navigation. Utilisez les flèches pour réorganiser l'ordre.
+                         </p>
+                         <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                              <p className="text-sm text-blue-800">
+                                   💡 <strong>Prochaine fonctionnalité:</strong> Menu méga avec sous-menus pour une navigation plus riche.
+                              </p>
+                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                         {headerData.navigation.main.map((item, index) => (
-                              <div key={index} className="flex gap-2">
-                                   <Input
-                                        value={item.name}
-                                        onChange={(e) => updateNavigationItem(index, 'name', e.target.value)}
-                                        placeholder="Nom du menu"
-                                        className="flex-1"
-                                   />
-                                   <Input
-                                        value={item.href}
-                                        onChange={(e) => updateNavigationItem(index, 'href', e.target.value)}
-                                        placeholder="#section"
-                                        className="flex-1"
-                                   />
-                                   <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => removeNavigationItem(index)}
-                                        className="text-red-600 hover:text-red-700"
-                                   >
-                                        Supprimer
-                                   </Button>
+                         {headerData.navigation.main
+                              .sort((a, b) => a.order - b.order)
+                              .map((item, index) => (
+                              <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                                   <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                             <span className="text-sm font-medium text-gray-500">#{item.order}</span>
+                                             <div className="flex flex-col gap-1">
+                                                  <Button
+                                                       variant="ghost"
+                                                       size="sm"
+                                                       onClick={() => moveNavigationItem(index, 'up')}
+                                                       disabled={index === 0}
+                                                       className="h-6 w-6 p-0"
+                                                  >
+                                                       <ChevronUp className="h-4 w-4" />
+                                                  </Button>
+                                                  <Button
+                                                       variant="ghost"
+                                                       size="sm"
+                                                       onClick={() => moveNavigationItem(index, 'down')}
+                                                       disabled={index === headerData.navigation.main.length - 1}
+                                                       className="h-6 w-6 p-0"
+                                                  >
+                                                       <ChevronDown className="h-4 w-4" />
+                                                  </Button>
+                                             </div>
+                                        </div>
+                                        <Button
+                                             variant="outline"
+                                             size="sm"
+                                             onClick={() => removeNavigationItem(index)}
+                                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        >
+                                             <Trash2 className="h-4 w-4 mr-1" />
+                                             Supprimer
+                                        </Button>
+                                   </div>
+                                   
+                                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div>
+                                             <Label htmlFor={`name-${index}`}>Nom du menu</Label>
+                                             <Input
+                                                  id={`name-${index}`}
+                                                  value={item.name}
+                                                  onChange={(e) => updateNavigationItem(index, 'name', e.target.value)}
+                                                  placeholder="Ex: Solutions, Blog, Contact"
+                                             />
+                                        </div>
+                                        
+                                        <div>
+                                             <Label htmlFor={`type-${index}`}>Type</Label>
+                                             <select
+                                                  id={`type-${index}`}
+                                                  value={item.type}
+                                                  onChange={(e) => updateNavigationItem(index, 'type', e.target.value)}
+                                                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                             >
+                                                  <option value="section">Section (page actuelle)</option>
+                                                  <option value="page">Page (nouvelle page)</option>
+                                             </select>
+                                        </div>
+                                        
+                                        <div>
+                                             <Label htmlFor={`href-${index}`}>
+                                                  {item.type === 'page' ? 'URL de la page' : 'Ancre de section'}
+                                             </Label>
+                                             <Input
+                                                  id={`href-${index}`}
+                                                  value={item.href}
+                                                  onChange={(e) => updateNavigationItem(index, 'href', e.target.value)}
+                                                  placeholder={item.type === 'page' ? '/blog, /about' : '#modules, #pricing'}
+                                             />
+                                        </div>
+                                   </div>
+                                   
+                                   {item.type === 'page' && item.href && !item.href.startsWith('/') && (
+                                        <div className="text-sm text-orange-600 bg-orange-50 p-2 rounded">
+                                             ⚠️ Les liens de pages doivent commencer par "/" (ex: /blog, /about)
+                                        </div>
+                                   )}
+                                   
+                                   {item.type === 'section' && item.href && !item.href.startsWith('#') && (
+                                        <div className="text-sm text-orange-600 bg-orange-50 p-2 rounded">
+                                             ⚠️ Les liens de sections doivent commencer par "#" (ex: #modules, #pricing)
+                                        </div>
+                                   )}
                               </div>
                          ))}
+                         
                          <Button
                               variant="outline"
                               onClick={addNavigationItem}
-                              className="w-full"
+                              className="w-full border-dashed border-2 border-gray-300 hover:border-gray-400"
                          >
+                              <Plus className="h-4 w-4 mr-2" />
                               Ajouter un élément de navigation
                          </Button>
                     </CardContent>

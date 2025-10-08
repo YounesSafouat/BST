@@ -130,11 +130,12 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const isScrolled = scrollY > 0;
 
   // Use CMS navigation data or fallback to default
-  const navigation = headerData?.navigation?.main || [
-    { name: 'Solutions', href: '#modules' },
-    { name: 'Tarifs', href: '#pricing' },
-    { name: 'Notre Agence', href: '#team' },
-    { name: 'Témoignages', href: '#testimonials' },
+  const navigation = headerData?.navigation?.main?.sort((a: any, b: any) => a.order - b.order) || [
+    { name: 'Solutions', href: '#modules', type: 'section', order: 1 },
+    { name: 'Tarifs', href: '#pricing', type: 'section', order: 2 },
+    { name: 'Blog', href: '/blog', type: 'page', order: 3 },
+    { name: 'Notre Agence', href: '#team', type: 'section', order: 4 },
+    { name: 'Témoignages', href: '#testimonials', type: 'section', order: 5 },
   ];
 
   // Get meeting link based on detected region
@@ -170,11 +171,27 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     return sizeMap[size] || 'h-10';
   };
 
-  const scrollToSection = (href: string) => {
-    console.log('scrollToSection called with:', href, 'Current path:', window.location.pathname);
+  const handleNavigationClick = (item: any) => {
+    console.log('Navigation clicked:', item);
     
     // Always close mobile menu first
     setMobileMenuOpen(false);
+    
+    if (item.type === 'page') {
+      // Handle page navigation
+      if (item.href.startsWith('/')) {
+        router.push(item.href);
+      } else {
+        console.warn('Invalid page URL:', item.href);
+      }
+    } else if (item.type === 'section') {
+      // Handle section scrolling
+      scrollToSection(item.href);
+    }
+  };
+
+  const scrollToSection = (href: string) => {
+    console.log('scrollToSection called with:', href, 'Current path:', window.location.pathname);
     
     // Check if we're on the home page
     if (window.location.pathname === '/') {
@@ -189,7 +206,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       }
     } else {
       // Not on home page, navigate to home page with hash
-      // Use the correct approach: navigate to home page first, then scroll to section
       router.push('/');
 
       // Wait for navigation to complete and DOM to be ready, then scroll to section
@@ -240,13 +256,40 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navigation.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm"
-              >
-                {item.name}
-              </button>
+              <div key={item.name} className="relative group">
+                <button
+                  onClick={() => handleNavigationClick(item)}
+                  className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm relative flex items-center gap-1"
+                >
+                  {item.name}
+                  {/* Future mega menu indicator */}
+                  {item.hasSubmenu && (
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  )}
+                </button>
+                
+                {/* Future mega menu dropdown - ready for implementation */}
+                {item.hasSubmenu && item.submenu && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="p-2">
+                      {item.submenu.map((subItem) => (
+                        <button
+                          key={subItem.name}
+                          onClick={() => handleNavigationClick(subItem)}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors"
+                        >
+                          <div className="font-medium">{subItem.name}</div>
+                          {subItem.description && (
+                            <div className="text-xs text-gray-500 mt-1">{subItem.description}</div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
@@ -308,12 +351,18 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                 <button
                   key={item.name}
                   onClick={() => {
-                    console.log('Mobile nav clicked:', item.name, item.href);
-                    scrollToSection(item.href);
+                    console.log('Mobile nav clicked:', item.name, item);
+                    handleNavigationClick(item);
                   }}
-                  className="block w-full text-left py-2 text-gray-700 hover:text-[var(--color-main)] transition-colors"
+                  className="block w-full text-left py-2 text-gray-700 hover:text-[var(--color-main)] transition-colors flex items-center gap-2"
                 >
                   {item.name}
+                  {item.type === 'page' && (
+                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Page</span>
+                  )}
+                  {item.type === 'section' && (
+                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Section</span>
+                  )}
                 </button>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t">
