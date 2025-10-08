@@ -42,6 +42,7 @@ import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useRouter } from 'next/navigation';
 import { useButtonAnalytics } from '@/hooks/use-analytics';
+import MegaMenu from './MegaMenu';
 
 // WhatsApp Icon Component
 const WhatsAppIcon = ({ className }: { className?: string }) => (
@@ -56,6 +57,9 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [headerData, setHeaderData] = useState<any>(null);
+  const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
+  
+  
   const { isPageVisible } = usePageVisibility();
   const { trackButtonClick } = useButtonAnalytics();
   const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
@@ -134,8 +138,27 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     { name: 'Solutions', href: '#modules', type: 'section', order: 1 },
     { name: 'Tarifs', href: '#pricing', type: 'section', order: 2 },
     { name: 'Blog', href: '/blog', type: 'page', order: 3 },
-    { name: 'Notre Agence', href: '#team', type: 'section', order: 4 },
-    { name: 'Témoignages', href: '#testimonials', type: 'section', order: 5 },
+    { 
+      name: 'Nos clients', 
+      href: '/cas-client', 
+      type: 'page', 
+      order: 4,
+      hasSubmenu: true,
+      submenu: [],
+      megaMenu: {
+        type: 'client-cases' as const,
+        title: 'Découvrez tous nos cas d\'usage',
+        description: 'Nous aidons nos clients dans différents secteurs et sur différentes problématiques',
+        featuredCases: [],
+        ctaButton: {
+          text: 'Tous nos cas clients',
+          href: '/cas-client'
+        }
+      }
+    },
+    { name: 'Notre Agence', href: '#team', type: 'section', order: 5 },
+    { name: 'Témoignages', href: '#testimonials', type: 'section', order: 6 },
+    { name: 'Contact', href: '#contact', type: 'section', order: 7 }
   ];
 
   // Get meeting link based on detected region
@@ -243,7 +266,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+        <div 
+          className="flex justify-between items-center py-4"
+          onMouseLeave={() => setActiveMegaMenu(null)}
+        >
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
@@ -256,25 +282,33 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navigation.map((item) => (
-              <div key={item.name} className="relative group">
+              <div 
+                key={item.name} 
+                className="relative"
+              >
                 <button
                   onClick={() => handleNavigationClick(item)}
-                  className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm relative flex items-center gap-1"
+                  onMouseEnter={() => {
+                    if (item.megaMenu) {
+                      setActiveMegaMenu(item.name);
+                    }
+                  }}
+                  className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm relative flex items-center gap-1 py-2"
                 >
                   {item.name}
-                  {/* Future mega menu indicator */}
-                  {item.hasSubmenu && (
+                  {/* Mega menu indicator */}
+                  {item.megaMenu && (
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   )}
                 </button>
                 
-                {/* Future mega menu dropdown - ready for implementation */}
-                {item.hasSubmenu && item.submenu && (
+                {/* Regular submenu dropdown */}
+                {item.hasSubmenu && (item as any).submenu && !item.megaMenu && (
                   <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="p-2">
-                      {item.submenu.map((subItem) => (
+                      {(item as any).submenu.map((subItem: any) => (
                         <button
                           key={subItem.name}
                           onClick={() => handleNavigationClick(subItem)}
@@ -336,6 +370,20 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           </Button>
         </div>
       </div>
+
+      {/* Mega Menu */}
+      {navigation.find(item => item.name === activeMegaMenu)?.megaMenu && (
+        <div 
+          className="absolute top-full left-0 w-full"
+          onMouseEnter={() => setActiveMegaMenu(activeMegaMenu)}
+          onMouseLeave={() => setActiveMegaMenu(null)}
+        >
+          <MegaMenu 
+            data={navigation.find(item => item.name === activeMegaMenu)!.megaMenu!}
+            isVisible={!!activeMegaMenu}
+          />
+        </div>
+      )}
 
       {/* Mobile Menu */}
       <AnimatePresence>

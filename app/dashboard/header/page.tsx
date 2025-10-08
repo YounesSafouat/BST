@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Save, Loader2, ChevronUp, ChevronDown, Plus, Trash2 } from "lucide-react";
+import { Save, Loader2, ChevronUp, ChevronDown, Plus, Trash2, Settings, Eye } from "lucide-react";
 
 interface HeaderData {
      logo: {
@@ -28,6 +28,22 @@ interface HeaderData {
                     order: number;
                     description?: string;
                }>;
+               megaMenu?: {
+                    type: 'client-cases';
+                    title: string;
+                    description: string;
+                    featuredCases: Array<{
+                         id: string;
+                         name: string;
+                         slug: string;
+                         image: string;
+                         excerpt: string;
+                    }>;
+                    ctaButton: {
+                         text: string;
+                         href: string;
+                    };
+               };
           }>;
      };
 }
@@ -44,9 +60,26 @@ export default function HeaderDashboard() {
                     { name: 'Solutions', href: '#modules', type: 'section', order: 1 },
                     { name: 'Tarifs', href: '#pricing', type: 'section', order: 2 },
                     { name: 'Blog', href: '/blog', type: 'page', order: 3 },
-                    { name: 'Notre Agence', href: '#team', type: 'section', order: 4 },
-                    { name: 'Témoignages', href: '#testimonials', type: 'section', order: 5 },
-                    { name: 'Contact', href: '#contact', type: 'section', order: 6 }
+                    { 
+                         name: 'Nos clients', 
+                         href: '/cas-client', 
+                         type: 'page', 
+                         order: 4,
+                         hasSubmenu: true,
+                         megaMenu: {
+                              type: 'client-cases',
+                              title: 'Découvrez tous nos cas d\'usage',
+                              description: 'Nous aidons nos clients dans différents secteurs et sur différentes problématiques',
+                              featuredCases: [],
+                              ctaButton: {
+                                   text: 'Tous nos cas clients',
+                                   href: '/cas-client'
+                              }
+                         }
+                    },
+                    { name: 'Notre Agence', href: '#team', type: 'section', order: 5 },
+                    { name: 'Témoignages', href: '#testimonials', type: 'section', order: 6 },
+                    { name: 'Contact', href: '#contact', type: 'section', order: 7 }
                ]
           }
      });
@@ -217,6 +250,111 @@ export default function HeaderDashboard() {
           }
      };
 
+     const toggleMegaMenu = (index: number) => {
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               const item = newNavigation[index];
+               
+               if (item.megaMenu) {
+                    // Remove mega menu
+                    delete item.megaMenu;
+                    item.hasSubmenu = false;
+               } else {
+                    // Add mega menu
+                    item.hasSubmenu = true;
+                    item.megaMenu = {
+                         type: 'client-cases',
+                         title: 'Découvrez tous nos cas d\'usage',
+                         description: 'Nous aidons nos clients dans différents secteurs et sur différentes problématiques',
+                         featuredCases: [],
+                         ctaButton: {
+                              text: 'Tous nos cas clients',
+                              href: '/cas-client'
+                         }
+                    };
+               }
+               
+               setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+          } catch (error) {
+               console.error('Error toggling mega menu:', error);
+               setError('Failed to toggle mega menu.');
+          }
+     };
+
+     const updateMegaMenuField = (index: number, field: string, value: string) => {
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               const item = newNavigation[index];
+               
+               if (item.megaMenu) {
+                    if (field.includes('.')) {
+                         const [parent, child] = field.split('.');
+                         (item.megaMenu as any)[parent][child] = value;
+                    } else {
+                         (item.megaMenu as any)[field] = value;
+                    }
+                    
+                    setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+               }
+          } catch (error) {
+               console.error('Error updating mega menu field:', error);
+               setError('Failed to update mega menu field.');
+          }
+     };
+
+     const addFeaturedCase = (index: number) => {
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               const item = newNavigation[index];
+               
+               if (item.megaMenu) {
+                    const newCase = {
+                         id: `case-${Date.now()}`,
+                         name: 'Nouveau cas client',
+                         slug: 'nouveau-cas-client',
+                         image: '/placeholder.jpg',
+                         excerpt: 'Description du cas client'
+                    };
+                    
+                    item.megaMenu.featuredCases.push(newCase);
+                    setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+               }
+          } catch (error) {
+               console.error('Error adding featured case:', error);
+               setError('Failed to add featured case.');
+          }
+     };
+
+     const updateFeaturedCase = (index: number, caseIndex: number, field: string, value: string) => {
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               const item = newNavigation[index];
+               
+               if (item.megaMenu && item.megaMenu.featuredCases[caseIndex]) {
+                    (item.megaMenu.featuredCases[caseIndex] as any)[field] = value;
+                    setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+               }
+          } catch (error) {
+               console.error('Error updating featured case:', error);
+               setError('Failed to update featured case.');
+          }
+     };
+
+     const removeFeaturedCase = (index: number, caseIndex: number) => {
+          try {
+               const newNavigation = [...headerData.navigation.main];
+               const item = newNavigation[index];
+               
+               if (item.megaMenu) {
+                    item.megaMenu.featuredCases.splice(caseIndex, 1);
+                    setHeaderData({ ...headerData, navigation: { ...headerData.navigation, main: newNavigation } });
+               }
+          } catch (error) {
+               console.error('Error removing featured case:', error);
+               setError('Failed to remove featured case.');
+          }
+     };
+
      if (loading) {
           return (
                <div className="flex items-center justify-center min-h-[400px]">
@@ -309,9 +447,9 @@ export default function HeaderDashboard() {
                          <p className="text-sm text-gray-600">
                               Configurez les éléments de navigation. Utilisez les flèches pour réorganiser l'ordre.
                          </p>
-                         <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                              <p className="text-sm text-blue-800">
-                                   💡 <strong>Prochaine fonctionnalité:</strong> Menu méga avec sous-menus pour une navigation plus riche.
+                         <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                              <p className="text-sm text-green-800">
+                                   ✨ <strong>Fonctionnalité disponible:</strong> Menu méga avec cas clients mis en avant. Activez le menu méga pour l'élément "Nos clients".
                               </p>
                          </div>
                     </CardHeader>
@@ -344,15 +482,26 @@ export default function HeaderDashboard() {
                                                   </Button>
                                              </div>
                                         </div>
-                                        <Button
-                                             variant="outline"
-                                             size="sm"
-                                             onClick={() => removeNavigationItem(index)}
-                                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                        >
-                                             <Trash2 className="h-4 w-4 mr-1" />
-                                             Supprimer
-                                        </Button>
+                                        <div className="flex gap-2">
+                                             <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  onClick={() => toggleMegaMenu(index)}
+                                                  className={item.megaMenu ? "bg-green-50 text-green-700 border-green-200 hover:bg-green-100" : "text-gray-600 hover:text-gray-700 hover:bg-gray-50"}
+                                             >
+                                                  <Settings className="h-4 w-4 mr-1" />
+                                                  {item.megaMenu ? "Menu Méga Actif" : "Activer Menu Méga"}
+                                             </Button>
+                                             <Button
+                                                  variant="outline"
+                                                  size="sm"
+                                                  onClick={() => removeNavigationItem(index)}
+                                                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                             >
+                                                  <Trash2 className="h-4 w-4 mr-1" />
+                                                  Supprimer
+                                             </Button>
+                                        </div>
                                    </div>
                                    
                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -401,6 +550,142 @@ export default function HeaderDashboard() {
                                    {item.type === 'section' && item.href && !item.href.startsWith('#') && (
                                         <div className="text-sm text-orange-600 bg-orange-50 p-2 rounded">
                                              ⚠️ Les liens de sections doivent commencer par "#" (ex: #modules, #pricing)
+                                        </div>
+                                   )}
+
+                                   {/* Mega Menu Configuration */}
+                                   {item.megaMenu && (
+                                        <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                             <div className="flex items-center gap-2 mb-4">
+                                                  <Eye className="h-5 w-5 text-green-600" />
+                                                  <h4 className="font-semibold text-gray-900">Configuration du Menu Méga</h4>
+                                             </div>
+                                             
+                                             <div className="space-y-4">
+                                                  {/* Mega Menu Title & Description */}
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label htmlFor={`mega-title-${index}`}>Titre du Menu Méga</Label>
+                                                            <Input
+                                                                 id={`mega-title-${index}`}
+                                                                 value={item.megaMenu.title}
+                                                                 onChange={(e) => updateMegaMenuField(index, 'title', e.target.value)}
+                                                                 placeholder="Découvrez tous nos cas d'usage"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label htmlFor={`mega-desc-${index}`}>Description</Label>
+                                                            <Input
+                                                                 id={`mega-desc-${index}`}
+                                                                 value={item.megaMenu.description}
+                                                                 onChange={(e) => updateMegaMenuField(index, 'description', e.target.value)}
+                                                                 placeholder="Description du menu méga"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  {/* CTA Button Configuration */}
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                                            <Label htmlFor={`mega-cta-text-${index}`}>Texte du bouton CTA</Label>
+                                                            <Input
+                                                                 id={`mega-cta-text-${index}`}
+                                                                 value={item.megaMenu.ctaButton.text}
+                                                                 onChange={(e) => updateMegaMenuField(index, 'ctaButton.text', e.target.value)}
+                                                                 placeholder="Tous nos cas clients"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                                            <Label htmlFor={`mega-cta-href-${index}`}>URL du bouton CTA</Label>
+                                                            <Input
+                                                                 id={`mega-cta-href-${index}`}
+                                                                 value={item.megaMenu.ctaButton.href}
+                                                                 onChange={(e) => updateMegaMenuField(index, 'ctaButton.href', e.target.value)}
+                                                                 placeholder="/cas-client"
+                                                            />
+                                                       </div>
+                                                  </div>
+
+                                                  {/* Featured Cases */}
+                                                  <div>
+                                                       <div className="flex items-center justify-between mb-3">
+                                                            <Label className="text-base font-medium">Cas Clients Mis en Avant</Label>
+                                                            <Button
+                                                                 variant="outline"
+                                                                 size="sm"
+                                                                 onClick={() => addFeaturedCase(index)}
+                                                                 className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                            >
+                                                                 <Plus className="h-4 w-4 mr-1" />
+                                                                 Ajouter un cas
+                                                            </Button>
+                                                       </div>
+                                                       
+                                                       {item.megaMenu.featuredCases.length > 0 ? (
+                                                            <div className="space-y-3">
+                                                                 {item.megaMenu.featuredCases.map((clientCase, caseIndex) => (
+                                                                      <div key={caseIndex} className="p-3 bg-white rounded-lg border border-gray-200">
+                                                                           <div className="flex items-center justify-between mb-3">
+                                                                                <span className="text-sm font-medium text-gray-600">Cas #{caseIndex + 1}</span>
+                                                                                <Button
+                                                                                     variant="ghost"
+                                                                                     size="sm"
+                                                                                     onClick={() => removeFeaturedCase(index, caseIndex)}
+                                                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50 h-8 w-8 p-0"
+                                                                                >
+                                                                                     <Trash2 className="h-4 w-4" />
+                                                                                </Button>
+                                                                           </div>
+                                                                           
+                                                                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                                                <div>
+                                                                                     <Label htmlFor={`case-name-${index}-${caseIndex}`}>Nom du cas</Label>
+                                                                                     <Input
+                                                                                          id={`case-name-${index}-${caseIndex}`}
+                                                                                          value={clientCase.name}
+                                                                                          onChange={(e) => updateFeaturedCase(index, caseIndex, 'name', e.target.value)}
+                                                                                          placeholder="Nom du cas client"
+                                                                                     />
+                                                                                </div>
+                                                                                <div>
+                                                                                     <Label htmlFor={`case-slug-${index}-${caseIndex}`}>Slug (URL)</Label>
+                                                                                     <Input
+                                                                                          id={`case-slug-${index}-${caseIndex}`}
+                                                                                          value={clientCase.slug}
+                                                                                          onChange={(e) => updateFeaturedCase(index, caseIndex, 'slug', e.target.value)}
+                                                                                          placeholder="slug-du-cas"
+                                                                                     />
+                                                                                </div>
+                                                                                <div>
+                                                                                     <Label htmlFor={`case-image-${index}-${caseIndex}`}>Image</Label>
+                                                                                     <Input
+                                                                                          id={`case-image-${index}-${caseIndex}`}
+                                                                                          value={clientCase.image}
+                                                                                          onChange={(e) => updateFeaturedCase(index, caseIndex, 'image', e.target.value)}
+                                                                                          placeholder="/path/to/image.jpg"
+                                                                                     />
+                                                                                </div>
+                                                                                <div>
+                                                                                     <Label htmlFor={`case-excerpt-${index}-${caseIndex}`}>Description</Label>
+                                                                                     <Input
+                                                                                          id={`case-excerpt-${index}-${caseIndex}`}
+                                                                                          value={clientCase.excerpt}
+                                                                                          onChange={(e) => updateFeaturedCase(index, caseIndex, 'excerpt', e.target.value)}
+                                                                                          placeholder="Description du cas client"
+                                                                                     />
+                                                                                </div>
+                                                                           </div>
+                                                                      </div>
+                                                                 ))}
+                                                            </div>
+                                                       ) : (
+                                                            <div className="text-center py-6 text-gray-500 bg-white rounded-lg border border-dashed border-gray-300">
+                                                                 <p>Aucun cas client mis en avant</p>
+                                                                 <p className="text-sm">Cliquez sur "Ajouter un cas" pour commencer</p>
+                                                            </div>
+                                                       )}
+                                                  </div>
+                                             </div>
                                         </div>
                                    )}
                               </div>
