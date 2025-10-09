@@ -180,9 +180,9 @@ export default function CompaniesCarouselV3({
 
                     {/* Carousel Container - EXACT same structure as working original */}
                     <div className="relative overflow-hidden h-[150px]">
-                        {/* Gradient overlays - EXACT same as original */}
-                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+                        {/* Gradient overlays - Very subtle fade effect */}
+                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
+                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white/10 to-transparent pointer-events-none"></div>
 
                         <div className="flex">
                             <div
