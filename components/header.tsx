@@ -58,6 +58,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [headerData, setHeaderData] = useState<any>(null);
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
+  const [megaMenuTimeout, setMegaMenuTimeout] = useState<NodeJS.Timeout | null>(null);
   
   
   const { isPageVisible } = usePageVisibility();
@@ -268,7 +269,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div 
           className="flex justify-between items-center py-4"
-          onMouseLeave={() => setActiveMegaMenu(null)}
         >
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
@@ -289,9 +289,19 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                 <button
                   onClick={() => handleNavigationClick(item)}
                   onMouseEnter={() => {
+                    if (megaMenuTimeout) {
+                      clearTimeout(megaMenuTimeout);
+                      setMegaMenuTimeout(null);
+                    }
                     if (item.megaMenu) {
                       setActiveMegaMenu(item.name);
+                    } else {
+                      setActiveMegaMenu(null);
                     }
+                  }}
+                  onMouseLeave={() => {
+                    const timeout = setTimeout(() => setActiveMegaMenu(null), 300);
+                    setMegaMenuTimeout(timeout);
                   }}
                   className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm relative flex items-center gap-1 py-2"
                 >
@@ -371,16 +381,25 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         </div>
       </div>
 
+
       {/* Mega Menu */}
       {navigation.find(item => item.name === activeMegaMenu)?.megaMenu && (
         <div 
           className="absolute top-full left-0 w-full"
-          onMouseEnter={() => setActiveMegaMenu(activeMegaMenu)}
-          onMouseLeave={() => setActiveMegaMenu(null)}
+          onMouseEnter={() => {
+            if (megaMenuTimeout) {
+              clearTimeout(megaMenuTimeout);
+              setMegaMenuTimeout(null);
+            }
+          }}
+          onMouseLeave={() => {
+            setActiveMegaMenu(null);
+          }}
         >
           <MegaMenu 
             data={navigation.find(item => item.name === activeMegaMenu)!.megaMenu!}
             isVisible={!!activeMegaMenu}
+            onMouseLeave={() => setActiveMegaMenu(null)}
           />
         </div>
       )}
