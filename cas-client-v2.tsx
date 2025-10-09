@@ -184,7 +184,7 @@ export default function CasClientV2() {
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
                                         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight">
-                                             Nos clients ont vu leur croissance augmenter, parfois de manière spectaculaire...
+                                        Ils ont transformé leur entreprise avec l'accompagnement de Blackswan. 
                                         </h1>
                                    </div>
 
