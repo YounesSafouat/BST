@@ -243,9 +243,9 @@ export default function MobileHeader() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-40 md:hidden transition-all duration-300 ${isScrolled
-        ? 'bg-white/80 backdrop-blur-xl shadow-lg border-b border-white/20'
-        : 'bg-white/20 backdrop-blur-md'
+      className={`fixed top-0 left-0 right-0 z-40 md:hidden transition-all duration-300 bg-white ${isScrolled
+        ? 'shadow-lg border-b border-gray-200'
+        : 'shadow-sm'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
