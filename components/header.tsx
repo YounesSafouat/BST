@@ -368,7 +368,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             >
               <Button
                 size="sm"
-                className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full"
+                className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white px-5 text-sm h-11 rounded-full"
                 onClick={() => {
                   window.open(meetingLink, '_blank');
                   trackButtonClick('meeting_link');

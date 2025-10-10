@@ -301,7 +301,7 @@ export default function MobileHeader() {
                     trackButtonClick('mobile_header_rdv_button');
                     window.open(meetingLink, '_blank');
                   }}
-                  className="w-full bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-105"
+                  className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-105"
                 >
                   Parler à un expert
                 </Button>
