@@ -507,14 +507,13 @@ export default function HomePage() {
                {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
                <HeroBannerBackground opacity={0.8}>
                     <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
-                         <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-12 xl:pt-24 2xl:pt-28 relative z-10 bg-transparent">
+                         <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-10 xl:pt-20 2xl:pt-20 relative z-10 bg-transparent">
                               <div>
                                    <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
                               </div>
                          </div>
                     </div>
                </HeroBannerBackground>
-
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
                <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
                     <CompaniesCarouselV3
@@ -527,8 +526,17 @@ export default function HomePage() {
                          showCount={false}
                     />
                </div>
-
-               {/* SECTION 2: Platform Modules Timeline - Overlapping with fade */}
+               {/* SECTION 2: Video Testimonials - HomePage */}
+                <div id="video-testimonials" className="relative z-10">
+                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
+               </div>
+               {/* SECTION 3: Odoo Certification - HomePage */}
+               <div id="certification" className="relative z-10">
+                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
+                         <LazyOdooCertificationSection certificationData={homePageData?.certification} />
+                    </Suspense>
+               </div>
+               {/* SECTION 4: Platform Modules Timeline - Overlapping with fade */}
                <section className="py-12 lg:py-6 xl:py-16 2xl:py-20 bg-white overflow-hidden pt-20 lg:pt-8 xl:pt-20 2xl:pt-24 relative z-30" id="modules">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          <div className="text-center mb-12">
@@ -665,29 +673,22 @@ export default function HomePage() {
                          </div>
                     </div>
                </section>
-
-               {/* SECTION 3: Video Testimonials - HomePage */}
-               <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
-               </div>
-
-               {/* SECTION 4: Services Section - HomePage */}
+               {/* SECTION 5: Services Section - HomePage */}
                <div className="relative z-10" id="services">
                     <ServicesSection servicesData={homePageData?.services} />
                </div>
-
-               {/* SECTION 5: Odoo Certification - HomePage */}
-               <div id="certification" className="relative z-10">
-                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                         <LazyOdooCertificationSection certificationData={homePageData?.certification} />
-                    </Suspense>
+               {/* SECTION 6: Testimonials - HomePage */}
+               <div id="testimonials">
+                    <TestimonialsSection
+                         testimonialsSectionData={homePageData?.testimonialsSection}
+                         testimonials={homePageData?.testimonials}
+                    />
                </div>
-
-               {/* SECTION 6: Pricing Section - HomePage */}
+               {/* SECTION 7: Pricing Section - HomePage */}
                <section id="pricing" className="relative z-10">
                     <PricingSection pricingData={homePageData?.pricing} />
                </section>
-               {/* SECTION 7: Our Agency - HomePage */}
+               {/* SECTION 8: Our Agency - HomePage */}
                <div id="about">
                     <OurAgencySection
                          key={userRegion} // Force re-render when region changes
@@ -695,20 +696,10 @@ export default function HomePage() {
                          userRegion={userRegion}
                     />
                </div>
-
-               {/* SECTION 8: Testimonials - HomePage */}
-               <div id="testimonials">
-                    <TestimonialsSection
-                         testimonialsSectionData={homePageData?.testimonialsSection}
-                         testimonials={homePageData?.testimonials}
-                    />
-               </div>
-
                {/* SECTION 9: Contact Section - HomePage */}
                <div id="contact">
                     <ContactSection contactData={homePageData?.contact} />
                </div>
-
                {/* SECTION 10: FAQ Section - HomePage */}
                <div id="faq">
                     <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
@@ -804,7 +795,7 @@ export default function HomePage() {
         .timeline-container:hover .animate-scroll-up-slow {
           animation-play-state: paused;
         }
-      `}</style>
+               `}</style>
           </div>
      );
 

@@ -128,10 +128,10 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
   };
 
   return (
-    <section id="hero" className="relative overflow-hidden bg-transparent" style={{ marginTop: '-2rem', paddingTop: '0' }}>
+    <section id="hero" className="relative overflow-hidden bg-transparent  ">
       {/* Removed white blur elements to show bubble effect */}
 
-      <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2" style={{ marginTop: '0', paddingTop: '0' }}>
+      <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
           <div className="lg:hidden space-y-4 sm:space-y-6 pt-0 mt-0 -mt-4 min-h-[80vh] flex flex-col justify-center" style={{ marginTop: '0', paddingTop: '0' }}>

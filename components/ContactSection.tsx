@@ -43,7 +43,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Phone, Mail, Calendar, CheckCircle, Award, Zap, Shield, CheckCircle as CheckCircleIcon, AlertCircle, User, Building, MessageSquare } from "lucide-react";
-import RegionalContactInfo from "./RegionalContactInfo";
 import { useToast } from "@/hooks/use-toast";
 import CountryCodeSelector from "./CountryCodeSelector";
 import { useGeolocationSingleton } from "@/hooks/useGeolocationSingleton";
@@ -2482,11 +2481,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                              <p className="text-purple-100 text-xs sm:text-sm mb-3 sm:mb-4">
                                                   {data.consultation.description}
                                              </p>
-                                        </div>
-
-                                        <div className="pt-3 sm:pt-4 md:pt-6 border-t border-white/20">
-                                             <h4 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Contact direct</h4>
-                                             <RegionalContactInfo className="text-white" />
                                         </div>
                                    </div>
                               </div>

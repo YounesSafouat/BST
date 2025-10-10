@@ -194,22 +194,23 @@ export default function MobileHeader() {
       }
     } else {
       // Not on home page, navigate to home page with hash
-      // Use the correct approach: navigate to home page first, then scroll to section
-      router.push('/');
+      router.push(`/${href}`);
+      setIsMenuOpen(false);
 
       // Wait for navigation to complete and DOM to be ready, then scroll to section
       let retryCount = 0;
-      const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
+      const maxRetries = 30; // Increased retries for better reliability
 
       const waitForSection = () => {
         const element = document.querySelector(href);
         if (element) {
           // Section found, scroll to it
           element.scrollIntoView({ behavior: 'smooth' });
+          console.log('Successfully scrolled to section:', href);
         } else if (retryCount < maxRetries) {
           // Section not found yet, wait a bit more and try again
           retryCount++;
-          setTimeout(waitForSection, 50);
+          setTimeout(waitForSection, 100); // Increased delay for better reliability
         } else {
           // Max retries reached, scroll to top as fallback
           console.warn(`Section ${href} not found after ${maxRetries} retries`);
@@ -218,8 +219,7 @@ export default function MobileHeader() {
       };
 
       // Start waiting for the section with a longer initial delay
-      setTimeout(waitForSection, 500);
-      setIsMenuOpen(false);
+      setTimeout(waitForSection, 800); // Increased initial delay
     }
   };
 
@@ -260,10 +260,10 @@ export default function MobileHeader() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="h-10 w-10 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMenuOpen ? <X className="!w-6 !h-6 !stroke-[2.5] !text-white" /> : <Menu className="!w-6 !h-6 !stroke-[2.5] !text-white" />}
           </Button>
         </div>
       </div>

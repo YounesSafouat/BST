@@ -36,8 +36,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, Menu, X, Sparkles, ArrowRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { usePageVisibility } from '@/hooks/usePageVisibility';
 import { useRouter } from 'next/navigation';
@@ -53,7 +53,6 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoaded: boolean }) {
   const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [contactData, setContactData] = useState<any>(null);
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
   const [headerData, setHeaderData] = useState<any>(null);
@@ -136,7 +135,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
 
   // Use CMS navigation data or fallback to default
   const navigation = headerData?.navigation?.main?.sort((a: any, b: any) => a.order - b.order) || [
-    { name: 'Solutions', href: '#modules', type: 'section', order: 1 },
+    { name: 'Solutions', href: '#services', type: 'section', order: 1 },
     { name: 'Tarifs', href: '#pricing', type: 'section', order: 2 },
     { name: 'Blog', href: '/blog', type: 'page', order: 3 },
     { 
@@ -157,7 +156,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         }
       }
     },
-    { name: 'Notre Agence', href: '#team', type: 'section', order: 5 },
+    { name: 'Notre Agence', href: '#about', type: 'section', order: 5 },
     { name: 'Témoignages', href: '#testimonials', type: 'section', order: 6 },
     { name: 'Contact', href: '#contact', type: 'section', order: 7 }
   ];
@@ -197,9 +196,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
 
   const handleNavigationClick = (item: any) => {
     console.log('Navigation clicked:', item);
-    
-    // Always close mobile menu first
-    setMobileMenuOpen(false);
+    console.log('Current pathname:', window.location.pathname);
     
     if (item.type === 'page') {
       // Handle page navigation
@@ -210,7 +207,10 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
       }
     } else if (item.type === 'section') {
       // Handle section scrolling
+      console.log('Attempting to scroll to section:', item.href);
       scrollToSection(item.href);
+    } else {
+      console.warn('Unknown navigation type:', item.type);
     }
   };
 
@@ -221,39 +221,43 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     if (window.location.pathname === '/') {
       // On home page, scroll to section
       const element = document.querySelector(href);
-      console.log('Element found:', element);
+      console.log('Element found on homepage:', element);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
-        console.log('Scrolled to section:', href);
+        console.log('Successfully scrolled to section on homepage:', href);
       } else {
-        console.warn('Section not found:', href);
+        console.warn('Section not found on homepage:', href);
       }
     } else {
       // Not on home page, navigate to home page with hash
-      router.push('/');
+      console.log('Not on homepage, navigating to:', `/${href}`);
+      router.push(`/${href}`);
 
       // Wait for navigation to complete and DOM to be ready, then scroll to section
       let retryCount = 0;
-      const maxRetries = 20; // Maximum 1 second of retries (20 * 50ms)
+      const maxRetries = 50; // Further increased retries for dashboard navigation
 
       const waitForSection = () => {
         const element = document.querySelector(href);
+        console.log(`Retry ${retryCount}: Looking for element ${href}, found:`, element);
+        
         if (element) {
           // Section found, scroll to it
           element.scrollIntoView({ behavior: 'smooth' });
+          console.log('Successfully scrolled to section after navigation:', href);
         } else if (retryCount < maxRetries) {
           // Section not found yet, wait a bit more and try again
           retryCount++;
-          setTimeout(waitForSection, 50);
+          setTimeout(waitForSection, 150); // Increased delay for dashboard navigation
         } else {
           // Max retries reached, scroll to top as fallback
-          console.warn(`Section ${href} not found after ${maxRetries} retries`);
+          console.warn(`Section ${href} not found after ${maxRetries} retries, scrolling to top`);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       };
 
-      // Start waiting for the section with a longer initial delay
-      setTimeout(waitForSection, 500);
+      // Start waiting for the section with a longer initial delay for dashboard navigation
+      setTimeout(waitForSection, 1000); // Increased initial delay for dashboard
     }
   };
 
@@ -369,18 +373,8 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             </motion.div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
         </div>
       </div>
-
 
       {/* Mega Menu */}
       {navigation.find(item => item.name === activeMegaMenu)?.megaMenu && (
@@ -404,55 +398,6 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
         </div>
       )}
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-t"
-          >
-            <div className="px-4 py-4 space-y-4">
-              {navigation.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => {
-                    console.log('Mobile nav clicked:', item.name, item);
-                    handleNavigationClick(item);
-                  }}
-                  className="block w-full text-left py-2 text-gray-700 hover:text-[var(--color-main)] transition-colors flex items-center gap-2"
-                >
-                  {item.name}
-                  {item.type === 'page' && (
-                    <span className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">Page</span>
-                  )}
-                  {item.type === 'section' && (
-                    <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">Section</span>
-                  )}
-                </button>
-              ))}
-              <div className="flex flex-col gap-3 pt-4 border-t">
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-5 text-sm h-11 rounded-full w-full"
-                    onClick={() => {
-                      window.open(meetingLink, '_blank');
-                      trackButtonClick('meeting_link');
-                    }}
-                  >
-                    <span className="font-semibold">Parler à un expert</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </motion.div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.header>
   );
 }

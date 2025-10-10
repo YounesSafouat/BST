@@ -142,7 +142,7 @@ export default function CompaniesCarouselV3({
             text: 'text-gray-600'
         },
         modern: {
-            background: 'bg-gradient-to-br from-blue-50/30 to-slate-50/30',
+            background: 'bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5',
             cardBg: 'bg-white/90 backdrop-blur-sm',
             border: 'border-white/50',
             shadow: 'shadow-md hover:shadow-xl',
@@ -161,8 +161,8 @@ export default function CompaniesCarouselV3({
     if (layout === 'carousel') {
         return (
             <div className="relative w-full">
-                {/* Transparent Background Container - EXACT same as original */}
-                <div className="relative bg-transparent p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
+                {/* Background Container with main color */}
+                <div className="relative border-2 border-[var(--color-main)] bg-white rounded-2xl p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
                     {/* Text above carousel - EXACT same as original */}
                     <div className="text-center mb-6 sm:mb-8 lg:mb-10">
                         <h3
@@ -178,11 +178,11 @@ export default function CompaniesCarouselV3({
                         </h3>
                     </div>
 
-                    {/* Carousel Container - EXACT same structure as working original */}
-                    <div className="relative overflow-hidden h-[150px]">
-                        {/* Gradient overlays - Very subtle fade effect */}
-                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white/10 to-transparent pointer-events-none"></div>
-                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white/10 to-transparent pointer-events-none"></div>
+                    {/* Carousel Container - Optimized height */}
+                    <div className="relative overflow-hidden h-[100px]">
+                        {/* Gradient overlays - Smooth fade effect */}
+                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
 
                         <div className="flex">
                             <div
@@ -202,9 +202,9 @@ export default function CompaniesCarouselV3({
                                     >
                                         {company.logo ? (
                                             <div className="w-full h-full flex items-center justify-center">
-                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
+                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
                                                     {/* Background circle for logo */}
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                                     <Image
                                                         src={company.logo}
                                                         alt={company.name}
@@ -216,7 +216,7 @@ export default function CompaniesCarouselV3({
                                             </div>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
-                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
+                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
                                                     <span className="text-gray-400 font-semibold text-sm sm:text-base text-center px-2 relative z-10">{company.name}</span>
                                                 </div>
                                             </div>
@@ -251,7 +251,7 @@ export default function CompaniesCarouselV3({
     // Grid Layout
     if (layout === 'grid') {
         return (
-            <div className={`relative w-full py-8 sm:py-12 lg:py-16 ${currentTheme.background}`}>
+            <div className="relative w-full py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl">
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Header Section */}
                     <div className="text-center mb-8 sm:mb-12">
@@ -277,7 +277,7 @@ export default function CompaniesCarouselV3({
                         {displayCompanies.slice(0, 12).map((company, index) => (
                             <div
                                 key={`grid-company-${index}`}
-                                className={`group ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-xl p-4 transition-all duration-500 hover:scale-105 hover:border-[var(--color-main)]/20 ${
+                                className={`group ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-4 transition-all duration-500 hover:scale-105 hover:border-[var(--color-main)]/20 ${
                                     visibleCards.has(index) 
                                         ? 'opacity-100 transform translate-y-0' 
                                         : 'opacity-0 transform translate-y-4'
@@ -289,7 +289,7 @@ export default function CompaniesCarouselV3({
                             >
                                 <div className="w-full h-full flex items-center justify-center relative">
                                     {/* Background circle for logo */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     
                                     {company.logo ? (
                                         <Image
@@ -315,7 +315,7 @@ export default function CompaniesCarouselV3({
 
     // Masonry Layout (default fallback)
     return (
-        <div className={`relative w-full py-8 sm:py-12 lg:py-16 ${currentTheme.background}`}>
+        <div className="relative w-full py-8 sm:py-12 lg:py-16 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <div className="text-center mb-8 sm:mb-12">
@@ -341,7 +341,7 @@ export default function CompaniesCarouselV3({
                     {displayCompanies.slice(0, 12).map((company, index) => (
                         <div
                             key={`masonry-company-${index}`}
-                            className={`group ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-xl p-4 mb-4 sm:mb-6 break-inside-avoid transition-all duration-500 hover:scale-105 hover:border-[var(--color-main)]/20 ${
+                            className={`group ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-4 mb-4 sm:mb-6 break-inside-avoid transition-all duration-500 hover:scale-105 hover:border-[var(--color-main)]/20 ${
                                 visibleCards.has(index) 
                                     ? 'opacity-100 transform translate-y-0' 
                                     : 'opacity-0 transform translate-y-4'
@@ -353,7 +353,7 @@ export default function CompaniesCarouselV3({
                         >
                             <div className="w-full h-full flex items-center justify-center relative">
                                 {/* Background circle for logo */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                 
                                 {company.logo ? (
                                     <Image

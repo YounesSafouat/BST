@@ -57,7 +57,7 @@ export default function HeaderDashboard() {
           },
           navigation: {
                main: [
-                    { name: 'Solutions', href: '#modules', type: 'section', order: 1 },
+                    { name: 'Solutions', href: '#services', type: 'section', order: 1 },
                     { name: 'Tarifs', href: '#pricing', type: 'section', order: 2 },
                     { name: 'Blog', href: '/blog', type: 'page', order: 3 },
                     { 
@@ -70,14 +70,29 @@ export default function HeaderDashboard() {
                               type: 'client-cases',
                               title: 'Découvrez tous nos cas d\'usage',
                               description: 'Nous aidons nos clients dans différents secteurs et sur différentes problématiques',
-                              featuredCases: [],
+                              featuredCases: [
+                                   {
+                                        id: "case-1759942156218",
+                                        name: "Fitness park",
+                                        slug: "fitness-park",
+                                        image: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                                        excerpt: "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+                                   },
+                                   {
+                                        id: "case-1759944672139",
+                                        name: "Essem",
+                                        slug: "essem",
+                                        image: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                                        excerpt: "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+                                   }
+                              ],
                               ctaButton: {
                                    text: 'Tous nos cas clients',
                                    href: '/cas-client'
                               }
                          }
                     },
-                    { name: 'Notre Agence', href: '#team', type: 'section', order: 5 },
+                    { name: 'Notre Agence', href: '#about', type: 'section', order: 5 },
                     { name: 'Témoignages', href: '#testimonials', type: 'section', order: 6 },
                     { name: 'Contact', href: '#contact', type: 'section', order: 7 }
                ]

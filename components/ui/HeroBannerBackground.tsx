@@ -1,6 +1,6 @@
 /**
  * Hero Banner Background Component
- * Uses the custom Baniere BST.svg for hero section only
+ * Uses responsive background images: Baniere-BST-mobile.svg for mobile and Baniere-BST.svg for desktop
  */
 
 "use client"
@@ -20,9 +20,22 @@ const HeroBannerBackground: React.FC<HeroBannerBackgroundProps> = ({
 }) => {
   return (
     <div className={`relative ${className}`}>
-      {/* Hero Background Layer */}
+      {/* Mobile Background Layer */}
       <div 
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none lg:hidden"
+        style={{ 
+          zIndex: -1,
+          backgroundImage: 'url("/Baniere-BST-mobile.svg")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          opacity: opacity,
+        }}
+      />
+      
+      {/* Desktop Background Layer */}
+      <div 
+        className="absolute inset-0 pointer-events-none hidden lg:block"
         style={{ 
           zIndex: -1,
           backgroundImage: 'url("/Baniere-BST.svg")',

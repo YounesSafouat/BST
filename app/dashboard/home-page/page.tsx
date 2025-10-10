@@ -172,6 +172,7 @@ interface HomePageData {
                videoUrl?: string;
                thumbnailUrl?: string;
                targetRegions?: string[]; // Add region targeting
+               clientCasePath?: string; // New field for cas-client link
           }>;
      };
      faq?: {
@@ -960,7 +961,7 @@ export default function HomePageDashboard() {
                                                                  title="Video preview"
                                                                  className="w-full h-full"
                                                                  frameBorder="0"
-                                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                                  allowFullScreen
                                                             />
                                                        )}
@@ -2715,7 +2716,8 @@ export default function HomePageDashboard() {
                                                        textColor: 'text-white',
                                                        videoUrl: '',
                                                        thumbnailUrl: '',
-                                                       targetRegions: ['all'] // Default to all regions
+                                                       targetRegions: ['all'], // Default to all regions
+                                                       clientCasePath: '' // New field for cas-client link
                                                   })}
                                                   size="sm"
                                                   className="flex items-center gap-2"
@@ -2777,24 +2779,18 @@ export default function HomePageDashboard() {
                                                        </div>
                                                   </div>
 
-                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                                       <div>
-                                                            <Label>Couleur de fond</Label>
-                                                            <Input
-                                                                 value={video.backgroundColor}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'backgroundColor', e.target.value)}
-                                                                 placeholder="Couleur de fond (ex: bg-gray-800)"
-                                                            />
-                                                       </div>
-                                                       <div>
-                                                            <Label>Couleur du texte</Label>
-                                                            <Input
-                                                                 value={video.textColor}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'textColor', e.target.value)}
-                                                                 placeholder="Couleur du texte (ex: text-white)"
-                                                            />
-                                                       </div>
+                                                  <div className="mt-4">
+                                                       <Label>Lien vers le cas client</Label>
+                                                       <Input
+                                                            value={video.clientCasePath || ''}
+                                                            onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'clientCasePath', e.target.value)}
+                                                            placeholder="Ex: allisone (pour agence-blackswan.com/cas-client/allisone)"
+                                                       />
+                                                       <p className="text-xs text-gray-500 mt-1">
+                                                            Entrez le slug du cas client (ex: allisone). Laisser vide pour rediriger vers /cas-client
+                                                       </p>
                                                   </div>
+
 
                                                   <div className="mt-4">
                                                        <Label>URL de la vidéo</Label>
@@ -2911,7 +2907,7 @@ export default function HomePageDashboard() {
                                                                                 title="Video preview"
                                                                                 className="w-full h-full"
                                                                                 frameBorder="0"
-                                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                                                 allowFullScreen
                                                                            />
                                                                       )}
