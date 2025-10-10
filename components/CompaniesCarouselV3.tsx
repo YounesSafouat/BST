@@ -161,8 +161,8 @@ export default function CompaniesCarouselV3({
     if (layout === 'carousel') {
         return (
             <div className="relative w-full">
-                {/* Background Container with main color */}
-                <div className="relative border-2 border-[var(--color-secondary)] bg-white rounded-2xl p-2 sm:p-4 lg:p-5 mx-auto max-w-6xl">
+                {/* Background Container - transparent with no border */}
+                <div className="relative bg-transparent rounded-2xl p-2 sm:p-4 lg:p-5 mx-auto max-w-6xl">
                     {/* Text above carousel - EXACT same as original */}
                     <div className="text-center mb-3 sm:mb-4 lg:mb-5">
                         <h3
@@ -178,11 +178,11 @@ export default function CompaniesCarouselV3({
                         </h3>
                     </div>
 
-                    {/* Carousel Container - Optimized height */}
-                    <div className="relative overflow-hidden h-[80px]">
-                        {/* Gradient overlays - Smooth fade effect */}
-                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+                    {/* Carousel Container - Increased height to show shadows */}
+                    <div className="relative overflow-hidden h-[100px] py-2">
+                        {/* Gradient overlays - Transparent fade effect */}
+                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white/80 to-transparent pointer-events-none"></div>
+                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white/80 to-transparent pointer-events-none"></div>
 
                         <div className="flex">
                             <div
