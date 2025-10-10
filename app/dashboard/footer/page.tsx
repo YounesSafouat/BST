@@ -708,29 +708,79 @@ export default function FooterDashboard() {
               <Label>Titre</Label>
               <Input
                 value={footerData.socialTitle || ''}
-                placeholder="Titre de la section"
+                onChange={(e) => updateField('socialTitle', e.target.value)}
+                placeholder="Titre de la section (ex: Suivez-nous)"
               />
             </div>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <Label>Réseaux</Label>
-                <Button
-                  onClick={() => {
-                    const newSocial = { ...footerData.social };
-                    newSocial.whatsapp = {
-                      icon: "WhatsApp",
-                      color: "#25d366",
-                      url: ""
-                    };
-                    updateField('social', newSocial);
-                  }}
-                  size="sm"
-                  variant="outline"
-                  disabled={!!footerData.social?.whatsapp}
-                >
-                  <WhatsAppIcon className="h-4 w-4 mr-1" />
-                  Ajouter WhatsApp
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      const newSocial = { ...footerData.social };
+                      newSocial.facebook = {
+                        icon: "Facebook",
+                        color: "#1877f2",
+                        url: "https://www.facebook.com/blackswantechnology"
+                      };
+                      updateField('social', newSocial);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    disabled={!!footerData.social?.facebook}
+                  >
+                    <Facebook className="h-4 w-4 mr-1" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const newSocial = { ...footerData.social };
+                      newSocial.linkedin = {
+                        icon: "Linkedin",
+                        color: "#0077b5",
+                        url: "https://www.linkedin.com/company/blackswan-technology/"
+                      };
+                      updateField('social', newSocial);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    disabled={!!footerData.social?.linkedin}
+                  >
+                    <Linkedin className="h-4 w-4 mr-1" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const newSocial = { ...footerData.social };
+                      newSocial.instagram = {
+                        icon: "Instagram",
+                        color: "#e1306c",
+                        url: "https://www.instagram.com/blackswantechnology"
+                      };
+                      updateField('social', newSocial);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    disabled={!!footerData.social?.instagram}
+                  >
+                    <Instagram className="h-4 w-4 mr-1" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      const newSocial = { ...footerData.social };
+                      newSocial.whatsapp = {
+                        icon: "WhatsApp",
+                        color: "#25d366",
+                        url: "https://api.whatsapp.com/send/?phone=212783699603"
+                      };
+                      updateField('social', newSocial);
+                    }}
+                    size="sm"
+                    variant="outline"
+                    disabled={!!footerData.social?.whatsapp}
+                  >
+                    <WhatsAppIcon className="h-4 w-4 mr-1" />
+                  </Button>
+                </div>
               </div>
               {/* Display each social network as a row with icon, color, name, and URL */}
               {Object.entries(footerData.social || {})
@@ -772,11 +822,18 @@ export default function FooterDashboard() {
                     </div>
                   );
                 })}
-              {/* Add new social network */}
-              <div className="flex gap-2 items-center mt-2">
+              {/* Add new social network - Custom */}
+              <div className="flex gap-2 items-center mt-2 p-3 bg-gray-50 rounded-lg">
+                <Label className="text-xs text-gray-600 w-20">Autre:</Label>
                 <Select
                   value={footerData._newSocialIcon || ''}
-                  onValueChange={value => updateField('_newSocialIcon', value)}
+                  onValueChange={value => {
+                    updateField('_newSocialIcon', value);
+                    const defaultColor = colorMap[value.toLowerCase()];
+                    if (defaultColor) {
+                      updateField('_newSocialColor', defaultColor);
+                    }
+                  }}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue placeholder="Icone" />
