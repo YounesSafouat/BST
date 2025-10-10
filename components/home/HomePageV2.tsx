@@ -94,7 +94,7 @@ export default function HomePageV2() {
   const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { userRegion } = useGeolocation();
+  const { region } = useGeolocation();
 
   useEffect(() => {
     const fetchHomePageData = async () => {
@@ -277,7 +277,12 @@ export default function HomePageV2() {
           </motion.div>
           
           {homePageData.services && (
-            <ServicesSection services={homePageData.services} />
+            <ServicesSection servicesData={{ 
+              headline: "Nos Solutions",
+              subheadline: "Services personnalisés",
+              description: "Découvrez nos services personnalisés pour transformer votre entreprise",
+              services: homePageData.services 
+            }} />
           )}
         </div>
       </section>
@@ -299,7 +304,7 @@ export default function HomePageV2() {
           
           <CompaniesCarouselV3
             companies={homePageData.companies.companies}
-            userRegion={userRegion}
+            userRegion={region}
             text={homePageData.companies.headline}
             layout="carousel"
             theme="modern"
@@ -314,7 +319,6 @@ export default function HomePageV2() {
           {homePageData.pricing && (
             <PricingSection
               pricingData={homePageData.pricing}
-              userRegion={userRegion}
             />
           )}
         </div>
@@ -338,7 +342,23 @@ export default function HomePageV2() {
             </p>
           </motion.div>
           
-          <ContactSection data={homePageData.contact} />
+          {/* Contact Section - Simplified for V2 */}
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+              <h3 className="text-3xl font-bold text-white mb-6">Contactez-nous</h3>
+              <p className="text-blue-100 mb-8 text-lg">
+                Prêt à transformer votre entreprise ? Contactez-nous pour une consultation gratuite.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6">
+                <button className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                  Demander un devis
+                </button>
+                <button className="border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 backdrop-blur-sm">
+                  Prendre rendez-vous
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

@@ -72,7 +72,7 @@ export default function HomePageV1() {
   const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { userRegion } = useGeolocation();
+  const { region } = useGeolocation();
 
   useEffect(() => {
     const fetchHomePageData = async () => {
@@ -170,7 +170,7 @@ export default function HomePageV1() {
           
           <CompaniesCarouselV3
             companies={homePageData.companies.companies}
-            userRegion={userRegion}
+            userRegion={region}
             text={homePageData.companies.headline}
             layout="grid"
             theme="light"
@@ -191,7 +191,23 @@ export default function HomePageV1() {
             </p>
           </div>
           
-          <ContactSection data={homePageData.contact} />
+          {/* Contact Section - Simplified for V1 */}
+          <div className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-lg shadow-md p-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Contactez-nous</h3>
+              <p className="text-gray-600 mb-6">
+                Prêt à transformer votre entreprise ? Contactez-nous pour une consultation gratuite.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                  Demander un devis
+                </button>
+                <button className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+                  Prendre rendez-vous
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

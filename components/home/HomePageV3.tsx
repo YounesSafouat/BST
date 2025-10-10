@@ -131,7 +131,7 @@ export default function HomePageV3() {
   const [homePageData, setHomePageData] = useState<HomePageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { userRegion } = useGeolocation();
+  const { region } = useGeolocation();
 
   useEffect(() => {
     const fetchHomePageData = async () => {
@@ -335,7 +335,12 @@ export default function HomePageV3() {
           </motion.div>
           
           {homePageData.services && (
-            <ServicesSection services={homePageData.services} />
+            <ServicesSection servicesData={{ 
+              headline: "Solutions d'Excellence",
+              subheadline: "Services premium",
+              description: "Des solutions sur mesure pour transformer votre vision en réalité",
+              services: homePageData.services 
+            }} />
           )}
         </div>
       </section>
@@ -359,7 +364,7 @@ export default function HomePageV3() {
           
           <CompaniesCarouselV3
             companies={homePageData.companies.companies}
-            userRegion={userRegion}
+            userRegion={region}
             text={homePageData.companies.headline}
             layout="carousel"
             theme="modern"
@@ -374,41 +379,163 @@ export default function HomePageV3() {
           {homePageData.pricing && (
             <PricingSection
               pricingData={homePageData.pricing}
-              userRegion={userRegion}
             />
           )}
         </div>
       </section>
 
-      {/* Premium Video Testimonials */}
+      {/* Premium Testimonials Section */}
       <section className="py-32 bg-gradient-to-b from-slate-800 to-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {homePageData.videoTestimonials && (
-            <VideoTestimonialsSection
-              testimonialsData={homePageData.videoTestimonials}
-              userRegion={userRegion}
-            />
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-extralight text-white mb-8 tracking-tight">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Témoignages Clients
+              </span>
+            </h2>
+            <p className="text-xl text-blue-200/70 max-w-3xl mx-auto font-light">
+              Découvrez les témoignages de nos clients satisfaits
+            </p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: i * 0.2 }}
+                viewport={{ once: true }}
+                className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all duration-300"
+              >
+                <p className="text-blue-200/80 mb-6 italic">
+                  "BlackSwan Technology a transformé notre entreprise avec Odoo. Leur expertise et leur accompagnement sont exceptionnels."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                    C{i}
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">Client {i}</p>
+                    <p className="text-blue-200/60 text-sm">Entreprise</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Premium Certification */}
       <section className="py-32 bg-gradient-to-b from-slate-900 to-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {homePageData.certification && (
-            <OdooCertificationSection
-              certificationData={homePageData.certification}
-            />
-          )}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-extralight text-white mb-8 tracking-tight">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Certifications
+              </span>
+            </h2>
+            <p className="text-xl text-blue-200/70 max-w-3xl mx-auto font-light">
+              Partenaires officiels et certifiés
+            </p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-2 gap-12">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="bg-white/5 backdrop-blur-sm rounded-2xl p-12 border border-white/10 text-center"
+            >
+              <div className="w-24 h-24 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
+                O
+              </div>
+              <h3 className="text-2xl font-light text-white mb-4">Odoo Silver Partner</h3>
+              <p className="text-blue-200/80 font-light">
+                Certifiés Silver Partner par Odoo pour notre expertise et notre qualité de service.
+              </p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-white/5 backdrop-blur-sm rounded-2xl p-12 border border-white/10 text-center"
+            >
+              <div className="w-24 h-24 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
+                H
+              </div>
+              <h3 className="text-2xl font-light text-white mb-4">HubSpot Partner</h3>
+              <p className="text-blue-200/80 font-light">
+                Partenaires HubSpot certifiés pour l'intégration et l'optimisation CRM.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Premium FAQ */}
       <section className="py-32 bg-gradient-to-b from-slate-800 to-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {homePageData.faq && (
-            <FAQSection faqData={homePageData.faq} />
-          )}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl font-extralight text-white mb-8 tracking-tight">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Questions Fréquentes
+              </span>
+            </h2>
+            <p className="text-xl text-blue-200/70 max-w-3xl mx-auto font-light">
+              Trouvez les réponses à vos questions
+            </p>
+          </motion.div>
+          
+          <div className="space-y-6">
+            {[
+              {
+                question: "Qu'est-ce qu'Odoo ERP ?",
+                answer: "Odoo est une suite ERP open-source complète qui centralise tous vos processus métier en une seule plateforme."
+              },
+              {
+                question: "Combien coûte l'implémentation ?",
+                answer: "Nos tarifs sont adaptés à chaque projet. Contactez-nous pour un devis personnalisé."
+              },
+              {
+                question: "Quel est le délai d'implémentation ?",
+                answer: "Le délai varie selon la complexité du projet, généralement entre 2 à 6 mois."
+              }
+            ].map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:bg-white/10 transition-all duration-300"
+              >
+                <h3 className="text-xl font-light text-white mb-4">{faq.question}</h3>
+                <p className="text-blue-200/80 font-light">{faq.answer}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -432,7 +559,23 @@ export default function HomePageV3() {
             </p>
           </motion.div>
           
-          <ContactSection data={homePageData.contact} />
+          {/* Premium Contact Section */}
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-12 border border-white/10">
+              <h3 className="text-4xl font-extralight text-white mb-8 text-center">Contactez-nous</h3>
+              <p className="text-blue-200/80 mb-12 text-center text-lg font-light max-w-2xl mx-auto">
+                Prêt à transformer votre entreprise ? Contactez-nous pour une consultation gratuite.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-8 justify-center">
+                <button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-light py-5 px-12 rounded-full text-lg transition-all duration-500 shadow-2xl hover:shadow-blue-500/25 border border-blue-400/30">
+                  Demander un devis
+                </button>
+                <button className="border-2 border-white/30 text-white hover:bg-white/10 font-light py-5 px-12 rounded-full text-lg transition-all duration-500 backdrop-blur-xl">
+                  Prendre rendez-vous
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
