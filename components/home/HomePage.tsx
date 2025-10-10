@@ -38,22 +38,7 @@
 
 import $ from 'jquery';
 
-const preloadCriticalResources = () => {
-     const heroImg = new window.Image();
-     heroImg.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hero-digital-transformation.png";
 
-     const link = document.createElement('link');
-     link.rel = 'preload';
-     link.href = '/fonts/inter-var.woff2';
-     link.as = 'font';
-     link.type = 'font/woff2';
-     link.crossOrigin = 'anonymous';
-     document.head.appendChild(link);
-};
-
-if (typeof window !== 'undefined') {
-     preloadCriticalResources();
-}
 
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
