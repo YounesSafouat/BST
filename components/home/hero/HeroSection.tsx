@@ -157,7 +157,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
               transition={{ delay: 0.3 }}
               className="text-base text-gray-600 leading-relaxed text-center px-2"
               dangerouslySetInnerHTML={{
-                __html: (heroData?.description || 'Chargement...')
+                __html: (heroData?.subheadline || 'Chargement...')
                   .replace(/&lt;/g, '<')
                   .replace(/&gt;/g, '>')
                   .replace(/&amp;/g, '&')
@@ -202,11 +202,11 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col md:flex-row gap-2 md:gap-4 justify-center px-4 max-w-md md:max-w-2xl mx-2"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 max-w-sm sm:max-w-lg mx-auto"
             >
               <Button
                 size="lg"
-                className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 flex-1 md:flex-none"
+                className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white px-6 py-2.5 sm:px-8 sm:py-3 text-sm sm:text-base font-medium rounded-full h-10 sm:h-12 shadow-sm hover:shadow-md transition-all duration-200 w-full sm:w-auto"
                 onClick={() => scrollToSection('#contact')}
               >
                 {heroData?.ctaPrimary?.text || 'Chargement...'}
@@ -216,7 +216,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                 <Button
                   size="lg"
                   variant="outline"
-                  className="px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 bg-white flex-1 md:flex-none"
+                  className="px-6 py-2.5 sm:px-8 sm:py-3 text-sm sm:text-base font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 sm:h-12 shadow-sm hover:shadow-md transition-all duration-200 bg-white w-full sm:w-auto"
                 >
                   {heroData?.ctaSecondary?.text || 'Chargement...'}
                 </Button>

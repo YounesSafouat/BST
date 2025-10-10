@@ -162,11 +162,11 @@ export default function CompaniesCarouselV3({
         return (
             <div className="relative w-full">
                 {/* Background Container with main color */}
-                <div className="relative border-2 border-[var(--color-secondary)] bg-white rounded-2xl p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
+                <div className="relative border-2 border-[var(--color-secondary)] bg-white rounded-2xl p-2 sm:p-4 lg:p-5 mx-auto max-w-6xl">
                     {/* Text above carousel - EXACT same as original */}
-                    <div className="text-center mb-6 sm:mb-8 lg:mb-10">
+                    <div className="text-center mb-3 sm:mb-4 lg:mb-5">
                         <h3
-                            className="text-gray-600 text-base sm:text-lg lg:text-xl font-semibold mb-2 sm:mb-4"
+                            className="text-gray-600 text-sm sm:text-base lg:text-lg font-semibold mb-1 sm:mb-2"
                             style={{
                                 textRendering: 'optimizeLegibility',
                                 WebkitFontSmoothing: 'antialiased',
@@ -179,7 +179,7 @@ export default function CompaniesCarouselV3({
                     </div>
 
                     {/* Carousel Container - Optimized height */}
-                    <div className="relative overflow-hidden h-[100px]">
+                    <div className="relative overflow-hidden h-[80px]">
                         {/* Gradient overlays - Smooth fade effect */}
                         <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
                         <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>

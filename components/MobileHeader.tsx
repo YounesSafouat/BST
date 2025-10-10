@@ -183,6 +183,22 @@ export default function MobileHeader() {
     { name: 'Témoignages', href: '#testimonials' },
   ];
 
+  const handleNavigationClick = (item: any) => {
+    const href = item.href || '';
+    const isPage = item.type === 'page' || (href.startsWith('/') && !href.startsWith('/#'));
+    const isSection = item.type === 'section' || href.startsWith('#') || href.startsWith('/#');
+    
+    if (isPage && !isSection) {
+      // Navigate to page
+      router.push(href);
+      setIsMenuOpen(false);
+    } else if (isSection) {
+      // Extract hash and scroll to section
+      const hash = href.includes('#') ? href.substring(href.indexOf('#')) : href;
+      scrollToSection(hash);
+    }
+  };
+
   const scrollToSection = (href: string) => {
     // Check if we're on the home page
     if (window.location.pathname === '/') {
@@ -295,7 +311,7 @@ export default function MobileHeader() {
               {navigation.map((item) => (
                 <button
                   key={item.name}
-                  onClick={() => scrollToSection(item.href)}
+                  onClick={() => handleNavigationClick(item)}
                   className="block w-full text-left text-gray-600 hover:text-[var(--color-main)] transition-colors font-medium py-2"
                 >
                   {item.name}

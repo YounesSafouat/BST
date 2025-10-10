@@ -198,19 +198,26 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     console.log('Navigation clicked:', item);
     console.log('Current pathname:', window.location.pathname);
     
-    if (item.type === 'page') {
+    // Determine navigation type from href if type is not set
+    const href = item.href || '';
+    const isPage = item.type === 'page' || href.startsWith('/');
+    const isSection = item.type === 'section' || href.startsWith('#') || href.startsWith('/#');
+    
+    if (isPage && !isSection) {
       // Handle page navigation
-      if (item.href.startsWith('/')) {
-        router.push(item.href);
+      if (href.startsWith('/')) {
+        router.push(href);
       } else {
-        console.warn('Invalid page URL:', item.href);
+        console.warn('Invalid page URL:', href);
       }
-    } else if (item.type === 'section') {
+    } else if (isSection) {
       // Handle section scrolling
-      console.log('Attempting to scroll to section:', item.href);
-      scrollToSection(item.href);
+      console.log('Attempting to scroll to section:', href);
+      // Extract the hash part
+      const hash = href.includes('#') ? href.substring(href.indexOf('#')) : href;
+      scrollToSection(hash);
     } else {
-      console.warn('Unknown navigation type:', item.type);
+      console.warn('Unknown navigation type:', item.type, 'href:', href);
     }
   };
 
