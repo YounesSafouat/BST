@@ -172,7 +172,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
               className="w-full"
             >
               <div className="relative mx-2 sm:mx-4">
-                <div className="bg-white p-2 rounded-xl shadow-lg">
+                <div className="bg-white p-2 rounded-xl shadow-lg border-4 border-[var(--color-secondary)]">
                   <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg overflow-hidden">
                     {/* Video element */}
                     <video
@@ -309,7 +309,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
               className="order-1 lg:order-2"
             >
               <div className="relative mx-4 sm:mx-6 lg:mx-0">
-                <div className="bg-white p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl">
+                <div className="bg-white p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl border-4 border-[var(--color-secondary)]">
                   <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg lg:rounded-xl overflow-hidden">
                     {/* Video element */}
                     <video
