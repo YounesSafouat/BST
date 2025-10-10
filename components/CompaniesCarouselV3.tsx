@@ -162,7 +162,7 @@ export default function CompaniesCarouselV3({
         return (
             <div className="relative w-full">
                 {/* Background Container with main color */}
-                <div className="relative border-2 border-[var(--color-main)] bg-white rounded-2xl p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
+                <div className="relative border-2 border-[var(--color-secondary)] bg-white rounded-2xl p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
                     {/* Text above carousel - EXACT same as original */}
                     <div className="text-center mb-6 sm:mb-8 lg:mb-10">
                         <h3

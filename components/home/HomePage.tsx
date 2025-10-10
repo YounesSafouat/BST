@@ -679,10 +679,12 @@ export default function HomePage() {
                </div>
                {/* SECTION 6: Testimonials - HomePage */}
                <div id="testimonials">
+                    {homePageData?.testimonialsSection && (
                     <TestimonialsSection
-                         testimonialsSectionData={homePageData?.testimonialsSection}
+                              testimonialsSectionData={homePageData.testimonialsSection}
                          testimonials={homePageData?.testimonials}
                     />
+                    )}
                </div>
                {/* SECTION 7: Pricing Section - HomePage */}
                <section id="pricing" className="relative z-10">

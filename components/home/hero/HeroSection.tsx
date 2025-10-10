@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Users, Play, Volume2, VolumeX, Clock } from 'lucide-react';
 import { motion } from "framer-motion";
@@ -211,14 +212,15 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                 {heroData?.ctaPrimary?.text || 'Chargement...'}
                 {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 bg-white flex-1 md:flex-none"
-                onClick={() => scrollToSection('#modules')}
-              >
-                {heroData?.ctaSecondary?.text || 'Chargement...'}
-              </Button>
+              <Link href="/cas-client">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="px-6 py-2.5 md:px-8 md:py-3 text-sm md:text-base font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 md:h-12 shadow-sm hover:shadow-md transition-all duration-200 bg-white flex-1 md:flex-none"
+                >
+                  {heroData?.ctaSecondary?.text || 'Chargement...'}
+                </Button>
+              </Link>
             </motion.div>
           </div>
 
@@ -264,7 +266,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                   transition={{ delay: 0.4 }}
                   className="text-lg text-gray-600 leading-relaxed max-w-3xl"
                   dangerouslySetInnerHTML={{
-                    __html: (heroData?.description || 'Chargement...')
+                    __html: (heroData?.subheadline || 'Chargement...')
                       .replace(/&lt;/g, '<')
                       .replace(/&gt;/g, '>')
                       .replace(/&amp;/g, '&')
@@ -286,15 +288,16 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                   {heroData?.ctaPrimary?.text || 'Chargement...'}
                   {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
                 </Button>
-                {/* Second CTA Button - Hidden/Deactivated */}
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-16 sm:h-12 lg:h-14 hidden"
-                  onClick={() => scrollToSection('#expertise')}
-                >
-                  {heroData?.ctaSecondary?.text || 'Chargement...'}
-                </Button>
+                {/* Second CTA Button - Redirects to Cas Client */}
+                <Link href="/cas-client">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-16 sm:h-12 lg:h-14"
+                  >
+                    {heroData?.ctaSecondary?.text || 'Chargement...'}
+                  </Button>
+                </Link>
               </motion.div>
             </motion.div>
 
