@@ -129,46 +129,52 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
   };
 
   return (
-    <section id="hero" className="relative overflow-hidden bg-transparent">
+    <section id="hero" className="relative overflow-hidden bg-[var(--color-main)]">
       <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
-          <div className="lg:hidden space-y-4 sm:space-y-6 pt-0 mt-0 -mt-4 min-h-[80vh] flex flex-col justify-center" style={{ marginTop: '0', paddingTop: '0' }}>
+          <div className="lg:hidden space-y-4 pt-4 pb-8 min-h-[85vh] flex flex-col justify-center px-2">
+
+            {/* Badge Image - First on Mobile */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="flex items-center justify-center"
+            >
+              <div className=" p-2 w-[160px] h-[90px] flex items-center justify-center">
+                <img 
+                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" 
+                  alt="Odoo Silver Partner Badge" 
+                  className='w-[180px]' 
+                />
+              </div>
+            </motion.div>
 
             {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight tracking-tight text-center"
-              style={{ lineHeight: '1.1', marginTop: '0', paddingTop: '0' }}
+              className="text-2xl sm:text-3xl font-bold text-white leading-tight text-center"
+              style={{ lineHeight: '1.2' }}
             >
-              Faites de votre gestion un <span className="text-[var(--color-secondary)]">avantage compétitif</span> avec Odoo
+              Intégrez <span className="text-[var(--color-secondary)]">Odoo</span> avec un partenaire Silver de <span className="text-[var(--color-secondary)]">confiance</span>
             </motion.h1>
-
-            {/* Description */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-base text-gray-600 leading-relaxed text-center px-2"
-            >
-              Passez à un ERP performant, paramétré par un partenaire Silver expert. Centralisez vos ventes, stocks, projets et finances — sans complexité inutile.
-            </motion.div>
 
             {/* Form instead of Video */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
               className="w-full"
             >
-              <div className="relative mx-2 sm:mx-4">
-                <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
-                    Obtenez votre démonstration gratuitement
+              <div className="relative">
+                <div className="bg-white p-5 rounded-2xl shadow-xl border-2 border-white/30">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 text-center">
+                    Obtenez votre plan d’intégration gratuitement
                   </h3>
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-3">
                     <div>
                       <input
                         type="text"
@@ -177,7 +183,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.fullName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all placeholder:text-gray-500"
                       />
                     </div>
                     <div>
@@ -188,7 +194,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all placeholder:text-gray-500"
                       />
                     </div>
                     <div>
@@ -199,7 +205,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all placeholder:text-gray-500"
                       />
                     </div>
                     <div>
@@ -210,37 +216,19 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.company}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-2.5 text-sm rounded-lg border border-gray-300 bg-white focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all placeholder:text-gray-500"
                       />
                     </div>
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white py-3 rounded-lg font-semibold transition-all"
+                      className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white py-3 text-sm rounded-lg font-semibold transition-all shadow-md hover:shadow-lg"
                     >
-                      {isSubmitting ? 'Envoi en cours...' : 'Obtenir ma démonstration'}
+                      {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
                     </Button>
                   </form>
                 </div>
               </div>
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 max-w-sm sm:max-w-lg mx-auto"
-            >
-              <Link href="/cas-client">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="px-6 py-2.5 sm:px-8 sm:py-3 text-sm sm:text-base font-medium border border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-10 sm:h-12 shadow-sm hover:shadow-md transition-all duration-200 bg-white w-full sm:w-auto"
-                >
-                  Voir nos cas clients
-                </Button>
-              </Link>
             </motion.div>
           </div>
 
@@ -260,30 +248,27 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                   transition={{ delay: 0.2 }}
                   className="flex items-center gap-2 mb-2"
                 >
-                  <Badge
-                    variant="outline"
-                    className="border-gray-300 text-gray-600 px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-white/80 backdrop-blur-sm cursor-pointer hover:bg-[var(--color-secondary)] hover:text-white hover:border-[var(--color-secondary)] transition-all duration-300 shadow-md hover:shadow-lg"
-                    onClick={() => window.open('https://www.odoo.com/partners/blackswan-technology-18572551?country_id=132', '_blank')}
-                  >
-                    Partenaire Silver Odoo
-                  </Badge>
+                  <div className="w-[250px] h-[100px] flex items-center justify-center" >
+                 <img src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" alt="Odoo Silver Partner Badge" />
+
+                  </div>
                 </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-gray-900 leading-tight tracking-tight"
+                  className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white leading-tight tracking-tight"
                   style={{ lineHeight: '1.1' }}
                 >
-                  Faites de votre gestion un <span className="text-[var(--color-secondary)]">avantage compétitif</span> avec Odoo
+                  Intégrez <span className="text-[var(--color-secondary)]">Odoo</span> avec un partenaire Silver de <span className="text-[var(--color-secondary)]">confiance</span>
                 </motion.h1>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-lg text-gray-600 leading-relaxed max-w-3xl"
+                  className="text-lg text-white leading-relaxed max-w-3xl"
                 >
                   Passez à un ERP performant, paramétré par un partenaire Silver expert. Centralisez vos ventes, stocks, projets et finances — sans complexité inutile.
                 </motion.div>
@@ -299,7 +284,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                   <Button
                     size="sm"
                     variant="outline"
-                    className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold border-2 border-[var(--color-main)] text-[var(--color-main)] hover:bg-[var(--color-main)] hover:text-white rounded-full h-16 sm:h-12 lg:h-14"
+                    className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold text-[var(--color-main)] bg-white hover:bg-[var(--color-secondary)] hover:text-[var(--color-white)] rounded-full h-16 sm:h-12 lg:h-14 bg-white"
                   >
                     Voir nos cas clients
                   </Button>
@@ -315,9 +300,9 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
               className="order-1 lg:order-2"
             >
               <div className="relative mx-4 sm:mx-6 lg:mx-0">
-                <div className="bg-white p-6 lg:p-8 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl border border-gray-200">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-                    Obtenez votre démonstration gratuitement
+                <div className="bg-white p-6 lg:p-8 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl border border-[var(--color-main)]">
+                  <h3 className="text-2xl font-bold text-[var(--color-main)] mb-6 text-center">
+                  Obtenez votre plan d’intégration gratuitement
                   </h3>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -328,7 +313,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.fullName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
                       />
                     </div>
                     <div>
@@ -339,7 +324,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
                       />
                     </div>
                     <div>
@@ -350,7 +335,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
                       />
                     </div>
                     <div>
@@ -361,15 +346,15 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.company}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[var(--color-main)] focus:ring-2 focus:ring-[var(--color-main)]/20 outline-none transition-all"
+                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
                       />
                     </div>
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white py-3 rounded-lg font-semibold transition-all text-lg"
+                      className="w-full bg-[var(--color-secondary)]  text-white py-3 rounded-lg font-semibold transition-all text-lg border-2 border-transparent hover:border-white"
                     >
-                      {isSubmitting ? 'Envoi en cours...' : 'Obtenir ma démonstration'}
+                      {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
                     </Button>
                   </form>
                 </div>
@@ -380,7 +365,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
       </div>
 
       {/* Companies Carousel - Reduced text size */}
-      <div className="hidden lg:block bg-transparent pt-1 sm:pt-2 md:pt-4 lg:pt-4 xl:pt-12 2xl:pt-16">
+      <div className="hidden lg:block bg-[var(--color-main)] pt-1 sm:pt-2 md:pt-4 lg:pt-4 xl:pt-12 2xl:pt-16 pb-8">
         <CompaniesCarouselV3
           companies={heroData?.carousel?.companies}
           userRegion={userRegion}

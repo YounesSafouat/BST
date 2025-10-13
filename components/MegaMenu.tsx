@@ -104,7 +104,7 @@ export default function MegaMenu({ data, isVisible, onMouseLeave }: MegaMenuProp
 
               {/* Right Side - Black CTA Card */}
               <div className="lg:col-span-1">
-                <Card className="h-full bg-black text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <Card className="h-full bg-gray-900 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <CardContent className="p-8 flex flex-col items-center justify-center text-center h-full min-h-[400px] relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black opacity-90"></div>
                     <div className="relative z-10 flex flex-col items-center justify-center h-full">
@@ -118,10 +118,7 @@ export default function MegaMenu({ data, isVisible, onMouseLeave }: MegaMenuProp
                         />
                       </div>
                       
-                      <h4 className="text-2xl font-bold mb-4 text-white">Découvrez nos succès</h4>
-                      <p className="text-white/90 mb-8 leading-relaxed text-sm max-w-xs">
-                        Plus de 100+ entreprises ont fait confiance à BlackSwan Technology pour leur transformation digitale.
-                      </p>
+                     
                       
                       <Button
                         asChild

@@ -1,8 +1,10 @@
 /**
  * VideoTestimonialsSectionV1.tsx
  * 
- * V1-specific simplified video presentation section - ONLY video, no titles or decoration
- * Clean presentation focused purely on the video content.
+ * V1-specific video testimonials section with responsive layout.
+ * Same title/description as VideoTestimonialsSection but with different layouts:
+ * - Mobile: Cards stacked vertically (no navigation arrows)
+ * - Desktop: Carousel with navigation arrows (like original)
  * 
  * @author younes safouat
  * @version 1.0.0 - V1 Variant
@@ -93,12 +95,18 @@ const VideoTestimonialsSectionV1 = ({ videoTestimonialsData }: VideoTestimonials
                if (!testimonial.targetRegions || testimonial.targetRegions.length === 0) {
                     return true;
                }
-               return testimonial.targetRegions.includes('all') || testimonial.targetRegions.includes(region);
+               // Case-insensitive comparison
+               const normalizedRegion = region?.toLowerCase() || '';
+               const normalizedTargetRegions = testimonial.targetRegions.map(r => r.toLowerCase());
+               return normalizedTargetRegions.includes('all') || normalizedTargetRegions.includes(normalizedRegion);
           });
      };
 
      const allTestimonials = videoTestimonialsData?.videos || fallbackTestimonials;
      const testimonials = filterTestimonialsByRegion(allTestimonials, userRegion);
+     const headline = videoTestimonialsData?.headline || 'NOS DERNIERS PROJETS';
+     const description = videoTestimonialsData?.description || 'Témoignages clients';
+     const subdescription = videoTestimonialsData?.subdescription || 'Découvrez comment nos clients ont transformé leur entreprise avec Odoo';
 
      useEffect(() => {
           if (locationLoading || testimonials.length === 0) return;
@@ -198,42 +206,26 @@ const VideoTestimonialsSectionV1 = ({ videoTestimonialsData }: VideoTestimonials
      return (
           <section className="h-screen bg-white" ref={sectionRef}>
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center">
-                    {/* NO TITLE - Just video */}
-                    <div className="relative w-full px-8 sm:px-12">
-                         <Swiper
-                              modules={[Navigation, Pagination]}
-                              spaceBetween={24}
-                              slidesPerView={1}
-                              navigation={{
-                                   nextEl: '.swiper-button-next',
-                                   prevEl: '.swiper-button-prev',
-                              }}
-                              breakpoints={{
-                                   640: {
-                                        slidesPerView: 1,
-                                        spaceBetween: 18
-                                   },
-                                   768: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 18
-                                   },
-                                   1188: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 24
-                                   }
-                              }}
-                              loop={true}
-                              grabCursor={true}
-                              className="w-full min-h-[300px] sm:min-h-[400px] md:min-h-[350px] lg:min-h-[400px] xl:min-h-[450px] pb-8 sm:pb-15"
-                         >
+                    {/* Title Section */}
+                    <div className="text-center mb-8 sm:mb-12">
+                         <div className="uppercase tracking-widest text-xs sm:text-sm text-[var(--color-secondary)] font-semibold mb-2">
+                              {headline}
+                         </div>
+                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-3 sm:mb-4">
+                              {description}
+                         </h2>
+                    </div>
+
+                    {/* Mobile: Stacked Vertically (No Swiper) */}
+                    <div className="md:hidden space-y-6 max-w-4xl mx-auto overflow-y-auto max-h-[60vh]">
                          {testimonials.map((testimonial) => (
-                                   <SwiperSlide key={testimonial.id}>
                               <div
+                                   key={testimonial.id}
                                    className={`relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer ${testimonial.backgroundColor}`}
-                                                  onClick={() => redirectToCaseClient(testimonial)}
+                                   onClick={() => redirectToCaseClient(testimonial)}
                               >
-                                  <div className="aspect-[16/10] relative">
-                                       {testimonial.videoUrl ? (
+                                   <div className="aspect-[16/10] relative">
+                                        {testimonial.videoUrl ? (
                                              <div
                                                   className="w-full h-full relative group"
                                                   onClick={(e) => {
@@ -260,6 +252,113 @@ const VideoTestimonialsSectionV1 = ({ videoTestimonialsData }: VideoTestimonials
                                                        <button
                                                             onClick={(e) => {
                                                                  e.stopPropagation();
+                                                                 redirectToCaseClient(testimonial);
+                                                            }}
+                                                            className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full flex items-center justify-center transition-all duration-300 transform scale-0 group-hover:scale-100 hover:scale-110"
+                                                       >
+                                                            <ExternalLink className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                                       </button>
+                                                  </div>
+                                             </div>
+                                        ) : (
+                                             <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                                  {testimonial.thumbnailUrl ? (
+                                                       <div className="w-full h-full relative">
+                                                            <img
+                                                                 src={testimonial.thumbnailUrl}
+                                                                 alt={testimonial.company}
+                                                                 className="w-full h-full object-cover"
+                                                            />
+                                                            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                                 <div className="text-center">
+                                                                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300">
+                                                                           <ExternalLink className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                                                      </div>
+                                                                      <p className="text-white text-sm sm:text-lg font-medium">
+                                                                           {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                                      </p>
+                                                                 </div>
+                                                            </div>
+                                                       </div>
+                                                  ) : (
+                                                       <div className="text-center">
+                                                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300">
+                                                                 <ExternalLink className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                                            </div>
+                                                            <p className="text-white text-sm sm:text-lg font-medium">
+                                                                 {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                            </p>
+                                                       </div>
+                                                  )}
+                                             </div>
+                                        )}
+                                   </div>
+                              </div>
+                         ))}
+                    </div>
+
+                    {/* Desktop: Carousel with Navigation Arrows */}
+                    <div className="hidden md:block relative w-full px-8 sm:px-12">
+                         <Swiper
+                              modules={[Navigation, Pagination]}
+                              spaceBetween={24}
+                              slidesPerView={1}
+                              navigation={{
+                                   nextEl: '.swiper-button-next',
+                                   prevEl: '.swiper-button-prev',
+                              }}
+                              breakpoints={{
+                                   640: {
+                                        slidesPerView: 1,
+                                        spaceBetween: 18
+                                   },
+                                   768: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 18
+                                   },
+                                   1188: {
+                                        slidesPerView: 2,
+                                        spaceBetween: 24
+                                   }
+                              }}
+                              loop={true}
+                              grabCursor={true}
+                              className="w-full min-h-[300px] sm:min-h-[400px] md:min-h-[350px] lg:min-h-[400px] xl:min-h-[450px] pb-8 sm:pb-15"
+                         >
+                              {testimonials.map((testimonial) => (
+                                   <SwiperSlide key={testimonial.id}>
+                                        <div
+                                             className={`relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer ${testimonial.backgroundColor}`}
+                                             onClick={() => redirectToCaseClient(testimonial)}
+                                        >
+                                             <div className="aspect-[16/10] relative">
+                                                  {testimonial.videoUrl ? (
+                                                       <div
+                                                            className="w-full h-full relative group"
+                                                            onClick={(e) => {
+                                                                 if (e.target === e.currentTarget || e.target === videoRefs.current[testimonial.id]) {
+                                                                      togglePlay(testimonial.id);
+                                                                 }
+                                                            }}
+                                                       >
+                                                            <video
+                                                                 ref={(el) => {
+                                                                      videoRefs.current[testimonial.id] = el;
+                                                                 }}
+                                                                 src={testimonial.videoUrl}
+                                                                 poster={testimonial.thumbnailUrl}
+                                                                 className="w-full h-full object-cover"
+                                                                 onLoadedMetadata={() => handleLoadedMetadata(testimonial.id)}
+                                                                 onEnded={() => handleVideoEnded(testimonial.id)}
+                                                                 onPlay={() => setPlayingVideos(prev => ({ ...prev, [testimonial.id]: true }))}
+                                                                 onPause={() => setPlayingVideos(prev => ({ ...prev, [testimonial.id]: false }))}
+                                                                 muted={mutedVideos[testimonial.id]}
+                                                            />
+
+                                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                                                 <button
+                                                                      onClick={(e) => {
+                                                                           e.stopPropagation();
                                                                            redirectToCaseClient(testimonial);
                                                                       }}
                                                                       className="w-12 h-12 sm:w-16 sm:h-16 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full flex items-center justify-center transition-all duration-300 transform scale-0 group-hover:scale-100 hover:scale-110"
@@ -267,17 +366,43 @@ const VideoTestimonialsSectionV1 = ({ videoTestimonialsData }: VideoTestimonials
                                                                       <ExternalLink className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                                                                  </button>
                                                             </div>
-
+                                                       </div>
+                                                  ) : (
+                                                       <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                                            {testimonial.thumbnailUrl ? (
+                                                                 <div className="w-full h-full relative">
+                                                                      <img
+                                                                           src={testimonial.thumbnailUrl}
+                                                                           alt={testimonial.company}
+                                                                           className="w-full h-full object-cover"
+                                                                      />
+                                                                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                                                                           <div className="text-center">
+                                                                                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300">
+                                                                                     <ExternalLink className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                                                                </div>
+                                                                                <p className="text-white text-sm sm:text-lg font-medium">
+                                                                                     {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                                                </p>
+                                                                           </div>
+                                                                      </div>
+                                                                 </div>
+                                                            ) : (
+                                                                 <div className="text-center">
+                                                                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-all duration-300">
+                                                                           <ExternalLink className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                                                                      </div>
+                                                                      <p className="text-white text-sm sm:text-lg font-medium">
+                                                                           {testimonial.tagline || `Découvrez notre client ${testimonial.company}`}
+                                                                      </p>
+                                                                 </div>
+                                                            )}
+                                                       </div>
+                                                  )}
                                              </div>
-                                        ) : (
-                                             <div className="w-full h-full flex items-center justify-center">
-                                                  <p className="text-gray-400">Vidéo non disponible</p>
-                                             </div>
-                                        )}
-                                  </div>
-                              </div>
+                                        </div>
                                    </SwiperSlide>
-                         ))}
+                              ))}
                          </Swiper>
 
                          {/* Navigation Buttons - Perfectly centered on video cards */}

@@ -272,8 +272,8 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 w-full z-50 transition-all duration-300 bg-white ${isScrolled
-        ? 'shadow-lg border-b border-gray-200'
+      className={`fixed top-0 w-full z-50 transition-all duration-300 bg-[var(--color-main)] ${isScrolled
+        ? 'shadow-lg border-b border-white/20'
         : 'shadow-sm'
         }`}
     >
@@ -284,9 +284,9 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
-              src={headerData?.logo?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg"}
+              src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/blackswantechnology%20white-3.svg"
               alt={headerData?.logo?.alt || "BlackSwan"}
-              className={getLogoSizeClass(headerData?.logo?.size || '10')}
+              className={getLogoSizeClass(headerData?.logo?.size || '8')}
             />
           </div>
 
@@ -314,7 +314,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
                     const timeout = setTimeout(() => setActiveMegaMenu(null), 300);
                     setMegaMenuTimeout(timeout);
                   }}
-                  className="text-gray-700 hover:text-[var(--color-main)] transition-colors duration-200 font-medium text-sm relative flex items-center gap-1 py-2"
+                  className="text-white hover:text-[var(--color-secondary)] transition-colors duration-200 font-medium text-sm relative flex items-center gap-1 py-2"
                 >
                   {item.name}
                   {/* Mega menu indicator */}

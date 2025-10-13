@@ -457,7 +457,7 @@ export default function HomePageV1() {
           <div className="min-h-screen overflow-hidden relative">
 
                <HeroBannerBackground opacity={0.8}>
-                    <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
+                    <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
                          <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-10 xl:pt-20 2xl:pt-20 relative z-10 bg-transparent">
                               <div>
                                    <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
@@ -465,7 +465,7 @@ export default function HomePageV1() {
                          </div>
                     </div>
                </HeroBannerBackground>
-               <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
+               <div className="lg:hidden bg-[var(--color-main)] py-6 -mt-5 relative z-10 companies-carousel-transparent pb-8">
                     <CompaniesCarouselV3
                          companies={homePageData?.hero?.carousel?.companies}
                          userRegion={userRegion}
@@ -630,9 +630,7 @@ export default function HomePageV1() {
                     />
                     )}
                </div>
-               <section id="pricing" className="relative z-10">
-                    <PricingSection pricingData={homePageData?.pricing} />
-               </section>
+               
                <div id="about">
                     <OurAgencySection
                          key={userRegion}

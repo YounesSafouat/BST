@@ -462,11 +462,7 @@ export default function HeaderDashboard() {
                          <p className="text-sm text-gray-600">
                               Configurez les éléments de navigation. Utilisez les flèches pour réorganiser l'ordre.
                          </p>
-                         <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-                              <p className="text-sm text-green-800">
-                                   ✨ <strong>Fonctionnalité disponible:</strong> Menu méga avec cas clients mis en avant. Activez le menu méga pour l'élément "Nos clients".
-                              </p>
-                         </div>
+                        
                     </CardHeader>
                     <CardContent className="space-y-4">
                          {headerData.navigation.main

@@ -121,8 +121,11 @@ const VideoTestimonialsSection = ({ videoTestimonialsData }: VideoTestimonialsSe
                if (!testimonial.targetRegions || testimonial.targetRegions.length === 0) {
                     return true;
                }
+               // Case-insensitive comparison for regions
+               const normalizedRegion = region?.toLowerCase() || '';
+               const normalizedTargetRegions = testimonial.targetRegions.map(r => r.toLowerCase());
                // Show if targeting all regions or specifically targeting user's region
-               return testimonial.targetRegions.includes('all') || testimonial.targetRegions.includes(region);
+               return normalizedTargetRegions.includes('all') || normalizedTargetRegions.includes(normalizedRegion);
           });
      };
 

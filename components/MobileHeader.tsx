@@ -163,6 +163,7 @@ export default function MobileHeader() {
   // Function to get logo size class
   const getLogoSizeClass = (size: string) => {
     const sizeMap: { [key: string]: string } = {
+      '6': 'h-6',
       '8': 'h-8',
       '10': 'h-10',
       '12': 'h-12',
@@ -243,8 +244,8 @@ export default function MobileHeader() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-40 md:hidden transition-all duration-300 bg-white ${isScrolled
-        ? 'shadow-lg border-b border-gray-200'
+      className={`fixed top-0 left-0 right-0 z-40 md:hidden transition-all duration-300 bg-[var(--color-main)] ${isScrolled
+        ? 'shadow-lg border-b border-white/20'
         : 'shadow-sm'
         }`}
     >
@@ -253,9 +254,9 @@ export default function MobileHeader() {
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
-              src={headerData?.logo?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20black.svg"}
+              src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/blackswantechnology%20white-3.svg"
               alt={headerData?.logo?.alt || "BlackSwan"}
-              className={getLogoSizeClass(headerData?.logo?.size || '8')}
+              className={getLogoSizeClass(headerData?.logo?.size || '6')}
             />
           </div>
 
