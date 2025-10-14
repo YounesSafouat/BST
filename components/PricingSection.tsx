@@ -130,9 +130,9 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                         transition={{ delay: index * 0.1 }}
                                         className="h-full"
                                    >
-                                        <Card className={`h-full border-2 rounded-xl sm:rounded-2xl transition-all duration-300 flex flex-col ${index === 1
-                                             ? 'border-[var(--color-secondary)] shadow-xl sm:shadow-2xl bg-white md:scale-105'
-                                             : 'border-transparent bg-white backdrop-blur-sm shadow-lg hover:shadow-xl'
+                                        <Card className={`h-full border border-gray-200 hover:border-[var(--color-secondary)] rounded-2xl transition-all duration-300 flex flex-col hover:shadow-lg transform hover:-translate-y-1 ${index === 1
+                                             ? 'border-[var(--color-secondary)] shadow-lg bg-white md:scale-105'
+                                             : 'bg-white'
                                              }`}>
                                              <CardHeader className="p-3 sm:p-4 md:p-6 lg:p-8 flex-shrink-0">
                                                   <h3 className="text-base sm:text-lg md:text-xl font-extrabold text-[var(--color-main)] mb-2">{plan.name}</h3>

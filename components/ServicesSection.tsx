@@ -221,7 +221,7 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
                   </p>
                   <Button
                     size="lg"
-                    className="bg-[var(--color-main)] hover:bg-[var(--color-main)]/90 text-white font-semibold group"
+                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)]/90 text-white font-semibold group"
                     onClick={scrollToContact}
                   >
                     {services[activeService].buttonText || defaultButtonText}

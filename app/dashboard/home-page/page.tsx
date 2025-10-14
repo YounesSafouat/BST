@@ -157,6 +157,7 @@ interface HomePageData {
           description: string;
           subdescription?: string;
      };
+     selectedClients?: string[]; // Array of client IDs to display in video testimonials
      videoTestimonials?: {
           headline: string;
           description: string;
@@ -222,6 +223,8 @@ interface HomePageData {
 export default function HomePageDashboard() {
      const [homeData, setHomeData] = useState<HomePageData | null>(null);
      const [availableTestimonials, setAvailableTestimonials] = useState<Testimonial[]>([]);
+     const [availableClients, setAvailableClients] = useState<any[]>([]);
+     const [selectedRegion, setSelectedRegion] = useState<string>('all');
      const [loading, setLoading] = useState(true);
      const [saving, setSaving] = useState(false);
      const router = useRouter();
@@ -229,6 +232,7 @@ export default function HomePageDashboard() {
      useEffect(() => {
           fetchHomeData();
           fetchAvailableTestimonials();
+          fetchAvailableClients();
      }, []);
 
      const fetchHomeData = async () => {
@@ -481,6 +485,33 @@ export default function HomePageDashboard() {
           } catch (error) {
                console.error('Error fetching available testimonials:', error);
           }
+     };
+
+     const fetchAvailableClients = async () => {
+          try {
+               const response = await fetch('/api/cas-client?published=true');
+               if (response.ok) {
+                    const data = await response.json();
+                    setAvailableClients(data.cases || []);
+               } else {
+                    console.error('Failed to fetch available clients');
+               }
+          } catch (error) {
+               console.error('Error fetching available clients:', error);
+          }
+     };
+
+     // Filter clients by region for display
+     const getFilteredClientsByRegion = (clients: any[], region: string) => {
+          if (!region) return clients;
+          return clients.filter(client => {
+               if (!client.targetRegions || client.targetRegions.length === 0) {
+                    return true; // Show if no region specified
+               }
+               const normalizedRegion = region.toLowerCase();
+               const normalizedTargetRegions = client.targetRegions.map((r: string) => r.toLowerCase());
+               return normalizedTargetRegions.includes('all') || normalizedTargetRegions.includes(normalizedRegion);
+          });
      };
 
      const saveHomeData = async () => {
@@ -2609,8 +2640,23 @@ export default function HomePageDashboard() {
                                                   Aucun témoignage sélectionné. Utilisez le sélecteur ci-dessus pour ajouter des témoignages.
                                              </div>
                                         ) : (
-                                             homeData.testimonials.map((testimonialId, index) => {
-                                                  const testimonial = availableTestimonials.find(t => t._id === testimonialId);
+                                             homeData.testimonials.map((testimonialItem, index) => {
+                                                  // Handle both testimonial IDs (strings) and testimonial objects
+                                                  let testimonial;
+                                                  let testimonialId;
+                                                  
+                                                  if (typeof testimonialItem === 'string') {
+                                                       // It's an ID
+                                                       testimonialId = testimonialItem;
+                                                       testimonial = availableTestimonials.find(t => t._id === testimonialId);
+                                                  } else if (typeof testimonialItem === 'object' && testimonialItem !== null) {
+                                                       // It's a testimonial object
+                                                       testimonial = testimonialItem;
+                                                       testimonialId = testimonial._id || testimonial.id || `testimonial-${index}`;
+                                                  } else {
+                                                       // Invalid item, skip it
+                                                       return null;
+                                                  }
                                                   return (
                                                        <Card key={index} className="p-4">
                                                             <div className="flex items-center justify-between mb-4">
@@ -2630,18 +2676,18 @@ export default function HomePageDashboard() {
                                                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                                            <div>
                                                                                 <Label className="text-sm font-medium text-gray-600">Auteur</Label>
-                                                                                <div className="text-sm font-medium">{testimonial.author}</div>
+                                                                                <div className="text-sm font-medium">{testimonial.author || testimonial.name || 'N/A'}</div>
                                                                            </div>
                                                                            <div>
                                                                                 <Label className="text-sm font-medium text-gray-600">Rôle</Label>
-                                                                                <div className="text-sm">{testimonial.role}</div>
+                                                                                <div className="text-sm">{testimonial.role || 'N/A'}</div>
                                                                            </div>
                                                                       </div>
 
                                                                       <div>
                                                                            <Label className="text-sm font-medium text-gray-600">Témoignage</Label>
                                                                            <div className="text-sm text-gray-700 mt-1 p-3 bg-gray-50 rounded">
-                                                                                "{testimonial.text}"
+                                                                                "{testimonial.text || testimonial.quote || 'N/A'}"
                                                                            </div>
                                                                       </div>
 
@@ -2661,7 +2707,7 @@ export default function HomePageDashboard() {
                                                             )}
                                                        </Card>
                                                   );
-                                             })
+                                             }).filter(Boolean)
                                         )}
                                    </div>
                               </CardContent>
@@ -2671,63 +2717,116 @@ export default function HomePageDashboard() {
                     <TabsContent value="videoTestimonials" className="space-y-6">
                          <Card>
                               <CardHeader>
-                                   <CardTitle>Section Témoignages Vidéo</CardTitle>
+                                   <CardTitle>Section Cas Clients - Témoignages Vidéo</CardTitle>
+                                   <p className="text-sm text-gray-500 mt-2">
+                                        Sélectionnez les cas clients à afficher dans la section témoignages vidéo. 
+                                        Les cas clients sont gérés dans la section "Cas Clients" du dashboard.
+                                        Le filtrage par région IP est automatique.
+                                   </p>
                               </CardHeader>
                               <CardContent className="space-y-4">
-                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                             <Label>Titre</Label>
-                                             <Input
-                                                  value={homeData.videoTestimonials?.headline || ''}
-                                                  onChange={(e) => updateField('videoTestimonials.headline', e.target.value)}
-                                                  placeholder="Titre de la section témoignages vidéo"
-                                             />
-                                        </div>
-                                        <div>
-                                             <Label>Description</Label>
-                                             <Input
-                                                  value={homeData.videoTestimonials?.description || ''}
-                                                  onChange={(e) => updateField('videoTestimonials.description', e.target.value)}
-                                                  placeholder="Description"
-                                             />
-                                        </div>
-                                   </div>
                                    <div>
-                                        <Label>Sous-description</Label>
-                                        <Input
-                                             value={homeData.videoTestimonials?.subdescription || ''}
-                                             onChange={(e) => updateField('videoTestimonials.subdescription', e.target.value)}
-                                             placeholder="Sous-description"
-                                        />
+                                        <Label className="text-lg font-semibold mb-4 block">Cas clients à afficher</Label>
+                                        <p className="text-sm text-gray-500 mb-4">
+                                             Cochez les cas clients que vous souhaitez afficher. Si aucun n'est sélectionné, tous les cas clients publiés seront affichés.
+                                        </p>
+                                        
+                                        {/* Region Filter */}
+                                        <div className="mb-6">
+                                             <Label className="text-sm font-medium mb-2 block">Filtrer par région</Label>
+                                             <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+                                                  <SelectTrigger className="w-full max-w-xs">
+                                                       <SelectValue placeholder="Sélectionner une région" />
+                                                  </SelectTrigger>
+                                                  <SelectContent>
+                                                       <SelectItem value="all">Toutes les régions</SelectItem>
+                                                       <SelectItem value="france">🇫🇷 France</SelectItem>
+                                                       <SelectItem value="morocco">🇲🇦 Maroc</SelectItem>
+                                                       <SelectItem value="international">🌍 International</SelectItem>
+                                                  </SelectContent>
+                                             </Select>
+                                             <p className="text-xs text-gray-500 mt-1">
+                                                  Affiche les cas clients selon leur ciblage régional
+                                             </p>
+                                        </div>
+                                        
+                                        {availableClients.length === 0 ? (
+                                             <div className="text-center py-8 bg-gray-50 rounded-lg">
+                                                  <p className="text-gray-500">Aucun cas client disponible</p>
+                                                  <Button 
+                                                       variant="link" 
+                                                       onClick={() => router.push('/dashboard/clients')}
+                                                       className="mt-2"
+                                                  >
+                                                       Créer un cas client
+                                                  </Button>
+                                             </div>
+                                        ) : (
+                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto p-4 border rounded-lg">
+                                                  {getFilteredClientsByRegion(availableClients, selectedRegion).map((client) => {
+                                                       const isSelected = (homeData.selectedClients || []).includes(client._id);
+                                                       return (
+                                                            <label 
+                                                                 key={client._id} 
+                                                                 className={`flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-all ${
+                                                                      isSelected 
+                                                                           ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]/5' 
+                                                                           : 'border-gray-200 hover:border-gray-300'
+                                                                 }`}
+                                                            >
+                                                                 <input
+                                                                      type="checkbox"
+                                                                      checked={isSelected}
+                                                                      onChange={(e) => {
+                                                                           const currentSelected = homeData.selectedClients || [];
+                                                                           let newSelected: string[];
+                                                                           
+                                                                           if (e.target.checked) {
+                                                                                newSelected = [...currentSelected, client._id];
+                                                                           } else {
+                                                                                newSelected = currentSelected.filter(id => id !== client._id);
+                                                                           }
+                                                                           
+                                                                           updateField('selectedClients', newSelected);
+                                                                      }}
+                                                                      className="mt-1"
+                                                                 />
+                                                                 <div className="flex-1 min-w-0">
+                                                                      <div className="font-semibold text-sm truncate">{client.name}</div>
+                                                                      <div className="text-xs text-gray-500 mt-1 line-clamp-2">{client.summary}</div>
+                                                                      {client.company?.sector && (
+                                                                           <div className="inline-block mt-2 px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                                                                {client.company.sector === 'Autre' ? client.company.customSector : client.company.sector}
+                                                                           </div>
+                                                                      )}
+                                                                      {client.targetRegions && client.targetRegions.length > 0 && (
+                                                                           <div className="text-xs text-gray-400 mt-1">
+                                                                                Régions: {client.targetRegions.join(', ')}
+                                                                           </div>
+                                                                      )}
+                                                                 </div>
+                                                            </label>
+                                                       );
+                                                  })}
+                                             </div>
+                                        )}
                                    </div>
 
-                                   {/* Video Testimonials */}
-                                   <div className="space-y-4">
-                                        <div className="flex items-center justify-between">
-                                             <Label className="text-lg font-semibold">Témoignages vidéo</Label>
-                                             <Button
-                                                  onClick={() => addArrayItem('videoTestimonials.videos', {
-                                                       id: `video-${Date.now()}`,
-                                                       company: 'Nouvelle entreprise',
-                                                       companyLogo: 'Nouveau logo',
-                                                       tagline: 'Découvrez notre client',
-                                                       duration: '02:00',
-                                                       backgroundColor: 'bg-gray-800',
-                                                       textColor: 'text-white',
-                                                       videoUrl: '',
-                                                       thumbnailUrl: '',
-                                                       targetRegions: ['all'], // Default to all regions
-                                                       clientCasePath: '' // New field for cas-client link
-                                                  })}
-                                                  size="sm"
-                                                  className="flex items-center gap-2"
-                                             >
-                                                  <Plus className="w-4 h-4" />
-                                                  Ajouter un témoignage vidéo
-                                             </Button>
+                                   {/* OLD VIDEO TESTIMONIALS - KEPT FOR BACKWARD COMPATIBILITY */}
+                                   {homeData.videoTestimonials?.videos && homeData.videoTestimonials.videos.length > 0 && (
+                                        <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                             <p className="text-sm text-yellow-800 font-semibold mb-2">
+                                                  ⚠️ Anciens témoignages vidéo détectés
+                                             </p>
+                                             <p className="text-sm text-yellow-700">
+                                                  Vous avez {homeData.videoTestimonials.videos.length} ancien(s) témoignage(s) vidéo. 
+                                                  Ces témoignages ne sont plus utilisés. Utilisez la nouvelle sélection de cas clients ci-dessus.
+                                             </p>
                                         </div>
+                                   )}
 
-                                        {homeData.videoTestimonials?.videos?.map((video, index) => (
+                                   {/* REMOVED OLD VIDEO TESTIMONIALS FORM - Now using selectedClients instead */}
+                                   {false && homeData?.videoTestimonials?.videos?.map((video, index) => (
                                              <Card key={index} className="p-4">
                                                   <div className="flex items-center justify-between mb-4">
                                                        <h4 className="font-semibold">Témoignage vidéo {index + 1}</h4>
@@ -2920,7 +3019,6 @@ export default function HomePageDashboard() {
                                                   </div>
                                              </Card>
                                         ))}
-                                   </div>
                               </CardContent>
                          </Card>
                     </TabsContent>

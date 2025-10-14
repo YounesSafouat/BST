@@ -118,7 +118,7 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                          {faqs.map((faq, index) => (
                               <div
                                    key={index}
-                                   className="border border-gray-200 rounded-lg overflow-hidden"
+                                   className="border border-gray-200 hover:border-[var(--color-secondary)] rounded-2xl overflow-hidden hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
                               >
                                    <button
                                         onClick={() => toggleItem(index)}

@@ -2055,7 +2055,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                     </motion.div>
 
                     <div className="max-w-6xl mx-auto">
-                         <Card className="border-none shadow-2xl bg-white rounded-2xl overflow-hidden">
+                         <Card className="border border-gray-200 hover:border-[var(--color-secondary)] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 bg-white rounded-2xl overflow-hidden">
                               <div className="grid grid-cols-1 lg:grid-cols-2">
                                    {/* Form Side */}
                                    <div className="p-4 sm:p-6 md:p-8 lg:p-12">

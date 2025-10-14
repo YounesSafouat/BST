@@ -46,14 +46,45 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
           setMounted(true);
      }, []);
 
-     // Fetch testimonials when geolocation is ready or when region changes
+     // Use passed testimonials or fetch from API
      useEffect(() => {
-          if (mounted && !geolocationLoading && userRegion && lastFetchedRegion.current !== userRegion) {
-              
-               lastFetchedRegion.current = userRegion;
-               fetchTestimonials(userRegion);
+          if (mounted && !geolocationLoading && userRegion) {
+               // If testimonials are passed as props, use them directly
+               if (testimonials && Array.isArray(testimonials) && testimonials.length > 0) {
+                    // Check if testimonials are already objects or IDs
+                    if (typeof testimonials[0] === 'object' && testimonials[0] !== null && '_id' in testimonials[0]) {
+                         // Already testimonial objects
+                         console.log('📝 TestimonialsSection - Using testimonial objects from props:', testimonials.length);
+                         const validTestimonials = testimonials
+                              .filter((t): t is Testimonial => {
+                                   if (!t || typeof t !== 'object') return false;
+                                   const testimonial = t as Testimonial;
+                                   return typeof testimonial._id === 'string' && testimonial._id.length > 0;
+                              })
+                              .map(t => ({
+                                   _id: t._id,
+                                   author: t.author || '',
+                                   role: t.role || '',
+                                   text: t.text || '',
+                                   photo: t.photo || '',
+                                   clientCasePath: t.clientCasePath || '',
+                                   targetRegions: t.targetRegions || ['all']
+                              }));
+                         setDisplayTestimonials(validTestimonials);
+                    } else {
+                         // Testimonial IDs - fetch from API
+                         console.log('📝 TestimonialsSection - Fetching testimonials by IDs:', testimonials);
+                         lastFetchedRegion.current = userRegion;
+                         fetchTestimonials(userRegion);
+                    }
+               } else {
+                    // No testimonials passed, fetch from API
+                    console.log('📝 TestimonialsSection - No testimonials prop, fetching all');
+                    lastFetchedRegion.current = userRegion;
+                    fetchTestimonials(userRegion);
+               }
           }
-     }, [mounted, geolocationLoading, userRegion]);
+     }, [mounted, geolocationLoading, userRegion, testimonials]);
 
      const fetchTestimonials = async (region?: string) => {
           try {
@@ -64,17 +95,44 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                if (response.ok) {
                     const data = await response.json();
                     
+                    // Ensure data is an array
+                    let rawData = Array.isArray(data) ? data : [];
                     
                     // Client-side filtering as backup
-                    let filteredData = data || [];
+                    let filteredData = rawData;
                     if (targetRegion && targetRegion !== 'all') {
-                         filteredData = data.filter(t => 
-                              t.targetRegions?.includes(targetRegion) || t.targetRegions?.includes('all')
+                         filteredData = rawData.filter(t => 
+                              t && t.targetRegions && (
+                                   t.targetRegions.includes(targetRegion) || t.targetRegions.includes('all')
+                              )
                          );
-                        
                     }
                     
-                    setDisplayTestimonials(filteredData);
+                    // Ensure we have the correct data structure and filter out invalid items
+                    const validTestimonials = filteredData
+                         .filter(t => {
+                              // Must be an object with required fields
+                              return t && 
+                                     typeof t === 'object' && 
+                                     (t._id || t.id) && 
+                                     (t.author || t.name) && 
+                                     (t.text || t.quote);
+                         })
+                         .map(t => ({
+                              _id: t._id || t.id,
+                              author: t.author || t.name || '',
+                              role: t.role || '',
+                              text: t.text || t.quote || '',
+                              photo: t.photo || t.avatar || '',
+                              company: t.company || '',
+                              result: t.result || '',
+                              clientCasePath: t.clientCasePath || '',
+                              targetRegions: t.targetRegions || ['all']
+                         }));
+                    
+                    console.log('📝 TestimonialsSection - Raw API data:', data);
+                    console.log('📝 TestimonialsSection - Processed testimonials:', validTestimonials);
+                    setDisplayTestimonials(validTestimonials);
                } else {
                     console.error('💬 TestimonialsSection - API response not ok:', response.status);
                }
@@ -94,7 +152,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
      }
 
      return (
-          <main id="testimonials" className="min-h-screen bg-[#f9fafb] flex items-center justify-center flex-col gap-15 py-8 px-8">
+          <main id="testimonials" className="min-h-screen bg-[var(--color-main)] flex items-center justify-center flex-col gap-15 py-8 px-8">
                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -102,8 +160,8 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                     className="text-center mb-12 sm:mb-16"
                >
                     <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{testimonialsSectionData.headline}</div>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-4">{testimonialsSectionData.description}</h2>
-                    <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">{testimonialsSectionData.subdescription}</p>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white mb-4">{testimonialsSectionData.description}</h2>
+                    <p className="text-base sm:text-lg text-white max-w-2xl mx-auto">{testimonialsSectionData.subdescription}</p>
                </motion.div>
 
                <div className="relative w-full px-12">
@@ -133,7 +191,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                          grabCursor={true}
                          className="w-full min-h-[450px] sm:min-h-[500px] md:min-h-[350px] lg:min-h-[400px] xl:min-h-[450px] pb-15"
                     >
-                         {displayTestimonials.map((testimonial) => {
+                         {displayTestimonials.filter(testimonial => testimonial && testimonial._id && typeof testimonial === 'object').map((testimonial) => {
                               const clientCaseUrl = testimonial.clientCasePath 
                                    ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
                                    : `/cas-client`;
@@ -141,7 +199,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                               return (
                                    <SwiperSlide key={testimonial._id}>
                                         <Link href={clientCaseUrl} className="block h-full">
-                                             <div className="bg-white flex flex-col gap-4 justify-between shadow-[0px_0px_20px_0px_rgba(92,115,160,0.07)] p-8 rounded-xl min-h-[400px] sm:min-h-[450px] md:min-h-[300px] lg:min-h-[350px] xl:min-h-[400px] hover:shadow-[0px_0px_30px_0px_rgba(92,115,160,0.15)] transition-all duration-300 cursor-pointer group">
+                                             <div className="bg-white flex flex-col gap-4 justify-between border border-gray-200 hover:border-[var(--color-secondary)] p-8 rounded-2xl min-h-[400px] sm:min-h-[450px] md:min-h-[300px] lg:min-h-[350px] xl:min-h-[400px] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
                                                   <div className="testimonial-rate flex gap-0.5">
                                                        <i className="fa-solid fa-star text-[#f9b707]"></i>
                                                        <i className="fa-solid fa-star text-[#f9b707]"></i>
@@ -151,7 +209,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                                                   </div>
 
                                                   <blockquote className="testimonial-quote text-[#637381] text-base">
-                                                       "{testimonial.text || 'No testimonial text available.'}"
+                                                       "{String(testimonial.text || 'No testimonial text available.')}"
                                                   </blockquote>
 
                                                   <div className="space-y-3">

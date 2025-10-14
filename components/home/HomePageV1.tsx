@@ -18,6 +18,7 @@ import $ from 'jquery';
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 import HomeHeroSplit from '@/components/home/hero/HeroSectionV1';
+import HeroSectionV1Mobile from '@/components/home/hero/HeroSectionV1Mobile';
 import HeroBannerBackground from '@/components/ui/HeroBannerBackground';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
@@ -28,6 +29,7 @@ import StatsSection from '../StatsSection';
 import CompaniesCarousel from '../CompaniesCarousel';
 import CompaniesCarouselV2 from '../CompaniesCarouselV2';
 import CompaniesCarouselV3 from '../CompaniesCarouselV3';
+import CompaniesCarouselV3V1 from '../CompaniesCarouselV3V1';
 import VideoTestimonialsSection from '../VideoTestimonialsSectionV1';
 import TestimonialsSection from './TestimonialsSection';
 import ServicesSection from '../ServicesSection';
@@ -153,6 +155,7 @@ interface HomePageData {
           description: string;
           subdescription?: string;
      };
+     selectedClients?: string[]; // Array of client IDs to display in video testimonials
      videoTestimonials?: {
           headline: string;
           description: string;
@@ -304,6 +307,7 @@ export default function HomePageV1() {
                          const homePageContent = data.find(item => item.type === 'home-page');
 
                          if (homePageContent && homePageContent.content) {
+                              console.log('🏠 HomePageV1 - Fetched home page data, selectedClients:', homePageContent.content.selectedClients);
                               
                               setHomePageData(homePageContent.content);
 
@@ -456,28 +460,36 @@ export default function HomePageV1() {
      const renderMainContent = () => (
           <div className="min-h-screen overflow-hidden relative">
 
-               <HeroBannerBackground opacity={0.8}>
-                    <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
-                         <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-10 xl:pt-20 2xl:pt-20 relative z-10 bg-transparent">
-                              <div>
-                                   <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+               {/* Mobile Hero */}
+               <div className="lg:hidden">
+                    <HeroSectionV1Mobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+               </div>
+               
+               {/* Desktop Hero */}
+               <div className="hidden lg:block">
+                    <HeroBannerBackground opacity={0.8}>
+                         <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
+                              <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-10 lg:pt-10 xl:pt-20 2xl:pt-20 relative z-10 bg-transparent">
+                                   <div>
+                                        <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+                                   </div>
                               </div>
                          </div>
-                    </div>
-               </HeroBannerBackground>
+                    </HeroBannerBackground>
+               </div>
                <div className="lg:hidden bg-[var(--color-main)] py-6 -mt-5 relative z-10 companies-carousel-transparent pb-8">
-                    <CompaniesCarouselV3
+                    <CompaniesCarouselV3V1
                          companies={homePageData?.hero?.carousel?.companies}
                          userRegion={userRegion}
                          speed={homePageData?.hero?.carousel?.speed ? Math.min(homePageData.hero.carousel.speed, 50) : 25}
                          text={homePageData?.hero?.carousel?.text}
                          layout="carousel"
-                         theme="light"
+                         theme="modern"
                          showCount={false}
                     />
                </div>
                 <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
+                    <VideoTestimonialsSection selectedClients={homePageData?.selectedClients} />
                </div>
                <div id="certification" className="relative z-10">
                     <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
@@ -626,7 +638,7 @@ export default function HomePageV1() {
                     {homePageData?.testimonialsSection && (
                     <TestimonialsSection
                               testimonialsSectionData={homePageData.testimonialsSection}
-                         testimonials={homePageData?.testimonials}
+                         testimonials={Array.isArray(homePageData?.testimonials) ? homePageData.testimonials : []}
                     />
                     )}
                </div>

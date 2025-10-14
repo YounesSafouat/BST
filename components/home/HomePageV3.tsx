@@ -153,6 +153,7 @@ interface HomePageData {
           description: string;
           subdescription?: string;
      };
+     selectedClients?: string[]; // Array of client IDs to display in video testimonials
      videoTestimonials?: {
           headline: string;
           description: string;
@@ -477,7 +478,7 @@ export default function HomePageV3() {
                     />
                </div>
                 <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
+                    <VideoTestimonialsSection selectedClients={homePageData?.selectedClients} />
                </div>
                <div id="certification" className="relative z-10">
                     <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>

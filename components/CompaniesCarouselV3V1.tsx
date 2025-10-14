@@ -169,13 +169,13 @@ export default function CompaniesCarouselV3V1({
                                         {company.logo ? (
                                             <div className="w-full h-full flex items-center justify-center">
                                                 <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-100 transition-opacity duration-300"></div>
                                                     <Image
                                                         src={company.logo}
                                                         alt={company.name}
                                                         width={140}
                                                         height={60}
-                                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 relative z-10"
+                                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-100 transition-opacity duration-300 relative z-10"
                                                     />
                                                 </div>
                                             </div>
@@ -250,7 +250,7 @@ export default function CompaniesCarouselV3V1({
                                 }}
                             >
                                 <div className="w-full h-full flex items-center justify-center relative">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-100 transition-opacity duration-300"></div>
                                     
                                     {company.logo ? (
                                         <Image
@@ -258,7 +258,7 @@ export default function CompaniesCarouselV3V1({
                                             alt={company.name}
                                             width={100}
                                             height={50}
-                                            className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 group-hover:opacity-90 transition-all duration-300 relative z-10"
+                                            className="max-w-full max-h-full w-auto h-auto object-contain opacity-100 transition-all duration-300 relative z-10"
                                         />
                                     ) : (
                                         <span className="text-gray-400 font-medium text-xs text-center px-2 relative z-10">
@@ -310,7 +310,7 @@ export default function CompaniesCarouselV3V1({
                             }}
                         >
                             <div className="w-full h-full flex items-center justify-center relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-100 transition-opacity duration-300"></div>
                                 
                                 {company.logo ? (
                                     <Image
@@ -318,7 +318,7 @@ export default function CompaniesCarouselV3V1({
                                         alt={company.name}
                                         width={100}
                                         height={50}
-                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 group-hover:opacity-90 transition-all duration-300 relative z-10"
+                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-100 transition-all duration-300 relative z-10"
                                     />
                                 ) : (
                                     <span className="text-gray-400 font-medium text-xs text-center px-2 relative z-10">

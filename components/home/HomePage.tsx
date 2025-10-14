@@ -177,6 +177,7 @@ interface HomePageData {
           description: string;
           subdescription?: string;
      };
+     selectedClients?: string[]; // Array of client IDs to display in video testimonials
      videoTestimonials?: {
           headline: string;
           description: string;
@@ -510,7 +511,7 @@ export default function HomePage() {
                </div>
                {/* SECTION 2: Video Testimonials - HomePage */}
                 <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection videoTestimonialsData={homePageData?.videoTestimonials} />
+                    <VideoTestimonialsSection selectedClients={homePageData?.selectedClients} />
                </div>
                {/* SECTION 3: Odoo Certification - HomePage */}
                <div id="certification" className="relative z-10">

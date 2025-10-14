@@ -163,7 +163,7 @@ export default function OdooCertificationSection({
                                              {data.features.map((feature, index) => {
                                                   const IconComponent = iconMap[feature.icon] || CheckCircle;
                                                   return (
-                                                       <div key={index} className="flex items-start gap-3 p-4 bg-white/50 backdrop-blur-sm rounded-xl border border-white/20">
+                                                       <div key={index} className="flex items-start gap-3 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20">
                                                             <IconComponent className="w-5 h-5 text-[var(--color-secondary)] mt-0.5 flex-shrink-0" />
                                                             <div>
                                                                  <div className="font-semibold text-gray-900">{feature.title}</div>

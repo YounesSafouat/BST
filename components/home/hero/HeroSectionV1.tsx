@@ -129,11 +129,11 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
   };
 
   return (
-    <section id="hero" className="relative overflow-hidden bg-[var(--color-main)]">
+    <section id="hero" className="relative overflow-hidden bg-[var(--color-main)] lg:min-h-screen min-h-[400vh] pt-[5rem]">
       <div className="relative w-full py-0 pt-0 lg:py-4 lg:pt-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Mobile Layout - Single Column */}
-          <div className="lg:hidden space-y-4 pt-4 pb-8 min-h-[85vh] flex flex-col justify-center px-2">
+          <div className="lg:hidden space-y-6  pb-8 min-h-screen flex flex-col justify-start px-2">
 
             {/* Badge Image - First on Mobile */}
             <motion.div
@@ -142,11 +142,11 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
               transition={{ delay: 0.1 }}
               className="flex items-center justify-center"
             >
-              <div className=" p-2 w-[160px] h-[90px] flex items-center justify-center">
+              <div className="p-2 w-[200px] h-[150px] flex items-center justify-center">
                 <img 
                   src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" 
                   alt="Odoo Silver Partner Badge" 
-                  className='w-[180px]' 
+                  className='w-[240px] h-[240px]' 
                 />
               </div>
             </motion.div>
@@ -162,6 +162,20 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
               Intégrez <span className="text-[var(--color-secondary)]">Odoo</span> avec un partenaire Silver de <span className="text-[var(--color-secondary)]">confiance</span>
             </motion.h1>
 
+            {/* Image below title */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="flex justify-center"
+            >
+              <img
+                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/couvertureV1SiteWeb.png"
+                alt="Odoo Integration"
+                className="w-full max-w-md rounded-2xl shadow-lg"
+              />
+            </motion.div>
+
             {/* Form instead of Video */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -171,9 +185,12 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
             >
               <div className="relative">
                 <div className="bg-white p-5 rounded-2xl shadow-xl border-2 border-white/30">
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 text-center">
-                    Obtenez votre plan d’intégration gratuitement
-                  </h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
+                      Obtenez votre plan d'intégration <span className="text-[var(--color-secondary)]"> gratuitement</span> 
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4 text-center">
+                    Nous aidons les entreprises à centraliser l'ensemble de leur activité sur une seule plateforme grâce à Odoo. Simple, efficace, et abordable.
+                  </p>
                   <form onSubmit={handleSubmit} className="space-y-3">
                     <div>
                       <input
@@ -302,7 +319,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
               <div className="relative mx-4 sm:mx-6 lg:mx-0">
                 <div className="bg-white p-6 lg:p-8 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl border border-[var(--color-main)]">
                   <h3 className="text-2xl font-bold text-[var(--color-main)] mb-6 text-center">
-                  Obtenez votre plan d’intégration gratuitement
+                  Obtenez votre plan d’intégration <span className="text-[var(--color-secondary)]">gratuitement</span>
                   </h3>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
