@@ -166,7 +166,7 @@ export default function CompaniesCarouselV3({
                     {/* Text above carousel - EXACT same as original */}
                     <div className="text-center mb-3 sm:mb-4 lg:mb-5">
                         <h3
-                            className="text-gray-600 text-sm sm:text-base lg:text-lg font-semibold mb-1 sm:mb-2"
+                            className="text-white text-sm sm:text-base lg:text-lg font-semibold mb-1 sm:mb-2"
                             style={{
                                 textRendering: 'optimizeLegibility',
                                 WebkitFontSmoothing: 'antialiased',
@@ -181,8 +181,8 @@ export default function CompaniesCarouselV3({
                     {/* Carousel Container - Increased height to show shadows */}
                     <div className="relative overflow-hidden h-[100px] py-2">
                         {/* Gradient overlays - Transparent fade effect */}
-                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white/80 to-transparent pointer-events-none"></div>
-                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white/80 to-transparent pointer-events-none"></div>
+                        <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-[var(--color-main)] to-transparent pointer-events-none"></div>
+                        <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-[var(--color-main)] to-transparent pointer-events-none"></div>
 
                         <div className="flex">
                             <div
@@ -202,21 +202,19 @@ export default function CompaniesCarouselV3({
                                     >
                                         {company.logo ? (
                                             <div className="w-full h-full flex items-center justify-center">
-                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
-                                                    {/* Background circle for logo */}
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 flex items-center justify-center relative`}>
                                                     <Image
                                                         src={company.logo}
                                                         alt={company.name}
                                                         width={140}
                                                         height={60}
-                                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 relative z-10"
+                                                        className="max-w-full max-h-full w-auto h-auto object-contain  relative z-10"
                                                     />
                                                 </div>
                                             </div>
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center">
-                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 hover:border-[var(--color-main)]/20 group flex items-center justify-center relative`}>
+                                                <div className={`w-full h-full ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-2 transition-all duration-300 hover:scale-105 flex items-center justify-center relative`}>
                                                     <span className="text-gray-400 font-semibold text-sm sm:text-base text-center px-2 relative z-10">{company.name}</span>
                                                 </div>
                                             </div>
@@ -277,7 +275,7 @@ export default function CompaniesCarouselV3({
                         {displayCompanies.slice(0, 12).map((company, index) => (
                             <div
                                 key={`grid-company-${index}`}
-                                className={`group ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-4 transition-all duration-500 hover:scale-105 hover:border-[var(--color-main)]/20 ${
+                                className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-4 transition-all duration-500 hover:scale-105 ${
                                     visibleCards.has(index) 
                                         ? 'opacity-100 transform translate-y-0' 
                                         : 'opacity-0 transform translate-y-4'
@@ -288,16 +286,13 @@ export default function CompaniesCarouselV3({
                                 }}
                             >
                                 <div className="w-full h-full flex items-center justify-center relative">
-                                    {/* Background circle for logo */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                    
                                     {company.logo ? (
                                         <Image
                                             src={company.logo}
                                             alt={company.name}
                                             width={100}
                                             height={50}
-                                            className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 group-hover:opacity-90 transition-all duration-300 relative z-10"
+                                            className="max-w-full max-h-full w-auto h-auto object-contain opacity-80 relative z-10"
                                         />
                                     ) : (
                                         <span className="text-gray-400 font-medium text-xs text-center px-2 relative z-10">
@@ -341,7 +336,7 @@ export default function CompaniesCarouselV3({
                     {displayCompanies.slice(0, 12).map((company, index) => (
                         <div
                             key={`masonry-company-${index}`}
-                            className={`group ${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-4 mb-4 sm:mb-6 break-inside-avoid transition-all duration-500 hover:scale-105 hover:border-[var(--color-main)]/20 ${
+                            className={`${currentTheme.cardBg} ${currentTheme.border} ${currentTheme.shadow} border rounded-2xl p-4 mb-4 sm:mb-6 break-inside-avoid transition-all duration-500 hover:scale-105 ${
                                 visibleCards.has(index) 
                                     ? 'opacity-100 transform translate-y-0' 
                                     : 'opacity-0 transform translate-y-4'
@@ -352,16 +347,13 @@ export default function CompaniesCarouselV3({
                             }}
                         >
                             <div className="w-full h-full flex items-center justify-center relative">
-                                {/* Background circle for logo */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)]/5 to-[var(--color-secondary)]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                
                                 {company.logo ? (
                                     <Image
                                         src={company.logo}
                                         alt={company.name}
                                         width={100}
                                         height={50}
-                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-60 group-hover:opacity-90 transition-all duration-300 relative z-10"
+                                        className="max-w-full max-h-full w-auto h-auto object-contain opacity-80 relative z-10"
                                     />
                                 ) : (
                                     <span className="text-gray-400 font-medium text-xs text-center px-2 relative z-10">

@@ -159,12 +159,13 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-                              Blackswan technology
+
+                         {partnershipData?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
                          </div>
-                         <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
-                              {partnershipData?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
+                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                              {partnershipData?.description || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
                          </h2>
-                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
                               {partnershipData?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
                          </p>
                     </div>

@@ -25,6 +25,10 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Loader from './home/Loader';
 import TestimonialCard from './ui/TestimonialCard';
+import { Button } from './ui/button';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+
 
 interface CasClientData {
      _id: string;
@@ -125,11 +129,9 @@ const VideoTestimonialsSection = ({ selectedClients }: VideoTestimonialsSectionP
                               NOS DERNIERS PROJETS
                          </div>
                          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                              Témoignages clients
+                              Cas clients
                          </h2>
-                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                              Découvrez comment nos clients ont transformé leur entreprise avec Odoo
-                         </p>
+                        
                     </div>
 
                     {/* Mobile: Stacked Cards */}
@@ -190,15 +192,15 @@ const VideoTestimonialsSection = ({ selectedClients }: VideoTestimonialsSectionP
 
                     {/* CTA Button */}
                     <div className="text-center mt-12">
-                         <a 
-                              href="/cas-client"
-                              className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                         >
-                              Voir tous nos projets
-                              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                         </a>
+                    <Button
+                    asChild
+                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  >
+                    <Link href="/cas-client" className="flex items-center gap-2">
+                      Voir tous nos projets
+                      <ArrowRight className="w-5 h-5" />
+                    </Link>
+                  </Button>
                     </div>
                </div>
           </section>

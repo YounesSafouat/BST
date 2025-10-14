@@ -87,15 +87,15 @@ export default function OdooCertificationSection({
                               transition={{ duration: 0.6 }}
                               className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
                          >
-                              {data.subheadline}
+                              {data.headline}
                          </motion.div>
                          <motion.h2
                               initial={{ opacity: 0, y: 20 }}
                               whileInView={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6, delay: 0.1 }}
-                              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+                              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
                          >
-                              {data.headline}
+                              {data.subheadline}
                          </motion.h2>
                          <motion.p
                               initial={{ opacity: 0, y: 20 }}

@@ -98,7 +98,7 @@ export default function MegaMenu({ data, isVisible, onMouseLeave }: MegaMenuProp
                 <div className="text-center pt-4 border-t border-gray-200">
                   <Button
                     asChild
-                    className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
                     <Link href="/cas-client" className="flex items-center gap-2">
                       Voir tous nos projets

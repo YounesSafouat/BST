@@ -43,6 +43,7 @@ import $ from 'jquery';
 import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
 
 import HomeHeroSplit from '@/components/home/hero/HeroSection';
+import HeroSectionMobile from '@/components/home/hero/HeroSectionMobile';
 import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
@@ -490,15 +491,20 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
-               <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-transparent">
+               <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
                     <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-10 xl:pt-20 2xl:pt-20 relative z-10 bg-transparent">
-                         <div>
+                         {/* Mobile Hero */}
+                         <div className="lg:hidden">
+                              <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+                         </div>
+                         {/* Desktop Hero */}
+                         <div className="hidden lg:block">
                               <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
                          </div>
                     </div>
                </div>
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
-               <div className="lg:hidden bg-transparent py-6 -mt-5 relative z-10 companies-carousel-transparent">
+               <div className="lg:hidden bg-[var(--color-main)] py-6 -mt-5 relative z-10 companies-carousel-transparent">
                     <CompaniesCarouselV3
                          companies={homePageData?.hero?.carousel?.companies}
                          userRegion={userRegion}
@@ -669,18 +675,19 @@ export default function HomePage() {
                     />
                     )}
                </div>
-               {/* SECTION 7: Pricing Section - HomePage */}
-               <section id="pricing" className="relative z-10">
-                    <PricingSection pricingData={homePageData?.pricing} />
-               </section>
-               {/* SECTION 8: Our Agency - HomePage */}
-               <div id="about">
+                {/* SECTION 7: Our Agency - HomePage */}
+                <div id="about">
                     <OurAgencySection
                          key={userRegion} // Force re-render when region changes
                          partnershipData={homePageData?.partnership}
                          userRegion={userRegion}
                     />
                </div>
+               {/* SECTION 8: Pricing Section - HomePage */}
+               <section id="pricing" className="relative z-10">
+                    <PricingSection pricingData={homePageData?.pricing} />
+               </section>
+              
                {/* SECTION 9: Contact Section - HomePage */}
                <div id="contact">
                     <ContactSection contactData={homePageData?.contact} />

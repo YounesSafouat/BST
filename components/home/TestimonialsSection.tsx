@@ -159,13 +159,15 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className="absolute -top-4 left-2 sm:top-8 sm:left-8 z-10"
+                    className="absolute top-4 left-2 sm:top-8 sm:left-8 z-10"
                >
-                    <img
-                         src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/GoogleBadge.png"
-                         alt="Google Partner Badge"
-                         className="w-20 sm:w-40 md:w-48 lg:w-56 h-auto drop-shadow-lg"
-                    />
+                    <div className="bg-white rounded-2xl shadow-lg p-3 sm:p-4 md:p-6">
+                         <img
+                              src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/GoogleBadge.png"
+                              alt="Google Partner Badge"
+                              className="w-16 sm:w-32 md:w-40 lg:w-48 h-auto"
+                         />
+                    </div>
                </motion.div>
 
                <motion.div
@@ -175,8 +177,8 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                     className="text-center mb-12 sm:mb-16"
                >
                     <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{testimonialsSectionData.headline}</div>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white mb-4">{testimonialsSectionData.description}</h2>
-                    <p className="text-base sm:text-lg text-white max-w-2xl mx-auto">{testimonialsSectionData.subdescription}</p>
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">{testimonialsSectionData.description}</h2>
+                    <p className="text-lg text-white max-w-3xl mx-auto">{testimonialsSectionData.subdescription}</p>
                </motion.div>
 
                <div className="relative w-full px-12">
