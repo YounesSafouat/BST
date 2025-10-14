@@ -152,7 +152,22 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
      }
 
      return (
-          <main id="testimonials" className="min-h-screen bg-[var(--color-main)] flex items-center justify-center flex-col gap-15 py-8 px-8">
+          <main id="testimonials" className="min-h-screen bg-[var(--color-main)] flex items-center justify-center flex-col gap-15 py-8 px-8 relative">
+               {/* Google Badge - Top Left */}
+               <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 }}
+                    className="absolute -top-4 left-2 sm:top-8 sm:left-8 z-10"
+               >
+                    <img
+                         src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/GoogleBadge.png"
+                         alt="Google Partner Badge"
+                         className="w-20 sm:w-40 md:w-48 lg:w-56 h-auto drop-shadow-lg"
+                    />
+               </motion.div>
+
                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
