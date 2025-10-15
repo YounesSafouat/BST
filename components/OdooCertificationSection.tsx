@@ -81,14 +81,6 @@ export default function OdooCertificationSection({
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                     <div className="text-center mb-12">
-                         <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.6 }}
-                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
-                         >
-                              {data.headline}
-                         </motion.div>
                          <motion.h2
                               initial={{ opacity: 0, y: 20 }}
                               whileInView={{ opacity: 1, y: 0 }}
@@ -97,14 +89,15 @@ export default function OdooCertificationSection({
                          >
                               {data.subheadline}
                          </motion.h2>
-                         <motion.p
+                         <motion.div
                               initial={{ opacity: 0, y: 20 }}
                               whileInView={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.6, delay: 0.2 }}
-                              className="text-lg text-gray-600 max-w-2xl mx-auto"
+                              transition={{ duration: 0.6 }}
+                              className="tracking-widest text-xl text-[var(--color-secondary)] font-bold mb-2"
                          >
-                              {data.description}
-                         </motion.p>
+                              {data.headline}
+                         </motion.div>
+                         
                     </div>
 
                     {/* Main Certification Card */}
