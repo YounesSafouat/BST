@@ -303,7 +303,7 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                     <div className="text-center mt-12">
                     <Button
                     asChild
-                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-3 rounded-full
+                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-12 py-10 text-xl rounded-full
                      shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
                     <Link href={sectionData?.ctaButton?.url || "/cas-client"} className="flex items-center gap-2">
