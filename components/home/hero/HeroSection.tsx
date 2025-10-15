@@ -261,7 +261,8 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                       <img
                         src={heroData.expertiseBadgeUrl}
                         alt="Expertise badge"
-                        className="w-50 h-20 lg:w-50 lg:h-30 object-contain"
+                        className="object-contain"
+                        style={{ width: '6.8125rem', height: '3.625rem' }}
                         onError={(e) => {
                           console.error('Badge image failed to load:', heroData?.expertiseBadgeUrl);
                           e.currentTarget.style.display = 'none';
