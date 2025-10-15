@@ -152,10 +152,7 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div 
-            className="tracking-widest text-3xl text-[var(--color-main)] font-semibold mb-5"
-            dangerouslySetInnerHTML={{ __html: headline }}
-          />
+          
           <h2 
             className="text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 mb-4"
             dangerouslySetInnerHTML={{ __html: subheadline }}
