@@ -1,16 +1,17 @@
 /**
  * VideoTestimonialsSection.tsx
  * 
- * Main video testimonials section using cas-client data and card design.
+ * Main video testimonials section using cas-client data with new card design.
  * Features:
  * - Fetches from /api/cas-client?published=true endpoint (same as cas-client page)
- * - Uses TestimonialCard component for consistent design
+ * - New card design with gradient backgrounds and metrics overlays
+ * - Hover effects to switch between two images
  * - Mobile: Cards stacked vertically
  * - Desktop: Carousel with navigation arrows
  * - IP-based region filtering
  * 
  * @author younes safouat
- * @version 2.0.0 - Cas Client Integration
+ * @version 3.0.0 - New Card Design with Hover Effects
  * @since 2025
  */
 
@@ -24,10 +25,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Loader from './home/Loader';
-import TestimonialCard from './ui/TestimonialCard';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
+import Image from 'next/image';
 
 
 interface CasClientData {
@@ -44,16 +45,116 @@ interface CasClientData {
      media: {
           cardBackgroundImage?: string;
           coverImage?: string;
+          hoverImage?: string; // Second image for hover effect
      };
+     metrics?: Array<{
+          icon: string;
+          text: string;
+     }>;
      targetRegions?: string[];
      published?: boolean;
 }
 
 interface VideoTestimonialsSectionProps {
      selectedClients?: string[]; // Array of client IDs to display
+     sectionData?: {
+          headline?: string;
+          subtitle?: string;
+          showStars?: boolean;
+          starCount?: number;
+          ctaButton?: {
+               text: string;
+               url: string;
+          };
+     };
 }
 
-const VideoTestimonialsSection = ({ selectedClients }: VideoTestimonialsSectionProps) => {
+// New Project Card Component
+const ProjectCard = ({ client }: { client: CasClientData }) => {
+     const [isHovered, setIsHovered] = useState(false);
+     
+     const getSectorColor = (sector: string) => {
+          return 'bg-gray-600'; // All badges use the same gray color
+     };
+
+     const sector = client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector;
+     
+     return (
+          <Link 
+               href={`/cas-client/${client.slug}`} 
+               className="block group"
+               onMouseEnter={() => setIsHovered(true)}
+               onMouseLeave={() => setIsHovered(false)}
+          >
+               <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-80">
+                    {/* Background Image */}
+                    <div className="absolute inset-0">
+                         <Image
+                              src={isHovered && client.media?.hoverImage ? client.media.hoverImage : (client.media?.cardBackgroundImage || client.media?.coverImage || '')}
+                              alt={client.name}
+                              fill
+                              className="object-cover transition-all duration-500"
+                         />
+                    </div>
+                    
+                    {/* Dark Section - Fixed at bottom, expands upward on hover */}
+                    <div className={`absolute bottom-0 left-0 right-0 bg-[var(--color-main)] transition-all duration-700 ease-in-out ${
+                         isHovered ? 'h-4/5 p-6' : 'h-16 p-4'
+                    } overflow-hidden`}>
+                         <div className="flex flex-col justify-between h-full">
+                              {/* Company Logo - Always visible with smooth transition */}
+                              <div className={`text-center transition-all duration-700 ease-in-out ${
+                                   isHovered ? 'mb-3' : 'mb-0'
+                              }`}>
+                                   {client.company?.logo ? (
+                                        <div className="flex justify-center">
+                                             <Image
+                                                  src={client.company.logo}
+                                                  alt={client.company.name}
+                                                  width={120}
+                                                  height={40}
+                                                  className="object-contain filter brightness-0 invert transition-all duration-700 ease-in-out"
+                                             />
+                                        </div>
+                                   ) : (
+                                        <h3 className="text-white text-xl font-bold mb-1">{client.name}</h3>
+                                   )}
+                              </div>
+                              
+                              {/* Description - Only visible on hover with smooth animation */}
+                              <div className={`transition-all duration-700 ease-in-out ${
+                                   isHovered ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0'
+                              } overflow-hidden`}>
+                                   <p className="text-white/90 text-sm leading-relaxed mb-4 line-clamp-3">
+                                        {client.summary}
+                                   </p>
+                              </div>
+                              
+                              {/* Bottom Row - Only visible on hover with smooth animation */}
+                              <div className={`transition-all duration-700 ease-in-out ${
+                                   isHovered ? 'opacity-100 max-h-12' : 'opacity-0 max-h-0'
+                              } overflow-hidden`}>
+                                   <div className="flex items-center justify-between">
+                                        {/* Sector Tag */}
+                                        <span className={`px-3 py-1 rounded-full text-white text-xs font-medium ${getSectorColor(sector || 'default')}`}>
+                                             {sector || 'Client'}
+                                        </span>
+                                        
+                                        {/* CTA */}
+                                        <div className="flex items-center gap-1 text-white group-hover:text-[var(--color-secondary)] transition-colors">
+                                             <span className="text-sm font-medium">Voir le cas</span>
+                                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </Link>
+     );
+};
+
+const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimonialsSectionProps) => {
      const [clientsData, setClientsData] = useState<CasClientData[]>([]);
      const [loading, setLoading] = useState(true);
      const { data: locationData, loading: locationLoading, region: userRegion } = useGeolocationSingleton();
@@ -121,33 +222,33 @@ const VideoTestimonialsSection = ({ selectedClients }: VideoTestimonialsSectionP
      }
 
      return (
-          <section className="py-20 bg-gradient-to-b from-white to-gray-50">
+          <section className="py-20 bg-white">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Section Header */}
                     <div className="text-center mb-16">
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-4">
-                              NOS DERNIERS PROJETS
+                         <h2 
+                              className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--color-main)] mb-4"
+                              dangerouslySetInnerHTML={{ __html: sectionData?.headline || 'Nos derniers projets' }}
+                         />
+                         <div className="flex items-center justify-center gap-2 mb-4">
+                              <span 
+                                   className="text-[var(--color-secondary)] text-lg font-semibold"
+                                   dangerouslySetInnerHTML={{ __html: sectionData?.subtitle || '+80 entreprises accompagnées' }}
+                              />
                          </div>
-                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                              Cas clients
-                         </h2>
-                        
+                         {sectionData?.showStars !== false && (
+                              <div className="flex items-center justify-center gap-1">
+                                   {[...Array(sectionData?.starCount || 5)].map((_, i) => (
+                                        <Star key={i} className="w-5 h-5 fill-[var(--color-secondary)] text-[var(--color-secondary)]" />
+                                   ))}
+                              </div>
+                         )}
                     </div>
 
                     {/* Mobile: Stacked Cards */}
                     <div className="md:hidden space-y-6">
                          {filteredClients.map((client) => (
-                              <TestimonialCard
-                                   key={client._id}
-                                   title={client.name}
-                                   description={client.summary}
-                                   videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
-                                   logo={client.company?.logo}
-                                   sector={client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector}
-                                   variant="primary"
-                                   slug={client.slug}
-                                   hasVideo={false}
-                              />
+                              <ProjectCard key={client._id} client={client} />
                          ))}
                     </div>
 
@@ -175,16 +276,7 @@ const VideoTestimonialsSection = ({ selectedClients }: VideoTestimonialsSectionP
                          >
                               {filteredClients.map((client) => (
                                    <SwiperSlide key={client._id}>
-                                        <TestimonialCard
-                                             title={client.name}
-                                             description={client.summary}
-                                             videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
-                                             logo={client.company?.logo}
-                                             sector={client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector}
-                                             variant="primary"
-                                             slug={client.slug}
-                                             hasVideo={false}
-                                        />
+                                        <ProjectCard client={client} />
                                    </SwiperSlide>
                          ))}
                          </Swiper>
@@ -196,8 +288,8 @@ const VideoTestimonialsSection = ({ selectedClients }: VideoTestimonialsSectionP
                     asChild
                     className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
-                    <Link href="/cas-client" className="flex items-center gap-2">
-                      Voir tous nos projets
+                    <Link href={sectionData?.ctaButton?.url || "/cas-client"} className="flex items-center gap-2">
+                      <span dangerouslySetInnerHTML={{ __html: sectionData?.ctaButton?.text || "Voir tous nos projets" }} />
                       <ArrowRight className="w-5 h-5" />
                     </Link>
                   </Button>

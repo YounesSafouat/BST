@@ -13,6 +13,7 @@ import { toast } from "@/hooks/use-toast";
 import { Save, Eye, ArrowLeft, Plus, Trash2, X, GripVertical, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/home/Loader";
+import RichTextEditor from "@/components/RichTextEditor";
 
 interface Testimonial {
      _id: string;
@@ -160,21 +161,13 @@ interface HomePageData {
      selectedClients?: string[]; // Array of client IDs to display in video testimonials
      videoTestimonials?: {
           headline: string;
-          description: string;
-          subdescription?: string;
-          videos: Array<{
-               id: string;
-               company: string;
-               companyLogo: string;
-               tagline?: string;
-               duration: string;
-               backgroundColor: string;
-               textColor: string;
-               videoUrl?: string;
-               thumbnailUrl?: string;
-               targetRegions?: string[]; // Add region targeting
-               clientCasePath?: string; // New field for cas-client link
-          }>;
+          subtitle: string;
+          showStars: boolean;
+          starCount: number;
+          ctaButton: {
+               text: string;
+               url: string;
+          };
      };
      faq?: {
           headline: string;
@@ -915,28 +908,30 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre principal</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.hero.headline}
-                                                  onChange={(e) => updateField('hero.headline', e.target.value)}
+                                                  onChange={(value) => updateField('hero.headline', value)}
                                                   placeholder="Titre principal"
+                                                  height={100}
                                              />
                                         </div>
                                         <div>
                                              <Label>Sous-titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.hero.subheadline}
-                                                  onChange={(e) => updateField('hero.subheadline', e.target.value)}
+                                                  onChange={(value) => updateField('hero.subheadline', value)}
                                                   placeholder="Sous-titre"
+                                                  height={100}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Description</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.hero.description}
-                                             onChange={(e) => updateField('hero.description', e.target.value)}
+                                             onChange={(value) => updateField('hero.description', value)}
                                              placeholder="Description"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
                                    <div>
@@ -1006,18 +1001,20 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Bouton principal - Texte</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.hero.ctaPrimary.text}
-                                                  onChange={(e) => updateField('hero.ctaPrimary.text', e.target.value)}
+                                                  onChange={(value) => updateField('hero.ctaPrimary.text', value)}
                                                   placeholder="Texte du bouton principal"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Bouton secondaire - Texte</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.hero.ctaSecondary.text}
-                                                  onChange={(e) => updateField('hero.ctaSecondary.text', e.target.value)}
+                                                  onChange={(value) => updateField('hero.ctaSecondary.text', value)}
                                                   placeholder="Texte du bouton secondaire"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
@@ -1067,12 +1064,11 @@ export default function HomePageDashboard() {
                                         {/* Text above carousel */}
                                         <div>
                                              <Label>Texte au-dessus du carousel</Label>
-                                             <Textarea
+                                             <RichTextEditor
                                                   value={homeData.hero.carousel?.text || ''}
-                                                  onChange={(e) => updateField('hero.carousel.text', e.target.value)}
+                                                  onChange={(value) => updateField('hero.carousel.text', value)}
                                                   placeholder="Ex: +112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne."
-                                                  title="Texte au-dessus du carousel"
-                                                  className="h-20"
+                                                  height={100}
                                              />
                                              <p className="text-xs text-gray-500 mt-1">
                                                   Ce texte apparaîtra au-dessus du carousel des logos d'entreprises
@@ -1355,28 +1351,30 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.platformSection.headline}
-                                                  onChange={(e) => updateField('platformSection.headline', e.target.value)}
+                                                  onChange={(value) => updateField('platformSection.headline', value)}
                                                   placeholder="Titre de la section plateforme"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Sous-titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.platformSection.subheadline}
-                                                  onChange={(e) => updateField('platformSection.subheadline', e.target.value)}
+                                                  onChange={(value) => updateField('platformSection.subheadline', value)}
                                                   placeholder="Sous-titre"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Description</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.platformSection.description || ''}
-                                             onChange={(e) => updateField('platformSection.description', e.target.value)}
+                                             onChange={(value) => updateField('platformSection.description', value)}
                                              placeholder="Description"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
 
@@ -1425,10 +1423,11 @@ export default function HomePageDashboard() {
                                                        </div>
                                                        <div>
                                                             <Label>Titre</Label>
-                                                            <Input
+                                                            <RichTextEditor
                                                                  value={app.title}
-                                                                 onChange={(e) => updateArrayField('platformSection.apps', index, 'title', e.target.value)}
+                                                                 onChange={(value) => updateArrayField('platformSection.apps', index, 'title', value)}
                                                                  placeholder="Titre de l'application"
+                                                                 height={80}
                                                             />
                                                        </div>
                                                   </div>
@@ -1448,11 +1447,11 @@ export default function HomePageDashboard() {
 
                                                   <div className="mt-4">
                                                        <Label>Description</Label>
-                                                       <Textarea
+                                                       <RichTextEditor
                                                             value={app.description}
-                                                            onChange={(e) => updateArrayField('platformSection.apps', index, 'description', e.target.value)}
+                                                            onChange={(value) => updateArrayField('platformSection.apps', index, 'description', value)}
                                                             placeholder="Description de l'application"
-                                                            rows={2}
+                                                            height={100}
                                                        />
                                                   </div>
 
@@ -1513,28 +1512,30 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.services.headline}
-                                                  onChange={(e) => updateField('services.headline', e.target.value)}
+                                                  onChange={(value) => updateField('services.headline', value)}
                                                   placeholder="Titre de la section services"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Sous-titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.services.subheadline}
-                                                  onChange={(e) => updateField('services.subheadline', e.target.value)}
+                                                  onChange={(value) => updateField('services.subheadline', value)}
                                                   placeholder="Sous-titre"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Description</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.services.description || ''}
-                                             onChange={(e) => updateField('services.description', e.target.value)}
+                                             onChange={(value) => updateField('services.description', value)}
                                              placeholder="Description"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
 
@@ -1606,21 +1607,22 @@ export default function HomePageDashboard() {
                                                        </div>
                                                        <div>
                                                             <Label>Titre</Label>
-                                                            <Input
+                                                            <RichTextEditor
                                                                  value={service.title}
-                                                                 onChange={(e) => updateArrayField('services.services', index, 'title', e.target.value)}
+                                                                 onChange={(value) => updateArrayField('services.services', index, 'title', value)}
                                                                  placeholder="Titre du service"
+                                                                 height={80}
                                                             />
                                                        </div>
                                                   </div>
 
                                                   <div className="mt-4">
                                                        <Label>Description</Label>
-                                                       <Textarea
+                                                       <RichTextEditor
                                                             value={service.description}
-                                                            onChange={(e) => updateArrayField('services.services', index, 'description', e.target.value)}
+                                                            onChange={(value) => updateArrayField('services.services', index, 'description', value)}
                                                             placeholder="Description du service"
-                                                            rows={3}
+                                                            height={120}
                                                        />
                                                   </div>
 
@@ -1675,47 +1677,50 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.certification.headline}
-                                                  onChange={(e) => updateField('certification.headline', e.target.value)}
+                                                  onChange={(value) => updateField('certification.headline', value)}
                                                   placeholder="Titre de la section certification"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Sous-titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.certification.subheadline}
-                                                  onChange={(e) => updateField('certification.subheadline', e.target.value)}
+                                                  onChange={(value) => updateField('certification.subheadline', value)}
                                                   placeholder="Sous-titre"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Description</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.certification.description || ''}
-                                             onChange={(e) => updateField('certification.description', e.target.value)}
+                                             onChange={(value) => updateField('certification.description', value)}
                                              placeholder="Description"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
 
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre du partenariat</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.certification.partnerTitle}
-                                                  onChange={(e) => updateField('certification.partnerTitle', e.target.value)}
+                                                  onChange={(value) => updateField('certification.partnerTitle', value)}
                                                   placeholder="Titre du partenariat"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Description du partenariat</Label>
-                                             <Textarea
+                                             <RichTextEditor
                                                   value={homeData.certification.partnerDescription || ''}
-                                                  onChange={(e) => updateField('certification.partnerDescription', e.target.value)}
+                                                  onChange={(value) => updateField('certification.partnerDescription', value)}
                                                   placeholder="Description du partenariat"
-                                                  rows={3}
+                                                  height={120}
                                              />
                                         </div>
                                    </div>
@@ -1880,28 +1885,30 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.pricing.headline}
-                                                  onChange={(e) => updateField('pricing.headline', e.target.value)}
+                                                  onChange={(value) => updateField('pricing.headline', value)}
                                                   placeholder="Titre de la section tarifs"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Sous-titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.pricing.subheadline}
-                                                  onChange={(e) => updateField('pricing.subheadline', e.target.value)}
+                                                  onChange={(value) => updateField('pricing.subheadline', value)}
                                                   placeholder="Sous-titre"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Description</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.pricing.description || ''}
-                                             onChange={(e) => updateField('pricing.description', e.target.value)}
+                                             onChange={(value) => updateField('pricing.description', value)}
                                              placeholder="Description"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
 
@@ -1978,11 +1985,11 @@ export default function HomePageDashboard() {
 
                                                   <div className="mb-4">
                                                        <Label>Description</Label>
-                                                       <Textarea
+                                                       <RichTextEditor
                                                             value={plan.description}
-                                                            onChange={(e) => updateArrayField('pricing.plans', index, 'description', e.target.value)}
+                                                            onChange={(value) => updateArrayField('pricing.plans', index, 'description', value)}
                                                             placeholder="Description du plan"
-                                                            rows={2}
+                                                            height={100}
                                                        />
                                                   </div>
 
@@ -2095,28 +2102,30 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.partnership.headline}
-                                                  onChange={(e) => updateField('partnership.headline', e.target.value)}
+                                                  onChange={(value) => updateField('partnership.headline', value)}
                                                   placeholder="Titre de la section agence"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Description</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.partnership.subdescription || ''}
-                                                  onChange={(e) => updateField('partnership.subdescription', e.target.value)}
+                                                  onChange={(value) => updateField('partnership.subdescription', value)}
                                                   placeholder="Description"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Texte d'expertise</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.partnership.expertiseText || ''}
-                                             onChange={(e) => updateField('partnership.expertiseText', e.target.value)}
+                                             onChange={(value) => updateField('partnership.expertiseText', value)}
                                              placeholder="Texte d'expertise"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
 
@@ -2288,11 +2297,11 @@ export default function HomePageDashboard() {
 
                                                   <div className="mt-4">
                                                        <Label>Description</Label>
-                                                       <Textarea
+                                                       <RichTextEditor
                                                             value={feature.description}
-                                                            onChange={(e) => updateArrayField('partnership.features', index, 'description', e.target.value)}
+                                                            onChange={(value) => updateArrayField('partnership.features', index, 'description', value)}
                                                             placeholder="Description de la fonctionnalité"
-                                                            rows={2}
+                                                            height={100}
                                                        />
                                                   </div>
                                              </Card>
@@ -2311,45 +2320,48 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.contact?.headline || ''}
-                                                  onChange={(e) => updateField('contact.headline', e.target.value)}
+                                                  onChange={(value) => updateField('contact.headline', value)}
                                                   placeholder="Titre de la section contact"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Description</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.contact?.description || ''}
-                                                  onChange={(e) => updateField('contact.description', e.target.value)}
+                                                  onChange={(value) => updateField('contact.description', value)}
                                                   placeholder="Description"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
                                    <div>
                                         <Label>Sous-description (texte avec statistiques)</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.contact?.subdescription || ''}
-                                             onChange={(e) => updateField('contact.subdescription', e.target.value)}
+                                             onChange={(value) => updateField('contact.subdescription', value)}
                                              placeholder="Ex: +112 entreprises nous font confiance. Rejoignez-les et découvrez pourquoi Odoo change la donne."
-                                             rows={2}
+                                             height={100}
                                         />
                                    </div>
                                    <div>
                                         <Label>Description du formulaire</Label>
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.contact?.formDescription || ''}
-                                             onChange={(e) => updateField('contact.formDescription', e.target.value)}
+                                             onChange={(value) => updateField('contact.formDescription', value)}
                                              placeholder="Description du formulaire"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
                                    <div>
                                         <Label>Titre du formulaire</Label>
-                                        <Input
+                                        <RichTextEditor
                                              value={homeData.contact?.formTitle || ''}
-                                             onChange={(e) => updateField('contact.formTitle', e.target.value)}
+                                             onChange={(value) => updateField('contact.formTitle', value)}
                                              placeholder="Titre du formulaire"
+                                             height={80}
                                         />
                                    </div>
 
@@ -2406,11 +2418,11 @@ export default function HomePageDashboard() {
 
                                                   <div className="mt-4">
                                                        <Label>Description</Label>
-                                                       <Textarea
+                                                       <RichTextEditor
                                                             value={benefit.description}
-                                                            onChange={(e) => updateArrayField('contact.benefits', index, 'description', e.target.value)}
+                                                            onChange={(value) => updateArrayField('contact.benefits', index, 'description', value)}
                                                             placeholder="Description de l'avantage"
-                                                            rows={2}
+                                                            height={100}
                                                        />
                                                   </div>
                                              </Card>
@@ -2475,11 +2487,11 @@ export default function HomePageDashboard() {
                                              <Label className="text-lg font-semibold">Garantie</Label>
                                         </div>
 
-                                        <Textarea
+                                        <RichTextEditor
                                              value={homeData.contact?.guarantee || ''}
-                                             onChange={(e) => updateField('contact.guarantee', e.target.value)}
+                                             onChange={(value) => updateField('contact.guarantee', value)}
                                              placeholder="Texte de la garantie"
-                                             rows={3}
+                                             height={120}
                                         />
                                    </div>
                               </CardContent>
@@ -2497,28 +2509,31 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.faq?.headline || ''}
-                                                  onChange={(e) => updateField('faq.headline', e.target.value)}
+                                                  onChange={(value) => updateField('faq.headline', value)}
                                                   placeholder="Titre de la section FAQ"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Description</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.faq?.description || ''}
-                                                  onChange={(e) => updateField('faq.description', e.target.value)}
+                                                  onChange={(value) => updateField('faq.description', value)}
                                                   placeholder="Description"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
 
                                    <div>
                                         <Label>Sous-description</Label>
-                                        <Input
+                                        <RichTextEditor
                                              value={homeData.faq?.subdescription || ''}
-                                             onChange={(e) => updateField('faq.subdescription', e.target.value)}
+                                             onChange={(value) => updateField('faq.subdescription', value)}
                                              placeholder="Découvrez les réponses aux questions les plus courantes sur notre accompagnement Odoo"
+                                             height={80}
                                         />
                                    </div>
 
@@ -2556,20 +2571,20 @@ export default function HomePageDashboard() {
                                                   <div className="space-y-4">
                                                        <div>
                                                             <Label>Question</Label>
-                                                            <Textarea
+                                                            <RichTextEditor
                                                                  value={item.question}
-                                                                 onChange={(e) => updateArrayField('faq.items', index, 'question', e.target.value)}
+                                                                 onChange={(value) => updateArrayField('faq.items', index, 'question', value)}
                                                                  placeholder="Question"
-                                                                 rows={2}
+                                                                 height={100}
                                                             />
                                                        </div>
                                                        <div>
                                                             <Label>Réponse</Label>
-                                                            <Textarea
+                                                            <RichTextEditor
                                                                  value={item.answer}
-                                                                 onChange={(e) => updateArrayField('faq.items', index, 'answer', e.target.value)}
+                                                                 onChange={(value) => updateArrayField('faq.items', index, 'answer', value)}
                                                                  placeholder="Réponse"
-                                                                 rows={3}
+                                                                 height={120}
                                                             />
                                                        </div>
                                                   </div>
@@ -2589,18 +2604,20 @@ export default function HomePageDashboard() {
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                              <Label>Titre</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.testimonialsSection.headline}
-                                                  onChange={(e) => updateField('testimonialsSection.headline', e.target.value)}
+                                                  onChange={(value) => updateField('testimonialsSection.headline', value)}
                                                   placeholder="Titre de la section témoignages"
+                                                  height={80}
                                              />
                                         </div>
                                         <div>
                                              <Label>Description</Label>
-                                             <Input
+                                             <RichTextEditor
                                                   value={homeData.testimonialsSection.description}
-                                                  onChange={(e) => updateField('testimonialsSection.description', e.target.value)}
+                                                  onChange={(value) => updateField('testimonialsSection.description', value)}
                                                   placeholder="Description"
+                                                  height={80}
                                              />
                                         </div>
                                    </div>
@@ -2715,9 +2732,115 @@ export default function HomePageDashboard() {
                     </TabsContent>
 
                     <TabsContent value="videoTestimonials" className="space-y-6">
+                         {/* Section Header Configuration */}
                          <Card>
                               <CardHeader>
-                                   <CardTitle>Section Cas Clients - Témoignages Vidéo</CardTitle>
+                                   <CardTitle>Configuration Section Cas Clients</CardTitle>
+                                   <p className="text-sm text-gray-500 mt-2">
+                                        Configurez l'en-tête et les paramètres de la section "Nos derniers projets"
+                                   </p>
+                              </CardHeader>
+                              <CardContent className="space-y-6">
+                                   {/* Headline */}
+                                   <div>
+                                        <Label htmlFor="videoTestimonials-headline" className="text-sm font-medium">
+                                             Titre principal
+                                        </Label>
+                                        <RichTextEditor
+                                             value={homeData.videoTestimonials?.headline || ''}
+                                             onChange={(value) => updateField('videoTestimonials.headline', value)}
+                                             placeholder="Ex: Nos derniers projets"
+                                             height={100}
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                             Supporte HTML et Tailwind CSS. Ex: &lt;span className="text-[var(--color-main)]"&gt;Nos derniers&lt;/span&gt; projets
+                                        </p>
+                                   </div>
+
+                                   {/* Subtitle */}
+                                   <div>
+                                        <Label htmlFor="videoTestimonials-subtitle" className="text-sm font-medium">
+                                             Sous-titre
+                                        </Label>
+                                        <RichTextEditor
+                                             value={homeData.videoTestimonials?.subtitle || ''}
+                                             onChange={(value) => updateField('videoTestimonials.subtitle', value)}
+                                             placeholder="Ex: +80 entreprises accompagnées"
+                                             height={100}
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                             Supporte HTML et Tailwind CSS
+                                        </p>
+                                   </div>
+
+                                   {/* Stars Configuration */}
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                             <Label className="text-sm font-medium mb-2 block">Afficher les étoiles</Label>
+                                             <div className="flex items-center space-x-2">
+                                                  <input
+                                                       type="checkbox"
+                                                       id="videoTestimonials-showStars"
+                                                       checked={homeData.videoTestimonials?.showStars !== false}
+                                                       onChange={(e) => updateField('videoTestimonials.showStars', e.target.checked)}
+                                                       className="rounded"
+                                                  />
+                                                  <Label htmlFor="videoTestimonials-showStars" className="text-sm">
+                                                       Afficher les étoiles de notation
+                                                  </Label>
+                                             </div>
+                                        </div>
+
+                                        <div>
+                                             <Label htmlFor="videoTestimonials-starCount" className="text-sm font-medium">
+                                                  Nombre d'étoiles
+                                             </Label>
+                                             <Input
+                                                  id="videoTestimonials-starCount"
+                                                  type="number"
+                                                  min="1"
+                                                  max="10"
+                                                  value={homeData.videoTestimonials?.starCount || 5}
+                                                  onChange={(e) => updateField('videoTestimonials.starCount', parseInt(e.target.value))}
+                                                  className="mt-1"
+                                             />
+                                        </div>
+                                   </div>
+
+                                   {/* CTA Button */}
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                             <Label htmlFor="videoTestimonials-ctaText" className="text-sm font-medium">
+                                                  Texte du bouton CTA
+                                             </Label>
+                                             <RichTextEditor
+                                                  value={homeData.videoTestimonials?.ctaButton?.text || ''}
+                                                  onChange={(value) => updateField('videoTestimonials.ctaButton.text', value)}
+                                                  placeholder="Ex: Voir tous nos projets"
+                                                  height={100}
+                                             />
+                                        </div>
+
+                                        <div>
+                                             <Label htmlFor="videoTestimonials-ctaUrl" className="text-sm font-medium">
+                                                  URL du bouton CTA
+                                             </Label>
+                                             <Input
+                                                  id="videoTestimonials-ctaUrl"
+                                                  value={homeData.videoTestimonials?.ctaButton?.url || ''}
+                                                  onChange={(e) => updateField('videoTestimonials.ctaButton.url', e.target.value)}
+                                                  placeholder="Ex: /cas-client"
+                                                  className="mt-1"
+                                             />
+                                        </div>
+                                   </div>
+                              </CardContent>
+                         </Card>
+
+                         {/* Client Selection */}
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>Sélection des Cas Clients</CardTitle>
                                    <p className="text-sm text-gray-500 mt-2">
                                         Sélectionnez les cas clients à afficher dans la section témoignages vidéo. 
                                         Les cas clients sont gérés dans la section "Cas Clients" du dashboard.
@@ -2811,214 +2934,6 @@ export default function HomePageDashboard() {
                                              </div>
                                         )}
                                    </div>
-
-                                   {/* OLD VIDEO TESTIMONIALS - KEPT FOR BACKWARD COMPATIBILITY */}
-                                   {homeData.videoTestimonials?.videos && homeData.videoTestimonials.videos.length > 0 && (
-                                        <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                                             <p className="text-sm text-yellow-800 font-semibold mb-2">
-                                                  ⚠️ Anciens témoignages vidéo détectés
-                                             </p>
-                                             <p className="text-sm text-yellow-700">
-                                                  Vous avez {homeData.videoTestimonials.videos.length} ancien(s) témoignage(s) vidéo. 
-                                                  Ces témoignages ne sont plus utilisés. Utilisez la nouvelle sélection de cas clients ci-dessus.
-                                             </p>
-                                        </div>
-                                   )}
-
-                                   {/* REMOVED OLD VIDEO TESTIMONIALS FORM - Now using selectedClients instead */}
-                                   {false && homeData?.videoTestimonials?.videos?.map((video, index) => (
-                                             <Card key={index} className="p-4">
-                                                  <div className="flex items-center justify-between mb-4">
-                                                       <h4 className="font-semibold">Témoignage vidéo {index + 1}</h4>
-                                                       <Button
-                                                            onClick={() => removeArrayItem('videoTestimonials.videos', index)}
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            className="text-red-600 hover:text-red-700"
-                                                       >
-                                                            <Trash2 className="w-4 h-4" />
-                                                       </Button>
-                                                  </div>
-
-                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                       <div>
-                                                            <Label>Entreprise</Label>
-                                                            <Input
-                                                                 value={video.company}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'company', e.target.value)}
-                                                                 placeholder="Nom de l'entreprise"
-                                                            />
-                                                       </div>
-                                                       <div>
-                                                            <Label>Logo de l'entreprise</Label>
-                                                            <Input
-                                                                 value={video.companyLogo}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'companyLogo', e.target.value)}
-                                                                 placeholder="Logo de l'entreprise"
-                                                            />
-                                                       </div>
-                                                  </div>
-
-                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                                       <div>
-                                                            <Label>Tagline</Label>
-                                                            <Input
-                                                                 value={video.tagline || ''}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'tagline', e.target.value)}
-                                                                 placeholder="Tagline"
-                                                            />
-                                                       </div>
-                                                       <div>
-                                                            <Label>Durée</Label>
-                                                            <Input
-                                                                 value={video.duration}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'duration', e.target.value)}
-                                                                 placeholder="Durée (ex: 02:00)"
-                                                            />
-                                                       </div>
-                                                  </div>
-
-                                                  <div className="mt-4">
-                                                       <Label>Lien vers le cas client</Label>
-                                                       <Input
-                                                            value={video.clientCasePath || ''}
-                                                            onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'clientCasePath', e.target.value)}
-                                                            placeholder="Ex: allisone (pour agence-blackswan.com/cas-client/allisone)"
-                                                       />
-                                                       <p className="text-xs text-gray-500 mt-1">
-                                                            Entrez le slug du cas client (ex: allisone). Laisser vide pour rediriger vers /cas-client
-                                                       </p>
-                                                  </div>
-
-
-                                                  <div className="mt-4">
-                                                       <Label>URL de la vidéo</Label>
-                                                       <div className="flex gap-2">
-                                                            <Input
-                                                                 value={video.videoUrl || ''}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'videoUrl', e.target.value)}
-                                                                 placeholder="URL de la vidéo (YouTube, Vimeo, etc.) ou télécharger un fichier"
-                                                                 className="flex-1"
-                                                            />
-                                                            <div className="relative">
-                                                                 <input
-                                                                      type="file"
-                                                                      accept="video/*"
-                                                                      onChange={(e) => {
-                                                                           const file = e.target.files?.[0];
-                                                                           if (file) {
-                                                                                handleVideoUploadForTestimonial(file, index);
-                                                                           }
-                                                                      }}
-                                                                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                                                      aria-label="Télécharger une vidéo"
-                                                                      title="Télécharger une vidéo"
-                                                                 />
-                                                                 <Button variant="outline" size="sm" className="h-10">
-                                                                      <Upload className="h-4 w-4" />
-                                                                 </Button>
-                                                            </div>
-                                                       </div>
-                                                       <p className="text-xs text-gray-500 mt-1">
-                                                            Vous pouvez utiliser une URL (YouTube, Vimeo) ou télécharger un fichier vidéo
-                                                       </p>
-
-                                                       {/* Thumbnail URL */}
-                                                       <div className="mt-4">
-                                                            <Label>URL de la miniature (optionnel)</Label>
-                                                            <Input
-                                                                 value={video.thumbnailUrl || ''}
-                                                                 onChange={(e) => updateArrayField('videoTestimonials.videos', index, 'thumbnailUrl', e.target.value)}
-                                                                 placeholder="URL de l'image miniature (recommandé: 1280x720)"
-                                                            />
-                                                            <p className="text-xs text-gray-500 mt-1">
-                                                                 URL d'une image qui sera affichée avant la lecture de la vidéo
-                                                            </p>
-                                                       </div>
-
-                                                       {/* Region Targeting */}
-                                                       <div className="mt-4">
-                                                            <Label>Ciblage Régional</Label>
-                                                            <p className="text-xs text-gray-500 mb-2">
-                                                                 Sélectionnez les régions où cette vidéo doit être visible
-                                                            </p>
-                                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                                                 {[
-                                                                      { value: 'all', label: 'Toutes les régions' },
-                                                                      { value: 'france', label: '🇫🇷 France' },
-                                                                      { value: 'morocco', label: '🇲🇦 Maroc' },
-                                                                      { value: 'international', label: '🌍 International' }
-                                                                 ].map((region) => (
-                                                                      <label key={region.value} className="flex items-center space-x-2 cursor-pointer">
-                                                                           <input
-                                                                                type="checkbox"
-                                                                                checked={(video.targetRegions || ['all']).includes(region.value)}
-                                                                                onChange={(e) => {
-                                                                                     const currentRegions = video.targetRegions || ['all'];
-                                                                                     let newRegions: string[];
-
-                                                                                     if (e.target.checked) {
-                                                                                          // If "all" is selected, remove other regions
-                                                                                          if (region.value === 'all') {
-                                                                                               newRegions = ['all'];
-                                                                                          } else {
-                                                                                               // Remove "all" if selecting specific regions
-                                                                                               newRegions = currentRegions.filter(r => r !== 'all');
-                                                                                               newRegions.push(region.value);
-                                                                                          }
-                                                                                     } else {
-                                                                                          // Remove the region
-                                                                                          newRegions = currentRegions.filter(r => r !== region.value);
-                                                                                          // If no regions selected, default to "all"
-                                                                                          if (newRegions.length === 0) {
-                                                                                               newRegions = ['all'];
-                                                                                          }
-                                                                                     }
-
-                                                                                     updateArrayField('videoTestimonials.videos', index, 'targetRegions', newRegions);
-                                                                                }}
-                                                                                className="rounded border-gray-300 text-[var(--color-main)] focus:ring-[var(--color-main)]"
-                                                                           />
-                                                                           <span className="text-xs font-medium text-gray-700">{region.label}</span>
-                                                                      </label>
-                                                                 ))}
-                                                            </div>
-                                                       </div>
-
-                                                       {/* Video Preview */}
-                                                       {video.videoUrl && (
-                                                            <div className="mt-4 p-4 border rounded-lg bg-gray-50">
-                                                                 <Label className="text-sm font-medium mb-2 block">Aperçu de la vidéo</Label>
-                                                                 <div className="w-full max-w-md aspect-video bg-black rounded overflow-hidden">
-                                                                      {video.videoUrl.startsWith('data:') || video.videoUrl.startsWith('blob:') ? (
-                                                                           <video
-                                                                                src={video.videoUrl}
-                                                                                controls
-                                                                                className="w-full h-full object-contain"
-                                                                                onError={(e) => {
-                                                                                     e.currentTarget.style.display = 'none';
-                                                                                     e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                                                                                }}
-                                                                           />
-                                                                      ) : (
-                                                                           <iframe
-                                                                                src={getVideoEmbedUrl(video.videoUrl)}
-                                                                                title="Video preview"
-                                                                                className="w-full h-full"
-                                                                                frameBorder="0"
-                                                                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                                allowFullScreen
-                                                                           />
-                                                                      )}
-                                                                      <div className="hidden w-full h-full flex items-center justify-center text-white text-sm">
-                                                                           Impossible de charger la vidéo
-                                                                      </div>
-                                                                 </div>
-                                                            </div>
-                                                       )}
-                                                  </div>
-                                             </Card>
-                                        ))}
                               </CardContent>
                          </Card>
                     </TabsContent>
@@ -3028,6 +2943,52 @@ export default function HomePageDashboard() {
                               <CardHeader>
                                    <CardTitle>CTA Final</CardTitle>
                               </CardHeader>
+                              <CardContent className="space-y-4">
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                             <Label>Titre</Label>
+                                                            <Input
+                                                  value={homeData.finalCta.headline}
+                                                  onChange={(e) => updateField('finalCta.headline', e.target.value)}
+                                                  placeholder="Titre du CTA final"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                             <Label>Description</Label>
+                                                            <Input
+                                                  value={homeData.finalCta.description}
+                                                  onChange={(e) => updateField('finalCta.description', e.target.value)}
+                                                  placeholder="Description"
+                                                            />
+                                                       </div>
+                                                  </div>
+                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                       <div>
+                                             <Label>Bouton principal - Texte</Label>
+                                                            <Input
+                                                  value={homeData.finalCta.ctaPrimary.text}
+                                                  onChange={(e) => updateField('finalCta.ctaPrimary.text', e.target.value)}
+                                                  placeholder="Texte du bouton principal"
+                                                            />
+                                                       </div>
+                                                       <div>
+                                             <Label>Bouton secondaire - Texte</Label>
+                                                            <Input
+                                                  value={homeData.finalCta.ctaSecondary.text}
+                                                  onChange={(e) => updateField('finalCta.ctaSecondary.text', e.target.value)}
+                                                  placeholder="Texte du bouton secondaire"
+                                                            />
+                                                       </div>
+                                                  </div>
+                              </CardContent>
+                         </Card>
+                    </TabsContent>
+                    <TabsContent value="final" className="space-y-6">
+                         <Card>
+                              <CardHeader>
+                                   <CardTitle>CTA Final</CardTitle>
+                              </CardHeader>
+
                               <CardContent className="space-y-4">
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>

@@ -853,6 +853,14 @@ html {
   color: #4b5563;
 }
 
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* Responsive adjustments for blog content */
 @media (max-width: 768px) {
   .blog-content {

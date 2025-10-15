@@ -181,20 +181,13 @@ interface HomePageData {
      selectedClients?: string[]; // Array of client IDs to display in video testimonials
      videoTestimonials?: {
           headline: string;
-          description: string;
-          subdescription?: string;
-          videos: Array<{
-               id: string;
-               company: string;
-               companyLogo: string;
-               tagline?: string;
-               duration: string;
-               backgroundColor: string;
-               textColor: string;
-               videoUrl?: string;
-               thumbnailUrl?: string;
-               targetRegions?: string[];
-          }>;
+          subtitle: string;
+          showStars: boolean;
+          starCount: number;
+          ctaButton: {
+               text: string;
+               url: string;
+          };
      };
      faq?: {
           headline: string;
@@ -517,7 +510,10 @@ export default function HomePage() {
                </div>
                {/* SECTION 2: Video Testimonials - HomePage */}
                 <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection selectedClients={homePageData?.selectedClients} />
+                    <VideoTestimonialsSection 
+                         selectedClients={homePageData?.selectedClients} 
+                         sectionData={homePageData?.videoTestimonials}
+                    />
                </div>
                {/* SECTION 3: Odoo Certification - HomePage */}
                <div id="certification" className="relative z-10">
