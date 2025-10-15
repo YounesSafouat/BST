@@ -11,6 +11,8 @@ import { Badge } from '../../ui/badge';
 import CompaniesCarouselV3 from '../../CompaniesCarouselV3V1';
 import CountryCodeSelector from '../../CountryCodeSelector';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
+import { useFormSubmit, StandardFormData } from '@/hooks/use-form-submit';
+import { useToast } from '@/hooks/use-toast';
 
 interface Country {
   code: string;
@@ -75,10 +77,16 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
     flag: '🇲🇦'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const router = useRouter();
   
   const { region, data: locationData, loading: geolocationLoading } = useGeolocationSingleton();
   const countryCode = locationData?.countryCode || '';
+  
+  const { submitForm } = useFormSubmit();
+  const { toast } = useToast();
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -418,30 +426,158 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
     }));
   };
 
+  // Validation functions
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^[0-9\s\-\+\(\)]{8,}$/;
+    return phoneRegex.test(phone.replace(/\s/g, ''));
+  };
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Le nom est requis';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'L\'email est requis';
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = 'Format d\'email invalide';
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Le téléphone est requis';
+    } else if (!validatePhone(formData.phone)) {
+      newErrors.phone = 'Format de téléphone invalide';
+    }
+    
+    if (!formData.company.trim()) {
+      newErrors.company = 'Le nom de l\'entreprise est requis';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const ensurePhoneWithCountryCode = (phone: string) => {
+    if (phone.startsWith('+')) {
+      return phone;
+    }
+    return selectedCountry.dialCode + phone;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     setIsSubmitting(true);
+    setSubmitError('');
     
     try {
-      // TODO: Add API call to submit form
-      console.log('Form submitted:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Reset form
-      setFormData({
-        fullName: '',
-        email: '',
-        phone: '',
-        company: ''
-      });
-      
-      // Show success message or redirect
-      alert('Merci ! Nous vous contacterons bientôt.');
+      const standardFormData: StandardFormData = {
+        name: formData.fullName,
+        company: formData.company,
+        email: formData.email,
+        phone: ensurePhoneWithCountryCode(formData.phone),
+        message: 'Demande de plan d\'intégration Odoo via Google Ads'
+      };
+
+      const additionalData = {
+        countryCode: selectedCountry.code,
+        countryName: selectedCountry.name,
+        city: locationData?.city || '',
+        source: 'google_ads',
+        medium: 'paid_search',
+        campaign: 'odoo_integration_plan',
+        page: 'votre-integrateur-odoo',
+        submitted_at: new Date().toISOString(),
+        brief_description: `Lead from Google Ads - ${formData.company} interested in Odoo integration plan. Phone: ${ensurePhoneWithCountryCode(formData.phone)}, Email: ${formData.email}`,
+        lead_source: 'google_ads',
+        lead_medium: 'paid_search',
+        lead_campaign: 'odoo_integration_plan',
+        utm_source: 'google',
+        utm_medium: 'ads',
+        utm_campaign: 'odoo_integration_plan'
+      };
+
+      console.log('HeroSectionV1 - Submitting form data:', standardFormData);
+      console.log('HeroSectionV1 - Additional tracking data:', additionalData);
+      console.log('HeroSectionV1 - About to call submitForm...');
+
+      // Use the standardized form submission
+      const result = await submitForm(
+        standardFormData,
+        additionalData,
+        '/api/contact',
+        'google_ads_form'
+      );
+
+      console.log('HeroSectionV1 - submitForm result:', result);
+
+      // If submitForm fails, try direct API call as fallback
+      if (!result.success) {
+        console.log('HeroSectionV1 - submitForm failed, trying direct API call...');
+        
+        const directResponse = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            event: 'formSubmit',
+            formData: standardFormData,
+            additionalData: additionalData
+          })
+        });
+
+        const directResult = await directResponse.json();
+        console.log('HeroSectionV1 - Direct API call result:', directResult);
+        
+        if (directResponse.ok && !directResult.error) {
+          console.log('HeroSectionV1 - Direct API call successful');
+          // Update result to success
+          result.success = true;
+          result.data = directResult;
+        }
+      }
+
+      if (result.success) {
+        console.log('HeroSectionV1 - Form submitted successfully:', result.data);
+        
+        setIsSubmitted(true);
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          company: ''
+        });
+        setErrors({});
+
+        toast({
+          title: "Demande envoyée !",
+          description: "Nous vous contacterons dans les 4 heures pour votre plan d'intégration.",
+          duration: 5000,
+        });
+      } else {
+        throw new Error(result.error || 'Erreur lors de l\'envoi');
+      }
     } catch (error) {
-      console.error('Form submission error:', error);
-      alert('Une erreur est survenue. Veuillez réessayer.');
+      console.error('HeroSectionV1 - Error submitting form:', error);
+      setSubmitError('Erreur lors de l\'envoi du formulaire. Veuillez réessayer.');
+      
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Une erreur est survenue. Veuillez réessayer.",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -553,8 +689,13 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.fullName}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
+                        className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)] ${
+                          errors.fullName ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[var(--color-main)]'
+                        }`}
                       />
+                      {errors.fullName && (
+                        <div className="text-red-500 text-xs mt-1">{errors.fullName}</div>
+                      )}
                     </div>
                     <div>
                       <div className="flex items-center gap-0">
@@ -569,9 +710,14 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                           value={formData.phone}
                           onChange={handleInputChange}
                           required
-                          className="flex-1 px-4 py-3 rounded-r-lg border border-l-0 focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)] h-11 sm:h-12"
+                          className={`flex-1 px-4 py-3 rounded-r-lg border border-l-0 focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)] h-11 sm:h-12 ${
+                            errors.phone ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[var(--color-main)]'
+                          }`}
                         />
                       </div>
+                      {errors.phone && (
+                        <div className="text-red-500 text-xs mt-1">{errors.phone}</div>
+                      )}
                     </div>
                     <div>
                       <input
@@ -581,8 +727,13 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
+                        className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)] ${
+                          errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[var(--color-main)]'
+                        }`}
                       />
+                      {errors.email && (
+                        <div className="text-red-500 text-xs mt-1">{errors.email}</div>
+                      )}
                     </div>
                     <div>
                       <input
@@ -592,16 +743,35 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         value={formData.company}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 rounded-lg border  focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)]"
+                        className={`w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-white/50 outline-none transition-all placeholder:text-[var(--color-main)] ${
+                          errors.company ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-[var(--color-main)]'
+                        }`}
                       />
+                      {errors.company && (
+                        <div className="text-red-500 text-xs mt-1">{errors.company}</div>
+                      )}
                     </div>
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-[var(--color-secondary)]  text-white py-3 rounded-lg font-semibold transition-all text-lg border-2 border-transparent hover:border-white"
-                    >
-                      {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
-                    </Button>
+                    
+                    {submitError && (
+                      <div className="text-red-500 text-sm text-center p-2 bg-red-50 rounded-lg">
+                        {submitError}
+                      </div>
+                    )}
+                    
+                    {isSubmitted ? (
+                      <div className="text-center p-4 bg-green-50 rounded-lg">
+                        <div className="text-green-600 font-semibold mb-2">✅ Demande envoyée !</div>
+                        <div className="text-green-600 text-sm">Nous vous contacterons dans les 4 heures pour votre plan d'intégration.</div>
+                      </div>
+                    ) : (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-[var(--color-secondary)] text-white py-3 rounded-lg font-semibold transition-all text-lg border-2 border-transparent hover:border-white disabled:opacity-50"
+                      >
+                        {isSubmitting ? 'Envoi en cours...' : 'Obtenir mon plan gratuit'}
+                      </Button>
+                    )}
                   </form>
                 </div>
               </div>

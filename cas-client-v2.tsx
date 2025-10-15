@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import TestimonialCard from "@/components/ui/TestimonialCard"
+import ClientCard from "@/components/cas-client/ClientCard"
 import {
      Search,
      Filter,
@@ -357,38 +357,20 @@ export default function CasClientV2() {
 
                                         {/* Client Cards Grid/List */}
                                         {viewMode === 'grid' ? (
-                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6">
-                                                  {filteredClients.map((client, index) => (
-                                                       <TestimonialCard
+                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                  {filteredClients.map((client) => (
+                                                       <ClientCard
                                                             key={client.slug || client.name}
-                                                            title={client.name}
-                                                            description={client.summary}
-                                                            videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
-                                                            logo={client.company?.logo}
-                                                            sector={client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector}
-                                                            interviewee={client.testimonial?.author?.name}
-                                                            variant={index % 2 === 0 ? 'primary' : 'secondary'}
-                                                            size="small"
-                                                            slug={client.slug}
-                                                            hasVideo={!!client.media?.heroVideo}
+                                                            client={client}
                                                        />
                                                   ))}
                                              </div>
                                         ) : (
-                                             <div className="space-y-6">
-                                                  {filteredClients.map((client, index) => (
-                                                       <TestimonialCard
+                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                  {filteredClients.map((client) => (
+                                                       <ClientCard
                                                             key={client.slug || client.name}
-                                                            title={client.name}
-                                                            description={client.summary}
-                                                            videoThumbnail={client.media?.cardBackgroundImage || client.media?.coverImage || ''}
-                                                            logo={client.company?.logo}
-                                                            sector={client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector}
-                                                            interviewee={client.testimonial?.author?.name}
-                                                            variant={index % 2 === 0 ? 'primary' : 'secondary'}
-                                                            size="small"
-                                                            slug={client.slug}
-                                                            hasVideo={!!client.media?.heroVideo}
+                                                            client={client}
                                                        />
                                                   ))}
                                              </div>

@@ -175,6 +175,10 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
      const dropdownRef = useRef<HTMLDivElement>(null);
      const searchInputRef = useRef<HTMLInputElement>(null);
 
+     // Debug log to ensure component is rendering
+     console.log('CountryCodeSelector rendered with country:', selectedCountry);
+     console.log('CountryCodeSelector button will show:', selectedCountry.flag, selectedCountry.dialCode);
+
      useEffect(() => {
           const handleClickOutside = (event: MouseEvent) => {
                if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -217,7 +221,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
                <button
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
-                    className="flex items-center justify-center gap-2 px-3 py-2 border border-gray-300 rounded-l-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)] transition-colors h-11 sm:h-12 min-w-[100px]"
+                    className="flex items-center justify-center gap-1 px-2 py-2 border border-gray-300 rounded-l-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)] transition-colors h-11 sm:h-12 min-w-[90px] sm:min-w-[110px] flex-shrink-0"
                >
                     <span className="text-lg">{selectedCountry.flag}</span>
                     <span className="text-sm font-medium text-gray-700">{selectedCountry.dialCode}</span>
@@ -226,7 +230,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
 
                {isOpen && (
                     <div 
-                         className="absolute top-full left-0 z-50 w-80 max-h-96 bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
+                         className="absolute top-full left-0 z-50 w-80 max-w-[90vw] max-h-96 bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
                          onMouseDown={(e) => e.preventDefault()}
                     >
                          <div className="p-3 border-b border-gray-200">
@@ -254,7 +258,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
                                              const value = (e.target as HTMLInputElement).value;
                                              setSearchTerm(value);
                                         }}
-                                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)]"
+                                        className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--color-main)] focus:border-[var(--color-main)] text-sm"
                                         autoComplete="off"
                                         autoFocus
                                    />
@@ -267,7 +271,7 @@ export default function CountryCodeSelector({ selectedCountry, onCountryChange }
                                         key={country.code}
                                         type="button"
                                         onClick={() => handleCountrySelect(country)}
-                                        className="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none"
+                                        className="w-full flex items-center gap-3 px-3 py-3 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none text-left"
                                    >
                                         <span className="text-lg">{country.flag}</span>
                                         <div className="flex-1 text-left">

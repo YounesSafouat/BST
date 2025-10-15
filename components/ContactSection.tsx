@@ -2163,6 +2163,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                       id="phone"
                                                                       type="tel"
                                                                       defaultValue={formData.phone}
+                                                                      className="flex-1"
                                                                       onChange={(e) => {
                                                                            const value = e.target.value;
                                                                            console.log('Phone input changed:', value);
@@ -2245,7 +2246,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                                            }
                                                                       }}
                                                                       placeholder="6 12 34 56 78"
-                                                                      className="flex-1 h-11 sm:h-12"
                                                                       required
                                                                  />
                                                             </div>

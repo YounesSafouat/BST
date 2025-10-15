@@ -30,7 +30,7 @@ import CompaniesCarousel from '../CompaniesCarousel';
 import CompaniesCarouselV2 from '../CompaniesCarouselV2';
 import CompaniesCarouselV3 from '../CompaniesCarouselV3';
 import CompaniesCarouselV3V1 from '../CompaniesCarouselV3V1';
-import VideoTestimonialsSection from '../VideoTestimonialsSectionV1';
+import VideoTestimonialsSection from '../VideoTestimonialsSection';
 import TestimonialsSection from './TestimonialsSection';
 import ServicesSection from '../ServicesSection';
 import FAQSection from '../FAQSection';
