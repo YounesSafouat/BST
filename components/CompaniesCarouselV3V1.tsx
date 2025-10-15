@@ -132,20 +132,7 @@ export default function CompaniesCarouselV3V1({
         return (
             <div className="relative w-full">
                 <div className="relative rounded-2xl p-2 sm:p-4 lg:p-5 mx-auto max-w-6xl">
-                    {/* Reduced text size for V1 */}
-                    <div className="text-center mb-2 sm:mb-3 lg:mb-4">
-                        <h3
-                            className="text-white text-xs sm:text-sm lg:text-base font-semibold mb-1"
-                            style={{
-                                textRendering: 'optimizeLegibility',
-                                WebkitFontSmoothing: 'antialiased',
-                                MozOsxFontSmoothing: 'grayscale',
-                                filter: 'none'
-                            }}
-                        >
-                            {(text && text.trim() !== '') ? text : 'Ils nous ont accordé leur confiance :'}
-                        </h3>
-                    </div>
+                   
 
                     <div className="relative overflow-hidden h-[80px]">
                         <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-[var(--color-main)] to-transparent pointer-events-none"></div>
