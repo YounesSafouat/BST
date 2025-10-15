@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import Link from 'next/link';
 
 interface VideoBackgroundSectionProps {
     headline?: string;
@@ -51,12 +52,12 @@ const VideoBackgroundSection: React.FC<VideoBackgroundSectionProps> = ({
 
                         {/* Right Side - CTA Button */}
                         <div className="flex justify-center lg:justify-end">
-                            <a
-                                href={ctaUrl}
-                                className="inline-flex items-center px-8 py-4 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                            <Link
+                                href="#contact"
+                                className="inline-flex items-center px-8 py-4 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
                             >
                                 <span dangerouslySetInnerHTML={{ __html: ctaText }} />
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

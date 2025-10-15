@@ -13,6 +13,7 @@
     "start": "next start -p ${PORT:-3000} -H 0.0.0.0",
     "lint": "next lint",
     "export": "next export",
+    "browser": "chromiumP http://localhost:3000",
     "seed:companies": "ts-node scripts/seedCompanies.ts",
     "seed:contact": "ts-node scripts/seedContactInfo.ts",
     "seed:content": "node scripts/seedContent.js",

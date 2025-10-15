@@ -91,7 +91,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
   };
 
   return (
-    <div className="lg:hidden space-y-6 pt-0 pb-8 min-h-screen flex flex-col justify-center px-2">
+    <div className="lg:hidden space-y-2 pb-12 px-4">
       {/* Badge Image - First on Mobile */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -103,7 +103,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
           <img 
             src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" 
             alt="Odoo Silver Partner Badge" 
-            className='w-[200px] h-[200px]' 
+            className='w-[220px] h-[220px]' 
           />
         </div>
       </motion.div>
@@ -163,7 +163,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="flex flex-col gap-4 justify-center px-4 max-w-md mx-auto w-full"
+        className="flex flex-col gap-4 justify-center px-2 max-w-md mx-auto w-full pb-4"
       >
         <Button
           size="lg"

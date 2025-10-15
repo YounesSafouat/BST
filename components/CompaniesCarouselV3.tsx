@@ -163,20 +163,7 @@ export default function CompaniesCarouselV3({
             <div className="relative w-full">
                 {/* Background Container - transparent with no border */}
                 <div className="relative bg-transparent rounded-2xl p-2 sm:p-4 lg:p-5 mx-auto max-w-6xl">
-                    {/* Text above carousel - EXACT same as original */}
-                    <div className="text-center mb-3 sm:mb-4 lg:mb-5">
-                        <h3
-                            className="text-white text-sm sm:text-base lg:text-lg font-semibold mb-1 sm:mb-2"
-                            style={{
-                                textRendering: 'optimizeLegibility',
-                                WebkitFontSmoothing: 'antialiased',
-                                MozOsxFontSmoothing: 'grayscale',
-                                filter: 'none'
-                            }}
-                        >
-                            {(text && text.trim() !== '') ? text : 'Ils nous ont accordé leur confiance :'}
-                        </h3>
-                    </div>
+                    
 
                     {/* Carousel Container - Increased height to show shadows */}
                     <div className="relative overflow-hidden h-[100px] py-2">

@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
-import { Save, Eye, ArrowLeft, Plus, Trash2, X, GripVertical, Upload } from "lucide-react";
+import { Save, Eye, ArrowLeft, Plus, Trash2, X, GripVertical, Upload, ChevronUp, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/home/Loader";
 import RichTextEditor from "@/components/RichTextEditor";
@@ -98,7 +98,6 @@ interface HomePageData {
      services: {
           headline: string;
           subheadline: string;
-          description: string;
           services: Array<{
                icon: string;
                title: string;
@@ -158,7 +157,10 @@ interface HomePageData {
           description: string;
           subdescription?: string;
      };
-     selectedClients?: string[]; // Array of client IDs to display in video testimonials
+     selectedClients?: Array<{
+          id: string;
+          order: number;
+     }>; // Array of client IDs with ordering for video testimonials
      videoTestimonials?: {
           headline: string;
           subtitle: string;
@@ -270,7 +272,6 @@ export default function HomePageDashboard() {
                          contentData.services = {
                               headline: "NOS SERVICES",
                               subheadline: "De l'audit à la mise en production, nous vous accompagnons à chaque étape",
-                              description: "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.",
                               defaultButtonText: "Discutons-en",
                               services: [
                                    {
@@ -433,6 +434,19 @@ export default function HomePageDashboard() {
                               { name: "Titre Français", logo: "/ref/titre-francais-vectorized-white.svg" },
                          ];
                          contentData.hero.carousel.companies = defaultCompanies;
+                    }
+
+                    // Migrate selectedClients from old format (string[]) to new format (Array<{id: string, order: number}>)
+                    if (contentData.selectedClients && Array.isArray(contentData.selectedClients)) {
+                         const firstItem = contentData.selectedClients[0];
+                         if (typeof firstItem === 'string') {
+                              // Old format: convert to new format
+                              contentData.selectedClients = contentData.selectedClients.map((id: string, index: number) => ({
+                                   id: id,
+                                   order: index
+                              }));
+                              console.log('Migrated selectedClients to new format');
+                         }
                     }
 
                     setHomeData(contentData);
@@ -648,6 +662,33 @@ export default function HomePageDashboard() {
           }
      };
 
+     const moveArrayItem = (path: string, fromIndex: number, toIndex: number) => {
+          if (!homeData) return;
+
+          const keys = path.split('.');
+          const newData = { ...homeData };
+          let current: any = newData;
+
+          // Navigate to the parent object
+          for (let i = 0; i < keys.length - 1; i++) {
+               if (!current[keys[i]]) {
+                    return; // Path doesn't exist
+               }
+               current = current[keys[i]];
+          }
+
+          // Ensure the array exists and move the item
+          const lastKey = keys[keys.length - 1];
+          if (current[lastKey] && Array.isArray(current[lastKey])) {
+               const array = current[lastKey];
+               if (toIndex >= 0 && toIndex < array.length) {
+                    const [movedItem] = array.splice(fromIndex, 1);
+                    array.splice(toIndex, 0, movedItem);
+                    setHomeData(newData);
+               }
+          }
+     };
+
      const addArrayStringItem = (path: string, defaultValue: string) => {
           if (!homeData) return;
 
@@ -832,8 +873,6 @@ export default function HomePageDashboard() {
                });
           }
      };
-
-
 
      if (loading) {
           return <Loader />;
@@ -1529,15 +1568,6 @@ export default function HomePageDashboard() {
                                              />
                                         </div>
                                    </div>
-                                   <div>
-                                        <Label>Description</Label>
-                                        <RichTextEditor
-                                             value={homeData.services.description || ''}
-                                             onChange={(value) => updateField('services.description', value)}
-                                             placeholder="Description"
-                                             height={120}
-                                        />
-                                   </div>
 
                                    <div>
                                         <Label>Texte par défaut du bouton</Label>
@@ -1574,7 +1604,29 @@ export default function HomePageDashboard() {
                                         {homeData.services.services?.map((service, index) => (
                                              <Card key={index} className="p-4">
                                                   <div className="flex items-center justify-between mb-4">
-                                                       <h4 className="font-semibold">Service {index + 1}</h4>
+                                                       <div className="flex items-center gap-2">
+                                                            <div className="flex flex-col gap-1">
+                                                                 <Button
+                                                                      onClick={() => moveArrayItem('services.services', index, index - 1)}
+                                                                      variant="ghost"
+                                                                      size="sm"
+                                                                      className="h-6 w-6 p-0"
+                                                                      disabled={index === 0}
+                                                                 >
+                                                                      <ChevronUp className="w-4 h-4" />
+                                                                 </Button>
+                                                                 <Button
+                                                                      onClick={() => moveArrayItem('services.services', index, index + 1)}
+                                                                      variant="ghost"
+                                                                      size="sm"
+                                                                      className="h-6 w-6 p-0"
+                                                                      disabled={index === homeData.services.services.length - 1}
+                                                                 >
+                                                                      <ChevronDown className="w-4 h-4" />
+                                                                 </Button>
+                                                            </div>
+                                                            <h4 className="font-semibold">Service {index + 1}</h4>
+                                                       </div>
                                                        <Button
                                                             onClick={() => removeArrayItem('services.services', index)}
                                                             variant="ghost"
@@ -2887,11 +2939,15 @@ export default function HomePageDashboard() {
                                         ) : (
                                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[600px] overflow-y-auto p-4 border rounded-lg">
                                                   {getFilteredClientsByRegion(availableClients, selectedRegion).map((client) => {
-                                                       const isSelected = (homeData.selectedClients || []).includes(client._id);
+                                                       const currentSelected = homeData.selectedClients || [];
+                                                       const selectedClient = currentSelected.find(sc => sc.id === client._id);
+                                                       const isSelected = !!selectedClient;
+                                                       const order = selectedClient?.order || 0;
+                                                       
                                                        return (
-                                                            <label 
+                                                            <div 
                                                                  key={client._id} 
-                                                                 className={`flex items-start space-x-3 p-4 border rounded-lg cursor-pointer transition-all ${
+                                                                 className={`flex items-start space-x-3 p-4 border rounded-lg transition-all ${
                                                                       isSelected 
                                                                            ? 'border-[var(--color-secondary)] bg-[var(--color-secondary)]/5' 
                                                                            : 'border-gray-200 hover:border-gray-300'
@@ -2902,12 +2958,13 @@ export default function HomePageDashboard() {
                                                                       checked={isSelected}
                                                                       onChange={(e) => {
                                                                            const currentSelected = homeData.selectedClients || [];
-                                                                           let newSelected: string[];
+                                                                           let newSelected: Array<{id: string; order: number}>;
                                                                            
                                                                            if (e.target.checked) {
-                                                                                newSelected = [...currentSelected, client._id];
+                                                                                const maxOrder = Math.max(0, ...currentSelected.map(sc => sc.order));
+                                                                                newSelected = [...currentSelected, { id: client._id, order: maxOrder + 1 }];
                                                                            } else {
-                                                                                newSelected = currentSelected.filter(id => id !== client._id);
+                                                                                newSelected = currentSelected.filter(sc => sc.id !== client._id);
                                                                            }
                                                                            
                                                                            updateField('selectedClients', newSelected);
@@ -2928,12 +2985,88 @@ export default function HomePageDashboard() {
                                                                            </div>
                                                                       )}
                                                                  </div>
-                                                            </label>
+                                                            </div>
                                                        );
                                                   })}
                                              </div>
                                         )}
                                    </div>
+                                   
+                                   {/* Selected Clients Ordering */}
+                                   {homeData.selectedClients && homeData.selectedClients.length > 0 && (
+                                        <div className="mt-6">
+                                             <Label className="text-lg font-semibold mb-4 block">Ordre d'affichage des témoignages</Label>
+                                             <div className="space-y-2">
+                                                  {homeData.selectedClients
+                                                       .sort((a, b) => a.order - b.order)
+                                                       .map((selectedClient, index) => {
+                                                            const client = availableClients.find(c => c._id === selectedClient.id);
+                                                            if (!client) return null;
+                                                            
+                                                            return (
+                                                                 <div 
+                                                                      key={selectedClient.id}
+                                                                      className="flex items-center justify-between p-3 bg-gray-50 border rounded-lg"
+                                                                 >
+                                                                      <div className="flex items-center space-x-3">
+                                                                           <div className="w-6 h-6 bg-[var(--color-secondary)] text-white rounded-full flex items-center justify-center text-sm font-bold">
+                                                                                {index + 1}
+                                                                           </div>
+                                                                           <div>
+                                                                                <div className="font-semibold text-sm">{client.name}</div>
+                                                                                <div className="text-xs text-gray-500">{client.company?.name}</div>
+                                                                           </div>
+                                                                      </div>
+                                                                      <div className="flex items-center space-x-2">
+                                                                           <Button
+                                                                                variant="outline"
+                                                                                size="sm"
+                                                                                onClick={() => {
+                                                                                     if (index > 0 && homeData.selectedClients) {
+                                                                                          const newSelected = [...homeData.selectedClients];
+                                                                                          [newSelected[index], newSelected[index - 1]] = [newSelected[index - 1], newSelected[index]];
+                                                                                          // Update order numbers
+                                                                                          newSelected.forEach((sc, i) => {
+                                                                                               if (typeof sc === 'object' && sc !== null) {
+                                                                                                    sc.order = i;
+                                                                                               }
+                                                                                          });
+                                                                                          updateField('selectedClients', newSelected);
+                                                                                     }
+                                                                                }}
+                                                                                disabled={index === 0}
+                                                                                className="p-1 h-8 w-8"
+                                                                           >
+                                                                                ↑
+                                                                           </Button>
+                                                                           <Button
+                                                                                variant="outline"
+                                                                                size="sm"
+                                                                                onClick={() => {
+                                                                                     if (index < (homeData.selectedClients?.length || 0) - 1 && homeData.selectedClients) {
+                                                                                          const newSelected = [...homeData.selectedClients];
+                                                                                          [newSelected[index], newSelected[index + 1]] = [newSelected[index + 1], newSelected[index]];
+                                                                                          // Update order numbers
+                                                                                          newSelected.forEach((sc, i) => {
+                                                                                               if (typeof sc === 'object' && sc !== null) {
+                                                                                                    sc.order = i;
+                                                                                               }
+                                                                                          });
+                                                                                          updateField('selectedClients', newSelected);
+                                                                                     }
+                                                                                }}
+                                                                                disabled={index === (homeData.selectedClients?.length || 0) - 1}
+                                                                                className="p-1 h-8 w-8"
+                                                                           >
+                                                                                ↓
+                                                                           </Button>
+                                                                      </div>
+                                                                 </div>
+                                                            );
+                                                       })}
+                                             </div>
+                                        </div>
+                                   )}
                               </CardContent>
                          </Card>
                     </TabsContent>

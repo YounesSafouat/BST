@@ -59,7 +59,6 @@ interface Service {
 interface ServicesData {
   headline: string;
   subheadline: string;
-  description: string;
   services: Service[];
   defaultButtonText?: string;
 }
@@ -133,7 +132,6 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
   const services = servicesData?.services || fallbackServices;
   const headline = servicesData?.headline || "Nos Expertises";
   const subheadline = servicesData?.subheadline || "Plus qu'un intégrateur, un partenaire de croissance";
-  const description = servicesData?.description || "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.";
   const defaultButtonText = servicesData?.defaultButtonText || "Discutons-en";
 
   
@@ -154,15 +152,14 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-            {headline}
-          </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            {subheadline}
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            {description}
-          </p>
+          <div 
+            className="tracking-widest text-3xl text-[var(--color-main)] font-semibold mb-5"
+            dangerouslySetInnerHTML={{ __html: headline }}
+          />
+          <h2 
+            className="text-3xl md:text-4xl lg:text-4xl font-bold text-gray-900 mb-4"
+            dangerouslySetInnerHTML={{ __html: subheadline }}
+          />
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-12 items-start">
@@ -186,7 +183,10 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
                         : 'text-[var(--color-secondary)]'
                         }`}
                     />
-                    <span className="font-semibold text-lg">{service.title}</span>
+                    <span 
+                      className="font-semibold text-lg"
+                      dangerouslySetInnerHTML={{ __html: service.title }}
+                    />
                   </div>
                 </button>
               );
@@ -215,10 +215,14 @@ export default function ServicesSection({ servicesData }: ServicesSectionProps) 
 
                 {/* Content */}
                 <div className="absolute bottom-0 left-0 p-8 text-white">
-                  <h3 className="text-3xl font-bold mb-4">{services[activeService].title}</h3>
-                  <p className="text-lg text-gray-200 mb-6 max-w-lg">
-                    {services[activeService].description}
-                  </p>
+                  <h3 
+                    className="text-3xl font-bold mb-4"
+                    dangerouslySetInnerHTML={{ __html: services[activeService].title }}
+                  />
+                  <p 
+                    className="text-lg text-gray-200 mb-6 max-w-lg"
+                    dangerouslySetInnerHTML={{ __html: services[activeService].description }}
+                  />
                   <Button
                     size="lg"
                     className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)]/90 text-white font-semibold group"

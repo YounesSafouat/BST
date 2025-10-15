@@ -158,16 +158,18 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
           <section className="py-20 bg-white relative z-10" id="team">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-
-                         {partnershipData?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
-                         </div>
-                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                              {partnershipData?.description || 'Plus qu\'un intégrateur, un partenaire de confiance.'}
-                         </h2>
-                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                              {partnershipData?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.'}
-                         </p>
+                         <div 
+                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
+                              dangerouslySetInnerHTML={{ __html: partnershipData?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.' }}
+                         />
+                         <h2 
+                              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+                              dangerouslySetInnerHTML={{ __html: partnershipData?.description || 'Plus qu\'un intégrateur, un partenaire de confiance.' }}
+                         />
+                         <p 
+                              className="text-lg text-gray-600 max-w-3xl mx-auto"
+                              dangerouslySetInnerHTML={{ __html: partnershipData?.subdescription || 'Une équipe de consultants certifiés, passionnés par l\'accompagnement de nos clients dans leur transformation digitale.' }}
+                         />
                     </div>
 
                     <div className="flex flex-col md:flex-row gap-10 items-center justify-center">
@@ -203,8 +205,14 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              }`}>
                                              {renderIcon(feature.icon)}
                                              <div>
-                                                  <div className="font-bold text-lg text-gray-900">{feature.title}</div>
-                                                  <div className="text-gray-500 text-sm">{feature.description}</div>
+                                                  <div 
+                                                       className="font-bold text-lg text-gray-900"
+                                                       dangerouslySetInnerHTML={{ __html: feature.title }}
+                                                  />
+                                                  <div 
+                                                       className="text-gray-500 text-sm"
+                                                       dangerouslySetInnerHTML={{ __html: feature.description }}
+                                                  />
                                              </div>
                                         </div>
                                    ))

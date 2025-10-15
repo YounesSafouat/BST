@@ -103,15 +103,18 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
           <section className="py-12 sm:py-16 md:py-20 bg-white">
                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 sm:mb-12">
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">
-                              {headline}
-                         </div>
-                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                              {description}
-                         </h2>
-                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                              {subdescription}
-                         </p>
+                         <div 
+                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
+                              dangerouslySetInnerHTML={{ __html: headline }}
+                         />
+                         <h2 
+                              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+                              dangerouslySetInnerHTML={{ __html: description }}
+                         />
+                         <p 
+                              className="text-lg text-gray-600 max-w-3xl mx-auto"
+                              dangerouslySetInnerHTML={{ __html: subdescription }}
+                         />
                     </div>
 
                     <div className="space-y-3 sm:space-y-4">
@@ -124,9 +127,10 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                                         onClick={() => toggleItem(index)}
                                         className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left bg-white hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
                                    >
-                                        <span className="font-semibold text-gray-900 pr-2 sm:pr-4 text-sm sm:text-base">
-                                             {faq.question}
-                                        </span>
+                                        <span 
+                                             className="font-semibold text-gray-900 pr-2 sm:pr-4 text-sm sm:text-base"
+                                             dangerouslySetInnerHTML={{ __html: faq.question }}
+                                        />
                                         {openItems.includes(index) ? (
                                              <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)] flex-shrink-0" />
                                         ) : (
@@ -136,9 +140,10 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
 
                                    {openItems.includes(index) && (
                                         <div className="px-4 sm:px-6 pb-3 sm:pb-4 bg-gray-50">
-                                             <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-                                                  {faq.answer}
-                                             </p>
+                                             <p 
+                                                  className="text-gray-700 leading-relaxed text-sm sm:text-base"
+                                                  dangerouslySetInnerHTML={{ __html: faq.answer }}
+                                             />
                                         </div>
                                    )}
                               </div>

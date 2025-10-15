@@ -102,15 +102,18 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                          viewport={{ once: true }}
                          className="text-center mb-8 sm:mb-12 md:mb-16"
                     >
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2 md:mb-3">
-                              {pricingData?.headline || "Tarifs & Accompagnement"}
-                         </div>
-                         <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 sm:mb-4 px-4">
-                              {pricingData?.subheadline || "Un partenariat, pas seulement une prestation"}
-                         </h2>
-                         <p className="text-sm sm:text-base md:text-lg text-white max-w-3xl mx-auto px-4">
-                              {pricingData?.description || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions."}
-                         </p>
+                         <div 
+                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2 md:mb-3"
+                              dangerouslySetInnerHTML={{ __html: pricingData?.headline || "Tarifs & Accompagnement" }}
+                         />
+                         <h2 
+                              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold text-white mb-3 sm:mb-4 px-4"
+                              dangerouslySetInnerHTML={{ __html: pricingData?.subheadline || "Un partenariat, pas seulement une prestation" }}
+                         />
+                         <p 
+                              className="text-sm sm:text-base md:text-lg text-white max-w-3xl mx-auto px-4"
+                              dangerouslySetInnerHTML={{ __html: pricingData?.description || "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions." }}
+                         />
 
                     </motion.div>
 
@@ -135,8 +138,14 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                              : 'bg-white'
                                              }`}>
                                              <CardHeader className="p-3 sm:p-4 md:p-6 lg:p-8 flex-shrink-0">
-                                                  <h3 className="text-base sm:text-lg md:text-xl font-extrabold text-[var(--color-main)] mb-2">{plan.name}</h3>
-                                                  <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 min-h-[2.5rem] sm:min-h-[3rem] md:h-12 flex items-center">{plan.description}</p>
+                                                  <h3 
+                                                       className="text-base sm:text-lg md:text-xl font-extrabold text-[var(--color-main)] mb-2"
+                                                       dangerouslySetInnerHTML={{ __html: plan.name }}
+                                                  />
+                                                  <p 
+                                                       className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 min-h-[2.5rem] sm:min-h-[3rem] md:h-12 flex items-center"
+                                                       dangerouslySetInnerHTML={{ __html: plan.description }}
+                                                  />
                                                   <div className="space-y-1">
                                                        <div className="text-lg sm:text-xl md:text-2xl font-extrabold text-[var(--color-secondary)]">{plan.price}</div>
                                                        <div className="text-xs sm:text-sm text-gray-500">{plan.estimation}</div>
@@ -149,7 +158,10 @@ export default function PricingSection({ pricingData }: PricingSectionProps) {
                                                        {plan.features?.map((feature: string, idx: number) => (
                                                             <li key={idx} className="flex items-start gap-2 sm:gap-3">
                                                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[var(--color-main)] mt-0.5 flex-shrink-0" />
-                                                                 <span className="text-gray-700 text-xs sm:text-sm">{feature}</span>
+                                                                 <span 
+                                                                      className="text-gray-700 text-xs sm:text-sm"
+                                                                      dangerouslySetInnerHTML={{ __html: feature }}
+                                                                 />
                                                             </li>
                                                        ))}
                                                   </ul>

@@ -56,7 +56,10 @@ interface CasClientData {
 }
 
 interface VideoTestimonialsSectionProps {
-     selectedClients?: string[]; // Array of client IDs to display
+     selectedClients?: string[] | Array<{
+          id: string;
+          order: number;
+     }>; // Array of client IDs (old format) or with ordering (new format) to display
      sectionData?: {
           headline?: string;
           subtitle?: string;
@@ -178,7 +181,7 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
           fetchClients();
      }, []);
 
-     // Filter clients by selected IDs (from CMS)
+     // Filter clients by selected IDs (from CMS) and apply ordering
      const filterClientsBySelection = (clients: CasClientData[]): CasClientData[] => {
           console.log('🎯 VideoTestimonials - selectedClients prop:', selectedClients);
           console.log('🎯 VideoTestimonials - available clients:', clients.length);
@@ -188,8 +191,35 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                return clients; // Show all if none selected
           }
           
-          const filtered = clients.filter(client => selectedClients.includes(client._id));
-          console.log('✅ VideoTestimonials - Filtered to', filtered.length, 'clients');
+          // Handle both old format (string[]) and new format (Array<{id: string, order: number}>)
+          let selectedClientIds: string[] = [];
+          if (typeof selectedClients[0] === 'string') {
+               // Old format
+               selectedClientIds = selectedClients as string[];
+               console.log('📝 Using old format (string[])');
+          } else {
+               // New format
+               selectedClientIds = selectedClients.map(sc => sc.id);
+               console.log('📝 Using new format (Array<{id, order}>)');
+          }
+          
+          // Filter clients by selected IDs and sort by order
+          const filtered = clients
+               .filter(client => selectedClientIds.includes(client._id))
+               .sort((a, b) => {
+                    if (typeof selectedClients[0] === 'string') {
+                         // Old format: maintain original order
+                         return selectedClientIds.indexOf(a._id) - selectedClientIds.indexOf(b._id);
+                    } else {
+                         // New format: use order property
+                         const newFormatClients = selectedClients as Array<{id: string; order: number}>;
+                         const orderA = newFormatClients.find(sc => sc.id === a._id)?.order || 0;
+                         const orderB = newFormatClients.find(sc => sc.id === b._id)?.order || 0;
+                         return orderA - orderB;
+                    }
+               });
+          
+          console.log('✅ VideoTestimonials - Filtered and ordered to', filtered.length, 'clients');
           return filtered;
      };
 
@@ -209,6 +239,15 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
      const selectedClientsData = filterClientsBySelection(clientsData);
      const filteredClients = filterClientsByRegion(selectedClientsData, userRegion);
 
+     // Debug logging
+     console.log('🎬 VideoTestimonialsSection Debug:');
+     console.log('- selectedClients prop:', selectedClients);
+     console.log('- clientsData loaded:', clientsData.length);
+     console.log('- selectedClientsData after selection filter:', selectedClientsData.length);
+     console.log('- filteredClients after region filter:', filteredClients.length);
+     console.log('- userRegion:', userRegion);
+     console.log('- loading:', loading, 'locationLoading:', locationLoading);
+
      if (loading || locationLoading) {
           return (
                <section className="py-20 bg-gradient-to-b from-white to-gray-50">
@@ -218,6 +257,7 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
      }
 
      if (filteredClients.length === 0) {
+          console.log('⚠️ VideoTestimonialsSection: No clients to display, returning null');
           return null; // Don't show section if no clients to display
      }
 
@@ -252,41 +292,19 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                          ))}
                     </div>
 
-                    {/* Desktop: Carousel with Navigation Arrows */}
-                    <div className="hidden md:block relative w-full px-8 sm:px-12">
-                         <Swiper
-                              modules={[Pagination]}
-                              spaceBetween={24}
-                              slidesPerView={1}
-                              breakpoints={{
-                                   768: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 24,
-                                   },
-                                   1024: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 24,
-                                   },
-                                   1280: {
-                                        slidesPerView: 2,
-                                        spaceBetween: 24,
-                                   },
-                              }}
-                              className="!pb-12"
-                         >
-                              {filteredClients.map((client) => (
-                                   <SwiperSlide key={client._id}>
-                                        <ProjectCard client={client} />
-                                   </SwiperSlide>
+                    {/* Desktop: 2x2 Grid Layout */}
+                    <div className="hidden md:grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                         {filteredClients.slice(0, 4).map((client) => (
+                              <ProjectCard key={client._id} client={client} />
                          ))}
-                         </Swiper>
                     </div>
 
                     {/* CTA Button */}
                     <div className="text-center mt-12">
                     <Button
                     asChild
-                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-3 rounded-full
+                     shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
                     <Link href={sectionData?.ctaButton?.url || "/cas-client"} className="flex items-center gap-2">
                       <span dangerouslySetInnerHTML={{ __html: sectionData?.ctaButton?.text || "Voir tous nos projets" }} />

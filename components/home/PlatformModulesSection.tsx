@@ -68,15 +68,19 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                                 onError={() => handleTimelineCardError(cardKey)}
                                             />
                                         </div>
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
-                                            {app.description}
-                                        </p>
+                                        <h3 
+                                            className="text-xl font-semibold text-gray-900 mb-3 text-center"
+                                            dangerouslySetInnerHTML={{ __html: app.title }}
+                                        />
+                                        <p 
+                                            className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
+                                            dangerouslySetInnerHTML={{ __html: app.description }}
+                                        />
                                         <div className="space-y-2">
                                             {app.features.slice(0, 2).map((feature, i) => (
                                                 <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
                                                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                    {feature}
+                                                    <span dangerouslySetInnerHTML={{ __html: feature }} />
                                                 </div>
                                             ))}
                                         </div>
@@ -105,15 +109,19 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                                 onError={() => handleTimelineCardError(cardKey)}
                                             />
                                         </div>
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
-                                            {app.description}
-                                        </p>
+                                        <h3 
+                                            className="text-xl font-semibold text-gray-900 mb-3 text-center"
+                                            dangerouslySetInnerHTML={{ __html: app.title }}
+                                        />
+                                        <p 
+                                            className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
+                                            dangerouslySetInnerHTML={{ __html: app.description }}
+                                        />
                                         <div className="space-y-2">
                                             {app.features.slice(0, 2).map((feature, i) => (
                                                 <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
                                                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                    {feature}
+                                                    <span dangerouslySetInnerHTML={{ __html: feature }} />
                                                 </div>
                                             ))}
                                         </div>
@@ -142,15 +150,19 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                                 onError={() => handleTimelineCardError(cardKey)}
                                             />
                                         </div>
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{app.title}</h3>
-                                        <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
-                                            {app.description}
-                                        </p>
+                                        <h3 
+                                            className="text-xl font-semibold text-gray-900 mb-3 text-center"
+                                            dangerouslySetInnerHTML={{ __html: app.title }}
+                                        />
+                                        <p 
+                                            className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
+                                            dangerouslySetInnerHTML={{ __html: app.description }}
+                                        />
                                         <div className="space-y-2">
                                             {app.features.slice(0, 2).map((feature, i) => (
                                                 <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
                                                     <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                    {feature}
+                                                    <span dangerouslySetInnerHTML={{ __html: feature }} />
                                                 </div>
                                             ))}
                                         </div>

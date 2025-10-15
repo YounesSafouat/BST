@@ -86,17 +86,15 @@ export default function OdooCertificationSection({
                               whileInView={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6, delay: 0.1 }}
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                         >
-                              {data.subheadline}
-                         </motion.h2>
+                              dangerouslySetInnerHTML={{ __html: data.subheadline }}
+                         />
                          <motion.div
                               initial={{ opacity: 0, y: 20 }}
                               whileInView={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6 }}
                               className="tracking-widest text-xl text-[var(--color-secondary)] font-bold mb-2"
-                         >
-                              {data.headline}
-                         </motion.div>
+                              dangerouslySetInnerHTML={{ __html: data.headline }}
+                         />
                          
                     </div>
 
@@ -159,8 +157,14 @@ export default function OdooCertificationSection({
                                                        <div key={index} className="flex items-start gap-3 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20">
                                                             <IconComponent className="w-5 h-5 text-[var(--color-secondary)] mt-0.5 flex-shrink-0" />
                                                             <div>
-                                                                 <div className="font-semibold text-gray-900">{feature.title}</div>
-                                                                 <div className="text-sm text-gray-600">{feature.description}</div>
+                                                                 <div 
+                                                                      className="font-semibold text-gray-900"
+                                                                      dangerouslySetInnerHTML={{ __html: feature.title }}
+                                                                 />
+                                                                 <div 
+                                                                      className="text-sm text-gray-600"
+                                                                      dangerouslySetInnerHTML={{ __html: feature.description }}
+                                                                 />
                                                             </div>
                                                        </div>
                                                   );

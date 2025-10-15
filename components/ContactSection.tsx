@@ -2049,9 +2049,18 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          viewport={{ once: true }}
                          className="text-center mb-12 sm:mb-16"
                     >
-                         <div className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2">{data.headline}</div>
-                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{data.description}</h2>
-                         <p className="text-lg text-gray-600 max-w-3xl mx-auto">{data.subdescription}</p>
+                         <div 
+                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
+                              dangerouslySetInnerHTML={{ __html: data.headline }}
+                         />
+                         <h2 
+                              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+                              dangerouslySetInnerHTML={{ __html: data.description }}
+                         />
+                         <p 
+                              className="text-lg text-gray-600 max-w-3xl mx-auto"
+                              dangerouslySetInnerHTML={{ __html: data.subdescription || '' }}
+                         />
                     </motion.div>
 
                     <div className="max-w-6xl mx-auto">
@@ -2060,8 +2069,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                    {/* Form Side */}
                                    <div className="p-4 sm:p-6 md:p-8 lg:p-12">
                                         <div className="mb-4 sm:mb-6 md:mb-8">
-                                             <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">{data.formTitle}</h3>
-                                             <p className="text-sm sm:text-base text-gray-600">{data.formDescription}</p>
+                                            
+                                             <p 
+                                                  className="text-sm sm:text-base text-gray-600"
+                                                  dangerouslySetInnerHTML={{ __html: data.formDescription }}
+                                             />
                                         </div>
 
                                         {!isSubmitted ? (
@@ -2400,9 +2412,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                        </div>
                                                   )}
 
-                                                  <p className="text-xs text-gray-500 text-center">
-                                                       {data.guarantee}
-                                                  </p>
+                                                  
                                              </form>
                                         ) : (
                                              <motion.div
@@ -2449,7 +2459,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                                    {/* Benefits Side */}
                                    <div className="bg-[var(--color-main)] p-4 sm:p-6 md:p-8 lg:p-12 text-white">
-                                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 md:mb-8">Ce qui vous attend :</h3>
                                         <div className="space-y-3 sm:space-y-4 md:space-y-6 mb-4 sm:mb-6 md:mb-8">
                                              {data.benefits.map((benefit, index) => (
                                                   <motion.div
@@ -2466,8 +2475,14 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                                             {benefit.icon === 'Shield' && <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[var(--color-secondary)]" />}
                                                        </div>
                                                        <div>
-                                                            <h4 className="font-semibold mb-1 text-sm sm:text-base">{benefit.title}</h4>
-                                                            <p className="text-purple-100 text-xs sm:text-sm leading-relaxed">{benefit.description}</p>
+                                                            <h4 
+                                                                 className="font-semibold mb-1 text-sm sm:text-base"
+                                                                 dangerouslySetInnerHTML={{ __html: benefit.title }}
+                                                            />
+                                                            <p 
+                                                                 className="text-purple-100 text-xs sm:text-sm leading-relaxed"
+                                                                 dangerouslySetInnerHTML={{ __html: benefit.description }}
+                                                            />
                                                        </div>
                                                   </motion.div>
                                              ))}
@@ -2476,11 +2491,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                                         <div className="bg-white/10 rounded-xl p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 md:mb-8">
                                              <h4 className="font-semibold mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base">
                                                   <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-[var(--color-secondary)]" />
-                                                  {data.consultation.title}
+                                                  <span dangerouslySetInnerHTML={{ __html: data.consultation.title }} />
                                              </h4>
-                                             <p className="text-purple-100 text-xs sm:text-sm mb-3 sm:mb-4">
-                                                  {data.consultation.description}
-                                             </p>
+                                             <p 
+                                                  className="text-purple-100 text-xs sm:text-sm mb-3 sm:mb-4"
+                                                  dangerouslySetInnerHTML={{ __html: data.consultation.description }}
+                                             />
                                         </div>
                                    </div>
                               </div>

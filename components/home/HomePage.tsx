@@ -131,7 +131,6 @@ interface HomePageData {
      services: {
           headline: string;
           subheadline: string;
-          description: string;
           services: Array<{
                icon: string;
                title: string;
@@ -186,7 +185,10 @@ interface HomePageData {
           description: string;
           subdescription?: string;
      };
-     selectedClients?: string[]; // Array of client IDs to display in video testimonials
+     selectedClients?: Array<{
+          id: string;
+          order: number;
+     }>; // Array of client IDs with ordering for video testimonials
      videoTestimonials?: {
           headline: string;
           subtitle: string;
@@ -486,8 +488,8 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
-               <div id="hero" className="h-screen lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
-                    <div className="h-[95vh] lg:min-h-[55vh] xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-20 lg:pt-10 xl:pt-20 2xl:pt-20 relative z-10 bg-transparent">
+               <div id="hero" className="min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
+                    <div className="min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-1 lg:-mt-8 xl:-mt-4 2xl:-mt-4 relative z-10 bg-transparent">
                          {/* Mobile Hero */}
                          <div className="lg:hidden">
                               <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
@@ -559,11 +561,12 @@ export default function HomePage() {
                          userRegion={userRegion}
                     />
                </div>
-               {/* SECTION 8: Pricing Section - HomePage */}
+               {/*
+                SECTION 8: Pricing Section - HomePage 
                <section id="pricing" className="relative z-10">
                     <PricingSection pricingData={homePageData?.pricing} />
                </section>
-              
+              */}
                {/* SECTION 9: Contact Section - HomePage */}
                <div id="contact">
                     <ContactSection contactData={homePageData?.contact} />
