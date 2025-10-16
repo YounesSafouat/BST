@@ -34,13 +34,24 @@ export async function POST(request: NextRequest) {
     console.log('Database connected successfully'); // Debug log
     
     const body = await request.json();
-    console.log('Received body:', body); // Debug log
+    console.log('Received body:', JSON.stringify(body, null, 2)); // Debug log
+    
+    // Validate body
+    if (!body || !body.content) {
+      console.error('Invalid request body - missing content');
+      return NextResponse.json({ 
+        error: "Invalid request body", 
+        details: "Content is required" 
+      }, { status: 400 });
+    }
     
     // Find existing snippets content or create new
     let snippetsContent = await Content.findOne({ type: 'snippets' });
+    console.log('Existing snippets content:', snippetsContent ? 'Found' : 'Not found');
     
     if (snippetsContent) {
       // Update existing
+      console.log('Updating existing snippets...');
       snippetsContent.content = body.content;
       snippetsContent.title = body.title || 'Snippets Configuration';
       snippetsContent.description = body.description || 'Meta tags, tracking codes, and custom scripts';
@@ -48,6 +59,7 @@ export async function POST(request: NextRequest) {
       snippetsContent.updatedAt = new Date();
     } else {
       // Create new
+      console.log('Creating new snippets document...');
       snippetsContent = new Content({
         type: 'snippets',
         content: body.content,
@@ -59,13 +71,19 @@ export async function POST(request: NextRequest) {
       });
     }
     
-    console.log('Saving snippetsContent:', snippetsContent); // Debug log
-    await snippetsContent.save();
+    console.log('Saving snippetsContent with content:', JSON.stringify(snippetsContent.content, null, 2)); // Debug log
+    const savedContent = await snippetsContent.save();
+    console.log('Successfully saved snippets. ID:', savedContent._id);
     
-    return NextResponse.json({ success: true, data: snippetsContent });
+    return NextResponse.json({ success: true, data: savedContent });
   } catch (error) {
     console.error("Error saving snippets:", error);
-    return NextResponse.json({ error: "Failed to save snippets", details: error.message }, { status: 500 });
+    console.error("Error stack:", error.stack);
+    return NextResponse.json({ 
+      error: "Failed to save snippets", 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    }, { status: 500 });
   }
 }
 

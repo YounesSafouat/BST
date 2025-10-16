@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
     
+    console.log('POST /api/seo - Received body:', body);
+    
     // Check if SEO entry already exists for this page and language
     const existingSEO = await SEO.findOne({
       page: body.page,
@@ -51,6 +53,7 @@ export async function POST(request: NextRequest) {
     });
     
     if (existingSEO) {
+      console.log('POST /api/seo - Entry already exists for:', body.page, body.language);
       return NextResponse.json(
         { error: 'SEO entry already exists for this page and language' },
         { status: 400 }
@@ -62,13 +65,27 @@ export async function POST(request: NextRequest) {
       updatedBy: session.user.email || session.user.name
     });
     
+    console.log('POST /api/seo - Creating SEO document...');
     await seoData.save();
+    console.log('POST /api/seo - SEO document saved successfully');
     
     return NextResponse.json(seoData, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating SEO data:', error);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    if (error.errors) {
+      console.error('Validation errors:', error.errors);
+    }
     return NextResponse.json(
-      { error: 'Failed to create SEO data' },
+      { 
+        error: 'Failed to create SEO data',
+        details: error.message,
+        validationErrors: error.errors ? Object.keys(error.errors).map(key => ({
+          field: key,
+          message: error.errors[key].message
+        })) : undefined
+      },
       { status: 500 }
     );
   }

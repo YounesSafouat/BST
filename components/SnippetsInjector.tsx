@@ -83,6 +83,8 @@ export default function SnippetsInjector() {
                return;
           }
 
+          console.log('SnippetsInjector: Injecting', snippets.length, 'active snippets');
+
           // Inject snippets based on their location
           snippets.forEach((snippet) => {
                if (!snippet.isActive) return;
@@ -92,7 +94,12 @@ export default function SnippetsInjector() {
                     const currentPath = window.location.pathname;
                     const shouldApply = !snippet.pages || snippet.pages.length === 0 || snippet.pages.includes(currentPath);
 
-                    if (!shouldApply) return;
+                    if (!shouldApply) {
+                         console.log('SnippetsInjector: Skipping snippet', snippet.title, 'for current page', currentPath);
+                         return;
+                    }
+
+                    console.log('SnippetsInjector: Injecting snippet', snippet.title, 'in', snippet.location);
 
                     switch (snippet.location) {
                          case 'head':
@@ -115,7 +122,7 @@ export default function SnippetsInjector() {
                // Note: We don't remove injected elements on cleanup to avoid breaking functionality
                // The browser will clean up when the page unloads
           };
-     }, [snippets, loading]);
+     }, [snippets, loading, isMounted]);
 
      const injectInHead = (content: string) => {
           try {

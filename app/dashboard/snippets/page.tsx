@@ -275,6 +275,12 @@ document.addEventListener('DOMContentLoaded', function() {
           console.log('Snippets state after save:', snippets); // Debug log
           setShowForm(false);
           setEditingSnippet(null);
+          
+          // Show reminder to save to database
+          toast({
+               title: "Snippet ajouté",
+               description: "N'oubliez pas de cliquer sur 'Enregistrer' en haut pour sauvegarder dans la base de données",
+          });
      };
 
      const cancelEdit = () => {

@@ -4,7 +4,23 @@ const SEOSchema = new mongoose.Schema({
   page: {
     type: String,
     required: true,
-    enum: ['home', 'hubspot', 'odoo', 'contact', 'about', 'blog', 'clients', 'dashboard']
+    enum: [
+      'home',
+      'about',
+      'blog',
+      'blog-post',
+      'cas-client',
+      'cas-client-detail',
+      'hubspot',
+      'votre-integrateur-odoo',
+      'politique-confidentialite',
+      'v2',
+      'v3',
+      'maintenance',
+      'contact',
+      'clients',
+      'dashboard'
+    ]
   },
   language: {
     type: String,

@@ -11,10 +11,11 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { X, Plus, Search, Edit, Trash2, Eye, EyeOff, FileText, TrendingUp, XCircle, AlertCircle } from 'lucide-react';
+import { X, Plus, Search, Edit, Trash2, Eye, EyeOff, FileText, TrendingUp, XCircle, AlertCircle, Upload, ExternalLink, Settings } from 'lucide-react';
 import Loader from '@/components/home/Loader';
 import YoastSEO from '@/components/YoastSEO';
 import GlobalSEOAnalyzer from '@/components/GlobalSEOAnalyzer';
+import Image from 'next/image';
 
 interface SEOData {
   _id: string;
@@ -33,13 +34,18 @@ interface SEOData {
 }
 
 const pages = [
-  { value: 'home', label: 'Accueil' },
-  { value: 'hubspot', label: 'HubSpot' },
-  { value: 'odoo', label: 'Odoo' },
-  { value: 'clients', label: 'Cas Clients' },
-  { value: 'blog', label: 'Blog' },
-  { value: 'about', label: 'À propos' },
-  { value: 'contact', label: 'Contact' }
+  { value: 'home', label: 'Accueil (/)' },
+  { value: 'about', label: 'À propos (/about)' },
+  { value: 'blog', label: 'Blog (/blog)' },
+  { value: 'blog-post', label: 'Articles de Blog (/blog/[slug])' },
+  { value: 'cas-client', label: 'Cas Clients (/cas-client)' },
+  { value: 'cas-client-detail', label: 'Détails Cas Client (/cas-client/[slug])' },
+  { value: 'hubspot', label: 'HubSpot (/hubspot)' },
+  { value: 'votre-integrateur-odoo', label: 'Votre Intégrateur Odoo (/votre-integrateur-odoo)' },
+  { value: 'politique-confidentialite', label: 'Politique de Confidentialité (/politique-confidentialite)' },
+  { value: 'v2', label: 'Version 2 (/v2)' },
+  { value: 'v3', label: 'Version 3 (/v3)' },
+  { value: 'maintenance', label: 'Maintenance (/maintenance)' }
 ];
 
 const languages = [
@@ -134,10 +140,23 @@ export default function SEODashboard() {
         fetchSEOData();
       } else {
         const error = await response.json();
-        throw new Error(error.error);
+        console.error('API Error:', error);
+        let errorMessage = error.error || "Erreur lors de la sauvegarde";
+        if (error.details) {
+          errorMessage += `: ${error.details}`;
+        }
+        if (error.validationErrors) {
+          errorMessage += '\n' + error.validationErrors.map((e: any) => `${e.field}: ${e.message}`).join('\n');
+        }
+        throw new Error(errorMessage);
       }
     } catch (error) {
-      toast({ title: "Erreur", description: error instanceof Error ? error.message : "Erreur lors de la sauvegarde", variant: "destructive" });
+      console.error('Save error:', error);
+      toast({ 
+        title: "Erreur", 
+        description: error instanceof Error ? error.message : "Erreur lors de la sauvegarde", 
+        variant: "destructive" 
+      });
     }
   };
 
@@ -564,144 +583,309 @@ export default function SEODashboard() {
 
       {/* SEO Form Modal */}
       {editingId && (
-        <Card className="border-2 border-orange-200">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              {editingId === 'new' ? 'Nouveau SEO' : 'Modifier SEO'}
-              <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>
-                <X className="w-4 h-4" />
+        <Card className="border-2 border-orange-500 shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-orange-50 to-orange-100 border-b border-orange-200">
+            <CardTitle className="flex items-center justify-between text-gray-900">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl">{editingId === 'new' ? 'Nouveau SEO' : 'Modifier SEO'}</span>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => setEditingId(null)} className="hover:bg-orange-200">
+                <X className="w-5 h-5" />
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Page</label>
-                <Select value={formData.page} onValueChange={(value) => setFormData({ ...formData, page: value })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner une page" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {pages.map(page => (
-                      <SelectItem key={page.value} value={page.value}>{page.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <CardContent className="space-y-8 p-6">
+            {/* Section 1: Configuration de Base */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-200">
+                <div className="w-8 h-8 bg-gray-800 rounded-lg flex items-center justify-center">
+                  <FileText className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Configuration de Base</h3>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Langue</label>
-                <Select value={formData.language} onValueChange={(value) => setFormData({ ...formData, language: value })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {languages.map(lang => (
-                      <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Titre Meta
-                <span className={`ml-2 ${getCharacterCount(formData.title) >= 30 && getCharacterCount(formData.title) <= 60 ? 'text-green-600' : 'text-red-600'}`}>
-                  ({getCharacterCount(formData.title)}/60)
-                </span>
-              </label>
-              <Input
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Titre optimisé pour le SEO (30-60 caractères)"
-                maxLength={60}
-                className={`border-2 ${getCharacterCount(formData.title) >= 30 && getCharacterCount(formData.title) <= 60
-                  ? 'border-green-300 focus:border-green-500'
-                  : 'border-red-300 focus:border-red-500'
-                  }`}
-              />
-              <div className="mt-2 flex items-center gap-2">
-                <Badge variant={getTitleStatus(formData.title).status === 'success' ? 'default' : 'destructive'} className="mt-1">
-                  {getTitleStatus(formData.title).message}
-                </Badge>
-                {getCharacterCount(formData.title) < 30 && (
-                  <span className="text-xs text-red-600">Ajoutez {30 - getCharacterCount(formData.title)} caractères minimum</span>
-                )}
-                {getCharacterCount(formData.title) > 60 && (
-                  <span className="text-xs text-red-600">Supprimez {getCharacterCount(formData.title) - 60} caractères</span>
-                )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Page</label>
+                  <Select value={formData.page} onValueChange={(value) => setFormData({ ...formData, page: value })}>
+                    <SelectTrigger className="border-2 hover:border-gray-400">
+                      <SelectValue placeholder="Sélectionner une page" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {pages.map(page => (
+                        <SelectItem key={page.value} value={page.value}>{page.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Langue</label>
+                  <Select value={formData.language} onValueChange={(value) => setFormData({ ...formData, language: value })}>
+                    <SelectTrigger className="border-2 hover:border-gray-400">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {languages.map(lang => (
+                        <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Description Meta
-                <span className={`ml-2 ${getCharacterCount(formData.description) >= 120 && getCharacterCount(formData.description) <= 160 ? 'text-green-600' : 'text-red-600'}`}>
-                  ({getCharacterCount(formData.description)}/160)
-                </span>
-              </label>
-              <Textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Description optimisée pour le SEO (120-160 caractères)"
-                maxLength={160}
-                rows={3}
-                className={`border-2 ${getCharacterCount(formData.description) >= 120 && getCharacterCount(formData.description) <= 160
-                  ? 'border-green-300 focus:border-green-500'
-                  : 'border-red-300 focus:border-red-500'
-                  }`}
-              />
-              <div className="mt-2 flex items-center gap-2">
-                <Badge variant={getDescriptionStatus(formData.description).status === 'success' ? 'default' : 'destructive'} className="mt-1">
-                  {getDescriptionStatus(formData.description).message}
-                </Badge>
-                {getCharacterCount(formData.description) < 120 && (
-                  <span className="text-xs text-red-600">Ajoutez {120 - getCharacterCount(formData.description)} caractères minimum</span>
-                )}
-                {getCharacterCount(formData.description) > 160 && (
-                  <span className="text-xs text-red-600">Supprimez {getCharacterCount(formData.description) - 160} caractères</span>
-                )}
+            {/* Section 2: Optimisation SEO */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-200">
+                <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                  <Search className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Optimisation pour les Moteurs de Recherche</h3>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Titre de la Page (Meta Title)
+                  <span className={`ml-2 font-bold ${getCharacterCount(formData.title) >= 30 && getCharacterCount(formData.title) <= 60 ? 'text-green-600' : 'text-red-600'}`}>
+                    ({getCharacterCount(formData.title)}/60)
+                  </span>
+                </label>
+                <Input
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder="Titre optimisé pour le SEO (30-60 caractères)"
+                  maxLength={60}
+                  className={`border-2 ${getCharacterCount(formData.title) >= 30 && getCharacterCount(formData.title) <= 60
+                    ? 'border-green-300 focus:border-green-500'
+                    : 'border-red-300 focus:border-red-500'
+                    }`}
+                />
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <Badge variant={getTitleStatus(formData.title).status === 'success' ? 'default' : 'destructive'}>
+                    {getTitleStatus(formData.title).message}
+                  </Badge>
+                  {getCharacterCount(formData.title) < 30 && (
+                    <span className="text-xs text-red-600 font-medium">Ajoutez {30 - getCharacterCount(formData.title)} caractères minimum</span>
+                  )}
+                  {getCharacterCount(formData.title) > 60 && (
+                    <span className="text-xs text-red-600 font-medium">Supprimez {getCharacterCount(formData.title) - 60} caractères</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description Meta
+                  <span className={`ml-2 font-bold ${getCharacterCount(formData.description) >= 120 && getCharacterCount(formData.description) <= 160 ? 'text-green-600' : 'text-red-600'}`}>
+                    ({getCharacterCount(formData.description)}/160)
+                  </span>
+                </label>
+                <Textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Description optimisée pour le SEO (120-160 caractères)"
+                  maxLength={160}
+                  rows={3}
+                  className={`border-2 ${getCharacterCount(formData.description) >= 120 && getCharacterCount(formData.description) <= 160
+                    ? 'border-green-300 focus:border-green-500'
+                    : 'border-red-300 focus:border-red-500'
+                    }`}
+                />
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <Badge variant={getDescriptionStatus(formData.description).status === 'success' ? 'default' : 'destructive'}>
+                    {getDescriptionStatus(formData.description).message}
+                  </Badge>
+                  {getCharacterCount(formData.description) < 120 && (
+                    <span className="text-xs text-red-600 font-medium">Ajoutez {120 - getCharacterCount(formData.description)} caractères minimum</span>
+                  )}
+                  {getCharacterCount(formData.description) > 160 && (
+                    <span className="text-xs text-red-600 font-medium">Supprimez {getCharacterCount(formData.description) - 160} caractères</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Mots-clés (séparés par des virgules)
+                  <span className="text-gray-500 text-xs ml-2 font-normal">Recommandé: 3-5 mots-clés</span>
+                </label>
+                <Input
+                  value={formData.keywords}
+                  onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
+                  placeholder="mot-clé1, mot-clé2, mot-clé3"
+                  className="border-2"
+                />
+                <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded">
+                  💡 <strong>Conseil:</strong> Utilisez des mots-clés spécifiques et pertinents pour votre page
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Mots-clés (séparés par des virgules)
-                <span className="text-gray-500 ml-2">Recommandé: 3-5 mots-clés</span>
-              </label>
-              <Input
-                value={formData.keywords}
-                onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-                placeholder="mot-clé1, mot-clé2, mot-clé3"
-              />
-              <div className="mt-1 text-xs text-gray-600">
-                💡 <strong>Conseil:</strong> Utilisez des mots-clés spécifiques et pertinents pour votre page
+            {/* Section 3: Open Graph / Social Media */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-blue-300">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <ExternalLink className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Partage sur les Réseaux Sociaux</h3>
+              </div>
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800 font-medium mb-4">
+                  📱 Ces informations s'affichent quand vous partagez la page sur WhatsApp, Facebook, LinkedIn, etc.
+                </p>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Titre pour le Partage
+                  <span className="text-gray-500 text-xs ml-2 font-normal">(affiché sur WhatsApp, Facebook, etc.)</span>
+                </label>
+                <Input 
+                  value={formData.ogTitle} 
+                  onChange={(e) => setFormData({ ...formData, ogTitle: e.target.value })} 
+                  placeholder="Titre accrocheur pour les réseaux sociaux" 
+                  className="border-2"
+                />
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Description pour le Partage
+                  <span className="text-gray-500 text-xs ml-2 font-normal">(affichée sous le titre lors du partage)</span>
+                </label>
+                <Textarea 
+                  value={formData.ogDescription} 
+                  onChange={(e) => setFormData({ ...formData, ogDescription: e.target.value })} 
+                  placeholder="Description courte et attrayante pour les réseaux sociaux" 
+                  rows={2}
+                  className="border-2"
+                />
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Image de Partage
+                  <span className="text-gray-500 text-xs ml-2 font-normal">(image affichée lors du partage sur WhatsApp, etc.)</span>
+                </label>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input 
+                      value={formData.ogImage} 
+                      onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })} 
+                      placeholder="URL de l'image (ex: https://votre-site.com/image.jpg)" 
+                      className="flex-1"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = async (e) => {
+                          const file = (e.target as HTMLInputElement).files?.[0];
+                          if (file) {
+                            toast({ 
+                              title: "Info", 
+                              description: "Veuillez héberger l'image sur votre serveur et coller l'URL ici" 
+                            });
+                          }
+                        };
+                        input.click();
+                      }}
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Parcourir
+                    </Button>
+                  </div>
+                  
+                  {formData.ogImage && (
+                    <div className="border border-gray-300 rounded-lg p-3 bg-white">
+                      <p className="text-xs font-medium text-gray-700 mb-2">Aperçu de l'image :</p>
+                      <div className="relative w-full h-48 bg-gray-100 rounded overflow-hidden">
+                        <Image
+                          src={formData.ogImage}
+                          alt="Open Graph Preview"
+                          fill
+                          className="object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            const parent = (e.target as HTMLImageElement).parentElement;
+                            if (parent) {
+                              parent.innerHTML = '<div class="flex items-center justify-center h-full text-red-500 text-sm">Image non valide ou inaccessible</div>';
+                            }
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        💡 Dimension recommandée : 1200x630 pixels
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="bg-blue-100 border-2 border-blue-300 rounded-lg p-3">
+                    <p className="text-xs text-blue-800 font-medium">
+                      <strong>📱 Conseil :</strong> Cette image apparaîtra quand quelqu'un partagera votre page sur WhatsApp, Facebook, LinkedIn, Twitter, etc. 
+                      Utilisez une image haute qualité de 1200x630 pixels pour un meilleur rendu.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Titre Open Graph</label>
-                <Input value={formData.ogTitle} onChange={(e) => setFormData({ ...formData, ogTitle: e.target.value })} placeholder="Titre pour les réseaux sociaux" />
+            {/* Section 4: Paramètres Avancés */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-200">
+                <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Paramètres Avancés</h3>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Image Open Graph</label>
-                <Input value={formData.ogImage} onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })} placeholder="URL de l'image" />
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  URL Canonique
+                  <span className="text-gray-500 text-xs ml-2 font-normal">(optionnel)</span>
+                </label>
+                <Input 
+                  value={formData.canonical} 
+                  onChange={(e) => setFormData({ ...formData, canonical: e.target.value })} 
+                  placeholder="/page" 
+                  className="border-2"
+                />
+                <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded">
+                  💡 <strong>Info:</strong> L'URL canonique aide à éviter le contenu dupliqué
+                </div>
+              </div>
+
+              <div className="bg-white p-4 rounded-lg border-2 border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Status de la Page</label>
+                    <p className="text-xs text-gray-500 mt-1">Activer ou désactiver le SEO pour cette page</p>
+                  </div>
+                  <Switch
+                    checked={formData.isActive}
+                    onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                  />
+                </div>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Description Open Graph</label>
-              <Textarea value={formData.ogDescription} onChange={(e) => setFormData({ ...formData, ogDescription: e.target.value })} placeholder="Description pour les réseaux sociaux" rows={2} />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">URL Canonique</label>
-              <Input value={formData.canonical} onChange={(e) => setFormData({ ...formData, canonical: e.target.value })} placeholder="/page" />
-            </div>
+            {/* Section 5: Analyse et Actions */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-gray-200">
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-white" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900">Analyse SEO</h3>
+              </div>
 
             {/* SEO Completion Progress */}
-            <div className="p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200">
+            <div className="p-5 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border-2 border-indigo-200">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-8 h-8 bg-[--color-black] rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-4 h-4 text-white" />
@@ -787,17 +971,14 @@ export default function SEODashboard() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
-              <Switch
-                checked={formData.isActive}
-                onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
-              />
-              <label className="text-sm font-medium">Actif</label>
-            </div>
-
             {/* Yoast SEO Analysis */}
-            <div className="pt-6 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Analyse SEO Yoast</h3>
+            <div className="bg-white p-5 rounded-lg border-2 border-gray-200">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 bg-green-600 rounded-lg flex items-center justify-center">
+                  <Search className="w-4 h-4 text-white" />
+                </div>
+                <h4 className="text-base font-semibold text-gray-900">Analyse SEO Yoast</h4>
+              </div>
               <YoastSEO
                 title={formData.title}
                 content={formData.description}
@@ -806,12 +987,32 @@ export default function SEODashboard() {
                 slug={formData.page}
               />
             </div>
+            </div>
 
-            <div className="flex items-center gap-4">
-              <Button onClick={handleSave} className="bg-orange-600 hover:bg-orange-700">Enregistrer</Button>
+            {/* Action Buttons */}
+            <div className="flex items-center gap-4 pt-4 border-t-2 border-gray-300">
+              <Button 
+                onClick={handleSave} 
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
+              >
+                💾 Enregistrer les Modifications
+              </Button>
               {editingId !== 'new' && (
-                <Button variant="destructive" onClick={() => handleDelete(editingId!)}>Supprimer</Button>
+                <Button 
+                  variant="destructive" 
+                  onClick={() => handleDelete(editingId!)}
+                  className="px-6 py-3 text-base font-semibold"
+                >
+                  🗑️ Supprimer
+                </Button>
               )}
+              <Button 
+                variant="outline" 
+                onClick={() => setEditingId(null)}
+                className="px-6 py-3 text-base"
+              >
+                Annuler
+              </Button>
             </div>
           </CardContent>
         </Card>
