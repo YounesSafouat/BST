@@ -36,6 +36,7 @@ import ServicesSection from '../ServicesSection';
 import FAQSection from '../FAQSection';
 import OdooCertificationSection from '../OdooCertificationSection';
 import OurAgencySection from './OurAgencySection';
+import VideoBackgroundSection from './VideoBackgroundSection';
 import { Button } from '@/components/ui/button';
 import CurvedLinesBackground from '@/components/ui/CurvedLinesBackground';
 import PerformanceMonitor from '../PerformanceMonitor';
@@ -86,6 +87,12 @@ interface HomePageData {
           suffix: string;
           label: string;
      }>;
+     videoBackgroundSection?: {
+          headline?: string;
+          description?: string;
+          ctaText?: string;
+          ctaUrl?: string;
+     };
      platformSection: {
           headline: string;
           subheadline: string;
@@ -497,6 +504,15 @@ export default function HomePageV1() {
                          <LazyOdooCertificationSection certificationData={homePageData?.certification} />
                     </Suspense>
                </div>
+               {/* SECTION 4: Video Background Section */}
+               <VideoBackgroundSection 
+                    headline={homePageData?.videoBackgroundSection?.headline}
+                    description={homePageData?.videoBackgroundSection?.description}
+                    ctaText={homePageData?.videoBackgroundSection?.ctaText}
+                    ctaUrl={homePageData?.videoBackgroundSection?.ctaUrl}
+               />
+
+               {/* SECTION 5: Platform Modules Timeline */}
                <PlatformModulesSection 
                     homePageData={homePageData}
                     timeline1={timeline1}

@@ -936,11 +936,11 @@ function HeroSectionV1Mobile({ heroData, userRegion, isPreview = false }: HeroSe
               <div className="relative">
                 <div className="bg-white p-5 rounded-2xl shadow-xl border-2 border-white/30">
                   <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 text-center">
-                    Obtenez votre plan <br /><span className="text-[var(--color-secondary)]">d'intégration</span>  gratuitement
+                    Obtenez votre plan d'intégration<br /><span className="text-[var(--color-secondary)]"> gratuitement</span>  
                   </h3>
                   <p className="text-sm text-gray-600 mb-4 text-center">
                     Nous aidons les entreprises à centraliser l'ensemble de leur activité sur une seule plateforme grâce à <span className="font-bold"> Odoo </span>. <br />  <span className="text-[var(--color-secondary)] font-bold">Simple, efficace, et abordable.</span>
-                    <br /><span className="text-xs text-gray-500 mt-2 block">Offre spéciale via Google Ads - Plan d'intégration gratuit</span>
+                    
                   </p>
                   <form onSubmit={handleSubmit} className="space-y-3">
                     <div>
@@ -1031,7 +1031,7 @@ function HeroSectionV1Mobile({ heroData, userRegion, isPreview = false }: HeroSe
                         disabled={isSubmitting}
                         className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white py-3 text-sm rounded-lg font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-50"
                       >
-                        {isSubmitting ? 'Envoi en cours...' : 'Obtenir mon plan gratuit'}
+                        {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
                       </Button>
                     )}
                   </form>

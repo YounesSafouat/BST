@@ -74,7 +74,7 @@ interface VideoTestimonialsSectionProps {
 
 // New Project Card Component
 const ProjectCard = ({ client }: { client: CasClientData }) => {
-     const [isHovered, setIsHovered] = useState(false);
+     const [isExpanded, setIsExpanded] = useState(false);
      
      const getSectorColor = (sector: string) => {
           return 'bg-gray-600'; // All badges use the same gray color
@@ -83,31 +83,29 @@ const ProjectCard = ({ client }: { client: CasClientData }) => {
      const sector = client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector;
      
      return (
-          <Link 
-               href={`/cas-client/${client.slug}`} 
-               className="block group"
-               onMouseEnter={() => setIsHovered(true)}
-               onMouseLeave={() => setIsHovered(false)}
+          <div 
+               className="block group cursor-pointer"
+               onClick={() => setIsExpanded(!isExpanded)}
           >
                <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 h-80">
                     {/* Background Image */}
                     <div className="absolute inset-0">
                          <Image
-                              src={isHovered && client.media?.hoverImage ? client.media.hoverImage : (client.media?.cardBackgroundImage || client.media?.coverImage || '')}
+                              src={isExpanded && client.media?.hoverImage ? client.media.hoverImage : (client.media?.cardBackgroundImage || client.media?.coverImage || '')}
                               alt={client.name}
                               fill
                               className="object-cover transition-all duration-500"
                          />
                     </div>
                     
-                    {/* Dark Section - Fixed at bottom, expands upward on hover */}
+                    {/* Dark Section - Fixed at bottom, expands upward on click */}
                     <div className={`absolute bottom-0 left-0 right-0 bg-[var(--color-main)] transition-all duration-700 ease-in-out ${
-                         isHovered ? 'h-4/5 p-6' : 'h-16 p-4'
+                         isExpanded ? 'h-4/5 p-6' : 'h-16 p-4'
                     } overflow-hidden`}>
                          <div className="flex flex-col justify-between h-full">
                               {/* Company Logo - Always visible with smooth transition */}
                               <div className={`text-center transition-all duration-700 ease-in-out ${
-                                   isHovered ? 'mb-3' : 'mb-0'
+                                   isExpanded ? 'mb-3' : 'mb-0'
                               }`}>
                                    {client.company?.logo ? (
                                         <div className="flex justify-center">
@@ -124,36 +122,30 @@ const ProjectCard = ({ client }: { client: CasClientData }) => {
                                    )}
                               </div>
                               
-                              {/* Description - Only visible on hover with smooth animation */}
+                              {/* Description - Only visible on click with smooth animation */}
                               <div className={`transition-all duration-700 ease-in-out ${
-                                   isHovered ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0'
+                                   isExpanded ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0'
                               } overflow-hidden`}>
                                    <p className="text-white/90 text-sm leading-relaxed mb-4 line-clamp-3">
                                         {client.summary}
                                    </p>
                               </div>
                               
-                              {/* Bottom Row - Only visible on hover with smooth animation */}
+                              {/* Bottom Row - Only visible on click with smooth animation */}
                               <div className={`transition-all duration-700 ease-in-out ${
-                                   isHovered ? 'opacity-100 max-h-12' : 'opacity-0 max-h-0'
+                                   isExpanded ? 'opacity-100 max-h-12' : 'opacity-0 max-h-0'
                               } overflow-hidden`}>
                                    <div className="flex items-center justify-between">
                                         {/* Sector Tag */}
                                         <span className={`px-3 py-1 rounded-full text-white text-xs font-medium ${getSectorColor(sector || 'default')}`}>
                                              {sector || 'Client'}
                                         </span>
-                                        
-                                        {/* CTA */}
-                                        <div className="flex items-center gap-1 text-white group-hover:text-[var(--color-secondary)] transition-colors">
-                                             <span className="text-sm font-medium">Voir le cas</span>
-                                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                        </div>
                                    </div>
                               </div>
                          </div>
                     </div>
                </div>
-          </Link>
+          </div>
      );
 };
 
@@ -303,11 +295,11 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                     <div className="text-center mt-12">
                     <Button
                     asChild
-                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-12 py-10 text-xl rounded-full
+                    className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold px-8 py-8 text-xl rounded-full
                      shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                   >
                     <Link href={sectionData?.ctaButton?.url || "/cas-client"} className="flex items-center gap-2">
-                      <span dangerouslySetInnerHTML={{ __html: sectionData?.ctaButton?.text || "Voir tous nos projets" }} />
+                      <span dangerouslySetInnerHTML={{ __html: sectionData?.ctaButton?.text || "Tous nos projets" }} />
                       <ArrowRight className="w-5 h-5" />
                     </Link>
                   </Button>

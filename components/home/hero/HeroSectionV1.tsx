@@ -645,27 +645,12 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                   className="text-lg text-white leading-relaxed max-w-3xl"
                 >
                   Passez à un ERP performant, paramétré par un partenaire expert. <br />
-                  Centralisez vos ventes, stocks, projets et finances <br />
-                   — sans complexité inutile.
+                  Centralisez vos ventes, stocks, projets et finances. <br />
+                  Sans complexité inutile.
                 </motion.div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-row gap-4 justify-start max-w-lg mx-auto"
-              >
-                <Link href="/cas-client">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold text-[var(--color-main)] bg-white hover:bg-[var(--color-secondary)] hover:text-[var(--color-white)] rounded-full h-16 sm:h-12 lg:h-14 bg-white"
-                  >
-                    Voir nos cas clients
-                  </Button>
-                </Link>
-              </motion.div>
+              
             </motion.div>
 
             {/* Right Content - Form instead of Video */}
@@ -769,7 +754,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                         disabled={isSubmitting}
                         className="w-full bg-[var(--color-secondary)] text-white py-3 rounded-lg font-semibold transition-all text-lg border-2 border-transparent hover:border-white disabled:opacity-50"
                       >
-                        {isSubmitting ? 'Envoi en cours...' : 'Obtenir mon plan gratuit'}
+                        {isSubmitting ? 'Envoi en cours...' : 'Soumettre'}
                       </Button>
                     )}
                   </form>
