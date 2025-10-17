@@ -665,6 +665,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                   <h3 className="text-2xl font-bold text-[var(--color-main)] mb-6 text-center">
                   Obtenez votre plan d’intégration <span className="text-[var(--color-secondary)]">gratuitement</span>
                   </h3>
+                  
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                       <input
@@ -758,6 +759,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                       </Button>
                     )}
                   </form>
+                  
                 </div>
               </div>
             </motion.div>
