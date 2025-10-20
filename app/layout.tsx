@@ -193,6 +193,7 @@ export default function RootLayout({
             <Analytics />
           </LoaderProvider>
         </ThemeProvider>
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
       </body>
     </html>
   )
