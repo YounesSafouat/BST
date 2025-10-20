@@ -178,6 +178,8 @@ export default function RootLayout({
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
        
         <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script>
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
+
 
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
@@ -193,7 +195,7 @@ export default function RootLayout({
             <Analytics />
           </LoaderProvider>
         </ThemeProvider>
-        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
+         
       </body>
     </html>
   )

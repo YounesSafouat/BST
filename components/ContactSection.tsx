@@ -2067,7 +2067,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          <Card className="border border-gray-200 hover:border-[var(--color-secondary)] shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 bg-white rounded-2xl p-8">
                                                            
                              <div className="iclosed-widget" data-url="https://app.iclosed.io/e/warrenblackswan/rendez-vous-avec-warren-blackswan" title="Rendez-vous avec Warren"></div>
-                         </Card>
+                                                      </Card>
                    </div>
                </div>
           </section>
