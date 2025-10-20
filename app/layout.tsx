@@ -176,9 +176,9 @@ export default function RootLayout({
         <meta name="geo.placename" content="Casablanca" />
         <meta name="ICBM" content="33.5731, -7.5898" />
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
-        <!-- iClosed Lift Widget begin -->
-    <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script>
-<!-- iClosed Lift Widget end -->
+       
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script>
+
       </head>
       <body className="min-h-screen flex flex-col" suppressHydrationWarning>
         <FaviconProvider />
