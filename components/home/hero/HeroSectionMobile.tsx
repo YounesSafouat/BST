@@ -74,24 +74,28 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
 
   const formatTextWithOdoo = (text: string) => {
     if (!text) return text;
+
+    // Replace "odoo" (case insensitive) with custom styled version
     const odooRegex = /(\b)(odoo)(\b)/gi;
     return text.replace(odooRegex, (match, before, odoo, after) => {
-      return `${before}<span style="font-weight: italic; display: inline-block;"><span style="color: #714B67">O</span><span style="color: #8F8F8F">doo</span></span>${after}`;
+      return `${before}<span style="font-weight: italic; display: inline-block; color: var(--color-secondary);">Odoo</span>${after}`;
     });
   };
 
   const formatSubheadline = (text: string) => {
     if (!text) return text;
+
     const odooRegex = /(\b)(odoo)(\b)/gi;
     let formattedText = text.replace(odooRegex, (match, before, odoo, after) => {
       return `${before}<span style="font-weight: bold;">Odoo</span>${after}`;
     });
+    // Add line break after periods
     formattedText = formattedText.replace(/\.\s/g, '.<br>');
     return formattedText;
   };
 
   return (
-    <div className="lg:hidden space-y-2 pb-12 px-4">
+    <div className="lg:hidden px-4">
       {/* Badge Image - First on Mobile */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -99,11 +103,11 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
         transition={{ delay: 0.1 }}
         className="flex items-center justify-center"
       >
-        <div className="p-2 flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <img 
             src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" 
             alt="Odoo Silver Partner Badge" 
-            className='w-[220px] h-[220px]' 
+            className='w-[180px] h-[180px]' 
           />
         </div>
       </motion.div>
@@ -113,7 +117,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="text-3xl font-bold text-white leading-tight tracking-tight text-center"
+        className="text-3xl font-bold text-white leading-tight tracking-tight text-center mb-6"
         style={{ lineHeight: '1.2' }}
         dangerouslySetInnerHTML={{
           __html: formatTextWithOdoo(heroData?.headline || 'Chargement...')
@@ -125,7 +129,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="text-base text-white/90 leading-relaxed text-center px-2"
+        className="text-base text-white/90 leading-relaxed text-center px-2 mb-8"
         dangerouslySetInnerHTML={{
           __html: formatSubheadline((heroData?.subheadline || 'Chargement...')
             .replace(/&lt;/g, '<')
@@ -139,7 +143,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.4 }}
-        className="w-full px-2"
+        className="w-full px-2 mb-8"
       >
         <div className="relative">
           <div className="bg-white p-2 rounded-2xl shadow-xl border-2 border-white/30">

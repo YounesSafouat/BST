@@ -487,17 +487,16 @@ export default function HomePage() {
      const renderMainContent = () => (
           <div className="min-h-screen overflow-hidden relative">
 
-               {/* SECTION 1: Hero Section - Responsive height for different screen sizes */}
-               <div id="hero" className="min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
+               {/* SECTION 1: Hero Section - mobile only*/}
+               <div id="hero-mobile" className="lg:hidden relative bg-[var(--color-main)]">
+                    <div className="flex flex-col justify-start pt-8 pb-8 relative z-10 bg-transparent">
+                         <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+                    </div>
+               </div>
+                {/* SECTION 1: Hero Section - Desktop only */}
+                <div id="hero-desktop" className="hidden lg:block min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
                     <div className="min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-1 lg:-mt-8 xl:-mt-4 2xl:-mt-4 relative z-10 bg-transparent">
-                         {/* Mobile Hero */}
-                         <div className="lg:hidden">
-                              <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
-                         </div>
-                         {/* Desktop Hero */}
-                         <div className="hidden lg:block">
-                              <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
-                         </div>
+                         <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
                     </div>
                </div>
                {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
