@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Users, Play } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Button } from '../../ui/button';
+import CompaniesCarouselV3 from '../../CompaniesCarouselV3';
 
 interface HeroData {
   headline: string;
@@ -95,98 +96,122 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
   };
 
   return (
-    <div className="lg:hidden px-4">
-      {/* Badge Image - First on Mobile */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="flex items-center justify-center"
-      >
-        <div className="flex items-center justify-center">
-          <img 
-            src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" 
-            alt="Odoo Silver Partner Badge" 
-            className='w-[180px] h-[180px]' 
-          />
-        </div>
-      </motion.div>
-
-      {/* Headline */}
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-3xl font-bold text-white leading-tight tracking-tight text-center mb-6"
-        style={{ lineHeight: '1.2' }}
-        dangerouslySetInnerHTML={{
-          __html: formatTextWithOdoo(heroData?.headline || 'Chargement...')
-        }}
-      />
-
-      {/* Description */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="text-base text-white/90 leading-relaxed text-center px-2 mb-8"
-        dangerouslySetInnerHTML={{
-          __html: formatSubheadline((heroData?.subheadline || 'Chargement...')
-            .replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&amp;/g, '&'))
-        }}
-      />
-
-      {/* Video */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="w-full px-2 mb-8"
-      >
-        <div className="relative">
-          <div className="bg-white p-2 rounded-2xl shadow-xl border-2 border-white/30">
-            <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden">
-              <video
-                ref={videoRef}
-                src={heroData?.videoUrl || ''}
-                muted
-                autoPlay
-                loop
-                className="w-full h-full object-cover"
-                playsInline
+    <div id="hero-mobile" className="lg:hidden relative bg-[var(--color-main)]">
+      <div className="flex flex-col justify-start pt-8 pb-8 relative z-10 bg-transparent">
+        <div className="lg:hidden px-4">
+          {/* 1. Badge Image - First on Mobile */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="flex items-center justify-center"
+          >
+            <div className="flex items-center justify-center">
+              <img
+                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png"
+                alt="Odoo Silver Partner Badge"
+                className='w-[180px] h-[180px]'
               />
             </div>
-          </div>
-        </div>
-      </motion.div>
+          </motion.div>
 
-      {/* CTA Buttons - Matching Desktop */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-col gap-4 justify-center px-2 max-w-md mx-auto w-full pb-4"
-      >
-        <Button
-          size="lg"
-          className="bg-[var(--color-secondary)] hover:bg-white text-white hover:text-[var(--color-main)] px-8 py-4 text-base font-semibold rounded-full h-14 shadow-sm hover:shadow-md transition-all duration-200 w-full"
-          onClick={() => scrollToSection('#contact')}
-        >
-          {heroData?.ctaPrimary?.text || 'Chargement...'}
-          {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
-        </Button>
-        <Link href="/cas-client" className="w-full">
-          <Button
-            size="lg"
-            variant="outline"
-            className="px-8 py-4 text-base font-semibold bg-white hover:bg-[var(--color-secondary)] text-[var(--color-main)] hover:text-white rounded-full h-14 shadow-sm hover:shadow-md transition-all duration-200 w-full"
+          {/* 2. Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-3xl font-bold text-white leading-tight tracking-tight text-center mb-6"
+            style={{ lineHeight: '1.2',fontSize: '2rem' }}
+            dangerouslySetInnerHTML={{
+              __html: formatTextWithOdoo(heroData?.headline || 'Chargement...')
+            }}
+          />
+
+          {/* 3. Subheadline */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-base text-white/90 leading-relaxed text-center px-2 mb-8"
+            style={{ fontSize: '1rem' }}
+            dangerouslySetInnerHTML={{
+              __html: formatSubheadline((heroData?.subheadline || 'Chargement...')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&amp;/g, '&'))
+            }}
+          />
+
+          {/* 4. CTA Buttons - Matching Desktop */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col gap-4 justify-center px-2 max-w-md mx-auto w-full pb-4"
           >
-            {heroData?.ctaSecondary?.text || 'Chargement...'}
-          </Button>
-        </Link>
-      </motion.div>
+            <Button
+              size="lg"
+              className="bg-[var(--color-secondary)] hover:bg-white text-white hover:text-[var(--color-main)] px-20 py-4 text-base font-semibold rounded-full h-14 shadow-sm hover:shadow-md transition-all duration-200 max-w-xs mx-auto"
+              onClick={() => scrollToSection('#contact')}
+            >
+              {heroData?.ctaPrimary?.text || 'Chargement...'}
+              {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
+            </Button>
+
+            {/*  
+            <Link href="/cas-client" className="w-full">
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-8 py-4 text-base font-semibold bg-white hover:bg-[var(--color-secondary)] text-[var(--color-main)] hover:text-white rounded-full h-14 shadow-sm hover:shadow-md transition-all duration-200 w-full"
+              >
+                {heroData?.ctaSecondary?.text || 'Chargement...'}
+              </Button>
+            </Link>
+            */}
+          </motion.div>
+        </div>
+        
+      </div>
+
+      {/* 5. Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
+      <div className="lg:hidden bg-[var(--color-main)] py-6 -mt-5 relative z-10 companies-carousel-transparent">
+        <CompaniesCarouselV3
+          companies={heroData?.carousel?.companies}
+          userRegion={userRegion}
+          speed={heroData?.carousel?.speed ? Math.min(heroData.carousel.speed, 50) : 25}
+          text={heroData?.carousel?.text}
+          layout="carousel"
+          theme="light"
+          showCount={false}
+        />
+      </div>
+
+      {/* 6. Video */}
+      <div className="lg:hidden px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="w-full px-2 mb-8"
+        >
+          <div className="relative">
+            <div className="bg-white p-2 rounded-2xl shadow-xl border-2 border-white/30">
+              <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden">
+                <video
+                  ref={videoRef}
+                  src={heroData?.videoUrl || ''}
+                  muted
+                  autoPlay
+                  loop
+                  className="w-full h-full object-cover"
+                  playsInline
+                />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

@@ -99,7 +99,7 @@ interface HomePageData {
                     name: string;
                     logo: string;
                     url?: string;
-                    regions?: string[];      
+                    regions?: string[];
                }>;
                speed?: number;
                text?: string;
@@ -261,8 +261,8 @@ export default function HomePage() {
 
      // Use singleton geolocation service
      const { region: userRegion, loading: locationLoading, isFromCache } = useGeolocationSingleton();
-     
-    
+
+
 
 
      useEffect(() => {
@@ -301,9 +301,9 @@ export default function HomePage() {
                          const parsed = JSON.parse(cachedData);
                          // Check if cached data has regions field (for backward compatibility)
                          const hasRegions = parsed.data?.hero?.carousel?.companies?.some((company: any) => company.regions);
-                         
+
                          if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) { // 5 minutes cache + regions check
-                             
+
                               setHomePageData(parsed.data);
                               return;
                          } else if (!hasRegions) {
@@ -332,7 +332,7 @@ export default function HomePage() {
                          const homePageContent = data.find(item => item.type === 'home-page');
 
                          if (homePageContent && homePageContent.content) {
-                              
+
                               setHomePageData(homePageContent.content);
 
                               sessionStorage.setItem('homePageData', JSON.stringify({
@@ -488,33 +488,18 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - mobile only*/}
-               <div id="hero-mobile" className="lg:hidden relative bg-[var(--color-main)]">
-                    <div className="flex flex-col justify-start pt-8 pb-8 relative z-10 bg-transparent">
-                         <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
-                    </div>
-               </div>
-                {/* SECTION 1: Hero Section - Desktop only */}
-                <div id="hero-desktop" className="hidden lg:block min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
-                    <div className="min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-1 lg:-mt-8 xl:-mt-4 2xl:-mt-4 relative z-10 bg-transparent">
-                         <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
-                    </div>
-               </div>
-               {/* Mobile Companies Carousel - Overlapping with fade - OUTSIDE gradient */}
-               <div className="lg:hidden bg-[var(--color-main)] py-6 -mt-5 relative z-10 companies-carousel-transparent">
-                    <CompaniesCarouselV3
-                         companies={homePageData?.hero?.carousel?.companies}
-                         userRegion={userRegion}
-                         speed={homePageData?.hero?.carousel?.speed ? Math.min(homePageData.hero.carousel.speed, 50) : 25}
-                         text={homePageData?.hero?.carousel?.text}
-                         layout="carousel"
-                         theme="light"
-                         showCount={false}
-                    />
-               </div>
+
+               <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+
+               {/* SECTION 1: Hero Section - Desktop only */}
+
+               <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+
+
                {/* SECTION 2: Video Testimonials - HomePage */}
-                <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection 
-                         selectedClients={homePageData?.selectedClients} 
+               <div id="video-testimonials" className="relative z-10">
+                    <VideoTestimonialsSection
+                         selectedClients={homePageData?.selectedClients}
                          sectionData={homePageData?.videoTestimonials}
                     />
                </div>
@@ -525,7 +510,7 @@ export default function HomePage() {
                     </Suspense>
                </div>
                {/* SECTION 4: Video Background Section */}
-               <VideoBackgroundSection 
+               <VideoBackgroundSection
                     headline={homePageData?.videoBackgroundSection?.headline}
                     description={homePageData?.videoBackgroundSection?.description}
                     ctaText={homePageData?.videoBackgroundSection?.ctaText}
@@ -533,7 +518,7 @@ export default function HomePage() {
                />
 
                {/* SECTION 5: Platform Modules Timeline */}
-               <PlatformModulesSection 
+               <PlatformModulesSection
                     homePageData={homePageData}
                     timeline1={timeline1}
                     timeline2={timeline2}
@@ -546,14 +531,14 @@ export default function HomePage() {
                {/* SECTION 6: Testimonials - HomePage */}
                <div id="testimonials">
                     {homePageData?.testimonialsSection && (
-                    <TestimonialsSection
+                         <TestimonialsSection
                               testimonialsSectionData={homePageData.testimonialsSection}
-                         testimonials={homePageData?.testimonials}
-                    />
+                              testimonials={homePageData?.testimonials}
+                         />
                     )}
                </div>
-                {/* SECTION 7: Our Agency - HomePage */}
-                <div id="about">
+               {/* SECTION 7: Our Agency - HomePage */}
+               <div id="about">
                     <OurAgencySection
                          key={userRegion} // Force re-render when region changes
                          partnershipData={homePageData?.partnership}

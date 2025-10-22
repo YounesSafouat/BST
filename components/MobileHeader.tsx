@@ -277,7 +277,7 @@ export default function MobileHeader() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-10 w-10 bg-[var(--color-main)] hover:bg-[var(--color-secondary)] rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            className="h-10 w-10 bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)] rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="!w-6 !h-6 !stroke-[2.5] !text-white" /> : <Menu className="!w-6 !h-6 !stroke-[2.5] !text-white" />}
@@ -298,10 +298,8 @@ export default function MobileHeader() {
               {/* Parler à un expert Button - Prominent at top */}
               <div className="pb-4 border-b border-gray-200">
                 <Button
-                  onClick={() => {
-                    trackButtonClick('mobile_header_rdv_button');
-                    window.open(meetingLink, '_blank');
-                  }}
+                  data-iclosed-link="https://app.iclosed.io/e/warrenblackswan/rendez-vous-avec-warren-blackswan"
+                  data-embed-type="popup"
                   className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white font-semibold py-3 rounded-lg transition-all duration-300 hover:scale-105"
                 >
                   Parler à un expert
