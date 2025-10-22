@@ -368,11 +368,9 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
             >
               <Button
                 size="sm"
-                className="bg-[var(--color-secondary)] hover:bg-[var(--color-main)] text-white px-5 text-sm h-11 rounded-full"
-                onClick={() => {
-                  window.open(meetingLink, '_blank');
-                  trackButtonClick('meeting_link');
-                }}
+                className="bg-[var(--color-secondary)] hover:bg-white hover:text-[var(--color-main)] text-white px-5 text-sm h-11 rounded-full"
+                data-iclosed-link="https://app.iclosed.io/e/warrenblackswan/rendez-vous-avec-warren-blackswan"
+                data-embed-type="popup"
               >
                 <span className="font-semibold">Parler à un expert</span>
                 <ArrowRight className="w-4 h-4" />

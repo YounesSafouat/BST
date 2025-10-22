@@ -179,6 +179,7 @@ export default function RootLayout({
        
         <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script>
         <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
 
 
       </head>

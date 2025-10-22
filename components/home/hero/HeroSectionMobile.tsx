@@ -181,7 +181,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
           <Button
             size="lg"
             variant="outline"
-            className="px-8 py-4 text-base font-semibold border-2 text-[var(--color-main)] hover:bg-white hover:text-[var(--color-main)] rounded-full h-14 shadow-sm hover:shadow-md transition-all duration-200 w-full"
+            className="px-8 py-4 text-base font-semibold bg-white hover:bg-[var(--color-secondary)] text-[var(--color-main)] hover:text-white rounded-full h-14 shadow-sm hover:shadow-md transition-all duration-200 w-full"
           >
             {heroData?.ctaSecondary?.text || 'Chargement...'}
           </Button>
