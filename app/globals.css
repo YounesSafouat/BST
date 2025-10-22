@@ -652,6 +652,29 @@ html {
   }
 }
 
+/* Testimonials Carousel Animation */
+@keyframes testimonials-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 6));
+  }
+}
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
+}
+
+.animate-testimonials-scroll {
+  animation: testimonials-scroll 20s linear infinite;
+}
+
+.animate-scroll:hover,
+.animate-testimonials-scroll:hover {
+  animation-play-state: paused;
+}
+
 /* Apple-style Scroll Animations */
 
 /* Companies Carousel Animation */

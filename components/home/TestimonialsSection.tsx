@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -37,7 +37,11 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({ testimonialsSectionData, testimonials }: TestimonialsSectionProps) {
      const [mounted, setMounted] = useState(false);
      const [displayTestimonials, setDisplayTestimonials] = useState<Testimonial[]>([]);
+     const [currentSlide, setCurrentSlide] = useState(0);
+     const [touchStart, setTouchStart] = useState<number | null>(null);
+     const [touchEnd, setTouchEnd] = useState<number | null>(null);
      const lastFetchedRegion = useRef<string | null>(null);
+     const scrollRef = useRef<HTMLDivElement>(null);
      
      // Use the new geolocation singleton service
      const { data: locationData, loading: geolocationLoading, region: userRegion } = useGeolocationSingleton();
@@ -45,6 +49,120 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
      useEffect(() => {
           setMounted(true);
      }, []);
+
+     // Mobile detection
+     const [isMobile, setIsMobile] = useState(false);
+     
+     useEffect(() => {
+          const checkMobile = () => {
+               setIsMobile(window.innerWidth < 768);
+          };
+          checkMobile();
+          window.addEventListener('resize', checkMobile);
+          return () => window.removeEventListener('resize', checkMobile);
+     }, []);
+
+     // Navigation functions for mobile
+     const nextSlide = () => {
+          setCurrentSlide((prev) => (prev + 1) % displayTestimonials.length);
+     };
+
+     const prevSlide = () => {
+          setCurrentSlide((prev) => (prev - 1 + displayTestimonials.length) % displayTestimonials.length);
+     };
+
+     // Touch handlers for mobile swipe
+     const handleTouchStart = (e: React.TouchEvent) => {
+          setTouchEnd(null);
+          setTouchStart(e.targetTouches[0].clientX);
+     };
+
+     const handleTouchMove = (e: React.TouchEvent) => {
+          setTouchEnd(e.targetTouches[0].clientX);
+     };
+
+     const handleTouchEnd = () => {
+          if (!touchStart || !touchEnd) return;
+          
+          const distance = touchStart - touchEnd;
+          const isLeftSwipe = distance > 50;
+          const isRightSwipe = distance < -50;
+
+          if (isLeftSwipe) {
+               nextSlide();
+          } else if (isRightSwipe) {
+               prevSlide();
+          }
+     };
+
+     // Handle dynamic animation based on number of testimonials and size changes (desktop only)
+     useEffect(() => {
+          if (mounted && displayTestimonials.length > 0 && scrollRef.current && !isMobile) {
+               const updateAnimation = () => {
+                    const container = scrollRef.current;
+                    if (container) {
+                         const totalWidth = container.scrollWidth;
+                         const oneSetWidth = totalWidth / 3; // We have 3 sets
+                         
+                         // Remove existing style if it exists
+                         const existingStyle = document.getElementById('testimonials-scroll-animation');
+                         if (existingStyle) {
+                              document.head.removeChild(existingStyle);
+                         }
+                         
+                         // Create new dynamic CSS animation
+                         const style = document.createElement('style');
+                         style.id = 'testimonials-scroll-animation';
+                         style.textContent = `
+                              @keyframes testimonials-scroll {
+                                   0% { transform: translateX(0); }
+                                   100% { transform: translateX(-${oneSetWidth}px); }
+                              }
+                              .testimonials-scroll {
+                                   animation: testimonials-scroll 20s linear infinite;
+                              }
+                              .testimonials-scroll:hover {
+                                   animation-play-state: paused;
+                              }
+                         `;
+                         document.head.appendChild(style);
+                         
+                         // Add the class to the container
+                         container.classList.add('testimonials-scroll');
+                    }
+               };
+
+               // Initial setup with timeout
+               const timer = setTimeout(updateAnimation, 100);
+               
+               // Set up ResizeObserver to detect significant size changes only
+               let lastWidth = 0;
+               const resizeObserver = new ResizeObserver((entries) => {
+                    for (let entry of entries) {
+                         const newWidth = entry.contentRect.width;
+                         // Only update if width changed significantly (more than 10px difference)
+                         if (Math.abs(newWidth - lastWidth) > 10) {
+                              lastWidth = newWidth;
+                              updateAnimation();
+                         }
+                    }
+               });
+               
+               resizeObserver.observe(scrollRef.current);
+               
+               return () => {
+                    clearTimeout(timer);
+                    resizeObserver.disconnect();
+                    const style = document.getElementById('testimonials-scroll-animation');
+                    if (style) {
+                         document.head.removeChild(style);
+                    }
+                    if (scrollRef.current) {
+                         scrollRef.current.classList.remove('testimonials-scroll');
+                    }
+               };
+          }
+     }, [mounted, displayTestimonials, isMobile]);
 
      // Use passed testimonials or fetch from API
      useEffect(() => {
@@ -172,100 +290,175 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                    
                </motion.div>
 
-               <div className="relative w-full px-12">
-                    <Swiper
-                         modules={[Navigation, Pagination]}
-                         spaceBetween={24}
-                         slidesPerView={1}
-                         navigation={{
-                              nextEl: '.swiper-button-next',
-                              prevEl: '.swiper-button-prev',
-                         }}
-                         breakpoints={{
-                              640: {
-                                   slidesPerView: 1,
-                                   spaceBetween: 18
-                              },
-                              768: {
-                                   slidesPerView: 2,
-                                   spaceBetween: 18
-                              },
-                              1188: {
-                                   slidesPerView: 3,
-                                   spaceBetween: 24
-                              }
-                         }}
-                         loop={true}
-                         grabCursor={true}
-                         className="w-full min-h-[450px] sm:min-h-[500px] md:min-h-[350px] lg:min-h-[400px] xl:min-h-[450px] pb-15"
-                    >
-                         {displayTestimonials.filter(testimonial => testimonial && testimonial._id && typeof testimonial === 'object').map((testimonial) => {
-                              const clientCaseUrl = testimonial.clientCasePath 
-                                   ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
-                                   : `/cas-client`;
+               <div className={`relative w-full ${isMobile ? 'overflow-visible' : 'overflow-hidden'}`}>
+                    {/* Desktop: Infinite scroll */}
+                    <div ref={scrollRef} className={`flex gap-6 ${!isMobile ? 'testimonials-scroll' : ''}`}>
+                         {/* Create 3 sets for seamless infinite scroll (desktop only) */}
+                         {!isMobile ? [...Array(3)].map((_, setIndex) => 
+                              displayTestimonials.map((testimonial) => {
+                                   const clientCaseUrl = testimonial.clientCasePath 
+                                        ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
+                                        : `/cas-client`;
 
-                              return (
-                                   <SwiperSlide key={testimonial._id}>
-                                        <Link href={clientCaseUrl} className="block h-full">
-                                             <div className="bg-white flex flex-col gap-4 justify-between border border-gray-200 hover:border-[var(--color-secondary)] p-8 rounded-2xl min-h-[400px] sm:min-h-[450px] md:min-h-[300px] lg:min-h-[350px] xl:min-h-[400px] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
-                                                  <div className="testimonial-rate flex gap-0.5">
-                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                       <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                   return (
+                                        <div key={`${setIndex}-${testimonial._id}`} className="flex-shrink-0 w-[520px]">
+                                             <Link href={clientCaseUrl} className="block h-full">
+                                                  <div className="bg-white flex flex-col gap-4 justify-between border border-gray-200 hover:border-[var(--color-secondary)] p-8 rounded-2xl h-[400px] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+                                                       <div className="testimonial-rate flex gap-0.5">
+                                                            <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                            <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                            <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                            <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                            <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                       </div>
+
+                                                       <blockquote className="testimonial-quote text-[#637381] text-base flex-1 overflow-y-auto">
+                                                            "{String(testimonial.text || 'No testimonial text available.')}"
+                                                       </blockquote>
+
+                                                       <div className="space-y-3 mt-auto">
+                                                            <div className="testimonial-author flex items-center gap-4">
+                                                                 <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
+                                                                      {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
+                                                                           <Image
+                                                                                src={testimonial.photo}
+                                                                                alt={testimonial.author || 'Author'}
+                                                                                width={50}
+                                                                                height={50}
+                                                                                className="w-full h-full object-cover"
+                                                                           />
+                                                                      ) : (
+                                                                           <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
+                                                                                <span className="text-white font-bold text-sm">
+                                                                                     {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
+                                                                                </span>
+                                                                           </div>
+                                                                      )}
+                                                                 </div>
+
+                                                                 <div className="author-info flex-1">
+                                                                      <h3 className="font-semibold text-sm text-[#111928]">
+                                                                           {testimonial.author || 'Anonymous'}
+                                                                      </h3>
+                                                                      <p className="text-xs text-[#8899a8]">
+                                                                           {testimonial.role || 'Client'}
+                                                                      </p>
+                                                                 </div>
+                                                            </div>
+
+                                                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] text-white text-xs font-semibold rounded-full group-hover:shadow-lg transition-all duration-300">
+                                                                 <span>Lire le cas client</span>
+                                                                 <ExternalLink className="w-3 h-3" />
+                                                            </div>
+                                                       </div>
                                                   </div>
+                                             </Link>
+                                        </div>
+                                   );
+                              })
+                         ) : null}
 
-                                                  <blockquote className="testimonial-quote text-[#637381] text-base">
-                                                       "{String(testimonial.text || 'No testimonial text available.')}"
-                                                  </blockquote>
+                         {/* Mobile: Single testimonial with navigation */}
+                         {isMobile && displayTestimonials.length > 0 && (
+                              <div className="flex-shrink-0 w-full px-4">
+                                   <div 
+                                        className="relative overflow-hidden"
+                                        onTouchStart={handleTouchStart}
+                                        onTouchMove={handleTouchMove}
+                                        onTouchEnd={handleTouchEnd}
+                                   >
+                                        <div 
+                                             className="flex transition-transform duration-500 ease-in-out"
+                                             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                                        >
+                                             {/* Create infinite testimonials by duplicating */}
+                                             {[...Array(2)].map((_, setIndex) => 
+                                                  displayTestimonials.map((testimonial, index) => {
+                                                       const clientCaseUrl = testimonial.clientCasePath 
+                                                            ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
+                                                            : `/cas-client`;
 
-                                                  <div className="space-y-3">
-                                                       <div className="testimonial-author flex items-center gap-4">
-                                                            <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
-                                                                 {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
-                                                                      <Image
-                                                                           src={testimonial.photo}
-                                                                           alt={testimonial.author || 'Author'}
-                                                                           width={50}
-                                                                           height={50}
-                                                                           className="w-full h-full object-cover"
-                                                                      />
-                                                                 ) : (
-                                                                      <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
-                                                                           <span className="text-white font-bold text-sm">
-                                                                                {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
-                                                                           </span>
+                                                       return (
+                                                            <div key={`${setIndex}-${testimonial._id}`} className="w-full flex-shrink-0">
+                                                                 <Link href={clientCaseUrl} className="block h-full">
+                                                                      <div className="bg-white flex flex-col gap-4 justify-between border border-gray-200 hover:border-[var(--color-secondary)] p-6 rounded-2xl h-[400px] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+                                                                           <div className="testimonial-rate flex gap-0.5">
+                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                           </div>
+
+                                                                           <blockquote className="testimonial-quote text-[#637381] text-base flex-1 overflow-y-auto">
+                                                                                "{String(testimonial.text || 'No testimonial text available.')}"
+                                                                           </blockquote>
+
+                                                                           <div className="space-y-3 mt-auto">
+                                                                                <div className="testimonial-author flex items-center gap-4">
+                                                                                     <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
+                                                                                          {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
+                                                                                               <Image
+                                                                                                    src={testimonial.photo}
+                                                                                                    alt={testimonial.author || 'Author'}
+                                                                                                    width={50}
+                                                                                                    height={50}
+                                                                                                    className="w-full h-full object-cover"
+                                                                                               />
+                                                                                          ) : (
+                                                                                               <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
+                                                                                                    <span className="text-white font-bold text-sm">
+                                                                                                         {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
+                                                                                                    </span>
+                                                                                               </div>
+                                                                                          )}
+                                                                                     </div>
+
+                                                                                     <div className="author-info flex-1">
+                                                                                          <h3 className="font-semibold text-sm text-[#111928]">
+                                                                                               {testimonial.author || 'Anonymous'}
+                                                                                          </h3>
+                                                                                          <p className="text-xs text-[#8899a8]">
+                                                                                               {testimonial.role || 'Client'}
+                                                                                          </p>
+                                                                                     </div>
+                                                                                </div>
+
+                                                                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] text-white text-xs font-semibold rounded-full group-hover:shadow-lg transition-all duration-300">
+                                                                                     <span>Lire le cas client</span>
+                                                                                     <ExternalLink className="w-3 h-3" />
+                                                                                </div>
+                                                                           </div>
                                                                       </div>
-                                                                 )}
+                                                                 </Link>
                                                             </div>
+                                                       );
+                                                  })
+                                             )}
+                                        </div>
+                                   </div>
+                              </div>
+                         )}
+                    </div>
 
-                                                            <div className="author-info flex-1">
-                                                                 <h3 className="font-semibold text-sm text-[#111928]">
-                                                                      {testimonial.author || 'Anonymous'}
-                                                                 </h3>
-                                                                 <p className="text-xs text-[#8899a8]">
-                                                                      {testimonial.role || 'Client'}
-                                                                 </p>
-                                                            </div>
-                                                       </div>
-
-                                                       <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] text-white text-xs font-semibold rounded-full group-hover:shadow-lg transition-all duration-300">
-                                                            <span>Lire le cas client</span>
-                                                            <ExternalLink className="w-3 h-3" />
-                                                       </div>
-                                                  </div>
-                                             </div>
-                                        </Link>
-                                   </SwiperSlide>
-                              );
-                         })}
-                    </Swiper>
-
-                    {/* Navigation Buttons - Positioned with proper spacing */}
-                    <div className="swiper-button-prev !absolute !left-0 !top-1/2 !-translate-y-1/2 !w-10 !h-10 !text-[#3758f9] !after:content-['\f053'] !after:font-['Font_Awesome_5_free'] !after:font-black !after:text-lg !z-10"></div>
-                    <div className="swiper-button-next !absolute !right-0 !top-1/2 !-translate-y-1/2 !w-10 !h-10 !text-[#3758f9] !after:content-['\f054'] !after:font-['Font_Awesome_5_free'] !after:font-black !after:text-lg !z-10"></div>
-
+                    {/* Mobile Navigation Buttons - Side arrows */}
+                    {isMobile && displayTestimonials.length > 1 && (
+                         <>
+                              <button
+                                   onClick={prevSlide}
+                                   className="absolute -left-8 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full text-white hover:text-white/80 flex items-center justify-center transition-all duration-300 z-20"
+                              >
+                                   <i className="fa-solid fa-chevron-left text-xl"></i>
+                              </button>
+                              
+                              <button
+                                   onClick={nextSlide}
+                                   className="absolute -right-8 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full text-white hover:text-white/80 flex items-center justify-center transition-all duration-300 z-20"
+                              >
+                                   <i className="fa-solid fa-chevron-right text-xl"></i>
+                              </button>
+                         </>
+                    )}
                </div>
 
                {/* Font Awesome Icons */}
