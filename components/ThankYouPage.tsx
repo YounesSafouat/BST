@@ -18,11 +18,11 @@ export function ThankYouPageDark() {
   useEffect(() => {
     const fetchClientCase = async () => {
       try {
-        const response = await fetch('/api/cas-client?search=qweekle&limit=1')
+        const response = await fetch('/api/cas-client/qweekle')
         if (response.ok) {
           const data = await response.json()
-          if (data.cases && data.cases.length > 0) {
-            setClientCase(data.cases[0])
+          if (data) {
+            setClientCase(data)
           }
         }
       } catch (error) {
@@ -249,11 +249,11 @@ export function ThankYouPageLight() {
   useEffect(() => {
     const fetchClientCase = async () => {
       try {
-        const response = await fetch('/api/cas-client?search=qweekle&limit=1')
+        const response = await fetch('/api/cas-client/qweekle')
         if (response.ok) {
           const data = await response.json()
-          if (data.cases && data.cases.length > 0) {
-            setClientCase(data.cases[0])
+          if (data) {
+            setClientCase(data)
           }
         }
       } catch (error) {
