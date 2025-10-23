@@ -39,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const seoData = await getSEOData('thank-you');
   return generateSEOMetadata(
     seoData,
-    'Merci - Black Swan Technology',
+    'Merci - BlackSwan Technology',
     'Merci pour votre demande. Notre équipe vous contactera dans les plus brefs délais.'
   );
 }
