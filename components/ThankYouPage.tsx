@@ -152,6 +152,14 @@ export function ThankYouPageDark() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
+                Notre dernier projet : Qweekle
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full"></div>
+            </div>
+
             {/* Premium grid layout with enhanced styling */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {/* Large featured image - spans 2 columns */}
@@ -210,7 +218,7 @@ export function ThankYouPageDark() {
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-blue-600 hover:from-cyan-400 hover:via-cyan-400 hover:to-blue-500 text-white font-bold px-12 py-7 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50 flex items-center gap-3 text-lg group shadow-lg"
                   >
-                    Lire le cas client complet
+                    Découvrir tous nos cas client
                     <ExternalLink className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                   </Button>
                 </Link>
@@ -383,6 +391,14 @@ export function ThankYouPageLight() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
+                Notre dernier projet : Qweekle
+              </h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full"></div>
+            </div>
+
             {/* Premium grid layout with enhanced styling */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {/* Large featured image - spans 2 columns */}
@@ -441,7 +457,7 @@ export function ThankYouPageLight() {
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-cyan-500 via-cyan-500 to-blue-600 hover:from-cyan-400 hover:via-cyan-400 hover:to-blue-500 text-white font-bold px-12 py-7 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/50 flex items-center gap-3 text-lg group shadow-lg"
                   >
-                    Lire le cas client complet
+                    Découvrir tous nos cas client
                     <ExternalLink className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                   </Button>
                 </Link>
