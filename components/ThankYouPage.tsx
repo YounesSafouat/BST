@@ -87,7 +87,7 @@ export function ThankYouPageDark() {
       `}</style>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-16 pb-16 sm:pb-24">
         {/* Hero Section */}
         <div className="text-center mb-20">
           <div
@@ -326,7 +326,7 @@ export function ThankYouPageLight() {
       `}</style>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-16 pb-16 sm:pb-24">
         {/* Hero Section */}
         <div className="text-center mb-20">
           <div
