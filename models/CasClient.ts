@@ -192,6 +192,9 @@ const CasClientSchema = new mongoose.Schema({
   tags: [{ type: String }],
   featured: { type: Boolean, default: false },
   published: { type: Boolean, default: true },
+  
+  // Regional targeting
+  targetRegions: [{ type: String, enum: ['morocco', 'france', 'international'] }],
 
   // Timestamps
   createdAt: { type: Date, default: Date.now },
@@ -215,5 +218,6 @@ CasClientSchema.index({ featured: 1 })
 CasClientSchema.index({ 'company.sector': 1 })
 CasClientSchema.index({ 'project.solution': 1 })
 CasClientSchema.index({ tags: 1 })
+CasClientSchema.index({ targetRegions: 1 })
 
 export default mongoose.models.CasClient || mongoose.model('CasClient', CasClientSchema)

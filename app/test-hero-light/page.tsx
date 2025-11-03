@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import CompaniesCarousel from "@/components/CompaniesCarousel"
 import { useGeolocationSingleton } from "@/hooks/useGeolocationSingleton"
@@ -11,6 +11,19 @@ export default function HeroSection() {
   const [homePageData, setHomePageData] = useState<any>(null)
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0)
   const { region: userRegion } = useGeolocationSingleton()
+
+  // Base colors (light mode defaults). Dark mode overrides via CSS variables below.
+  const COLORS = {
+    brandOrange: '#F25519',
+    badgeText: '#410e09',
+    sectionBg: '#F5FAFF',
+    badgeBorder: '#e5e7eb',
+    textPrimary: '#1e2844',
+    orangeBorder: '#FED7AA',
+    gradientTo: '#E33E13',
+    glowSoft: 'rgba(242,85,25,0.28)',
+    glowRing: 'rgba(242,85,25,0.26)'
+  }
 
   const features = [
     "Intégration rapide",
@@ -74,189 +87,173 @@ export default function HeroSection() {
   const carouselText = homePageData?.hero?.carousel?.text || "Nos clients"
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-white via-gray-50 to-gray-100">
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[var(--color-main)] rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-[var(--color-main)] rounded-full blur-3xl"></div>
-      </div>
+    <section 
+      className="relative overflow-hidden px-6 py-44 hero-ctx"
+      style={{ backgroundColor: 'var(--section-bg)' }}
+    >
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('/hero BG.svg')",
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+          backgroundSize: 'min(1400px, 92vw)',
+          opacity: 'var(--bg-opacity)'
+        }}
+      />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <div className="text-center space-y-8 lg:space-y-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex justify-center mb-3 sm:mb-4"
-          >
-            <div className="w-[120px] sm:w-[180px] h-[50px] sm:h-[70px] flex items-center justify-center">
-              <img
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/silverBadge.png"
-                alt="Odoo Silver Partner Badge"
-                className="h-auto w-full object-contain"
-              />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pb-4"
-          >
-            <div className="flex -space-x-3">
-              {['A', 'B', 'C', '+50'].map((letter, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="w-12 h-12 rounded-full bg-[var(--color-main)] border-2 border-white flex items-center justify-center text-white text-sm font-bold shadow-lg hover:scale-110 transition-transform cursor-default"
-                >
-                  {letter}
-                </motion.div>
-              ))}
-            </div>
-            <span className="text-sm sm:text-base text-gray-900 flex items-center gap-1.5">
-              <span className="text-yellow-400 text-lg sm:text-xl">⭐⭐⭐⭐⭐</span>
-              <span>100% de satisfaction</span>
-            </span>
-          </motion.div>
-
-          <div className="space-y-6 lg:space-y-8">
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight tracking-tight max-w-5xl mx-auto"
-              style={{ lineHeight: '1.1' }}
-            >
-              Intégration{" "}
-              <span className="italic font-semibold" style={{ color: 'var(--color-main)' }}>
-                Odoo
-              </span>{" "}
-              ERP
-              <br />
-              <span className="text-gray-900">clé en main</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-lg sm:text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed px-4"
-            >
-              Automatisez, centralisez et optimisez votre entreprise avec une solution Odoo sur mesure.
-              <br />
-              <span className="font-semibold text-gray-900">Intégration fluide en 60 jours.</span>
-            </motion.p>
+      <div className="relative mx-auto max-w-6xl pt-6 md:pt-10">
+        {/* Floating Orb Icons */}
+        <div className="absolute -left-12 top-28 animate-float" style={{ animation: "float 6s ease-in-out infinite" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/inventory.svg" alt="Inventory" className="w-8 h-8" />
           </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-4"
-          >
-            {[0, 1, 2].map((badgeIndex) => {
-              const currentText = features[(currentFeatureIndex + badgeIndex) % features.length]
-              return (
-                <motion.div
-                  key={badgeIndex}
-                  layout
-                  className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-gray-100 border border-gray-200 rounded-full hover:bg-gray-200 hover:border-gray-300"
-                  transition={{
-                    layout: { 
-                      duration: 0.5, 
-                      ease: [0.25, 0.1, 0.25, 1],
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 30
-                    }
-                  }}
-                >
-                  <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[var(--color-main)] flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    ✓
-                  </span>
-                  <motion.div 
-                    layout
-                    className="relative h-5 sm:h-6"
-                    transition={{
-                      layout: { 
-                        duration: 0.5, 
-                        ease: [0.25, 0.1, 0.25, 1],
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30
-                      }
-                    }}
-                  >
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={`${badgeIndex}-${currentFeatureIndex + badgeIndex}`}
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -20, opacity: 0 }}
-                        transition={{ 
-                          duration: 0.4,
-                          ease: [0.4, 0, 0.2, 1],
-                          delay: badgeIndex * 0.05
-                        }}
-                        className="inline-block text-xs sm:text-sm font-medium text-gray-900 whitespace-nowrap"
-                      >
-                        {currentText}
-                      </motion.span>
-                    </AnimatePresence>
-                  </motion.div>
-                </motion.div>
-              )
-            })}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4"
-          >
-            <Button
-              size="lg"
-              className="bg-[var(--color-main)] hover:bg-[var(--color-secondary)] text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full group shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              Prendre un rendez-vous
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-2 border-[var(--color-main)] hover:bg-[var(--color-main)] text-[var(--color-main)] hover:text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full transition-all duration-300"
-            >
-              Voir nos projets
-            </Button>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-sm sm:text-base text-gray-700 font-medium pt-4"
-          >
-            + de 2000 entreprises nous font confiance
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="pt-12 sm:pt-16 border-t border-gray-200 mt-12 sm:mt-16"
-          >
-            <CompaniesCarousel
-              companies={companies}
-              userRegion={userRegion}
-              text={carouselText}
-            />
-          </motion.div>
         </div>
+        <div className="absolute -right-14 top-32 animate-float" style={{ animation: "float 6s ease-in-out infinite 1s" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/manufacturing.svg" alt="Manufacturing" className="w-8 h-8" />
+          </div>
+        </div>
+        <div className="absolute left-0 top-1/2 animate-float" style={{ animation: "float 6s ease-in-out infinite 0.5s" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/point-of-sale.svg" alt="Point of Sale" className="w-8 h-8" />
+          </div>
+        </div>
+        <div className="absolute right-0 top-1/2 animate-float" style={{ animation: "float 6s ease-in-out infinite 1.5s" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/CRM.svg" alt="CRM" className="w-8 h-8" />
+          </div>
+        </div>
+
+        {/* Features Badges Row */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 mb-6 max-w-max mx-auto "
+        >
+          {features.map((text, idx) => {
+            const Icon = () => {
+              if (text.toLowerCase().includes('intégration')) {
+                // lightning bolt
+                return (
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden style={{ color: 'var(--brand)' }}>
+                    <path d="M11 3L6 13h5l-2 8 8-13h-6l2-5z" fill="currentColor" />
+                  </svg>
+                )
+              }
+              if (text.toLowerCase().includes('support')) {
+                // headset
+                return (
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden style={{ color: 'var(--brand)' }}>
+                    <path d="M6 13v-1a6 6 0 1112 0v1a3 3 0 01-3 3h-1v-3h3v-1a5 5 0 10-10 0v1h3v3H9a3 3 0 01-3-3z" fill="currentColor" />
+                  </svg>
+                )
+              }
+              // location/pin for France
+              return (
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden style={{ color: 'var(--brand)' }}>
+                  <path d="M12 6a5 5 0 00-5 5c0 3.6 5 7.5 5 7.5S17 14.6 17 11a5 5 0 00-5-5zm0 7a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="currentColor" />
+                </svg>
+              )
+            }
+            return (
+              <div key={idx} className="flex items-center gap-3 px-4 py-2 bg-white/96 dark:bg-white/10 border border-gray-200 dark:border-white/10 rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
+                <Icon />
+                <span className="text-[14px] sm:text-[15px] font-medium uppercase leading-none tracking-wide whitespace-nowrap" style={{ color: 'var(--badge-text)' }}>{text}</span>
+              </div>
+            )
+          })}
+        </motion.div>
+
+        <div className="text-center mb-4">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.15] max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-1"
+            style={{ color: 'var(--text)' }}
+          >
+            <span className="font-semibold" style={{ color: 'var(--brand)' }}>Nous intégrons</span>
+            <span className="font-semibold ml-2 flex items-center" style={{ color: 'var(--brand)' }}>Odoo
+              <span className="inline-flex items-center align-baseline ml-1">
+                <span className="rounded-full p-[4px] flex items-center justify-center w-10 h-10 animate-float bg-white dark:bg-white/10" style={{ border: `1px solid var(--orange-border)`, animation: "float 6s ease-in-out infinite", boxShadow: `0 0 0 6px rgba(255,255,255,0.65), 0 0 30px var(--glow-soft)` }}>
+                  <img src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Odoo.ico" alt="Odoo Icon" className="w-7 h-7 align-bottom" />
+                </span>
+              </span>
+            </span>
+            <span className="ml-2">pour piloter toute votre entreprise.</span>
+          </motion.h1>
+        </div>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.33 }}
+          className="mb-6 text-center text-[15px] sm:text-base text-gray-500 font-normal max-w-2xl mx-auto"
+        >
+          Automatisez, centralisez et optimisez votre entreprise avec une solution Odoo sur mesure.
+        </motion.p>
+
+        <div className="flex flex-col items-center gap-3 mb-6">
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4 }}>
+            <Button
+              size="lg"
+              className="flex items-center gap-2 rounded-full px-6 py-2.5 text-white font-semibold transition shadow-[0_0_0_6px_rgba(0,0,0,0.05)] hover:brightness-105"
+              style={{ backgroundImage: `linear-gradient(var(--brand), var(--gradient-to))` }}
+            >
+              Planifier un rendez-vous
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </motion.div>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }} className="text-xs text-gray-400 font-normal">
+            Sans engagement • 20 minutes
+          </motion.p>
+        </div>
+
+        <motion.div initial={{ opacity: 0, y: 13 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.55 }} className="pt-2 pb-0 mb-12">
+          <CompaniesCarousel companies={companies} userRegion={userRegion} text={carouselText} speed={60} />
+        </motion.div>
+        
       </div>
+
+      <style jsx>{`
+        /* Light mode defaults for this hero context */
+        .hero-ctx {
+          --brand: ${COLORS.brandOrange};
+          --text: ${COLORS.textPrimary};
+          --section-bg: ${COLORS.sectionBg};
+          --badge-text: ${COLORS.badgeText};
+          --badge-border: ${COLORS.badgeBorder};
+          --orange-border: ${COLORS.orangeBorder};
+          --gradient-to: ${COLORS.gradientTo};
+          --glow-soft: ${COLORS.glowSoft};
+          --glow-ring: ${COLORS.glowRing};
+          --bg-opacity: 0.25;
+        }
+
+        /* Dark mode overrides */
+        :global(.dark) .hero-ctx {
+          --brand: #1AD3BB;                 /* teal brand in dark */
+          --text: #FFFFFF;                  /* white text */
+          --section-bg: #000000;            /* black background */
+          --badge-text: #E5E7EB;            /* light gray text on badges */
+          --badge-border: rgba(255,255,255,0.12);
+          --orange-border: rgba(255,255,255,0.25);
+          --gradient-to: #f6ff47;          /* teal to lime */
+          --glow-soft: rgba(26,211,187,0.35);
+          --glow-ring: rgba(26,211,187,0.28);
+          --bg-opacity: 0.15;
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+      `}</style>
     </section>
   )
 }

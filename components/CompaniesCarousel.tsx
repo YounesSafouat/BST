@@ -109,7 +109,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
      const animationDuration = singleSetWidth / speed;
 
      return (
-          <div className="relative w-full">
+          <div className="relative w-full bg-white border-2 border-gray-200 rounded-lg">
                {/* Transparent Background Container */}
                <div className="relative bg-transparent p-2 sm:p-6 lg:p-8 mx-auto max-w-6xl">
                     {/* Text above carousel */}
@@ -143,9 +143,9 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
 
                     {/* Carousel Container */}
                     <div className="relative overflow-hidden">
-                         {/* Gradient overlays */}
-                         <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-                         <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+                         {/* Gradient overlays match section background (#F5FAFF) */}
+                         <div className="absolute left-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-r from-[#F5FAFF] to-transparent pointer-events-none"></div>
+                         <div className="absolute right-0 top-0 w-8 sm:w-12 md:w-16 lg:w-20 h-full z-10 bg-gradient-to-l from-[#F5FAFF] to-transparent pointer-events-none"></div>
 
                          <div className="flex">
                               <div
@@ -153,6 +153,7 @@ export default function CompaniesCarousel({ companies = defaultCompanies, userRe
                                    className="flex gap-4 sm:gap-6 md:gap-10 lg:gap-16 whitespace-nowrap animate-scroll"
                                    style={{
                                         animationPlayState: isHovered ? 'paused' : 'running',
+                                        animationDuration: `${animationDuration}s`,
                                    }}
                                    onMouseEnter={() => setIsHovered(true)}
                                    onMouseLeave={() => setIsHovered(false)}

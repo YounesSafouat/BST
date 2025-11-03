@@ -9,7 +9,35 @@ import { useGeolocationSingleton } from "@/hooks/useGeolocationSingleton"
 
 export default function HeroSection() {
   const [homePageData, setHomePageData] = useState<any>(null)
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0)
   const { region: userRegion } = useGeolocationSingleton()
+
+  // Base colors (light mode defaults). Dark mode overrides via CSS variables below.
+  const COLORS = {
+    brandOrange: '#F25519',
+    badgeText: '#410e09',
+    sectionBg: '#F5FAFF',
+    badgeBorder: '#e5e7eb',
+    textPrimary: '#1e2844',
+    orangeBorder: '#FED7AA',
+    gradientTo: '#E33E13',
+    glowSoft: 'rgba(242,85,25,0.28)',
+    glowRing: 'rgba(242,85,25,0.26)'
+  }
+
+  const features = [
+    "Intégration rapide",
+    "Support 24/7",
+    "Depuis la France"
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeatureIndex((prev) => (prev + 1) % features.length)
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [features.length])
 
   useEffect(() => {
     const fetchHomePageData = async () => {
@@ -59,143 +87,159 @@ export default function HeroSection() {
   const carouselText = homePageData?.hero?.carousel?.text || "Nos clients"
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--color-main)]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-main)] via-blue-600 to-[var(--color-main)]"></div>
+    <section 
+      className="relative overflow-hidden px-6 py-44 hero-ctx"
+      style={{ backgroundColor: 'var(--section-bg)' }}
+    >
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: "url('/hero BG.svg')",
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center center',
+          backgroundSize: 'min(1400px, 92vw)',
+          opacity: 'var(--bg-opacity)'
+        }}
+      />
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <div className="text-center space-y-8 lg:space-y-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="flex justify-center"
-          >
-            <div className="w-[200px] sm:w-[250px] h-[80px] sm:h-[100px] flex items-center justify-center">
-              <img
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png"
-                alt="Odoo Silver Partner Badge"
-                className="h-auto w-full object-contain"
-              />
-            </div>
-          </motion.div>
-
-          <div className="space-y-6 lg:space-y-8">
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight tracking-tight max-w-5xl mx-auto"
-              style={{ lineHeight: '1.1' }}
-            >
-              Intégration{" "}
-              <span className="italic font-semibold" style={{ color: 'var(--color-secondary)' }}>
-                Odoo
-              </span>{" "}
-              ERP
-              <br />
-              <span className="text-white">clé en main</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-lg sm:text-xl md:text-2xl text-white/95 max-w-3xl mx-auto leading-relaxed px-4"
-            >
-              Automatisez, centralisez et optimisez votre entreprise avec une solution Odoo sur mesure.
-              <br />
-              <span className="font-semibold text-white">Intégration fluide en 60 jours.</span>
-            </motion.p>
+      <div className="relative mx-auto max-w-6xl pt-6 md:pt-10">
+        {/* Floating Orb Icons */}
+        <div className="absolute -left-12 top-28 animate-float" style={{ animation: "float 6s ease-in-out infinite" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/inventory.svg" alt="Inventory" className="w-8 h-8" />
           </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-4"
-          >
-            {[
-              { label: "Intégration rapide" },
-              { label: "Support 24/7" },
-              { label: "Depuis la France" }
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-white/10 backdrop-blur-md border border-white/25 rounded-full hover:bg-white/20 hover:border-white/40 transition-all duration-300"
-              >
-                <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[var(--color-secondary)] flex items-center justify-center text-white text-xs font-bold shrink-0">
-                  ✓
-                </span>
-                <span className="text-xs sm:text-sm font-medium text-white whitespace-nowrap">{feature.label}</span>
-              </div>
-            ))}
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4"
-          >
-            <Button
-              size="lg"
-              className="bg-[var(--color-secondary)] hover:bg-white text-white hover:text-[var(--color-main)] px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full group shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              Prendre un rendez-vous
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="bg-white/10 backdrop-blur-md border-2 border-white/40 hover:bg-white/20 hover:border-white/60 text-white px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-full transition-all duration-300"
-            >
-              Voir nos projets
-            </Button>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-sm sm:text-base text-white/90 font-medium pt-4"
-          >
-            + de 2000 entreprises nous font confiance
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="pt-12 sm:pt-16 border-t border-white/20 mt-12 sm:mt-16"
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-10 sm:mb-12">
-              <div className="flex -space-x-3">
-                {['A', 'B', 'C', '+50'].map((letter, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 + i * 0.1 }}
-                    className="w-12 h-12 rounded-full bg-[var(--color-secondary)] border-2 border-[var(--color-main)] flex items-center justify-center text-white text-sm font-bold shadow-lg hover:scale-110 transition-transform cursor-default"
-                  >
-                    {letter}
-                  </motion.div>
-                ))}
-              </div>
-              <span className="text-sm sm:text-base text-white flex items-center gap-1.5">
-                <span className="text-yellow-400 text-lg sm:text-xl">⭐⭐⭐⭐⭐</span>
-                <span>100% de satisfaction</span>
-              </span>
-            </div>
-
-            <CompaniesCarousel
-              companies={companies}
-              userRegion={userRegion}
-              text={carouselText}
-            />
-          </motion.div>
         </div>
+        <div className="absolute -right-14 top-32 animate-float" style={{ animation: "float 6s ease-in-out infinite 1s" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/manufacturing.svg" alt="Manufacturing" className="w-8 h-8" />
+          </div>
+        </div>
+        <div className="absolute left-0 top-1/2 animate-float" style={{ animation: "float 6s ease-in-out infinite 0.5s" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/point-of-sale.svg" alt="Point of Sale" className="w-8 h-8" />
+          </div>
+        </div>
+        <div className="absolute right-0 top-1/2 animate-float" style={{ animation: "float 6s ease-in-out infinite 1.5s" }}>
+          <div className="rounded-full p-3.5 w-16 h-16 flex items-center justify-center bg-white dark:bg-white/10" style={{ boxShadow: `0 0 0 8px rgba(255,255,255,0.6), 0 0 34px var(--glow-ring), 0 22px 64px rgba(17,0,56,0.1)` }}>
+            <img src="/icones/odoo/CRM.svg" alt="CRM" className="w-8 h-8" />
+          </div>
+        </div>
+
+        {/* Features Badges Row */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 mb-6 max-w-max mx-auto "
+        >
+          {features.map((text, idx) => {
+            const Icon = () => {
+              if (text.toLowerCase().includes('intégration')) {
+                // lightning bolt
+                return (
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden style={{ color: 'var(--brand)' }}>
+                    <path d="M11 3L6 13h5l-2 8 8-13h-6l2-5z" fill="currentColor" />
+                  </svg>
+                )
+              }
+              if (text.toLowerCase().includes('support')) {
+                // headset
+                return (
+                  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden style={{ color: 'var(--brand)' }}>
+                    <path d="M6 13v-1a6 6 0 1112 0v1a3 3 0 01-3 3h-1v-3h3v-1a5 5 0 10-10 0v1h3v3H9a3 3 0 01-3-3z" fill="currentColor" />
+                  </svg>
+                )
+              }
+              // location/pin for France
+              return (
+                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden style={{ color: 'var(--brand)' }}>
+                  <path d="M12 6a5 5 0 00-5 5c0 3.6 5 7.5 5 7.5S17 14.6 17 11a5 5 0 00-5-5zm0 7a2.5 2.5 0 110-5 2.5 2.5 0 010 5z" fill="currentColor" />
+                </svg>
+              )
+            }
+            return (
+              <div key={idx} className="flex items-center gap-3 px-4 py-2 bg-white/96 dark:bg-white/10 border border-gray-200 dark:border-white/10 rounded-full shadow-[0_2px_6px_rgba(0,0,0,0.08)]">
+                <Icon />
+                <span className="text-[14px] sm:text-[15px] font-medium uppercase leading-none tracking-wide whitespace-nowrap" style={{ color: 'var(--badge-text)' }}>{text}</span>
+              </div>
+            )
+          })}
+        </motion.div>
+
+        <div className="text-center mb-4">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-normal leading-[1.15] max-w-5xl mx-auto flex flex-wrap justify-center items-center gap-1"
+            style={{ color: 'var(--text)' }}
+          >
+            <span className="font-semibold" style={{ color: 'var(--brand)' }}>Nous intégrons</span>
+            <span className="font-semibold ml-2 flex items-center" style={{ color: 'var(--brand)' }}>Odoo
+              <span className="inline-flex items-center align-baseline ml-1">
+                <span className="rounded-full p-[4px] flex items-center justify-center w-10 h-10 animate-float bg-white dark:bg-white/10" style={{ border: `1px solid var(--orange-border)`, animation: "float 6s ease-in-out infinite", boxShadow: `0 0 0 6px rgba(255,255,255,0.65), 0 0 30px var(--glow-soft)` }}>
+                  <img src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Odoo.ico" alt="Odoo Icon" className="w-7 h-7 align-bottom" />
+                </span>
+              </span>
+            </span>
+            <span className="ml-2">pour piloter toute votre entreprise.</span>
+          </motion.h1>
+        </div>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.33 }}
+          className="mb-6 text-center text-[15px] sm:text-base text-gray-500 font-normal max-w-2xl mx-auto"
+        >
+          Automatisez, centralisez et optimisez votre entreprise avec une solution Odoo sur mesure.
+        </motion.p>
+
+        <div className="flex flex-col items-center gap-3 mb-6">
+          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.4 }}>
+            <Button
+              size="lg"
+              className="flex items-center gap-2 rounded-full px-6 py-2.5 text-black font-semibold transition shadow-[0_0_0_6px_rgba(0,0,0,0.05)] hover:brightness-105"
+              style={{ backgroundImage: `linear-gradient(var(--brand), var(--gradient-to))` }}
+            >
+              Planifier un rendez-vous
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </motion.div>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7, delay: 0.5 }} className="text-xs text-gray-400 font-normal">
+            Sans engagement • 20 minutes
+          </motion.p>
+        </div>
+
+        <motion.div initial={{ opacity: 0, y: 13 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.55 }} className="pt-2 pb-0 mb-12">
+          <CompaniesCarousel companies={companies} userRegion={userRegion} text={carouselText} speed={60} />
+        </motion.div>
+        
       </div>
+
+      <style jsx>{`
+        /* Dark theme defaults for this hero context (forced dark) */
+        .hero-ctx {
+          --brand: #1AD3BB;
+          --text: #F3F7F6;
+          --section-bg: #0B1513; /* softened from pure black */
+          --badge-text: #E5E7EB;
+          --badge-border: rgba(255,255,255,0.14);
+          --orange-border: rgba(255,255,255,0.28);
+          --gradient-to: #f6ff47; /* break/accent color */
+          --glow-soft: rgba(26,211,187,0.32);
+          --glow-ring: #f6ff47;
+          --bg-opacity: 0.28; /* brighten background graphic */
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+      `}</style>
     </section>
   )
 }

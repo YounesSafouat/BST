@@ -49,6 +49,8 @@ import { useState, useEffect } from "react"
 import Loader from "@/components/home/Loader"
 import Image from "next/image"
 import Link from "next/link"
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
+import { shouldShowContent } from '@/lib/geolocation'
 
 const sectorIcons = {
      "Tous": Building,
@@ -64,6 +66,7 @@ const sectorIcons = {
 
 
 export default function CasClientV2() {
+     const { region, loading: locationLoading } = useGeolocationSingleton()
      const [searchTerm, setSearchTerm] = useState("")
      const [selectedSector, setSelectedSector] = useState("Tous")
      const [clientsData, setClientsData] = useState<any[]>([])
@@ -138,6 +141,9 @@ export default function CasClientV2() {
      useEffect(() => {
           let filtered = clientsData
 
+          // Filter by regional targeting
+          filtered = filtered.filter((client) => shouldShowContent(client, region || 'international'))
+
           // Filter by search term
           if (searchTerm) {
                filtered = filtered.filter(
@@ -160,7 +166,7 @@ export default function CasClientV2() {
           filtered = filtered.filter((client) => client.published !== false)
 
           setFilteredClients(filtered)
-     }, [searchTerm, selectedSector, clientsData])
+     }, [searchTerm, selectedSector, clientsData, region])
 
      // Debug: Log actual solution values in CMS data
      useEffect(() => {

@@ -142,7 +142,8 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
     sidebarInfo: [],
     tags: [],
     featured: false,
-    published: false
+    published: false,
+    targetRegions: []
   })
 
   const [activeTab, setActiveTab] = useState('basic')
@@ -172,7 +173,8 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
         sidebarInfo: initialData.sidebarInfo || [],
         tags: initialData.tags,
         featured: initialData.featured,
-        published: initialData.published
+        published: initialData.published,
+        targetRegions: initialData.targetRegions || []
       })
     }
   }, [initialData])
@@ -577,6 +579,54 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                         onCheckedChange={(checked) => updateFormData('published', checked)}
                       />
                       <Label htmlFor="published">Publié</Label>
+                    </div>
+                  </div>
+
+                  {/* Regional Targeting */}
+                  <div>
+                    <Label className="text-base font-semibold mb-3 block">Cibler par région</Label>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="region-morocco"
+                          checked={formData.targetRegions?.includes('morocco')}
+                          onChange={(e) => {
+                            const regions = formData.targetRegions || []
+                            if (e.target.checked) {
+                              updateFormData('targetRegions', [...regions, 'morocco'])
+                            } else {
+                              updateFormData('targetRegions', regions.filter(r => r !== 'morocco'))
+                            }
+                          }}
+                          className="w-4 h-4 text-[var(--color-main)] border-gray-300 rounded focus:ring-[var(--color-main)]"
+                        />
+                        <Label htmlFor="region-morocco" className="text-sm font-medium cursor-pointer">
+                          Maroc 🇲🇦
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="region-france"
+                          checked={formData.targetRegions?.includes('france')}
+                          onChange={(e) => {
+                            const regions = formData.targetRegions || []
+                            if (e.target.checked) {
+                              updateFormData('targetRegions', [...regions, 'france'])
+                            } else {
+                              updateFormData('targetRegions', regions.filter(r => r !== 'france'))
+                            }
+                          }}
+                          className="w-4 h-4 text-[var(--color-main)] border-gray-300 rounded focus:ring-[var(--color-main)]"
+                        />
+                        <Label htmlFor="region-france" className="text-sm font-medium cursor-pointer">
+                          France & International 🇫🇷 🌍
+                        </Label>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Laissez vide pour afficher dans toutes les régions
+                      </p>
                     </div>
                   </div>
                 </CardContent>

@@ -163,6 +163,9 @@ export interface DynamicClientCase {
   featured: boolean
   published: boolean
   
+  // Regional targeting
+  targetRegions?: string[]
+  
   // Timestamps
   createdAt: string
   updatedAt: string
@@ -259,6 +262,9 @@ export interface ClientCaseFormData {
   tags: string[]
   featured: boolean
   published: boolean
+  
+  // Regional targeting
+  targetRegions?: string[]
 }
 
 // Filter options for the CAS client listing

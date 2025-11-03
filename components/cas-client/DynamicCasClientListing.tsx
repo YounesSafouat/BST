@@ -27,6 +27,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { DynamicClientCase, ClientCaseFilters, AVAILABLE_SECTORS, AVAILABLE_TAGS } from '@/lib/types/cas-client'
 import Loader from '@/components/home/Loader'
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
+import { shouldShowContent } from '@/lib/geolocation'
 
 interface DynamicCasClientListingProps {
   initialCases?: DynamicClientCase[]
@@ -63,6 +65,7 @@ const solutionLabels = {
 }
 
 export default function DynamicCasClientListing({ initialCases = [] }: DynamicCasClientListingProps) {
+  const { region } = useGeolocationSingleton()
   const [cases, setCases] = useState<DynamicClientCase[]>(initialCases)
   const [filteredCases, setFilteredCases] = useState<DynamicClientCase[]>(initialCases)
   const [loading, setLoading] = useState(false)
@@ -111,6 +114,9 @@ export default function DynamicCasClientListing({ initialCases = [] }: DynamicCa
   // Apply filters
   useEffect(() => {
     let filtered = [...cases]
+
+    // Filter by regional targeting
+    filtered = filtered.filter((case_) => shouldShowContent(case_, region || 'international'))
 
     // Search filter
     if (filters.search) {
@@ -168,7 +174,7 @@ export default function DynamicCasClientListing({ initialCases = [] }: DynamicCa
     }
 
     setFilteredCases(filtered)
-  }, [cases, filters])
+  }, [cases, filters, region])
 
   // Get available sectors from cases
   const getAvailableSectors = () => {
