@@ -569,9 +569,9 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
 
      return (
           <div className="min-h-screen pt-20 md:pt-10">
-               {/* Enhanced Header */}
-               <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
-                    <div className="max-w-7xl mx-auto px-6 py-1">
+               {/* Breadcrumb Navigation */}
+               <div className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-[64px] z-40">
+                    <div className="max-w-7xl mx-auto px-6 py-3">
                          <div className="flex items-center justify-start">
                               <Link href="/cas-client">
                                    <Button variant="ghost" size="sm" className="text-gray-700 hover:bg-gray-100/50 hover:text-[var(--color-main)] transition-all duration-300 h-8 px-3">
@@ -581,7 +581,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                               </Link>
                          </div>
                     </div>
-               </header>
+               </div>
 
                {/* Enhanced Hero Section */}
                <section className="relative overflow-hidden">
