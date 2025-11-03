@@ -2896,7 +2896,7 @@ export default function HomePageDashboard() {
                                    <p className="text-sm text-gray-500 mt-2">
                                         Sélectionnez les cas clients à afficher dans la section témoignages vidéo. 
                                         Les cas clients sont gérés dans la section "Cas Clients" du dashboard.
-                                        Le filtrage par région IP est automatique.
+                                        Les cas clients sélectionnés seront automatiquement filtrés par région IP sur le site.
                                    </p>
                               </CardHeader>
                               <CardContent className="space-y-4">

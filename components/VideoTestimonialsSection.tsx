@@ -8,7 +8,7 @@
  * - Hover effects to switch between two images
  * - Mobile: Cards stacked vertically
  * - Desktop: Carousel with navigation arrows
- * - Filters by CMS selected clients only (no regional filtering on homepage)
+ * - IP-based region filtering
  * 
  * @author younes safouat
  * @version 3.0.0 - New Card Design with Hover Effects
@@ -18,6 +18,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
+import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -151,6 +152,7 @@ const ProjectCard = ({ client }: { client: CasClientData }) => {
 const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimonialsSectionProps) => {
      const [clientsData, setClientsData] = useState<CasClientData[]>([]);
      const [loading, setLoading] = useState(true);
+     const { region: userRegion, loading: locationLoading } = useGeolocationSingleton();
 
      // Fetch client cases from API (same endpoint as cas-client page)
      useEffect(() => {
@@ -213,17 +215,32 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
           return filtered;
      };
 
-     // Apply selection filter only (no regional filtering for homepage)
-     const filteredClients = filterClientsBySelection(clientsData);
+     // Filter clients by region (IP-based filtering)
+     const filterClientsByRegion = (clients: CasClientData[], region: string): CasClientData[] => {
+          return clients.filter(client => {
+               if (!client.targetRegions || client.targetRegions.length === 0) {
+                    return true; // Show if no region specified
+               }
+               const normalizedRegion = region?.toLowerCase() || '';
+               const normalizedTargetRegions = client.targetRegions.map(r => r.toLowerCase());
+               return normalizedTargetRegions.includes('all') || normalizedTargetRegions.includes(normalizedRegion);
+          });
+     };
+
+     // Apply both filters
+     const selectedClientsData = filterClientsBySelection(clientsData);
+     const filteredClients = filterClientsByRegion(selectedClientsData, userRegion);
 
      // Debug logging
      console.log('🎬 VideoTestimonialsSection Debug:');
      console.log('- selectedClients prop:', selectedClients);
      console.log('- clientsData loaded:', clientsData.length);
-     console.log('- filteredClients after selection filter:', filteredClients.length);
-     console.log('- loading:', loading);
+     console.log('- selectedClientsData after selection filter:', selectedClientsData.length);
+     console.log('- filteredClients after region filter:', filteredClients.length);
+     console.log('- userRegion:', userRegion);
+     console.log('- loading:', loading, 'locationLoading:', locationLoading);
 
-     if (loading) {
+     if (loading || locationLoading) {
           return (
                <section className="py-20 bg-gradient-to-b from-white to-gray-50">
                     <Loader />
