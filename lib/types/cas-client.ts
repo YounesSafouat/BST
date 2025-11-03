@@ -291,110 +291,83 @@ export interface ClientCasesResponse {
 export const CONTENT_BLOCK_TEMPLATES = {
   'text-only': {
     type: 'text-only' as const,
-    title: 'Titre de la section',
-    content: '<p>Votre contenu ici...</p>'
+    title: '',
+    content: ''
   },
   'text-image-left': {
     type: 'text-image-left' as const,
-    title: 'Notre Approche',
-    content: '<p>Nous avons développé une approche méthodique pour accompagner [NOM_CLIENT] dans sa transformation digitale...</p>',
+    title: '',
+    content: '',
     imageUrl: '',
-    imageAlt: 'Image du projet'
+    imageAlt: ''
   },
   'text-image-right': {
     type: 'text-image-right' as const,
-    title: 'Titre de la section',
-    content: '<p>Votre contenu ici...</p>',
+    title: '',
+    content: '',
     imageUrl: '',
-    imageAlt: 'Description de l\'image'
+    imageAlt: ''
   },
   'image-stats-left': {
     type: 'image-stats-left' as const,
-    title: 'Résultats Obtenus',
-    content: '<p>La collaboration avec [NOM_CLIENT] a permis d\'atteindre des résultats significatifs...</p>',
+    title: '',
+    content: '',
     imageUrl: '',
-    imageAlt: 'Résultats',
-    stats: [
-      { label: 'Performance', value: '+85%', icon: 'trending-up', description: 'Amélioration de la performance' },
-      { label: 'Temps perdu', value: '-60%', icon: 'clock', description: 'Réduction du temps perdu' }
-    ]
+    imageAlt: '',
+    stats: []
   },
   'image-stats-right': {
     type: 'image-stats-right' as const,
-    title: 'Titre de la section',
-    content: '<p>Votre contenu ici...</p>',
+    title: '',
+    content: '',
     imageUrl: '',
-    imageAlt: 'Description de l\'image',
-    stats: [
-      { label: 'Métrique 1', value: '100%', icon: 'trending-up', description: 'Description' },
-      { label: 'Métrique 2', value: '+50%', icon: 'bar-chart', description: 'Description' }
-    ]
+    imageAlt: '',
+    stats: []
   },
   'text-stats': {
     type: 'text-stats' as const,
-    title: 'Impact & Transformation',
-    content: '<p>La transformation digitale de [NOM_CLIENT] a eu un impact significatif sur l\'ensemble de l\'organisation...</p>',
-    stats: [
-      { label: 'Efficacité opérationnelle', value: '+90%', icon: 'trending-up' },
-      { label: 'Satisfaction client', value: '+75%', icon: 'heart' },
-      { label: 'Réduction des erreurs', value: '-80%', icon: 'check-circle' }
-    ]
+    title: '',
+    content: '',
+    stats: []
   },
   'cards-layout': {
     type: 'cards-layout' as const,
-    title: 'Le Livrable',
-    content: '<p>Description des livrables du projet...</p>',
-    cards: [
-      {
-        title: 'Migration Odoo Complète',
-        description: 'Une migration complète d\'Odoo vers la dernière version, incluant la formation des équipes...',
-        icon: 'database'
-      },
-      {
-        title: 'Formation Personnalisée',
-        description: 'Sessions de formation adaptées aux besoins spécifiques de [NOM_CLIENT]...',
-        icon: 'users'
-      },
-      {
-        title: 'Support & Accompagnement',
-        description: 'Un accompagnement continu post-migration pour assurer la stabilité du système...',
-        icon: 'headphones'
-      }
-    ]
+    title: '',
+    content: '',
+    cards: []
   },
   'video': {
     type: 'video' as const,
-    title: 'Vidéo du projet',
-    content: '<p>Description de la vidéo...</p>',
+    title: '',
+    content: '',
     videoUrl: '',
     videoThumbnail: ''
   },
   'testimonial': {
     type: 'testimonial' as const,
-    title: 'Témoignage client',
+    title: '',
     testimonial: {
-      quote: 'BlackSwan Technology a transformé notre façon de travailler. L\'efficacité a considérablement augmenté.',
+      quote: '',
       author: {
-        name: 'Nom du client',
-        role: 'Directeur Général',
-        company: 'Nom de l\'entreprise',
+        name: '',
+        role: '',
+        company: '',
         avatar: ''
       },
-      rating: 5
+      rating: 0
     }
   },
   'contact-form': {
     type: 'contact-form' as const,
-    title: 'Intéressé par notre travail?',
-    
+    title: ''
   },
   'cta': {
     type: 'cta' as const,
-    title: 'Prêt à transformer votre entreprise ?',
-    content: '<p>Contactez-nous pour discuter de votre projet de transformation digitale.</p>',
+    title: '',
+    content: '',
     cta: {
-      text: 'Nous Contacter',
-      url: '/#contact',
+      text: '',
+      url: '',
       style: 'primary' as const
     }
   }
