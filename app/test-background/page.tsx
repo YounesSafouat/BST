@@ -17,14 +17,7 @@ export default function TestBackgroundPage() {
                     }}>
                          Background Test Page
                     </h1>
-                    <p style={{ 
-                         color: 'black', 
-                         fontSize: '18px', 
-                         textAlign: 'center',
-                         marginTop: '20px'
-                    }}>
-                         This page should show the Copernic-style background effect
-                    </p>
+                    
                </div>
           </CurvedLinesBackground>
      );

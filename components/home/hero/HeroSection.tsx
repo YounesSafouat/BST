@@ -210,16 +210,16 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                       {heroData?.ctaPrimary?.text || 'Chargement...'}
                       {getIconComponent(heroData?.ctaPrimary?.icon || 'ArrowRight')}
                     </Button>
-                    {/* Second CTA Button - Redirects to Cas Client 
+                    {/* Second CTA Button - Redirects to Cas Client */}
                 <Link href="/cas-client">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold bg-white hover:bg-[var(--color-secondary)] text-[var(--color-main)] hover:text-white rounded-full h-16 sm:h-12 lg:h-14"
+                    className="px-8 py-4 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-base sm:text-base lg:text-lg font-semibold bg-[var(--color-main)] hover:bg-[var(--color-main)] text-white hover:text-white rounded-full h-16 sm:h-12 lg:h-14"
                   >
                     {heroData?.ctaSecondary?.text || 'Chargement...'}
                   </Button>
-                </Link>*/}
+                </Link>
                   </motion.div>
                 </motion.div>
 

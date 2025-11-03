@@ -10,7 +10,6 @@ interface CurvedLinesBackgroundProps {
 const CurvedLinesBackground: React.FC<CurvedLinesBackgroundProps> = ({ children, className = "" }) => {
      return (
           <div className={`relative ${className}`}>
-               {/* Background Layer - Copernic Style with Fixed Positioning */}
                <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }}>
                     <style jsx>{`
                          .section-bg {
@@ -46,7 +45,6 @@ const CurvedLinesBackground: React.FC<CurvedLinesBackgroundProps> = ({ children,
                          }
                     `}</style>
                     
-                    {/* Copernic-style background structure */}
                     <div className="section-bg section-bg--light">
                          <div className="section-bg__ui"></div>
                          <div className="section-bg__media section-bg__media--lg section-bg__img" 

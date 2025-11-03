@@ -184,12 +184,12 @@ export default function CasClientV2() {
      }
 
      return (
-          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900 pt-20 lg:pt-24">
-               {/* Hero Section - Copernic Style */}
-               <section className="relative pt-[10rem] pb-8 px-3 lg:pt-16 lg:pb-20 lg:px-8">
+          <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 text-gray-900" style={{ paddingTop: '13em' }}>
+               
+               <section className="relative pb-8 px-3 lg:pb-20 lg:px-8">
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
-                                        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight">
+                                        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight ">
                                         Ils ont transformé leur entreprise avec l'accompagnement de Blackswan. 
                                         </h1>
                                    </div>

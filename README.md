@@ -727,7 +727,6 @@ interface ContactSubmission {
 - [ ] **Case Studies Filter**: Add left sidebar filter (max width)
 - [ ] **Case Study Images**: Use video thumbnail images from testimonial videos
 - [ ] **Featured Case**: Implement featured case study display
-- [ ] **Style Inspiration**: Implement style similar to [Copernic Agency](https://www.agence-copernic.fr/cas-client-orixa-media-migration-pipedrive-hubspot) while maintaining our brand identity
 - [ ] **Client Filter Design**: Keep our style for other client case filters
 
 ### **Technical Implementation Notes**
