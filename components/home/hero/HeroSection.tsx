@@ -142,7 +142,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
   };
 
   return (
-    <div id="hero-desktop" className="hidden lg:block min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)]">
+    <div id="hero-desktop" className="hidden lg:block min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] relative bg-[var(--color-main)] pt-12 lg:pt-16 xl:pt-20">
       <div className="min-h-[120vh] lg:h-screen xl:min-h-[85vh] 2xl:min-h-[90vh] flex flex-col justify-center pt-1 lg:-mt-8 xl:-mt-4 2xl:-mt-4 relative z-10 bg-transparent">
         <section id="hero" className="relative overflow-hidden bg-[var(--color-main)]">
           <div className="relative w-full py-4 pt-2">
