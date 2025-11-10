@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { Save, Loader2, ChevronUp, ChevronDown, Plus, Trash2, Settings, Eye } from "lucide-react";
+import ImageUpload from "@/components/dashboard/ImageUpload";
 
 interface HeaderData {
      logo: {
@@ -75,14 +76,14 @@ export default function HeaderDashboard() {
                                         id: "case-1759942156218",
                                         name: "Fitness park",
                                         slug: "fitness-park",
-                                        image: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                                        image: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787675/bst-migration/qzmjiqdldqh7vhkjhl2v.webp",
                                         excerpt: "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
                                    },
                                    {
                                         id: "case-1759944672139",
                                         name: "Essem",
                                         slug: "essem",
-                                        image: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                                        image: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787677/bst-migration/qict5h0xvsey3racgmyy.webp",
                                         excerpt: "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
                                    }
                               ],
@@ -404,15 +405,14 @@ export default function HeaderDashboard() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                          <div>
-                              <Label htmlFor="logoImage">URL de l'image du logo</Label>
-                              <Input
-                                   id="logoImage"
+                              <ImageUpload
                                    value={headerData.logo.image}
-                                   onChange={(e) => setHeaderData({
+                                   onChange={(url) => setHeaderData({
                                         ...headerData,
-                                        logo: { ...headerData.logo, image: e.target.value }
+                                        logo: { ...headerData.logo, image: url }
                                    })}
-                                   placeholder="https://example.com/logo.svg"
+                                   label="URL de l'image du logo"
+                                   placeholder="https://example.com/logo.svg ou télécharger"
                               />
                          </div>
                          <div>
@@ -668,12 +668,12 @@ export default function HeaderDashboard() {
                                                                                      />
                                                                                 </div>
                                                                                 <div>
-                                                                                     <Label htmlFor={`case-image-${index}-${caseIndex}`}>Image</Label>
-                                                                                     <Input
-                                                                                          id={`case-image-${index}-${caseIndex}`}
-                                                                                          value={clientCase.image}
-                                                                                          onChange={(e) => updateFeaturedCase(index, caseIndex, 'image', e.target.value)}
-                                                                                          placeholder="/path/to/image.jpg"
+                                                                                     <ImageUpload
+                                                                                          value={clientCase.image || ''}
+                                                                                          onChange={(url) => updateFeaturedCase(index, caseIndex, 'image', url)}
+                                                                                          label="Image"
+                                                                                          placeholder="/path/to/image.jpg ou télécharger"
+                                                                                          showPreview={false}
                                                                                      />
                                                                                 </div>
                                                                                 <div>

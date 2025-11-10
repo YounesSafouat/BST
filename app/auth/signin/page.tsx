@@ -78,7 +78,7 @@ export default function SignInPage() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-32 h-32 mb-6">
             <Image
-              src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST_favIcone_big-removebg-preview.png"
+              src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787674/bst-migration/cpaezmhlolmxstzeamjp.png"
               alt="BlackSwan Technology Logo"
               width={300}
               height={300}
@@ -173,7 +173,7 @@ export default function SignInPage() {
           <div className="mt-8 pt-6 border-t border-slate-200">
             <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
               <Image
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST_favIcone_big-removebg-preview.png"
+                src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787674/bst-migration/cpaezmhlolmxstzeamjp.png"
                 alt="BlackSwan Technology"
                 width={16}
                 height={16}

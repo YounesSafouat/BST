@@ -14,6 +14,8 @@ import { Save, Eye, ArrowLeft, Plus, Trash2, X, GripVertical, Upload, ChevronUp,
 import { useRouter } from "next/navigation";
 import Loader from "@/components/home/Loader";
 import RichTextEditor from "@/components/RichTextEditor";
+import ImageUpload from "@/components/dashboard/ImageUpload";
+import VideoUpload from "@/components/dashboard/VideoUpload";
 
 interface Testimonial {
      _id: string;
@@ -346,15 +348,15 @@ export default function HomePageDashboard() {
                               ],
                               certificationImages: [
                                    {
-                                        src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
+                                        src: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787679/bst-migration/gr2anwuyuvxj7naqp0wo.png",
                                         alt: "Odoo Certification Certificate"
                                    },
                                    {
-                                        src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Blog%205/blog%205%20(1).png",
+                                        src: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762788380/blog_205_20_1_f45upp.png",
                                         alt: "Odoo Silver Partner Badge"
                                    },
                                    {
-                                        src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo.png",
+                                        src: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787681/bst-migration/zrrfchxk7gw9fmxkny76.png",
                                         alt: "Odoo Official Partner"
                                    }
                               ]
@@ -365,15 +367,15 @@ export default function HomePageDashboard() {
                     if (!contentData.certification?.certificationImages || contentData.certification.certificationImages.length === 0) {
                          contentData.certification.certificationImages = [
                               {
-                                   src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
+                                   src: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787679/bst-migration/gr2anwuyuvxj7naqp0wo.png",
                                    alt: "Odoo Certification Certificate"
                               },
                               {
-                                   src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Blog%205/blog%205%20(1).png",
+                                   src: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762788380/blog_205_20_1_f45upp.png",
                                    alt: "Odoo Silver Partner Badge"
                               },
                               {
-                                   src: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo.png",
+                                   src: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787681/bst-migration/zrrfchxk7gw9fmxkny76.png",
                                    alt: "Odoo Official Partner"
                               }
                          ];
@@ -777,14 +779,17 @@ export default function HomePageDashboard() {
 
      const handleImageUpload = async (file: File, companyIndex: number) => {
           try {
-               // For now, we'll use a simple approach - convert to base64
-               // In production, you'd want to upload to a CDN or cloud storage
-               const reader = new FileReader();
-               reader.onload = (e) => {
-                    const base64 = e.target?.result as string;
+               const formData = new FormData();
+               formData.append('file', file);
+               const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+               });
+               if (response.ok) {
+                    const data = await response.json();
                     if (homeData && homeData.hero.carousel?.companies) {
                          const companies = [...homeData.hero.carousel.companies];
-                         companies[companyIndex] = { ...companies[companyIndex], logo: base64 };
+                         companies[companyIndex] = { ...companies[companyIndex], logo: data.url };
 
                          setHomeData({
                               ...homeData,
@@ -797,13 +802,19 @@ export default function HomePageDashboard() {
                               }
                          });
                     }
-               };
-               reader.readAsDataURL(file);
-          } catch (error) {
+                    toast({
+                         title: "Succès",
+                         description: "Image téléchargée avec succès",
+                    });
+               } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Upload failed');
+               }
+          } catch (error: any) {
                console.error('Error uploading image:', error);
                toast({
                     title: "Erreur",
-                    description: "Erreur lors du téléchargement de l'image",
+                    description: error.message || "Erreur lors du téléchargement de l'image",
                     variant: "destructive",
                });
           }
@@ -811,27 +822,36 @@ export default function HomePageDashboard() {
 
      const handleVideoUpload = async (file: File) => {
           try {
-               // For now, we'll use a simple approach - convert to base64
-               // In production, you'd want to upload to a CDN or cloud storage
-               const reader = new FileReader();
-               reader.onload = (e) => {
-                    const base64 = e.target?.result as string;
+               const formData = new FormData();
+               formData.append('file', file);
+               const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+               });
+               if (response.ok) {
+                    const data = await response.json();
                     if (homeData) {
                          setHomeData({
                               ...homeData,
                               hero: {
                                    ...homeData.hero,
-                                   videoUrl: base64
+                                   videoUrl: data.url
                               }
                          });
                     }
-               };
-               reader.readAsDataURL(file);
-          } catch (error) {
+                    toast({
+                         title: "Succès",
+                         description: "Vidéo téléchargée avec succès",
+                    });
+               } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Upload failed');
+               }
+          } catch (error: any) {
                console.error('Error uploading video:', error);
                toast({
                     title: "Erreur",
-                    description: "Erreur lors du téléchargement de la vidéo",
+                    description: error.message || "Erreur lors du téléchargement de la vidéo",
                     variant: "destructive",
                });
           }
@@ -858,17 +878,28 @@ export default function HomePageDashboard() {
 
      const handleVideoUploadForTestimonial = async (file: File, videoIndex: number) => {
           try {
-               const reader = new FileReader();
-               reader.onload = (e) => {
-                    const base64 = e.target?.result as string;
-                    updateArrayField('videoTestimonials.videos', videoIndex, 'videoUrl', base64);
-               };
-               reader.readAsDataURL(file);
-          } catch (error) {
+               const formData = new FormData();
+               formData.append('file', file);
+               const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+               });
+               if (response.ok) {
+                    const data = await response.json();
+                    updateArrayField('videoTestimonials.videos', videoIndex, 'videoUrl', data.url);
+                    toast({
+                         title: "Succès",
+                         description: "Vidéo téléchargée avec succès",
+                    });
+               } else {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Upload failed');
+               }
+          } catch (error: any) {
                console.error('Error uploading video:', error);
                toast({
                     title: "Erreur",
-                    description: "Impossible de télécharger la vidéo",
+                    description: error.message || "Impossible de télécharger la vidéo",
                     variant: "destructive",
                });
           }
@@ -974,68 +1005,15 @@ export default function HomePageDashboard() {
                                         />
                                    </div>
                                    <div>
-                                        <Label>Vidéo</Label>
-                                        <div className="flex gap-2">
-                                             <Input
-                                                  value={homeData.hero.videoUrl}
-                                                  onChange={(e) => updateField('hero.videoUrl', e.target.value)}
-                                                  placeholder="URL de la vidéo (YouTube, Vimeo, etc.) ou télécharger un fichier"
-                                                  className="flex-1"
-                                             />
-                                             <div className="relative">
-                                                  <input
-                                                       type="file"
-                                                       accept="video/*"
-                                                       onChange={(e) => {
-                                                            const file = e.target.files?.[0];
-                                                            if (file) {
-                                                                 handleVideoUpload(file);
-                                                            }
-                                                       }}
-                                                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                                       aria-label="Télécharger une vidéo"
-                                                       title="Télécharger une vidéo"
-                                                  />
-                                                  <Button variant="outline" size="sm" className="h-10">
-                                                       <Upload className="h-4 w-4" />
-                                                  </Button>
-                                             </div>
-                                        </div>
+                                        <VideoUpload
+                                             value={homeData.hero.videoUrl || ''}
+                                             onChange={(url) => updateField('hero.videoUrl', url)}
+                                             label="Vidéo"
+                                             placeholder="URL de la vidéo (YouTube, Vimeo) ou télécharger"
+                                        />
                                         <p className="text-xs text-gray-500 mt-1">
                                              Vous pouvez utiliser une URL (YouTube, Vimeo) ou télécharger un fichier vidéo
                                         </p>
-
-                                        {/* Video Preview */}
-                                        {homeData.hero.videoUrl && (
-                                             <div className="mt-4 p-4 border rounded-lg bg-gray-50">
-                                                  <Label className="text-sm font-medium mb-2 block">Aperçu de la vidéo</Label>
-                                                  <div className="w-full max-w-md aspect-video bg-black rounded overflow-hidden">
-                                                       {homeData.hero.videoUrl.startsWith('data:') || homeData.hero.videoUrl.startsWith('blob:') ? (
-                                                            <video
-                                                                 src={homeData.hero.videoUrl}
-                                                                 controls
-                                                                 className="w-full h-full object-contain"
-                                                                 onError={(e) => {
-                                                                      e.currentTarget.style.display = 'none';
-                                                                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                                                                 }}
-                                                            />
-                                                       ) : (
-                                                            <iframe
-                                                                 src={getVideoEmbedUrl(homeData.hero.videoUrl)}
-                                                                 title="Video preview"
-                                                                 className="w-full h-full"
-                                                                 frameBorder="0"
-                                                                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                                 allowFullScreen
-                                                            />
-                                                       )}
-                                                       <div className="hidden w-full h-full flex items-center justify-center text-white text-sm">
-                                                            Impossible de charger la vidéo
-                                                       </div>
-                                                  </div>
-                                             </div>
-                                        )}
                                    </div>
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
@@ -1060,14 +1038,14 @@ export default function HomePageDashboard() {
 
                                    {/* Expertise Badge */}
                                    <div>
-                                        <Label>URL du badge d'expertise</Label>
-                                        <Input
+                                        <ImageUpload
                                              value={homeData.hero.expertiseBadgeUrl || ''}
-                                             onChange={(e) => updateField('hero.expertiseBadgeUrl', e.target.value)}
-                                             placeholder="https://example.com/badge.png"
+                                             onChange={(url) => updateField('hero.expertiseBadgeUrl', url)}
+                                             label="URL du badge d'expertise"
+                                             placeholder="https://example.com/badge.png ou télécharger"
                                         />
                                         <p className="text-xs text-gray-500 mt-1">
-                                             Remplace le texte "3 ans d'expertise" par une image. Entrez l'URL de l'image du badge.
+                                             Remplace le texte "3 ans d'expertise" par une image. Entrez l'URL de l'image du badge ou téléchargez une image.
                                         </p>
                                    </div>
 
@@ -1183,41 +1161,18 @@ export default function HomePageDashboard() {
                                                             />
                                                        </div>
                                                        <div>
-                                                            <Label>Logo</Label>
-                                                            <div className="flex gap-2">
-                                                                 <Input
-                                                                      value={company.logo}
-                                                                      onChange={(e) => {
-                                                                           const currentCompanies = homeData.hero.carousel?.companies || [];
-                                                                           const updatedCompanies = [...currentCompanies];
-                                                                           updatedCompanies[index] = { ...updatedCompanies[index], logo: e.target.value };
-                                                                           updateField('hero.carousel.companies', updatedCompanies);
-                                                                      }}
-                                                                      placeholder="URL du logo ou télécharger un fichier"
-                                                                      className="flex-1 h-10"
-                                                                 />
-                                                                 <div className="relative">
-                                                                      <input
-                                                                           type="file"
-                                                                           accept="image/*"
-                                                                           onChange={(e) => {
-                                                                                const file = e.target.files?.[0];
-                                                                                if (file) {
-                                                                                     handleImageUpload(file, index);
-                                                                                }
-                                                                           }}
-                                                                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                                                           aria-label="Télécharger une image"
-                                                                           title="Télécharger une image"
-                                                                      />
-                                                                      <Button variant="outline" size="sm" className="h-10">
-                                                                           <Upload className="h-4 w-4" />
-                                                                      </Button>
-                                                                 </div>
-                                                            </div>
-                                                            <p className="text-xs text-gray-500 mt-1">
-                                                                 Vous pouvez utiliser une URL ou télécharger une image
-                                                            </p>
+                                                            <ImageUpload
+                                                                 value={company.logo}
+                                                                 onChange={(url) => {
+                                                                      const currentCompanies = homeData.hero.carousel?.companies || [];
+                                                                      const updatedCompanies = [...currentCompanies];
+                                                                      updatedCompanies[index] = { ...updatedCompanies[index], logo: url };
+                                                                      updateField('hero.carousel.companies', updatedCompanies);
+                                                                 }}
+                                                                 label="Logo"
+                                                                 placeholder="URL du logo ou télécharger"
+                                                                 showPreview={false}
+                                                            />
                                                             {company.logo && (
                                                                  <div className="mt-2 p-2 border rounded bg-gray-50">
                                                                       <img
@@ -1679,27 +1634,15 @@ export default function HomePageDashboard() {
                                                   </div>
 
                                                   <div className="mt-4">
-                                                       <Label>Image de fond</Label>
-                                                       <Input
+                                                       <ImageUpload
                                                             value={service.image}
-                                                            onChange={(e) => updateArrayField('services.services', index, 'image', e.target.value)}
-                                                            placeholder="URL de l'image de fond"
+                                                            onChange={(url) => updateArrayField('services.services', index, 'image', url)}
+                                                            label="Image de fond"
+                                                            placeholder="URL de l'image de fond ou télécharger"
                                                        />
                                                        <p className="text-xs text-gray-500 mt-1">
                                                             URL de l'image qui sera affichée en arrière-plan du service
                                                        </p>
-                                                       {service.image && (
-                                                            <div className="mt-2">
-                                                                 <img
-                                                                      src={service.image}
-                                                                      alt="Aperçu de l'image"
-                                                                      className="w-32 h-32 object-cover rounded-lg border"
-                                                                      onError={(e) => {
-                                                                           e.currentTarget.style.display = 'none';
-                                                                      }}
-                                                                 />
-                                                            </div>
-                                                       )}
                                                   </div>
 
                                                   <div className="mt-4">
@@ -1882,11 +1825,12 @@ export default function HomePageDashboard() {
 
                                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                        <div>
-                                                            <Label>URL de l'image</Label>
-                                                            <Input
+                                                            <ImageUpload
                                                                  value={image.src}
-                                                                 onChange={(e) => updateArrayField('certification.certificationImages', index, 'src', e.target.value)}
-                                                                 placeholder="https://example.com/image.jpg"
+                                                                 onChange={(url) => updateArrayField('certification.certificationImages', index, 'src', url)}
+                                                                 label="URL de l'image"
+                                                                 placeholder="https://example.com/image.jpg ou télécharger"
+                                                                 showPreview={false}
                                                             />
                                                        </div>
                                                        <div>
@@ -2182,115 +2126,21 @@ export default function HomePageDashboard() {
                                    </div>
 
                                    <div>
-                                        <Label>Image de l'agence</Label>
-                                        <div className="flex items-center gap-4">
-                                             <Input
-                                                  value={homeData.partnership.image || ''}
-                                                  onChange={(e) => updateField('partnership.image', e.target.value)}
-                                                  placeholder="URL de l'image ou /placeholder.svg"
-                                             />
-                                             <input
-                                                  type="file"
-                                                  accept="image/*"
-                                                  onChange={async (e) => {
-                                                       const file = e.target.files?.[0];
-                                                       if (file) {
-                                                            try {
-                                                                 const formData = new FormData();
-                                                                 formData.append('file', file);
-                                                                 const response = await fetch('/api/upload', {
-                                                                      method: 'POST',
-                                                                      body: formData
-                                                                 });
-                                                                 if (response.ok) {
-                                                                      const data = await response.json();
-                                                                      updateField('partnership.image', data.url);
-                                                                 }
-                                                            } catch (error) {
-                                                                 console.error('Error uploading image:', error);
-                                                            }
-                                                       }
-                                                  }}
-                                                  className="hidden"
-                                                  id="partnership-image-upload"
-                                                  title="Choisir une image pour l'agence"
-                                             />
-                                             <Button
-                                                  type="button"
-                                                  variant="outline"
-                                                  onClick={() => document.getElementById('partnership-image-upload')?.click()}
-                                             >
-                                                  Choisir une image
-                                             </Button>
-                                        </div>
-                                        {homeData.partnership.image && (
-                                             <div className="mt-2">
-                                                  <img
-                                                       src={homeData.partnership.image}
-                                                       alt="Aperçu de l'image"
-                                                       className="w-32 h-32 object-cover rounded-lg border"
-                                                       onError={(e) => {
-                                                            e.currentTarget.src = '/placeholder.svg';
-                                                       }}
-                                                  />
-                                             </div>
-                                        )}
+                                        <ImageUpload
+                                             value={homeData.partnership.image || ''}
+                                             onChange={(url) => updateField('partnership.image', url)}
+                                             label="Image de l'agence"
+                                             placeholder="URL de l'image ou /placeholder.svg"
+                                        />
                                    </div>
 
                                    <div>
-                                        <Label>Image autres pays</Label>
-                                        <div className="flex items-center gap-4">
-                                             <Input
-                                                  value={homeData.partnership.imageOtherCountries || ''}
-                                                  onChange={(e) => updateField('partnership.imageOtherCountries', e.target.value)}
-                                                  placeholder="URL de l'image pour les autres pays"
-                                             />
-                                             <input
-                                                  type="file"
-                                                  accept="image/*"
-                                                  onChange={async (e) => {
-                                                       const file = e.target.files?.[0];
-                                                       if (file) {
-                                                            try {
-                                                                 const formData = new FormData();
-                                                                 formData.append('file', file);
-                                                                 const response = await fetch('/api/upload', {
-                                                                      method: 'POST',
-                                                                      body: formData
-                                                                 });
-                                                                 if (response.ok) {
-                                                                      const data = await response.json();
-                                                                      updateField('partnership.imageOtherCountries', data.url);
-                                                                 }
-                                                            } catch (error) {
-                                                                 console.error('Error uploading image:', error);
-                                                            }
-                                                       }
-                                                  }}
-                                                  className="hidden"
-                                                  id="partnership-other-countries-image-upload"
-                                                  title="Choisir une image pour les autres pays"
-                                             />
-                                             <Button
-                                                  type="button"
-                                                  variant="outline"
-                                                  onClick={() => document.getElementById('partnership-other-countries-image-upload')?.click()}
-                                             >
-                                                  Choisir une image
-                                             </Button>
-                                        </div>
-                                        {homeData.partnership.imageOtherCountries && (
-                                             <div className="mt-2">
-                                                  <img
-                                                       src={homeData.partnership.imageOtherCountries}
-                                                       alt="Aperçu de l'image autres pays"
-                                                       className="w-32 h-32 object-cover rounded-lg border"
-                                                       onError={(e) => {
-                                                            e.currentTarget.src = '/placeholder.svg';
-                                                       }}
-                                                  />
-                                             </div>
-                                        )}
+                                        <ImageUpload
+                                             value={homeData.partnership.imageOtherCountries || ''}
+                                             onChange={(url) => updateField('partnership.imageOtherCountries', url)}
+                                             label="Image autres pays"
+                                             placeholder="URL de l'image pour les autres pays"
+                                        />
                                         <p className="text-xs text-gray-500 mt-1">
                                              Cette image sera affichée pour tous les visiteurs sauf ceux du Maroc
                                         </p>
@@ -3165,4 +3015,4 @@ export default function HomePageDashboard() {
                </Tabs>
           </div>
      );
-} 
+}

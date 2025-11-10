@@ -165,7 +165,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                     >
                       <div className="w-[250px] h-[100px] flex items-center justify-center">
                         <img
-                          src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png"
+                          src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787746/bst-migration/xz4i6pkggcududsqraaf.png"
                           alt="Odoo Silver Partner Badge"
                         />
                       </div>

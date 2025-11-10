@@ -16,6 +16,7 @@ import Loader from '@/components/home/Loader';
 import YoastSEO from '@/components/YoastSEO';
 import GlobalSEOAnalyzer from '@/components/GlobalSEOAnalyzer';
 import Image from 'next/image';
+import ImageUpload from '@/components/dashboard/ImageUpload';
 
 interface SEOData {
   _id: string;
@@ -771,36 +772,13 @@ export default function SEODashboard() {
                   <span className="text-gray-500 text-xs ml-2 font-normal">(image affichée lors du partage sur WhatsApp, etc.)</span>
                 </label>
                 <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input 
-                      value={formData.ogImage} 
-                      onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })} 
-                      placeholder="URL de l'image (ex: https://votre-site.com/image.jpg)" 
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        const input = document.createElement('input');
-                        input.type = 'file';
-                        input.accept = 'image/*';
-                        input.onchange = async (e) => {
-                          const file = (e.target as HTMLInputElement).files?.[0];
-                          if (file) {
-                            toast({ 
-                              title: "Info", 
-                              description: "Veuillez héberger l'image sur votre serveur et coller l'URL ici" 
-                            });
-                          }
-                        };
-                        input.click();
-                      }}
-                    >
-                      <Upload className="w-4 h-4 mr-2" />
-                      Parcourir
-                    </Button>
-                  </div>
+                  <ImageUpload
+                    value={formData.ogImage || ''}
+                    onChange={(url) => setFormData({ ...formData, ogImage: url })}
+                    label=""
+                    placeholder="URL de l'image ou télécharger"
+                    showPreview={true}
+                  />
                   
                   {formData.ogImage && (
                     <div className="border border-gray-300 rounded-lg p-3 bg-white">

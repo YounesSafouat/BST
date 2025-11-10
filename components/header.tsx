@@ -284,7 +284,7 @@ export default function Header({ scrollY, isLoaded }: { scrollY: number; isLoade
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
-              src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/blackswantechnology%20white-3.svg"
+              src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762788652/blackswantechnology_20white-3_kohnph.svg"
               alt={headerData?.logo?.alt || "BlackSwan"}
               className={getLogoSizeClass(headerData?.logo?.size || '8')}
             />

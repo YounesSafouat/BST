@@ -22,6 +22,7 @@ import {
      Eye
 } from 'lucide-react';
 import Loader from '@/components/home/Loader';
+import ImageUpload from '@/components/dashboard/ImageUpload';
 
 interface StructuredDataForm {
      businessName: string;
@@ -577,21 +578,19 @@ export default function StructuredDataDashboard() {
 
                               <div className="grid grid-cols-2 gap-4">
                                    <div>
-                                        <Label htmlFor="logo">Logo *</Label>
-                                        <Input
-                                             id="logo"
+                                        <ImageUpload
                                              value={formData.logo}
-                                             onChange={(e) => handleInputChange('logo', e.target.value)}
-                                             placeholder="URL du logo"
+                                             onChange={(url) => handleInputChange('logo', url)}
+                                             label="Logo *"
+                                             placeholder="URL du logo ou télécharger"
                                         />
                                    </div>
                                    <div>
-                                        <Label htmlFor="businessImage">Image de l'entreprise</Label>
-                                        <Input
-                                             id="businessImage"
-                                             value={formData.businessImage}
-                                             onChange={(e) => handleInputChange('businessImage', e.target.value)}
-                                             placeholder="URL de l'image"
+                                        <ImageUpload
+                                             value={formData.businessImage || ''}
+                                             onChange={(url) => handleInputChange('businessImage', url)}
+                                             label="Image de l'entreprise"
+                                             placeholder="URL de l'image ou télécharger"
                                         />
                                    </div>
                               </div>

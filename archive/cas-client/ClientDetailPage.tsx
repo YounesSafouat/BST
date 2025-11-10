@@ -48,7 +48,7 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
      // Mock data - this will be replaced with dynamic data later
      const clientData = {
           name: "TechCorp Solutions",
-          logo: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg",
+          logo: "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80",
           sector: "Technologie",
           solution: "hubspot",
           summary: "Transformation digitale complète avec HubSpot CRM pour optimiser les processus de vente et marketing.",
@@ -85,30 +85,30 @@ export default function ClientDetailPage({ slug }: ClientDetailPageProps) {
                {
                     name: "Marie Dubois",
                     role: "Chef de projet",
-                    avatar: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"
+                    avatar: "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80"
                },
                {
                     name: "Pierre Martin",
                     role: "Développeur HubSpot",
-                    avatar: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"
+                    avatar: "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80"
                },
                {
                     name: "Sophie Laurent",
                     role: "Consultante CRM",
-                    avatar: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"
+                    avatar: "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80"
                }
           ],
           testimonial: {
                text: "La transformation avec HubSpot a révolutionné notre approche client. Les résultats dépassent nos attentes et notre équipe est plus efficace que jamais.",
                author: "Jean Dupont",
                position: "Directeur Commercial, TechCorp Solutions",
-               avatar: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"
+               avatar: "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80"
           },
           gallery: [
-               "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg",
-               "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg",
-               "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg",
-               "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg"
+               "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80",
+               "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80",
+               "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80",
+               "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80"
           ]
      }
 

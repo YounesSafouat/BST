@@ -1,0 +1,1472 @@
+[{
+  "_id": {
+    "$oid": "68dff775b1bf72745ecf9048"
+  },
+  "slug": "allisone",
+  "name": "Allisone",
+  "headline": "Centralisation des données et optimisation commerciale : l'accompagnement d'Allisone",
+  "summary": " Allisone est une startup MedTech spécialisée dans l’intelligence artificielle appliquée aux radios dentaires. En pleine croissance, les cofondateurs Sacha Samama et Lionel Elbaz ont souhaité structurer leur pilotage commercial, migrer leurs données dans un environnement unifié, et réduire leur dépendance aux outils externes.\n\n",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/allisone-vectorized-white.svg",
+    "size": "36 collaborateurs",
+    "sector": "Technologie",
+    "location": "Paris, France",
+    "website": ""
+  },
+  "project": {
+    "solution": "hubspot",
+    "customSolution": "",
+    "duration": "90 jours",
+    "teamSize": "36 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "gallery": [],
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/alisone/1669974921967.jpeg",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/alisone/1669974921967.jpeg"
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1759507983620",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>\n\n\n  Allisone est une startup MedTech spécialisée dans l’intelligence artificielle appliquée aux radios dentaires. \n  En pleine croissance, les cofondateurs <strong>Sacha Samama</strong> et <strong>Lionel Elbaz</strong> ont souhaité \n  structurer leur pilotage commercial, migrer leurs données dans un environnement unifié, \n  et réduire leur dépendance aux outils externes.\n</p>\n\n<h2>Ce que nous avons mis en place</h2>\n<ul>\n  <li>\n    <strong>Migration &amp; structuration du cycle</strong>\n    <ul>\n      <li>Nettoyage des données issues de l’ancien outil</li>\n      <li>Construction d’un entonnoir de conversion sur-mesure</li>\n      <li>Création de vues dédiées à chaque étape du pipeline</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Suivi personnalisé des offres</strong>\n    <ul>\n      <li>Champs spécifiques pour les options souscrites par client</li>\n      <li>Segmentation des performances par typologie d’offre</li>\n      <li>Intégration d’un tracking des concurrents rencontrés en vente</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Fiabilisation des données clés</strong>\n    <ul>\n      <li>Règles de correction automatique (dates, montants, abonnements)</li>\n      <li>Itérations avec Sacha et Lionel pour adapter les vues aux usages réels</li>\n      <li>Autonomie des équipes sur l’évolution de l’outil</li>\n    </ul>\n  </li>\n</ul>",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759508015369",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Approche progressive & alignée",
+      "content": "<p>\n  Nous avons travaillé par itérations courtes, avec des livrables concrets dès les premières semaines. \n  Cela a permis une montée en puissance fluide, sans rupture de process.\n</p>\n<ul>\n  <li>Approche progressive et pragmatique</li>\n  <li>Livrables concrets dès le démarrage</li>\n  <li>Adaptation continue aux besoins réels</li>\n</ul>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/alisone/1659081314279.jpeg.png",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759508032181",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Formation à l’appropriation",
+      "content": "<p>\n  Des sessions de formation ciblées ont été menées avec chaque pôle. \n  Objectif : rendre les équipes opérationnelles et indépendantes dès la première semaine d’utilisation.\n</p>\n<ul>\n  <li>Sessions adaptées aux besoins de chaque équipe</li>\n  <li>Mise en pratique immédiate sur l’outil</li>\n  <li>Autonomie acquise dès la première semaine</li>\n</ul>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/alisone/1659081322513.jpeg.png",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759508046128",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Dashboards clairs par typologie",
+      "content": "<p>\n  Chaque type d’offre (abonnement, service, option) a désormais sa propre logique de suivi. \n  Résultat : des données exploitables, filtrables, pilotables.\n</p>\n<ul>\n  <li>Dashboards adaptés par typologie d’offre</li>\n  <li>Suivi clair et structuré des abonnements, services et options</li>\n  <li>Données exploitables pour le pilotage stratégique</li>\n</ul>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/alisone/Capture%20d%E2%80%99%C3%A9cran%202025-10-03%20%C3%A0%2014.56.59.png",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759744145516",
+      "type": "testimonial",
+      "order": 5,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "On a adoré bosser avec Rubens. Sa compréhension technique et son adaptabilité ont permis une migration fluide et surtout un système parfaitement aligné avec nos besoins. Aujourd’hui, on pilote notre activité sans dépendre de personne.",
+        "author": {
+          "name": "Sacha Samama",
+          "role": "Cofondateur & CTO",
+          "company": "Allisone",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1718722863504.jpeg"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1759744269814",
+      "type": "contact-form",
+      "order": 6,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "content": "Découvrez comment nous pouvons transformer votre entreprise avec des solutions similaires. Contactez-nous pour une consultation gratuite.",
+      "sectionBadgeIcon": "star",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-10-03T16:19:01.397Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T11:06:22.772Z"
+  },
+  "publishedAt": {
+    "$date": "2025-10-03T16:19:01.397Z"
+  },
+  "__v": 0,
+  "sidebarInfo": [
+    {
+      "key": "Localisation",
+      "value": "Paris, France",
+      "icon": "map-pin",
+      "order": 0
+    },
+    {
+      "key": "Taille de l'équipe",
+      "value": "36 collaborateurs",
+      "icon": "users",
+      "order": 1
+    },
+    {
+      "key": "Durée du projet",
+      "value": "90 jours",
+      "icon": "clock",
+      "order": 2
+    },
+    {
+      "key": "Secteur",
+      "value": "Technologie & numérique",
+      "icon": "building",
+      "order": 3
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "97%",
+      "icon": "users",
+      "order": 4
+    },
+    {
+      "key": "Taux de conversion (lead → signature)",
+      "value": "+38% après mise en place",
+      "icon": "trending-up",
+      "order": 5
+    },
+    {
+      "key": "Économie (licences)",
+      "value": "14 000 €/an",
+      "icon": "target",
+      "order": 6
+    }
+  ],
+  "targetRegions": [
+    "france"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68e387cac4a1ab0b3c2d3d0e"
+  },
+  "slug": "qweekle",
+  "name": "Qweekle",
+  "headline": "Structurer le pilotage commercial d’une startup du secteur loisirs : Qweekle",
+  "summary": "Qweekle offre une solution dédiée aux parcs de loisirs, escape games et centres culturels, pour centraliser la gestion commerciale et garantir un pilotage simple, fiable et performant.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/qwwekle.png",
+    "size": "25 collaborateurs",
+    "sector": "Autre",
+    "location": "",
+    "website": "",
+    "customSector": "SaaS B2B / Gestion pour parcs de loisirs"
+  },
+  "project": {
+    "solution": "hubspot",
+    "customSolution": "",
+    "duration": "30 jours",
+    "teamSize": "25 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/qweekle/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/qweekle/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1759741337645",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>\n  Qweekle propose une solution métier pour les parcs de loisirs, escape games et centres culturels. \n  Avec une activité en forte croissance, leur cofondateur <strong>Cédric</strong> cherchait à centraliser le suivi commercial, \n  fiabiliser les données, et offrir aux équipes un pilotage lisible et actionnable au quotidien.\n</p>\n\n<h2>Ce que nous avons mis en place</h2>\n<ul>\n  <li>\n    <strong>Dashboards de pilotage commercial</strong>\n    <ul>\n      <li>Construction d’un entonnoir complet : lead → démo → signature → upsell</li>\n      <li>Vues segmentées par type d’offre : abonnements, matériel, services</li>\n      <li>Lecture claire des taux de conversion à chaque étape</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Fiabilisation &amp; suivi hebdo</strong>\n    <ul>\n      <li>Dashboard “New of the week” pour les nouvelles signatures</li>\n      <li>Tableau “Sanity” pour fiabiliser les montants et transactions</li>\n      <li>Règles automatiques pour corriger les dates manquantes ou incohérentes</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Suivi commercial personnalisé</strong>\n    <ul>\n      <li>Propriétés ajoutées pour suivre les options commandées</li>\n      <li>Intégration d’un suivi des concurrents rencontrés (won / lost)</li>\n      <li>Feedbacks réguliers avec Cédric pour adapter aux usages terrain</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Un socle évolutif et actionnable</strong>\n    <ul>\n      <li>Un pilotage opérationnel autonome, sans dépendance externe</li>\n      <li>Des dashboards clairs, utilisables en réunion comme en exécution</li>\n      <li>Des gains immédiats sur la consolidation, le suivi et les relances</li>\n    </ul>\n  </li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759741354197",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Formation des équipes",
+      "content": "<p>\n  Des vues simples, une logique de pilotage claire, et une équipe formée à l’outil. \n  La montée en compétences est rapide et directement utile.\n</p>\n<ul>\n  <li>Vues simples et intuitives</li>\n  <li>Logique de pilotage claire et partagée</li>\n  <li>Montée en compétences rapide et utile</li>\n</ul>\n",
+      "sectionBadge": "",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/qweekle/2.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759741413148",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Co-construction du pilotage",
+      "content": "<p>\n  Nous avons construit les dashboards main dans la main avec <strong>Cédric</strong> et les équipes terrain. \n  L’objectif : créer un outil métier réellement utilisé au quotidien, pas juste un reporting.\n</p>\n<ul>\n  <li>Co-construction avec les équipes pour coller aux besoins réels</li>\n  <li>Dashboards opérationnels, utilisables au quotidien</li>\n  <li>Outil métier intégré, pas seulement un reporting</li>\n</ul>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/qweekle/3.webp",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759741436879",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Sanity & qualité de données",
+      "content": "<p>\n  Des workflows intelligents corrigent automatiquement les oublis et incohérences. \n  Les dashboards sont plus fiables, les actions plus ciblées.\n</p>\n<ul>\n  <li>Correction automatique des oublis et incohérences</li>\n  <li>Dashboards fiables et actualisés</li>\n  <li>Actions commerciales plus ciblées et efficaces</li>\n</ul>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/qweekle/4.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759742179461",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "L’équipe Blackswan a su comprendre notre logique produit et commerciale dès les premiers échanges. Le résultat est clair, rapide, sur mesure. On a maintenant une base solide pour structurer notre croissance.",
+        "author": {
+          "name": "Cédric",
+          "role": "Cofondateur & CTO",
+          "company": "Qweekle",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/qweekle/tem.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1759743487532",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "content": "Découvrez comment nous pouvons transformer votre entreprise avec des solutions similaires. Contactez-nous pour une consultation gratuite.",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-10-06T09:11:38.267Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T11:06:14.391Z"
+  },
+  "__v": 0,
+  "sidebarInfo": [
+    {
+      "key": "Taille de l'équipe",
+      "value": "25 collaborateurs",
+      "icon": "users",
+      "order": 0
+    },
+    {
+      "key": "Durée du projet",
+      "value": "30 jours",
+      "icon": "clock",
+      "order": 1
+    },
+    {
+      "key": "Secteur",
+      "value": "SaaS B2B / Gestion pour parcs de loisirs",
+      "icon": "building",
+      "order": 2
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "95%",
+      "icon": "target",
+      "order": 3
+    },
+    {
+      "key": "Taux de conversion (lead → signature)",
+      "value": "+42% après mise en place",
+      "icon": "trending-up",
+      "order": 4
+    }
+  ],
+  "targetRegions": [
+    "france"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68e3d86d6fdbe1ea4a7b84ec"
+  },
+  "slug": "idc-pharma",
+  "name": "IDC Pharma",
+  "headline": "Unifier la logistique, les ventes et l’e-commerce dans un groupe pharmaceutique",
+  "summary": "IDC Pharma a centralisé sa gestion e-commerce et logistique pour gagner en fiabilité et efficacité, avec synchronisation automatique, pilotage complet et optimisation des flux.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/idc_pharma-horizontal-white-vector.svg",
+    "size": "50 à 100 collaborateurs",
+    "sector": "Commerce",
+    "customSector": "",
+    "location": "",
+    "website": ""
+  },
+  "project": {
+    "solution": "hubspot",
+    "customSolution": "",
+    "duration": "120 jours",
+    "teamSize": "50 à 100 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/main2.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/main2.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1759761723799",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>IDC Pharma est un acteur majeur de la distribution pharmaceutique en ligne. Avec des ventes 100 % e-commerce via WooCommerce, une large gamme de produits et plus de 50 utilisateurs internes, le groupe souhaitait centraliser toute sa gestion dans un environnement unifié. L’objectif : gagner en fiabilité, réduire les frictions, et poser les bases d’une croissance maîtrisée.</p>\n\n<hr>\n\n<h2>Ce que nous avons mis en place</h2>\n\n<h3>Connexion e-commerce & synchronisation automatisée</h3>\n<ul>\n  <li>Synchronisation WooCommerce ↔ système interne (commandes, statuts, stocks)</li>\n  <li>Génération automatique des factures et bons de livraison</li>\n  <li>Stock mis à jour en temps réel sur le site client</li>\n</ul>\n\n<h3>Optimisation logistique à grande échelle</h3>\n<ul>\n  <li>Routage intelligent des commandes selon le transporteur optimal</li>\n  <li>Alerte sur seuils critiques & réassort automatisé</li>\n  <li>Analyse des coûts logistiques intégrée dans les dashboards</li>\n</ul>\n\n<h3>Pilotage complet et centralisé</h3>\n<ul>\n  <li>Modules intégrés : ventes, stock, achats, comptabilité, CRM</li>\n  <li>50+ utilisateurs avec rôles métiers personnalisés</li>\n  <li>Tableaux de bord pour suivre marges, retours, délais, règlements</li>\n</ul>\n\n<h3>Une structure capable de scaler</h3>\n<ul>\n  <li>Aucun ralentissement même en période de forte activité</li>\n  <li>Suppression des doubles saisies et outils dispersés</li>\n  <li>Plus d’autonomie pour les équipes internes sur la gestion quotidienne</li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759761844046",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Notre Approche",
+      "content": "<p>Nous avons commencé par aligner les flux WooCommerce avec les processus internes existants.</p>\n<p>L’objectif : éviter toute rupture opérationnelle entre boutique en ligne, gestion des stocks et comptabilité.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/1.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759762301728",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Mise en place de l’écosysteme",
+      "content": "<p>Un audit terrain a permis de cartographier tous les flux de vente, de stock, de livraison et de facturation.</p>\n<p>Nous avons identifié les points de friction critiques et défini un plan de migration par lots.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/2%20.webp",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759762349103",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Formation & accompagnement",
+      "content": "<p>Accompagnés pendant tout le projet, par pôle métier.</p>\n<p>Des formations ciblées, une documentation claire et un support réactif ont permis une adoption rapide.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/3.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759762393922",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "Je connais Rubens depuis longtemps, et je savais qu’en confiant ce projet à son équipe, on aurait un vrai partenaire — pas juste un prestataire. Ils ont compris nos enjeux business, nos contraintes e‑commerce et notre organisation interne.\n\nLe résultat est à la hauteur : tout est fluide, robuste, intégré. On pilote aujourd’hui une activité e‑commerce à très fort volume avec sérénité.",
+        "author": {
+          "name": "Ilan Abitbol",
+          "role": "Directeur Général",
+          "company": "IDC Pharma",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/tem.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1759762463227",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-10-06T14:55:41.419Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T11:06:08.726Z"
+  },
+  "__v": 0,
+  "sidebarInfo": [
+    {
+      "key": "Taille de l'équipe",
+      "value": "50 à 100 collaborateurs",
+      "icon": "users",
+      "order": 0
+    },
+    {
+      "key": "Durée du projet",
+      "value": "120 jours",
+      "icon": "clock",
+      "order": 1
+    },
+    {
+      "key": "Secteur",
+      "value": "Commerce et distribution",
+      "icon": "zap",
+      "order": 2
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "94 %",
+      "icon": "trending-up",
+      "order": 3
+    },
+    {
+      "key": "Connexions actives simultanées",
+      "value": "50+ utilisateurs",
+      "icon": "users",
+      "order": 4
+    },
+    {
+      "key": "Chiffre d’affaires",
+      "value": "+100 M€ annuel",
+      "icon": "award",
+      "order": 5
+    }
+  ],
+  "targetRegions": [
+    "france"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68e3df5f6fdbe1ea4a7b860d"
+  },
+  "slug": "garett-immobilier",
+  "name": "Garett Immobilier",
+  "headline": "Digitaliser les opérations d’une agence immobilière premium avec Odoo v19",
+  "summary": "Garett Immobilier a centralisé la gestion de ses ventes, leads et annonces via Odoo v19, automatisant compromis, mandats et suivi des agents.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/logo-1.webp",
+    "size": "14 utilisateurs actifs",
+    "sector": "Immobilier",
+    "customSector": "",
+    "location": "",
+    "website": ""
+  },
+  "project": {
+    "solution": "odoo",
+    "customSolution": "",
+    "duration": "60 jours",
+    "teamSize": "14 utilisateurs actifs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1759763995374",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>Garett Immobilier est une agence haut de gamme basée à Paris, spécialisée dans la vente, l’achat et l’estimation de biens. Accompagné de son cofondateur Ruben Sabbah, le cabinet souhaitait poser les bases d’une gestion structurée, 100 % intégrée, pour piloter son activité en temps réel.</p>\n<p>Nous avons déployé Odoo version 19, adapté aux spécificités de l’immobilier, pour centraliser le suivi des leads, la gestion des dossiers de vente, le monitoring des agents et l’interconnexion avec le site web — y compris la signature électronique et la gestion des annonces.</p>\n\n<hr>\n\n<h2>Ce que nous avons mis en place</h2>\n\n<h3>Gestion des leads & pipeline immobilier</h3>\n<ul>\n  <li>Pipeline complet : contact → visite → offre → compromis → acte</li>\n  <li>Assignation automatique des leads selon la typologie ou le secteur</li>\n  <li>Relances automatisées sur les leads dormants</li>\n</ul>\n\n<h3>Dossiers de vente & automatisation</h3>\n<ul>\n  <li>Chaque bien géré comme un projet avec jalons, tâches et documents</li>\n  <li>Génération automatique des compromis / mandats depuis Odoo</li>\n  <li>Intégration de la signature électronique native Odoo, suppression de Docusign</li>\n</ul>\n\n<h3>Front‑office connecté & annonces en ligne</h3>\n<ul>\n  <li>Connexion site ↔ Odoo pour injection automatique des leads</li>\n  <li>Gestion des annonces immobilières directement depuis Odoo</li>\n  <li>Mise à jour des statuts (vendu, sous offre, exclu) en un clic sur le site</li>\n</ul>\n\n<h3>Multi‑utilisateurs & rôles</h3>\n<ul>\n  <li>14 utilisateurs actifs sur Odoo v19 (agents, managers, back-office)</li>\n  <li>Droits adaptés selon rôle (édition, signature, suivi, stats)</li>\n  <li>Accès en mobilité via app Odoo pour agents en déplacement</li>\n</ul>\n\n<h3>Reporting & performance</h3>\n<ul>\n  <li>Taux de conversion par agent ou par typologie de bien</li>\n  <li>Délai entre publication & signature</li>\n  <li>Alertes sur biens inactifs depuis 15+ jours</li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759764008825",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Annonces connectées au back-office",
+      "content": "<p>Toutes les annonces sont gérées dans Odoo : photos, textes, statut, diffusion.</p>\n<p>Les mises à jour sont instantanément répercutées sur le site web.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/1.png",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759764046715",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Odoo CRM centré métier",
+      "content": "<p>L’instance Odoo v19 a été configurée pour refléter la vraie vie d’un agent immobilier.</p>\n<p>Le pipeline, les automatismes et les vues ont été pensés pour coller aux usages terrain.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/2.png",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759764181473",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Contrats dynamiques & signature intégrée",
+      "content": "<p>Nous avons remplacé Docusign par la signature native d’Odoo.</p>\n<p>Les mandats, offres et compromis sont générés et signés en ligne, en quelques clics.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/3.png",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759764233217",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "Blackswan a su transformer nos besoins métier en un outil réellement opérationnel. Odoo v19 nous permet de piloter toute notre activité en temps réel, sans friction, sans perte. Un vrai confort pour les équipes et un gain de temps pour la direction.”",
+        "author": {
+          "name": "Ruben Sabbah",
+          "role": "Cofondateur",
+          "company": "Garett Immobilier",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/Garett%20Immobilier/tem.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1759764878709",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [
+    {
+      "label": "Taille de l'équipe",
+      "value": "14 utilisateurs actifs",
+      "icon": "users",
+      "description": ""
+    }
+  ],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-10-06T15:25:19.546Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T11:05:42.224Z"
+  },
+  "publishedAt": {
+    "$date": "2025-10-06T15:25:19.546Z"
+  },
+  "__v": 0,
+  "sidebarInfo": [
+    {
+      "key": "Taille de l'équipe",
+      "value": "14 utilisateurs actifs",
+      "icon": "users",
+      "order": 0
+    },
+    {
+      "key": "Durée du projet",
+      "value": "60 jours",
+      "icon": "clock",
+      "order": 1
+    },
+    {
+      "key": "Secteur",
+      "value": "Immobilier résidentiel haut de gamme",
+      "icon": "zap",
+      "order": 2
+    },
+    {
+      "key": "Système déployé",
+      "value": "Odoo version 19",
+      "icon": "award",
+      "order": 3
+    },
+    {
+      "key": "Satisfaction des équipes",
+      "value": "100 % (équipe dirigeante & agents terrain)",
+      "icon": "users",
+      "order": 4
+    },
+    {
+      "key": "Nombre de projets immobiliers suivis",
+      "value": "+120 dossiers en flux continu",
+      "icon": "trending-up",
+      "order": 5
+    }
+  ],
+  "targetRegions": [
+    "france"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68e675c92b859197ed3c456e"
+  },
+  "slug": "fitness-park",
+  "name": "Fitness Park",
+  "headline": "Suivi marketing et relances automatisées pour une prospection plus performante",
+  "summary": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads.\n\nSous la direction de Taha Mzali, Directeur Marketing, le besoin portait sur un outil capable de centraliser les données, d’optimiser les appels commerciaux et d’automatiser les relances via WhatsApp.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/fitnespark-vectorized-white-3.svg",
+    "size": "+20 collaborateurs",
+    "sector": "Santé",
+    "customSector": "",
+    "location": "",
+    "website": ""
+  },
+  "project": {
+    "solution": "hubspot",
+    "customSolution": "",
+    "duration": "110 jours",
+    "teamSize": "+20 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1759933493671",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads.</p>\n\n<p>Sous la direction de <strong>Taha Mzali</strong>, Directeur Marketing, le besoin portait sur un outil capable de centraliser les données, d’optimiser les appels commerciaux et d’automatiser les relances via WhatsApp.</p>\n\n<h2>Ce que nous avons mis en place</h2>\n\n<h3>Gestion et suivi des leads</h3>\n<ul>\n  <li>Mise en place d’un système clair pour suivre chaque lead, de la première prise de contact à la conversion.</li>\n  <li>Priorisation automatique selon le niveau d’intérêt et la réactivité des prospects.</li>\n</ul>\n\n<h3>Système d’appels intégré</h3>\n<ul>\n  <li>Intégration d’un module d’appels performant directement dans la plateforme.</li>\n  <li>Enregistrement des interactions et statistiques détaillées sur la productivité téléphonique.</li>\n</ul>\n\n<h3>Relances WhatsApp automatisées</h3>\n<ul>\n  <li>Automatisation des relances via WhatsApp pour maintenir le contact de manière fluide.</li>\n  <li>Scénarios adaptés selon le comportement du prospect et l’avancement de la discussion.</li>\n</ul>\n\n<h3>Pilotage marketing et reporting</h3>\n<ul>\n  <li>Tableaux de bord en temps réel pour suivre les performances des campagnes.</li>\n  <li>Suivi précis du coût par lead et du taux de conversion des actions marketing.</li>\n</ul>\n\n<h3>Coordination des équipes</h3>\n<ul>\n  <li>Outil partagé entre marketing et commercial pour une meilleure synergie.</li>\n  <li>Vision commune des échanges clients et de l’avancement des relances.</li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759933636347",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Notre Approche",
+      "content": "<p>Nous avons co-construit la solution avec l’équipe marketing pour assurer une parfaite adéquation aux besoins terrain.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/1.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759933696523",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Audit initial",
+      "content": "<p>Une analyse des processus d’acquisition et de relance a permis d’identifier les points d’amélioration prioritaires.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/2.avif",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759933731598",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Intégration fluide",
+      "content": "<p>Le système a été connecté aux outils existants afin d’assurer une continuité opérationnelle immédiate.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/3.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759933813273",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "Grâce à l’accompagnement de Blackswan, nous avons considérablement amélioré notre suivi marketing et la réactivité de nos équipes. La combinaison appels + WhatsApp a fait une vraie différence.",
+        "author": {
+          "name": "Taha Mzali",
+          "role": " Directeur Marketing",
+          "company": "Fitness Park",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/temp.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1759933868987",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "sidebarInfo": [
+    {
+      "key": "Localisation",
+      "value": "Casablanca, Maroc",
+      "icon": "map-pin",
+      "order": 0
+    },
+    {
+      "key": "Taille de l'équipe",
+      "value": "+20 collaborateurs",
+      "icon": "users",
+      "order": 1
+    },
+    {
+      "key": "Durée du projet",
+      "value": "110 jours",
+      "icon": "clock",
+      "order": 2
+    },
+    {
+      "key": "Secteur",
+      "value": "Sport & Bien être",
+      "icon": "building",
+      "order": 3
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "98%",
+      "icon": "bar-chart-3",
+      "order": 4
+    },
+    {
+      "key": "Taux de conversion (lead → signature)",
+      "value": "+25% après mise en place",
+      "icon": "trending-up",
+      "order": 5
+    },
+    {
+      "key": "Économie (licences)",
+      "value": "5 000 €/an",
+      "icon": "award",
+      "order": 6
+    }
+  ],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-10-08T14:31:37.180Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T11:06:01.115Z"
+  },
+  "publishedAt": {
+    "$date": "2025-10-08T14:31:37.180Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "france",
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68e67ce62b859197ed3c45e3"
+  },
+  "slug": "essem",
+  "name": "Essem",
+  "headline": "Centralisation et pilotage de la prospection commerciale : L’intégration ESSEM",
+  "summary": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions.\n\nSous l’impulsion de Salim Gueddari, l’objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/essem-1-2.svg",
+    "size": "15 collaborateurs",
+    "sector": "Éducation",
+    "customSector": "",
+    "location": "Casablanca, Maroc",
+    "website": ""
+  },
+  "project": {
+    "solution": "hubspot",
+    "customSolution": "",
+    "duration": "90 jours",
+    "teamSize": "15 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1759935337678",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions.</p>\n\n<p>Sous l’impulsion de <strong>Salim Gueddari</strong>, l’objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances.</p>\n\n<h2>Ce que nous avons mis en place</h2>\n\n<h3>Gestion de la prospection</h3>\n<ul>\n  <li>Mise en place d’un système structuré pour suivre les prospects à chaque étape du parcours.</li>\n  <li>Historisation automatique des échanges pour une meilleure continuité commerciale.</li>\n</ul>\n\n<h3>Centralisation des canaux</h3>\n<ul>\n  <li>Regroupement des comptes WhatsApp sur une seule interface.</li>\n  <li>Suivi synchronisé des conversations pour éviter toute perte d’information.</li>\n</ul>\n\n<h3>Suivi des inscriptions</h3>\n<ul>\n  <li>Intégration d’un suivi détaillé du processus d’inscription.</li>\n  <li>Visualisation claire des statuts et des priorités.</li>\n</ul>\n\n<h3>Tableaux de bord et KPI</h3>\n<ul>\n  <li>Création de rapports dynamiques avec indicateurs clés en temps réel.</li>\n  <li>Aide à la prise de décision rapide et factuelle pour la direction.</li>\n</ul>\n\n<h3>Collaboration des équipes</h3>\n<ul>\n  <li>Accès multi-utilisateurs avec rôles différenciés selon les départements.</li>\n  <li>Amélioration de la coordination entre les pôles commercial et administratif.</li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759935360056",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Approche progressive & alignée",
+      "content": "<p>Nous avons co-construit la solution avec les équipes internes pour garantir une adoption rapide.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/1.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759935378740",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Audit initial",
+      "content": "<p>Un diagnostic des méthodes de prospection existantes a permis d’adapter la plateforme aux besoins réels.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/2.webp",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759935386658",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Mise en production progressive",
+      "content": "<p>Le déploiement s’est effectué par étapes afin d’assurer une transition fluide pour les utilisateurs.</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/3.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1759935614815",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "La solution mise en place par Blackswan nous a permis de centraliser toute notre prospection et d’avoir enfin une visibilité claire sur les performances. Le gain de temps au quotidien est considérable.",
+        "author": {
+          "name": "Salim Gueddari",
+          "role": "CEO & Founder",
+          "company": "ESSEM",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/temp.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1759935681630",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "sidebarInfo": [
+    {
+      "key": "Localisation ",
+      "value": "Casablanca, Maroc",
+      "icon": "map-pin",
+      "order": 0
+    },
+    {
+      "key": "Taille de l'équipe",
+      "value": "15 collaborateurs",
+      "icon": "users",
+      "order": 1
+    },
+    {
+      "key": "Durée du projet",
+      "value": "90 jours",
+      "icon": "clock",
+      "order": 2
+    },
+    {
+      "key": "Secteur",
+      "value": "Education ",
+      "icon": "building",
+      "order": 3
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "98%",
+      "icon": "zap",
+      "order": 4
+    },
+    {
+      "key": "Taux de conversion (lead → signature)",
+      "value": "+45% après mise en place",
+      "icon": "trending-up",
+      "order": 5
+    },
+    {
+      "key": "Économie (licences)",
+      "value": "12 000 €/an",
+      "icon": "award",
+      "order": 6
+    }
+  ],
+  "tags": [],
+  "featured": false,
+  "published": false,
+  "createdAt": {
+    "$date": "2025-10-08T15:01:58.302Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-13T16:37:00.745Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69087d2b028655733bdca6ce"
+  },
+  "slug": "worqbox",
+  "name": "WORQBOX",
+  "headline": "Une gestion multi‑marques fluide et centralisée pour Worqbox",
+  "summary": "Worqbox est un acteur majeur au Maroc dans le domaine des revêtements et profilés décoratifs haut de gamme, avec cinq showrooms et plusieurs marques distribuées.Afin de structurer son activité multi‑marques, améliorer le suivi des ventes, et donner aux équipes internes un outil intégré, nous avons mis en place une solution complète sur Odoo version 19, accompagnée d’une formation pour 14 personnes.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/logo.png",
+    "size": "14 utilisateurs",
+    "sector": "Autre",
+    "customSector": "Distribution de revêtements & profilés décoratifs",
+    "location": "",
+    "website": ""
+  },
+  "project": {
+    "solution": "odoo",
+    "customSolution": "",
+    "duration": "75 jours",
+    "teamSize": "14 14 utilisateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1762163646546",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>\n  Worqbox est un acteur majeur au Maroc dans le domaine des revêtements et profilés décoratifs haut de gamme, \n  avec cinq showrooms et plusieurs marques distribuées. Afin de structurer son activité multi-marques, \n  améliorer le suivi des ventes, et donner aux équipes internes un outil intégré, \n  nous avons mis en place une solution complète sur Odoo version 19, \n  accompagnée d’une formation pour 14 personnes.\n</p>\n\n<h2>Ce que nous avons mis en place</h2>\n<ul>\n  <li>\n    <strong>Gestion multi-marques et catalogue produit</strong>\n    <ul>\n      <li>Création d’un catalogue unifié pour toutes les marques distribuées</li>\n      <li>Gestion des fiches produits, tarifs, remises et conditions propres à chaque marque</li>\n      <li>Suivi des ventes par marque, segment ou showroom</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Pipeline de leads et opportunités</strong>\n    <ul>\n      <li>Intégration des leads entrants depuis le site, le showroom et les commerciaux terrain</li>\n      <li>Mise en place d’un pipeline clair : lead → devis → commande → projet</li>\n      <li>Automatisations pour relance, suivi d’abandon de devis et qualification</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Suivi des projets et livraisons</strong>\n    <ul>\n      <li>Chaque commande multi-marque traitée comme un projet avec étapes : préparation, expédition, pose</li>\n      <li>Suivi des stocks dédiés aux marques, alertes sur seuils, contrôle qualité avant expédition</li>\n      <li>Dashboard livraison &amp; stock pour anticiper les retards et piloter les showrooms</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Formation &amp; adoption utilisateur</strong>\n    <ul>\n      <li>14 utilisateurs formés : commerciaux, back-office, managers, showrooms</li>\n      <li>Sessions de formation métier + ateliers pratiques + documentation personnalisée</li>\n    </ul>\n  </li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762163654758",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Approche co‑construite",
+      "content": "<p>\n  Le projet a été piloté main dans la main avec les responsables showroom et la direction de Worqbox.\n</p>\n\n<p>\n  L’outil a été adapté étape par étape pour coller aux usages terrain, limites et attentes des équipes.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/1.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762163713334",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Migration progressive",
+      "content": "<p>\n  Nous avons démarré par l’import des catalogues multi‑marques existants et des données leads historiques.\n</p>\n\n<p>\n  Le déploiement s’est fait par phase : catalogues → pipeline → projets → reporting, pour assurer la stabilité.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/2.webp",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762163771443",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Résultats obtenu",
+      "content": "<ul>\n  <li>Un catalogue unifié et fluide pour toutes les marques distribuées</li>\n  <li>Une traçabilité complète des commandes jusqu’à la livraison et la pose</li>\n  <li>Une montée en compétence de l’équipe (14 personnes) visible dès le premier mois\n    <ul>\n      <li>Un pilotage multi‑marques clair, accessible à la direction et aux managers</li>\n    </ul>\n  </li>\n</ul>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/3.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762163848417",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "Nous avons fait appel à Warren pour la migration complète de notre ERP Odoo de la V15 à la V19 ainsi qu’une formation de nos équipes.L’accompagnement a été à la fois rigoureux, fluide et parfaitement adapté à nos besoins.",
+        "author": {
+          "name": "Mehdi Ktiri",
+          "role": "Directeur général",
+          "company": "Worqbox",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/worqbox/tem.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1762163925917",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "sidebarInfo": [
+    {
+      "key": "Taille de l’équipe formée",
+      "value": "14 utilisateurs",
+      "icon": "users",
+      "order": 0
+    },
+    {
+      "key": "Durée projet",
+      "value": "75 jours",
+      "icon": "clock",
+      "order": 1
+    },
+    {
+      "key": "Secteur",
+      "value": "Distribution de revêtements & profilés décoratifs",
+      "icon": "building",
+      "order": 2
+    },
+    {
+      "key": "Solution déployée",
+      "value": "Odoo v19",
+      "icon": "zap",
+      "order": 3
+    },
+    {
+      "key": "Marques gérées via l’outil",
+      "value": "6 +",
+      "icon": "bar-chart-3",
+      "order": 4
+    },
+    {
+      "key": "Taux d’adoption utilisateur à J+60",
+      "value": "92%",
+      "icon": "trending-up",
+      "order": 5
+    }
+  ],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-11-03T10:00:11.427Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-06T10:51:18.520Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "690880e2028655733bdca7c5"
+  },
+  "slug": "jeanne-darc",
+  "name": "Jeanne d’arc",
+  "headline": "Optimiser la gestion des leads et le suivi marketing de Jeanne d’Arc School",
+  "summary": "Jeanne d’Arc, établissement scolaire allant de la crèche au baccalauréat, souhaitait mieux suivre ses performances marketing et optimiser le traitement de ses leads.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/jeannedarc-vectorized.svg",
+    "size": "12 collaborateurs",
+    "sector": "Éducation",
+    "customSector": "",
+    "location": "",
+    "website": ""
+  },
+  "project": {
+    "solution": "hubspot",
+    "customSolution": "",
+    "duration": "90 jours",
+    "teamSize": "12 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/jean%20d-arc%20school/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/jean%20d-arc%20school/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1762164738675",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>\n  Jeanne d’Arc, établissement scolaire allant de la crèche au baccalauréat, souhaitait mieux suivre ses performances marketing \n  et optimiser le traitement de ses leads.\n</p>\n\n<p>\n  Sous la direction de <strong>Ahmed Guessous</strong>, Directeur Général, le besoin était clair : disposer d’un logiciel unique \n  pour piloter la prospection, suivre les appels entrants et sortants, et automatiser les relances via WhatsApp.\n</p>\n\n<h2>Ce que nous avons mis en place</h2>\n<ul>\n  <li>\n    <strong>Gestion centralisée des leads</strong>\n    <ul>\n      <li>Structuration du processus de suivi des contacts depuis la première demande jusqu’à l’inscription.</li>\n      <li>Vision globale des échanges et priorisation automatique selon le niveau d’intérêt.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Système d’appels performant</strong>\n    <ul>\n      <li>Intégration d’un module d’appels connecté au logiciel pour un suivi complet.</li>\n      <li>Enregistrement des interactions et statistiques de performance commerciale.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Relances WhatsApp intégrées</strong>\n    <ul>\n      <li>Automatisation des rappels et des messages de suivi via WhatsApp.</li>\n      <li>Relances personnalisées selon les réponses et le stade d’avancement.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Pilotage marketing et reporting</strong>\n    <ul>\n      <li>Tableaux de bord dynamiques pour visualiser les performances en temps réel.</li>\n      <li>Indicateurs clairs sur le volume de leads, la conversion et la réactivité des équipes.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Collaboration inter-départements</strong>\n    <ul>\n      <li>Mise en place d’un espace partagé entre marketing, secrétariat et direction.</li>\n      <li>Coordination renforcée pour un meilleur suivi des inscriptions.</li>\n    </ul>\n  </li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762164752853",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Notre Approche",
+      "content": "<p>\n  Nous avons construit un système simple, évolutif, aligné avec les processus internes.\n</p>\n\n<p>\n  Chaque fonctionnalité a été pensée pour une prise en main rapide par les équipes.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/jean%20d-arc%20school/1.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762164818382",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Audit initial",
+      "content": "<p>\n  Une cartographie des canaux d’acquisition a permis d’identifier les leviers sous‑exploités.\n</p>\n\n<p>\n  Le pipeline a été ajusté pour mieux refléter les étapes réelles de décision des familles.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/jean%20d-arc%20school/2.webp",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762164859870",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Accompagnement continu",
+      "content": "<p>\n  Chaque collaborateur a été formé à l’outil en fonction de son rôle opérationnel.\n</p>\n\n<p>\n  L’équipe est devenue autonome en moins de deux semaines sur tous les usages clés.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/jean%20d-arc%20school/3.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762164895162",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "Cette solution a transformé notre manière de gérer la prospection. Nous avons désormais une vision complète de nos leads et un suivi automatisé qui nous fait gagner un temps précieux.",
+        "author": {
+          "name": "Ahmed Guessous",
+          "role": "Directeur Général",
+          "company": "Jeanne d’Arc School",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/jean%20d-arc%20school/tem.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1762164939661",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "sidebarInfo": [
+    {
+      "key": "Localisation",
+      "value": "Casablanca, Maroc",
+      "icon": "map-pin",
+      "order": 0
+    },
+    {
+      "key": "Taille de l’équipe",
+      "value": "12 collaborateurs",
+      "icon": "users",
+      "order": 1
+    },
+    {
+      "key": "Durée du projet",
+      "value": "90 jours",
+      "icon": "clock",
+      "order": 2
+    },
+    {
+      "key": "Secteur",
+      "value": "Éducation",
+      "icon": "building",
+      "order": 3
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "97 %",
+      "icon": "award",
+      "order": 4
+    },
+    {
+      "key": "Taux de conversion (lead → inscription)",
+      "value": "+42 % après mise en place",
+      "icon": "zap",
+      "order": 5
+    }
+  ],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-11-03T10:16:02.389Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T11:04:50.393Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "69088401028655733bdca80b"
+  },
+  "slug": "ai-crafters",
+  "name": "AI Crafters",
+  "headline": "Une stratégie marketing unifiée et automatisée de bout en bout",
+  "summary": "AI Crafters, entreprise innovante spécialisée dans l’intelligence artificielle, cherchait à structurer et automatiser ses actions marketing.",
+  "company": {
+    "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/aicrafters-vectorized-white.svg",
+    "size": "21 collaborateurs",
+    "sector": "Technologie",
+    "customSector": "",
+    "location": "",
+    "website": ""
+  },
+  "project": {
+    "solution": "odoo",
+    "customSolution": "",
+    "duration": "90 jours",
+    "teamSize": "21 collaborateurs",
+    "budget": "",
+    "status": "completed"
+  },
+  "media": {
+    "coverImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/ai%20crafters/main.webp",
+    "heroVideo": "",
+    "heroVideoThumbnail": "",
+    "cardBackgroundImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/ai%20crafters/main.webp",
+    "gallery": []
+  },
+  "contentBlocks": [
+    {
+      "id": "block_1762165378909",
+      "type": "text-only",
+      "order": 0,
+      "title": "",
+      "content": "<p>\n  AI Crafters, entreprise innovante spécialisée dans l’intelligence artificielle, cherchait à structurer et automatiser ses actions marketing.\n</p>\n\n<p>\n  Sous la direction de <strong>Morad El Meziyani</strong>, CEO &amp; co-Founder, l’objectif était de disposer d’un outil complet permettant \n  de gérer l’envoi de newsletters, l’organisation de webinaires et la centralisation des données marketing pour un meilleur pilotage des performances.\n</p>\n\n<h2>Ce que nous avons mis en place</h2>\n<ul>\n  <li>\n    <strong>Automatisation marketing complète</strong>\n    <ul>\n      <li>Mise en place d’un système centralisé pour orchestrer les campagnes multicanales.</li>\n      <li>Automatisation des workflows pour simplifier la gestion des séquences marketing.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Gestion des newsletters</strong>\n    <ul>\n      <li>Outil d’envoi segmenté permettant une communication ciblée selon les audiences.</li>\n      <li>Suivi des taux d’ouverture, de clics et de conversion en temps réel.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Intégration des webinaires</strong>\n    <ul>\n      <li>Synchronisation entre les inscriptions en ligne et les listes marketing.</li>\n      <li>Suivi automatique des participants et envoi de rappels personnalisés.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Reporting et analyse</strong>\n    <ul>\n      <li>Création de tableaux de bord détaillés pour suivre les performances globales.</li>\n      <li>Indicateurs clés sur la portée, la conversion et le retour sur engagement.</li>\n    </ul>\n  </li>\n  <li>\n    <strong>Centralisation des contacts</strong>\n    <ul>\n      <li>Base de données unique regroupant prospects, partenaires et participants.</li>\n      <li>Historique complet des interactions pour une meilleure personnalisation des actions.</li>\n    </ul>\n  </li>\n</ul>\n",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762165489497",
+      "type": "text-image-left",
+      "order": 1,
+      "title": "Mise en place des automatisations",
+      "content": "<p>\n  Nous avons co‑construit les parcours avec l’équipe marketing pour automatiser sans complexifier.\n</p>\n\n<p>\n  Chaque scénario a été pensé pour refléter les échanges réels entre parents et établissement.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/ai%20crafters/1.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762165614739",
+      "type": "text-image-right",
+      "order": 2,
+      "title": "Cadrage marketing & priorités",
+      "content": "<p>\n  L’audit a mis en lumière un besoin fort d’automatiser les relances et d’unifier le tracking.\n</p>\n\n<p>\n  Nous avons priorisé les actions à fort impact avant d'étendre à l’ensemble des cycles.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/ai%20crafters/2.webp",
+      "imageAlt": "Description de l'image",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762165654935",
+      "type": "text-image-left",
+      "order": 3,
+      "title": "Ajustements basés sur les retours",
+      "content": "<p>\n  Les scénarios ont été optimisés après analyse des performances sur les premières campagnes.\n</p>\n\n<p>\n  Un reporting dynamique a été mis en place pour ajuster en temps réel les taux d’ouverture et de réponse.\n</p>\n",
+      "imageUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/ai%20crafters/3.webp",
+      "imageAlt": "Image du projet",
+      "stats": [],
+      "cards": []
+    },
+    {
+      "id": "block_1762165686259",
+      "type": "testimonial",
+      "order": 4,
+      "title": "",
+      "stats": [],
+      "cards": [],
+      "testimonial": {
+        "quote": "Nous avons enfin une vision claire et intégrée de toutes nos actions marketing. L’automatisation mise en place par Blackswan nous a permis de gagner du temps et d’augmenter notre impact.",
+        "author": {
+          "name": "Morad El Meziyani",
+          "role": "CEO & Founder",
+          "company": "AI Crafters",
+          "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/ai%20crafters/tem.webp"
+        },
+        "rating": 5
+      }
+    },
+    {
+      "id": "block_1762165728887",
+      "type": "contact-form",
+      "order": 5,
+      "title": "Vous souhaitez optimiser ou bien mettre en place votre plateforme Odoo ?",
+      "stats": [],
+      "cards": []
+    }
+  ],
+  "seo": {
+    "title": "",
+    "description": "",
+    "keywords": [],
+    "ogImage": ""
+  },
+  "quickStats": [],
+  "sidebarInfo": [
+    {
+      "key": "Localisation",
+      "value": "Casablanca, Maroc",
+      "icon": "map-pin",
+      "order": 0
+    },
+    {
+      "key": "Taille de l'équipe",
+      "value": "21 collaborateurs",
+      "icon": "users",
+      "order": 1
+    },
+    {
+      "key": "Durée du projet",
+      "value": "90 jours",
+      "icon": "clock",
+      "order": 2
+    },
+    {
+      "key": "Secteur",
+      "value": "Technologie & numérique",
+      "icon": "building",
+      "order": 3
+    },
+    {
+      "key": "Satisfaction de l’équipe",
+      "value": "97%",
+      "icon": "zap",
+      "order": 4
+    },
+    {
+      "key": "Taux de conversion (lead → signature)",
+      "value": "+53% après mise en place",
+      "icon": "bar-chart-3",
+      "order": 5
+    }
+  ],
+  "tags": [],
+  "featured": false,
+  "published": true,
+  "createdAt": {
+    "$date": "2025-11-03T10:29:21.383Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T10:58:49.550Z"
+  },
+  "publishedAt": {
+    "$date": "2025-11-03T10:29:21.383Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+}]

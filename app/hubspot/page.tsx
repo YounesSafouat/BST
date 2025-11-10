@@ -730,7 +730,7 @@ function HubSpotPageContent() {
     title: "HubSpot",
     hero: {
       headline: "HubSpot CRM & Marketing Automation",
-      logo: "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hubspot.svg",
+      logo: "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787682/bst-migration/ev7nzcydrxevkouiukh6.svg",
       subheadline: "En tant que Partenaire Platinum HubSpot, nous transformons votre chaos commercial en machine de croissance automatisée.",
       ctaPrimary: { text: "Planifier une Consultation", icon: "Calendar" },
       ctaSecondary: { text: "Voir Nos Cas d'Étude", icon: "Play" }
@@ -1085,7 +1085,7 @@ function HubSpotPageContent() {
           >
             <div className="bg-white rounded-xl p-8 border border-gray-200 hover:shadow-lg transition-all duration-300 max-w-2xl mx-auto">
               <Image
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Hubspot.webp"
+                src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787684/bst-migration/xexprd3djwldexxlgqqw.webp"
                 alt="Certification HubSpot"
                 width={300}
                 height={200}

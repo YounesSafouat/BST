@@ -894,7 +894,7 @@ function HeroSectionV1Mobile({ heroData, userRegion, isPreview = false }: HeroSe
             >
               <div className="p-2 flex items-center justify-center">
                 <img 
-                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" 
+                  src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787746/bst-migration/xz4i6pkggcududsqraaf.png" 
                   alt="Odoo Silver Partner Badge" 
                   className='w-[240px] h-[240px]' 
                 />
@@ -920,7 +920,7 @@ function HeroSectionV1Mobile({ heroData, userRegion, isPreview = false }: HeroSe
               className="flex justify-center"
             >
               <img
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/couvertureV1SiteWeb.png"
+                src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787755/bst-migration/dq7dp7sqqqjsjgkdsjqb.png"
                 alt="Odoo Integration"
                 className="w-full max-w-md rounded-2xl shadow-lg"
               />

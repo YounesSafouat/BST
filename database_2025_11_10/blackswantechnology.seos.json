@@ -1,0 +1,106 @@
+[{
+  "_id": {
+    "$oid": "685c1603b742e9bd1291b461"
+  },
+  "page": "home",
+  "language": "fr",
+  "title": "Blackswan Technology - Partenaire Officiel Odoo",
+  "description": "Transformez votre entreprise avec nos solutions Odoo ERP. Experts en transformation digitale, nous implémentons des solutions sur mesure.",
+  "keywords": "intégrateur Odoo, expert Odoo, consultant Odoo, partenaire Odoo, spécialiste Odoo, intégration Odoo, implémentation Odoo, installation Odoo, développement Odoo, formation Odoo, maintenance Odoo, migration Odoo, optimisation Odoo, Odoo ERP, Odoo Enterprise, Odoo Community, Odoo Maroc, Odoo France, Odoo Casablanca, Odoo Rabat, Odoo Marrakech, Odoo Tanger, Odoo Agadir, Odoo Fès, intégrateur Odoo Maroc, intégrateur Odoo France, expert Odoo Maroc, expert Odoo France, consultant Odoo Maroc, consultant Odoo France, partenaire Odoo Maroc, partenaire Odoo France, spécialiste Odoo Maroc, spécialiste Odoo France, implémentation Odoo Maroc, implémentation Odoo France, intégration Odoo Maroc, intégration Odoo France, installation Odoo Maroc, installation Odoo France, développement Odoo Maroc, développement Odoo France, formation Odoo Maroc, formation Odoo France, maintenance Odoo Maroc, maintenance Odoo France, migration Odoo Maroc, migration Odoo France, optimisation Odoo Maroc, optimisation Odoo France, ERP Maroc, ERP France, ERP Odoo Maroc, ERP Odoo France, solution ERP Maroc, solution ERP France, logiciel ERP Maroc, logiciel ERP France, transformation digitale Maroc, transformation digitale France, automatisation Maroc, automatisation France, intégrateur ERP Maroc, intégrateur ERP France, spécialiste ERP Maroc, spécialiste ERP France, projet Odoo, déploiement Odoo, paramétrage Odoo, personnalisation Odoo, support Odoo, accompagnement Odoo, conseil Odoo, intégration ERP Odoo, digitalisation des entreprises Maroc, digitalisation des entreprises France",
+  "ogTitle": "Blackwan Technology - Partenaire Officiel Odoo",
+  "ogDescription": "Transformez votre entreprise avec nos solutions Odoo ERP. Experts en transformation digitale.",
+  "ogImage": "https://raw.githubusercontent.com/WarrenBST/signature/main/Logo%20r%C3%A9seaux%20sociaux",
+  "isActive": true,
+  "updatedBy": "younes@blackswantechnology.fr",
+  "createdAt": {
+    "$date": "2025-01-20T10:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-03T13:51:21.424Z"
+  },
+  "hreflang": [],
+  "lastUpdated": {
+    "$date": "2025-11-03T13:51:21.423Z"
+  },
+  "__v": 0,
+  "canonical": ""
+},
+{
+  "_id": {
+    "$oid": "685c1603b742e9bd1291b467"
+  },
+  "page": "blog",
+  "language": "fr",
+  "title": "Blog - BlackSwan Technology | Articles Odoo & HubSpot",
+  "description": "Découvrez nos articles, guides pratiques et études de cas sur Odoo ERP, HubSpot CRM et la transformation digitale. Conseils d'experts et bonnes pratiques.",
+  "keywords": "intégrateur Odoo Maroc, expert Odoo Maroc, intégrateur HubSpot Maroc, expert HubSpot Maroc, consultant Odoo Maroc, consultant HubSpot Maroc, spécialiste Odoo Maroc, spécialiste HubSpot Maroc, blog, articles, guides, Odoo, HubSpot, transformation digitale, conseils, bonnes pratiques, études de cas, Odoo Maroc, HubSpot Maroc, ERP CRM Maroc, Odoo المغرب, هابسبوت المغرب, Odoo integration Morocco, HubSpot integration Morocco, ERP Morocco, CRM Morocco, Odoo expert Morocco, HubSpot expert Morocco, Odoo consultant Morocco, HubSpot consultant Morocco, Odoo integrator Morocco, HubSpot integrator Morocco",
+  "ogTitle": "Blog - BlackSwan Technology",
+  "ogDescription": "Articles et guides sur Odoo ERP, HubSpot CRM et la transformation digitale par nos experts.",
+  "ogImage": "/hero-digital-transformation.png",
+  "isActive": true,
+  "updatedBy": "system",
+  "createdAt": {
+    "$date": "2025-01-20T10:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-20T10:00:00.000Z"
+  },
+  "hreflang": [],
+  "lastUpdated": {
+    "$date": "2025-06-25T15:30:11.945Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685c1603b742e9bd1291b469"
+  },
+  "page": "clients",
+  "language": "fr",
+  "title": "Cas Clients - BlackSwan Technology | Études de Cas",
+  "description": "Découvrez nos études de cas clients et leurs réussites avec nos solutions Odoo et HubSpot. Témoignages et résultats concrets de transformation digitale.",
+  "keywords": "intégrateur Odoo Maroc, expert Odoo Maroc, intégrateur HubSpot Maroc, expert HubSpot Maroc, consultant Odoo Maroc, consultant HubSpot Maroc, spécialiste Odoo Maroc, spécialiste HubSpot Maroc, cas clients, études de cas, témoignages, réussites, transformation digitale, Odoo, HubSpot, résultats, Odoo Maroc, HubSpot Maroc, ERP CRM Maroc, Odoo المغرب, هابسبوت المغرب, Odoo integration Morocco, HubSpot integration Morocco, ERP Morocco, CRM Morocco, Odoo expert Morocco, HubSpot expert Morocco, Odoo consultant Morocco, HubSpot consultant Morocco, Odoo integrator Morocco, HubSpot integrator Morocco",
+  "ogTitle": "Cas Clients - BlackSwan Technology",
+  "ogDescription": "Découvrez nos études de cas clients et leurs réussites avec nos solutions Odoo et HubSpot.",
+  "ogImage": "/hero-digital-transformation.png",
+  "isActive": true,
+  "updatedBy": "system",
+  "createdAt": {
+    "$date": "2025-01-20T10:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-20T10:00:00.000Z"
+  },
+  "hreflang": [],
+  "lastUpdated": {
+    "$date": "2025-06-25T15:30:11.995Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68f0bdd8cf160a6f579e5775"
+  },
+  "page": "votre-integrateur-odoo",
+  "language": "fr",
+  "title": "Blackwan Technology - Partenaire Officiel Odoo",
+  "description": "Transformez votre entreprise avec nos solutions Odoo ERP. Experts en transformation digitale, nous implémentons des solutions sur mesure. ",
+  "keywords": "Odoo, intégration Odoo, ERP Odoo, consultant Odoo, intégrateur Odoo, système ERP, gestion d’entreprise, automatisation des processus, transformation digitale, solution ERP, implémentation Odoo, Odoo pour PME, ERP cloud, intégration sur mesure, expert Odoo",
+  "ogTitle": "Blackwan Technology - Partenaire Officiel Odoo",
+  "ogDescription": "Transformez votre entreprise avec nos solutions Odoo ERP. Experts en transformation digitale, nous implémentons des solutions sur mesure.",
+  "ogImage": "https://raw.githubusercontent.com/WarrenBST/signature/main/Logo%20r%C3%A9seaux%20sociaux",
+  "canonical": "/votre-integrateur-odoo",
+  "isActive": true,
+  "updatedBy": "warren@blackswantechnology.fr",
+  "hreflang": [],
+  "lastUpdated": {
+    "$date": "2025-10-17T13:11:29.441Z"
+  },
+  "createdAt": {
+    "$date": "2025-10-16T09:41:44.437Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-17T13:11:29.441Z"
+  },
+  "__v": 0
+}]

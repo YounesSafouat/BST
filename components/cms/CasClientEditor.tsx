@@ -54,6 +54,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DynamicClientCase, ClientCaseFormData, ContentBlock, ContentBlockType, CONTENT_BLOCK_TEMPLATES, AVAILABLE_SECTORS, AVAILABLE_TAGS } from '@/lib/types/cas-client'
 import { toast } from '@/components/ui/use-toast'
 import Image from 'next/image'
+import ImageUpload from '@/components/dashboard/ImageUpload'
+import VideoUpload from '@/components/dashboard/VideoUpload'
 
 // Icon options for dropdowns
 const ICON_OPTIONS = [
@@ -642,12 +644,11 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="company-logo">Logo de l'entreprise</Label>
-                      <Input
-                        id="company-logo"
+                      <ImageUpload
                         value={formData.company.logo}
-                        onChange={(e) => updateNestedFormData('company', 'logo', e.target.value)}
-                        placeholder="URL du logo"
+                        onChange={(url) => updateNestedFormData('company', 'logo', url)}
+                        label="Logo de l'entreprise"
+                        placeholder="URL du logo ou télécharger"
                       />
                     </div>
                     <div>
@@ -993,30 +994,27 @@ export default function CasClientEditor({ initialData, onSave, onCancel, mode }:
                     <h3 className="text-lg font-semibold">Médias</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="cover-image">Image de couverture *</Label>
-                        <Input
-                          id="cover-image"
+                        <ImageUpload
                           value={formData.media.coverImage}
-                          onChange={(e) => updateNestedFormData('media', 'coverImage', e.target.value)}
-                          placeholder="URL de l'image de couverture"
+                          onChange={(url) => updateNestedFormData('media', 'coverImage', url)}
+                          label="Image de couverture *"
+                          placeholder="URL de l'image de couverture ou télécharger"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="hero-video">Vidéo principale</Label>
-                        <Input
-                          id="hero-video"
+                        <VideoUpload
                           value={formData.media.heroVideo || ''}
-                          onChange={(e) => updateNestedFormData('media', 'heroVideo', e.target.value)}
-                          placeholder="URL de la vidéo YouTube"
+                          onChange={(url) => updateNestedFormData('media', 'heroVideo', url)}
+                          label="Vidéo principale"
+                          placeholder="URL de la vidéo YouTube ou télécharger"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="card-background">Image de fond pour les cartes</Label>
-                        <Input
-                          id="card-background"
+                        <ImageUpload
                           value={formData.media.cardBackgroundImage || ''}
-                          onChange={(e) => updateNestedFormData('media', 'cardBackgroundImage', e.target.value)}
-                          placeholder="URL de l'image de fond pour les cartes"
+                          onChange={(url) => updateNestedFormData('media', 'cardBackgroundImage', url)}
+                          label="Image de fond pour les cartes"
+                          placeholder="URL de l'image de fond pour les cartes ou télécharger"
                         />
                       </div>
                     </div>
@@ -1289,13 +1287,14 @@ const ContentBlockEditor: React.FC<{
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label>URL de l'image</Label>
-                  <Input
+                  <ImageUpload
                     value={safeBlock.imageUrl}
-                    onChange={(e) => onUpdate({ 
-                      imageUrl: e.target.value
+                    onChange={(url) => onUpdate({ 
+                      imageUrl: url
                     })}
-                    placeholder="URL de l'image"
+                    label="URL de l'image"
+                    placeholder="URL de l'image ou télécharger"
+                    showPreview={false}
                   />
                 </div>
                 <div>
@@ -1319,13 +1318,14 @@ const ContentBlockEditor: React.FC<{
               {(block.type === 'image-stats-left' || block.type === 'image-stats-right') && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label>URL de l'image</Label>
-                    <Input
+                    <ImageUpload
                       value={safeBlock.imageUrl}
-                      onChange={(e) => onUpdate({ 
-                        imageUrl: e.target.value
+                      onChange={(url) => onUpdate({ 
+                        imageUrl: url
                       })}
-                      placeholder="URL de l'image"
+                      label="URL de l'image"
+                      placeholder="URL de l'image ou télécharger"
+                      showPreview={false}
                     />
                   </div>
                   <div>
@@ -1424,28 +1424,22 @@ const ContentBlockEditor: React.FC<{
               
               {/* Section Background Image */}
               <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-                <Label className="text-sm font-medium mb-2 block">Image de fond de la section</Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
+                <div className="space-y-4">
+                  <ImageUpload
                     value={safeBlock.sectionImageUrl || ''}
-                    onChange={(e) => onUpdate({ sectionImageUrl: e.target.value })}
-                    placeholder="URL de l'image de fond de la section"
+                    onChange={(url) => onUpdate({ sectionImageUrl: url })}
+                    label="Image de fond de la section"
+                    placeholder="URL de l'image de fond de la section ou télécharger"
                   />
-                  <Input
-                    value={safeBlock.sectionImageAlt || ''}
-                    onChange={(e) => onUpdate({ sectionImageAlt: e.target.value })}
-                    placeholder="Texte alternatif de l'image de fond"
-                  />
-                </div>
-                {safeBlock.sectionImageUrl && (
-                  <div className="mt-3">
-                    <img 
-                      src={safeBlock.sectionImageUrl} 
-                      alt={safeBlock.sectionImageAlt || 'Aperçu de l\'image de fond'}
-                      className="w-full h-32 object-cover rounded border"
+                  <div>
+                    <Label>Texte alternatif</Label>
+                    <Input
+                      value={safeBlock.sectionImageAlt || ''}
+                      onChange={(e) => onUpdate({ sectionImageAlt: e.target.value })}
+                      placeholder="Texte alternatif de l'image de fond"
                     />
                   </div>
-                )}
+                </div>
               </div>
               
               <div className="space-y-4">
@@ -1551,30 +1545,32 @@ const ContentBlockEditor: React.FC<{
               {safeBlock.videoUrl ? (
                 <>
                   <div>
-                    <Label>URL de la vidéo</Label>
-                    <Input
+                    <VideoUpload
                       value={safeBlock.videoUrl}
-                      onChange={(e) => onUpdate({ videoUrl: e.target.value })}
-                      placeholder="URL YouTube, Vimeo, ou autre vidéo"
+                      onChange={(url) => onUpdate({ videoUrl: url })}
+                      label="URL de la vidéo"
+                      placeholder="URL YouTube, Vimeo, ou télécharger"
                     />
                   </div>
                   <div>
-                    <Label>Miniature de la vidéo (optionnel)</Label>
-                    <Input
+                    <ImageUpload
                       value={safeBlock.videoThumbnail || ''}
-                      onChange={(e) => onUpdate({ videoThumbnail: e.target.value })}
-                      placeholder="URL de l'image de miniature"
+                      onChange={(url) => onUpdate({ videoThumbnail: url })}
+                      label="Miniature de la vidéo (optionnel)"
+                      placeholder="URL de l'image de miniature ou télécharger"
+                      showPreview={false}
                     />
                   </div>
                 </>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label>URL de l'image</Label>
-                    <Input
+                    <ImageUpload
                       value={safeBlock.imageUrl}
-                      onChange={(e) => onUpdate({ imageUrl: e.target.value })}
-                      placeholder="URL de l'image"
+                      onChange={(url) => onUpdate({ imageUrl: url })}
+                      label="URL de l'image"
+                      placeholder="URL de l'image ou télécharger"
+                      showPreview={false}
                     />
                   </div>
                   <div>
@@ -1694,39 +1690,20 @@ const ContentBlockEditor: React.FC<{
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium text-gray-700 mb-2 block">Photo de profil (URL)</Label>
-                    <div className="space-y-3">
-                      <Input
-                        value={safeBlock.testimonial?.author?.avatar || ''}
-                        onChange={(e) => onUpdate({ 
-                          testimonial: { 
-                            ...safeBlock.testimonial, 
-                            author: { 
-                              ...safeBlock.testimonial?.author, 
-                              avatar: e.target.value 
-                            } 
+                    <ImageUpload
+                      value={safeBlock.testimonial?.author?.avatar || ''}
+                      onChange={(url) => onUpdate({ 
+                        testimonial: { 
+                          ...safeBlock.testimonial, 
+                          author: { 
+                            ...safeBlock.testimonial?.author, 
+                            avatar: url 
                           } 
-                        })}
-                        placeholder="URL de la photo de profil"
-                      />
-                      {safeBlock.testimonial?.author?.avatar && (
-                        <div className="flex items-center gap-4 p-3 bg-white rounded-lg border">
-                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200">
-                            <img 
-                              src={safeBlock.testimonial.author.avatar} 
-                              alt="Photo de profil"
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none'
-                              }}
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm text-gray-600">Aperçu de la photo de profil</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                        } 
+                      })}
+                      label="Photo de profil"
+                      placeholder="URL de la photo de profil ou télécharger"
+                    />
                   </div>
                 </div>
               </div>

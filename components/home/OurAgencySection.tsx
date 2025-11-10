@@ -67,9 +67,9 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
           const isMorocco = cachedData ? JSON.parse(cachedData).data?.countryCode === 'MA' : false;
           
           if (isMorocco) {
-               return partnershipData?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
+               return partnershipData?.image || "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80";
           } else {
-               return partnershipData?.imageOtherCountries || partnershipData?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
+               return partnershipData?.imageOtherCountries || partnershipData?.image || "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80";
           }
      };
 
@@ -103,10 +103,10 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                
                if (isMoroccoCountry) {
                     // Morocco: show team photo
-                    setImageUrl(partnershipData?.image || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg");
+                    setImageUrl(partnershipData?.image || "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80");
                } else {
                     // Other countries: show BST logo
-                    setImageUrl(partnershipData?.imageOtherCountries || "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20logo.png");
+                    setImageUrl(partnershipData?.imageOtherCountries || "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787740/bst-migration/rpfvrsxhzapcwyopzfrt.png");
                }
                
               
@@ -186,7 +186,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              alt="Notre équipe"
                                              className="object-cover w-full h-72 md:h-80 transition-transform duration-700 group-hover:scale-110"
                                              onError={(e) => {
-                                                  e.currentTarget.src = "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg";
+                                                  e.currentTarget.src = "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80";
                                              }}
                                         />
                                         {/* Subtle border glow */}

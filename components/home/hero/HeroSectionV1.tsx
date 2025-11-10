@@ -623,7 +623,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
                   className="flex items-center gap-2 mb-2"
                 >
                   <div className="w-[250px] h-[100px] flex items-center justify-center" >
-                 <img src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odooSilverBadge-2.png" alt="Odoo Silver Partner Badge" />
+                 <img src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787746/bst-migration/xz4i6pkggcududsqraaf.png" alt="Odoo Silver Partner Badge" />
 
                   </div>
                 </motion.div>

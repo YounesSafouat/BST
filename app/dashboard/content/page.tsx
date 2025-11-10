@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
 import Loader from '@/components/home/Loader';
 import { availableIcons } from '@/lib/iconList';
+import ImageUpload from '@/components/dashboard/ImageUpload';
 
 // Lazy load components for preview to prevent performance issues
 import dynamic from 'next/dynamic';
@@ -497,12 +498,12 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <Label>Logo Odoo URL</Label>
-                            <Input
+                            <ImageUpload
                                 value={content.logos?.odoo?.url || ""}
-                                onChange={(e) => handleNestedChange("logos", "odoo", { ...content.logos?.odoo, url: e.target.value })}
-                                placeholder="https://example.com/odoo-logo.svg"
-                                className="w-full"
+                                onChange={(url) => handleNestedChange("logos", "odoo", { ...content.logos?.odoo, url })}
+                                label="Logo Odoo URL"
+                                placeholder="https://example.com/odoo-logo.svg ou télécharger"
+                                showPreview={false}
                             />
                         </div>
                         <div className="space-y-2">
@@ -515,12 +516,12 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Logo HubSpot URL</Label>
-                            <Input
+                            <ImageUpload
                                 value={content.logos?.hubspot?.url || ""}
-                                onChange={(e) => handleNestedChange("logos", "hubspot", { ...content.logos?.hubspot, url: e.target.value })}
-                                placeholder="https://example.com/hubspot-logo.svg"
-                                className="w-full"
+                                onChange={(url) => handleNestedChange("logos", "hubspot", { ...content.logos?.hubspot, url })}
+                                label="Logo HubSpot URL"
+                                placeholder="https://example.com/hubspot-logo.svg ou télécharger"
+                                showPreview={false}
                             />
                         </div>
                         <div className="space-y-2">
@@ -896,11 +897,12 @@ function HeroForm({ data, onChange }: { data: ContentSection; onChange: (data: C
                                     placeholder="Odoo"
                                     className="w-full"
                                 />
-                                <Input
+                                <ImageUpload
                                     value={company.logo || ""}
-                                    onChange={(e) => handleArrayChange("companies", index, "logo", e.target.value)}
-                                    placeholder="https://example.com/logo.svg"
-                                    className="w-full"
+                                    onChange={(url) => handleArrayChange("companies", index, "logo", url)}
+                                    label=""
+                                    placeholder="https://example.com/logo.svg ou télécharger"
+                                    showPreview={false}
                                 />
                             </div>
                             <Button
@@ -1047,7 +1049,7 @@ function SolutionForm({ data, onChange }: { data: ContentSection; onChange: (dat
                             <div><Label>Titre</Label><Input value={solution.title} onChange={e => handleSolutionChange(solIndex, "title", e.target.value)} /></div>
                             <div><Label>Sous-titre</Label><Input value={solution.subtitle} onChange={e => handleSolutionChange(solIndex, "subtitle", e.target.value)} /></div>
                             <div><Label>Icône</Label><Select value={solution.icon} onValueChange={v => handleSolutionChange(solIndex, 'icon', v)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select></div>
-                            <div><Label>URL Icône (optionnel)</Label><Input value={solution.iconUrl || ""} onChange={e => handleSolutionChange(solIndex, "iconUrl", e.target.value)} placeholder="https://example.com/icon.svg" /></div>
+                            <div><ImageUpload value={solution.iconUrl || ""} onChange={url => handleSolutionChange(solIndex, "iconUrl", url)} label="URL Icône (optionnel)" placeholder="https://example.com/icon.svg ou télécharger" showPreview={false} /></div>
                             <div><Label>Couleur</Label><Input type="color" value={solution.color} onChange={e => handleSolutionChange(solIndex, "color", e.target.value)} /></div>
                         </div>
                         <div><Label>Description</Label><Textarea value={solution.description} onChange={e => handleSolutionChange(solIndex, "description", e.target.value)} /></div>
@@ -1108,7 +1110,7 @@ function TransformationForm({ data, onChange }: { data: ContentSection; onChange
                             <div><Label>Numéro d'étape</Label><Input value={step.step} onChange={e => handleStepChange(index, "step", e.target.value)} /></div>
                             <div><Label>Côté</Label><Select value={step.side} onValueChange={v => handleStepChange(index, 'side', v)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="left">Gauche</SelectItem><SelectItem value="right">Droite</SelectItem></SelectContent></Select></div>
                             <div><Label>Icône</Label><Select value={step.icon} onValueChange={v => handleStepChange(index, 'icon', v)}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{availableIcons.map((icon: any) => <SelectItem key={icon.value} value={icon.value}><div className="flex items-center space-x-2"><icon.icon className="w-4 h-4" /><span>{icon.label}</span></div></SelectItem>)}</SelectContent></Select></div>
-                            <div><Label>URL Icône (optionnel)</Label><Input value={step.iconUrl || ""} onChange={e => handleStepChange(index, "iconUrl", e.target.value)} placeholder="https://example.com/icon.svg" /></div>
+                            <div><ImageUpload value={step.iconUrl || ""} onChange={url => handleStepChange(index, "iconUrl", url)} label="URL Icône (optionnel)" placeholder="https://example.com/icon.svg ou télécharger" showPreview={false} /></div>
                         </div>
                         <div><Label>Titre</Label><Input value={step.title} onChange={e => handleStepChange(index, "title", e.target.value)} /></div>
                         <div><Label>Description</Label><Textarea value={step.description} onChange={e => handleStepChange(index, "description", e.target.value)} /></div>

@@ -27,7 +27,7 @@ const VideoBackgroundSection: React.FC<VideoBackgroundSectionProps> = ({
                     playsInline
                     className="w-full h-full object-cover"
                 >
-                    <source src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/video%20module%20section.mp4" type="video/mp4" />
+                    <source src="https://res.cloudinary.com/dwob2hfin/video/upload/v1762789193/video_20module_20section_jcpnsd.mp4" type="video/mp4" />
                 </video>
                 
                 {/* Blue Gradient Overlay */}

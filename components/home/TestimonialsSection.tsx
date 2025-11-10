@@ -3,11 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 import { motion } from "framer-motion";
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
 import { ExternalLink } from 'lucide-react';
@@ -37,9 +32,6 @@ interface TestimonialsSectionProps {
 export default function TestimonialsSection({ testimonialsSectionData, testimonials }: TestimonialsSectionProps) {
      const [mounted, setMounted] = useState(false);
      const [displayTestimonials, setDisplayTestimonials] = useState<Testimonial[]>([]);
-     const [currentSlide, setCurrentSlide] = useState(0);
-     const [touchStart, setTouchStart] = useState<number | null>(null);
-     const [touchEnd, setTouchEnd] = useState<number | null>(null);
      const lastFetchedRegion = useRef<string | null>(null);
      const scrollRef = useRef<HTMLDivElement>(null);
      
@@ -62,38 +54,8 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
           return () => window.removeEventListener('resize', checkMobile);
      }, []);
 
-     // Navigation functions for mobile
-     const nextSlide = () => {
-          setCurrentSlide((prev) => (prev + 1) % displayTestimonials.length);
-     };
-
-     const prevSlide = () => {
-          setCurrentSlide((prev) => (prev - 1 + displayTestimonials.length) % displayTestimonials.length);
-     };
-
-     // Touch handlers for mobile swipe
-     const handleTouchStart = (e: React.TouchEvent) => {
-          setTouchEnd(null);
-          setTouchStart(e.targetTouches[0].clientX);
-     };
-
-     const handleTouchMove = (e: React.TouchEvent) => {
-          setTouchEnd(e.targetTouches[0].clientX);
-     };
-
-     const handleTouchEnd = () => {
-          if (!touchStart || !touchEnd) return;
-          
-          const distance = touchStart - touchEnd;
-          const isLeftSwipe = distance > 50;
-          const isRightSwipe = distance < -50;
-
-          if (isLeftSwipe) {
-               nextSlide();
-          } else if (isRightSwipe) {
-               prevSlide();
-          }
-     };
+     // Get first 4 testimonials for mobile display (controlled via CMS)
+     const mobileTestimonials = displayTestimonials.slice(0, 4);
 
      // Handle dynamic animation based on number of testimonials and size changes (desktop only)
      useEffect(() => {
@@ -358,107 +320,73 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                               })
                          ) : null}
 
-                         {/* Mobile: Single testimonial with navigation */}
-                         {isMobile && displayTestimonials.length > 0 && (
-                              <div className="flex-shrink-0 w-full px-4">
-                                   <div 
-                                        className="relative overflow-hidden"
-                                        onTouchStart={handleTouchStart}
-                                        onTouchMove={handleTouchMove}
-                                        onTouchEnd={handleTouchEnd}
-                                   >
-                                        <div 
-                                             className="flex transition-transform duration-500 ease-in-out"
-                                             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-                                        >
-                                             {/* Create infinite testimonials by duplicating */}
-                                             {[...Array(2)].map((_, setIndex) => 
-                                                  displayTestimonials.map((testimonial, index) => {
-                                                       const clientCaseUrl = testimonial.clientCasePath 
-                                                            ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
-                                                            : `/cas-client`;
+                         {/* Mobile: Display 4 testimonials in grid (controlled via CMS) */}
+                         {isMobile && mobileTestimonials.length > 0 && (
+                              <div className="grid grid-cols-1 gap-6 w-full px-4">
+                                   {mobileTestimonials.map((testimonial) => {
+                                        const clientCaseUrl = testimonial.clientCasePath 
+                                             ? `/cas-client${testimonial.clientCasePath.startsWith('/') ? '' : '/'}${testimonial.clientCasePath}`
+                                             : `/cas-client`;
 
-                                                       return (
-                                                            <div key={`${setIndex}-${testimonial._id}`} className="w-full flex-shrink-0">
-                                                                 <Link href={clientCaseUrl} className="block h-full">
-                                                                      <div className="bg-white flex flex-col gap-4 justify-between border border-gray-200 hover:border-[var(--color-secondary)] p-6 rounded-2xl h-[400px] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
-                                                                           <div className="testimonial-rate flex gap-0.5">
-                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                                                <i className="fa-solid fa-star text-[#f9b707]"></i>
-                                                                           </div>
-
-                                                                           <blockquote className="testimonial-quote text-[#637381] text-base flex-1 overflow-y-auto">
-                                                                                "{String(testimonial.text || 'No testimonial text available.')}"
-                                                                           </blockquote>
-
-                                                                           <div className="space-y-3 mt-auto">
-                                                                                <div className="testimonial-author flex items-center gap-4">
-                                                                                     <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
-                                                                                          {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
-                                                                                               <Image
-                                                                                                    src={testimonial.photo}
-                                                                                                    alt={testimonial.author || 'Author'}
-                                                                                                    width={50}
-                                                                                                    height={50}
-                                                                                                    className="w-full h-full object-cover"
-                                                                                               />
-                                                                                          ) : (
-                                                                                               <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
-                                                                                                    <span className="text-white font-bold text-sm">
-                                                                                                         {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
-                                                                                                    </span>
-                                                                                               </div>
-                                                                                          )}
-                                                                                     </div>
-
-                                                                                     <div className="author-info flex-1">
-                                                                                          <h3 className="font-semibold text-sm text-[#111928]">
-                                                                                               {testimonial.author || 'Anonymous'}
-                                                                                          </h3>
-                                                                                          <p className="text-xs text-[#8899a8]">
-                                                                                               {testimonial.role || 'Client'}
-                                                                                          </p>
-                                                                                     </div>
-                                                                                </div>
-
-                                                                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] text-white text-xs font-semibold rounded-full group-hover:shadow-lg transition-all duration-300">
-                                                                                     <span>Lire le cas client</span>
-                                                                                     <ExternalLink className="w-3 h-3" />
-                                                                                </div>
-                                                                           </div>
-                                                                      </div>
-                                                                 </Link>
+                                        return (
+                                             <div key={testimonial._id} className="w-full">
+                                                  <Link href={clientCaseUrl} className="block h-full">
+                                                       <div className="bg-white flex flex-col gap-4 justify-between border border-gray-200 hover:border-[var(--color-secondary)] p-6 rounded-2xl min-h-[350px] hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer group">
+                                                            <div className="testimonial-rate flex gap-0.5">
+                                                                 <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                 <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                 <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                 <i className="fa-solid fa-star text-[#f9b707]"></i>
+                                                                 <i className="fa-solid fa-star text-[#f9b707]"></i>
                                                             </div>
-                                                       );
-                                                  })
-                                             )}
-                                        </div>
-                                   </div>
+
+                                                            <blockquote className="testimonial-quote text-[#637381] text-base flex-1 overflow-y-auto">
+                                                                 "{String(testimonial.text || 'No testimonial text available.')}"
+                                                            </blockquote>
+
+                                                            <div className="space-y-3 mt-auto">
+                                                                 <div className="testimonial-author flex items-center gap-4">
+                                                                      <div className="author-avatar w-12 h-12 rounded-full overflow-hidden">
+                                                                           {testimonial.photo && (testimonial.photo.startsWith('http') || testimonial.photo.startsWith('/')) ? (
+                                                                                <Image
+                                                                                     src={testimonial.photo}
+                                                                                     alt={testimonial.author || 'Author'}
+                                                                                     width={50}
+                                                                                     height={50}
+                                                                                     className="w-full h-full object-cover"
+                                                                                />
+                                                                           ) : (
+                                                                                <div className="w-full h-full bg-gradient-to-br from-[#3758f9] to-[#3758f9]/80 rounded-full flex items-center justify-center">
+                                                                                     <span className="text-white font-bold text-sm">
+                                                                                          {(testimonial.author || 'Anonymous').split(' ').map(n => n[0]).join('')}
+                                                                                     </span>
+                                                                                </div>
+                                                                           )}
+                                                                      </div>
+
+                                                                      <div className="author-info flex-1">
+                                                                           <h3 className="font-semibold text-sm text-[#111928]">
+                                                                                {testimonial.author || 'Anonymous'}
+                                                                           </h3>
+                                                                           <p className="text-xs text-[#8899a8]">
+                                                                                {testimonial.role || 'Client'}
+                                                                           </p>
+                                                                      </div>
+                                                                 </div>
+
+                                                                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-main)] text-white text-xs font-semibold rounded-full group-hover:shadow-lg transition-all duration-300">
+                                                                      <span>Lire le cas client</span>
+                                                                      <ExternalLink className="w-3 h-3" />
+                                                                 </div>
+                                                            </div>
+                                                       </div>
+                                                  </Link>
+                                             </div>
+                                        );
+                                   })}
                               </div>
                          )}
                     </div>
-
-                    {/* Mobile Navigation Buttons - Side arrows */}
-                    {isMobile && displayTestimonials.length > 1 && (
-                         <>
-                              <button
-                                   onClick={prevSlide}
-                                   className="absolute -left-8 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full text-white hover:text-white/80 flex items-center justify-center transition-all duration-300 z-20"
-                              >
-                                   <i className="fa-solid fa-chevron-left text-xl"></i>
-                              </button>
-                              
-                              <button
-                                   onClick={nextSlide}
-                                   className="absolute -right-8 top-1/2 -translate-y-1/2 w-16 h-16 rounded-full text-white hover:text-white/80 flex items-center justify-center transition-all duration-300 z-20"
-                              >
-                                   <i className="fa-solid fa-chevron-right text-xl"></i>
-                              </button>
-                         </>
-                    )}
                </div>
 
                {/* Font Awesome Icons */}

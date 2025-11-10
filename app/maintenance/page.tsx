@@ -19,7 +19,7 @@ export default function MaintenancePage() {
           <div className="mb-12">
             <div className="mb-6">
               <img 
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst%20white.png" 
+                src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787688/bst-migration/vyrhkhe2kfx2hzifp9m3.png" 
                 alt="BST - Business Solutions & Technology" 
                 className="h-32 w-auto object-contain mx-auto"
               />

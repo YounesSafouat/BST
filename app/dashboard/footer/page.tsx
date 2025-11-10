@@ -28,6 +28,7 @@ import {
   Youtube
 } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
+import ImageUpload from "@/components/dashboard/ImageUpload"
 import Loader from '@/components/home/Loader';
 import { availableIcons } from '@/lib/iconList';
 
@@ -452,11 +453,11 @@ export default function FooterDashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label>Logo (URL)</Label>
-              <Input
+              <ImageUpload
                 value={footerData.companyInfo?.logo?.image || ''}
-                onChange={(e) => updateField('companyInfo.logo.image', e.target.value)}
-                placeholder="/bst.png"
+                onChange={(url) => updateField('companyInfo.logo.image', url)}
+                label="Logo"
+                placeholder="/bst.png ou télécharger"
               />
             </div>
             <div>

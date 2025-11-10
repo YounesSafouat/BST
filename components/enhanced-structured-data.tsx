@@ -266,7 +266,12 @@ export default function EnhancedStructuredData() {
                "name": structuredData.businessName,
                "alternateName": structuredData.alternateNames,
                "url": structuredData.websiteUrl,
-               "logo": structuredData.logo,
+               "logo": {
+                    "@type": "ImageObject",
+                    "url": structuredData.logo,
+                    "width": 512,
+                    "height": 512
+               },
                "image": structuredData.businessImage || structuredData.logo,
                "description": structuredData.description,
                "foundingDate": structuredData.foundingDate,
@@ -294,7 +299,8 @@ export default function EnhancedStructuredData() {
                     "name": "Morocco"
                },
                "areaServed": areaServed,
-               "hasOfferCatalog": hasOfferCatalog
+               "hasOfferCatalog": hasOfferCatalog,
+               "knowsAbout": structuredData.knowsAbout || ["Odoo ERP", "HubSpot CRM", "Digital Transformation", "ERP Implementation", "CRM Integration"]
           };
 
           // Check if page configuration is enabled and get schema type

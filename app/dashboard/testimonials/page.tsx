@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import { FileText, Pencil, Trash2, Plus, X, Save, User, Quote, Globe } from "lucide-react";
 import Loader from '@/components/home/Loader';
+import ImageUpload from '@/components/dashboard/ImageUpload';
 
 interface Testimonial {
   _id?: string;
@@ -256,8 +257,12 @@ export default function TestimonialsPage() {
                       </div>
                     </div>
                     <div>
-                      <Label>Photo (URL)</Label>
-                      <Input name="photo" value={form.photo} onChange={handleChange} placeholder="https://..." />
+                      <ImageUpload
+                        value={form.photo || ''}
+                        onChange={(url) => handleChange({ target: { name: 'photo', value: url } } as any)}
+                        label="Photo"
+                        placeholder="https://... ou télécharger"
+                      />
                     </div>
                     <div>
                       <Label>Témoignage</Label>

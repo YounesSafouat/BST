@@ -2042,12 +2042,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
      return (
           <section id="contact" className="py-12 sm:py-16 lg:py-20 bg-[var(--odoo-purple-light)]">
-               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+               <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
                     <motion.div
                          initial={{ opacity: 0, y: 20 }}
                          whileInView={{ opacity: 1, y: 0 }}
                          viewport={{ once: true }}
-                         className="text-center mb-12 sm:mb-16"
+                         className="text-center mb-12 sm:mb-16 px-4 sm:px-0"
                     >
                          <div 
                               className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
@@ -2063,8 +2063,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                          />
                     </motion.div>
 
-                    <div className="max-w-6xl mx-auto">
-                         <Card className="border border-gray-200 hover:border-[var(--color-secondary)] shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 bg-white rounded-2xl p-8">                           
+                    <div className="w-full sm:max-w-6xl sm:mx-auto">
+                         <Card className="border-0 sm:border border-gray-200 hover:border-[var(--color-secondary)] shadow-none sm:shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 bg-white rounded-none sm:rounded-2xl p-0 sm:p-8">                           
                              <div className="iclosed-widget" data-url="https://app.iclosed.io/e/warrenblackswan/rendez-vous-avec-warren-blackswan" title="Rendez-vous avec Warren"></div>
                          </Card>
                    </div>

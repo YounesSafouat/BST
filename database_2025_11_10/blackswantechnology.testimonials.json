@@ -1,0 +1,199 @@
+[{
+  "_id": {
+    "$oid": "688b5636b75f4bed33d9688e"
+  },
+  "author": "Mehdi Ktiri",
+  "role": "Directeur général de Worqbox",
+  "text": "Nous avons fait appel à Warren pour la migration complète de notre ERP Odoo de la V15 à la V19 ainsi qu’une formation de nos équipes.L’accompagnement a été à la fois rigoureux, fluide et parfaitement adapté à nos besoins.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/MEHDI%20KTIRI.png",
+  "createdAt": {
+    "$date": "2025-07-31T11:40:38.444Z"
+  },
+  "updatedAt": {
+    "$date": "2025-11-06T10:47:36.525Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ],
+  "clientCasePath": null
+},
+{
+  "_id": {
+    "$oid": "688b564cb75f4bed33d96890"
+  },
+  "author": "Ahmed Guessous",
+  "role": "CEO & Fondateur de Jeanne d’arc International",
+  "text": "Blackswan Technology a pris en main tout notre processus d’admission avec efficacité et professionnalisme. Saad a su proposer une solution sur-mesure, fiable et parfaitement adaptée à nos besoins. Un partenaire de confiance que je recommande sans hésiter.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/ahmed%20guessous.jpg",
+  "createdAt": {
+    "$date": "2025-07-31T11:41:00.084Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-13T17:00:39.636Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "688b565fb75f4bed33d96892"
+  },
+  "author": "Khalid",
+  "role": "Responsable Commercial chez TRT Broker",
+  "text": "\nNous avons fait appel à Blackswan Technology pour l’intégration de l’ERP Odoo au sein de notre société. Leur intervention nous a permis d’optimiser la gestion de nos clients, de nos salariés, de nos contrats, tout en renforçant notre suivi commercial.\n",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Khalid.png",
+  "createdAt": {
+    "$date": "2025-07-31T11:41:19.506Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-13T17:17:01.980Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68936285db60153e1dde124f"
+  },
+  "author": "Salah Eddine Belkadi",
+  "role": "CEO de Unique Packing",
+  "text": "Nous avons fait appel à Blackswan Technology pour la mise en place d’un ERP adapté à nos activités d’export.\n L’équipe a su comprendre nos enjeux logistiques et commerciaux, et a livré une solution parfaitement opérationnelle.\n Un accompagnement rigoureux et une grande réactivité. Je recommande vivement.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/unique.jpg",
+  "createdAt": {
+    "$date": "2025-08-06T14:11:17.299Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-13T17:17:07.489Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "689362a7db60153e1dde1251"
+  },
+  "author": "Hasnaa Eddal",
+  "role": "Dirigeante de Turkish Hair Clinique",
+  "text": "Blackswan Technology nous a accompagnés dans la mise en place d’un ERP pour gérer efficacement nos flux patients, nos plannings et nos équipes.\n Leur solution a grandement amélioré notre organisation au quotidien.\n Une équipe à l’écoute, professionnelle et très compétente. Un vrai plus pour notre clinique.\n",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hassnaa.jpg",
+  "createdAt": {
+    "$date": "2025-08-06T14:11:51.920Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-13T17:17:11.058Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "689362c8db60153e1dde1253"
+  },
+  "author": "Taha Mzali",
+  "role": "Responsable Marketing chez Fitness Park",
+  "text": "Grâce à Blackswan Technology, nous avons déployé un ERP qui nous permet aujourd’hui de mieux gérer nos adhérents, nos abonnements et nos opérations marketing.\n L’équipe a été rapide, claire et toujours disponible.\n Une collaboration très professionnelle que je recommande à 100 %.\n",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/taha%20mzali.jpg",
+  "createdAt": {
+    "$date": "2025-08-06T14:12:24.235Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-13T17:17:16.443Z"
+  },
+  "__v": 0,
+  "targetRegions": [
+    "morocco"
+  ]
+},
+{
+  "_id": {
+    "$oid": "689cc8867587f44306db0050"
+  },
+  "author": "Ruben Sabbah",
+  "role": "Co-fondateur @Garett Immobilier",
+  "text": "Blackswan a su transformer nos besoins métier en un outil réellement opérationnel. Odoo v19 nous permet de piloter toute notre activité en temps réel, sans friction, sans perte. Un vrai confort pour les équipes et un gain de temps pour la direction.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1697969711806.jpeg",
+  "targetRegions": [
+    "france",
+    "international"
+  ],
+  "createdAt": {
+    "$date": "2025-08-13T17:16:54.198Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T14:03:27.188Z"
+  },
+  "__v": 0,
+  "clientCasePath": "/garett-immobilier"
+},
+{
+  "_id": {
+    "$oid": "689cc8b77587f44306db0056"
+  },
+  "author": "Sacha Samama",
+  "role": "CTO & Co-Founder @Allisone.ai",
+  "text": "On a adoré bosser avec Rubens. Sa compréhension technique et son adaptabilité ont permis une migration fluide et surtout un système parfaitement aligné avec nos besoins. Aujourd’hui, on pilote notre activité sans dépendre de personne.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1718722863504.jpeg",
+  "targetRegions": [
+    "france",
+    "international"
+  ],
+  "createdAt": {
+    "$date": "2025-08-13T17:17:43.997Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-07T14:38:01.590Z"
+  },
+  "__v": 0,
+  "clientCasePath": "/allisone"
+},
+{
+  "_id": {
+    "$oid": "689cc8cf7587f44306db0058"
+  },
+  "author": "Cedric Demannez",
+  "role": "Co-founder @Qweekle",
+  "text": "L’équipe Blackswan a su comprendre notre logique produit et commerciale dès les premiers échanges. Le résultat est clair, rapide, sur mesure. On a maintenant une base solide pour structurer notre croissance.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1600073305077.jpeg",
+  "targetRegions": [
+    "france",
+    "international"
+  ],
+  "createdAt": {
+    "$date": "2025-08-13T17:18:07.556Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-07T15:09:06.044Z"
+  },
+  "__v": 0,
+  "clientCasePath": "/qweekle"
+},
+{
+  "_id": {
+    "$oid": "68e7c01f28ed2cbcb3af6746"
+  },
+  "author": "Ilan Abitbol ",
+  "role": "Directeur Général @idc-pharma",
+  "text": "Je connais Rubens depuis longtemps, et je savais qu’en confiant ce projet à son équipe, on aurait un vrai partenaire — pas juste un prestataire. Ils ont compris nos enjeux business, nos contraintes e‑commerce et notre organisation interne.\n\nLe résultat est à la hauteur : tout est fluide, robuste, intégré. On pilote aujourd’hui une activité e‑commerce à très fort volume avec sérénité.",
+  "photo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/tem.webp",
+  "targetRegions": [
+    "france",
+    "international"
+  ],
+  "clientCasePath": "idc-pharma",
+  "createdAt": {
+    "$date": "2025-10-09T14:01:03.164Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-09T14:03:15.947Z"
+  },
+  "__v": 0
+}]

@@ -1,0 +1,2431 @@
+[{
+  "_id": {
+    "$oid": "6852ef92538aa0f25bc39d01"
+  },
+  "type": "clients-page",
+  "title": "Cas Clients",
+  "description": "Découvrez nos études de cas clients et leurs réussites avec nos solutions digitales.",
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Solutions",
+          "href": "#services",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Tarifs",
+          "href": "#pricing",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Blog",
+          "href": "/blog",
+          "type": "page",
+          "order": 3
+        },
+        {
+          "name": "Nos clients",
+          "href": "/cas-client",
+          "type": "page",
+          "order": 4,
+          "hasSubmenu": true,
+          "megaMenu": {
+            "type": "client-cases",
+            "title": "Découvrez tous nos cas d'usage",
+            "description": "Nous aidons nos clients dans différents secteurs et sur différentes problématiques",
+            "featuredCases": [
+              {
+                "id": "case-1759942156218",
+                "name": "Fitness park",
+                "slug": "fitness-park",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                "excerpt": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+              },
+              {
+                "id": "case-1759944672139",
+                "name": "Essem",
+                "slug": "essem",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                "excerpt": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+              }
+            ],
+            "ctaButton": {
+              "text": "Tous nos cas clients",
+              "href": "/cas-client"
+            }
+          }
+        },
+        {
+          "name": "Notre Agence",
+          "href": "#about",
+          "type": "section",
+          "order": 5
+        },
+        {
+          "name": "Témoignages",
+          "href": "#testimonials",
+          "type": "section",
+          "order": 6
+        },
+        {
+          "name": "Contact",
+          "href": "#contact",
+          "type": "section",
+          "order": 7
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "order": 1
+  },
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-06-18T16:55:46.513Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-15T10:00:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "685047117e4828ed4be27195"
+  },
+  "type": "contact",
+  "title": "Contactez-nous",
+  "description": "Nous sommes là pour vous aider à transformer votre entreprise avec nos solutions digitales sur mesure.",
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Solutions",
+          "href": "#services",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Tarifs",
+          "href": "#pricing",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Blog",
+          "href": "/blog",
+          "type": "page",
+          "order": 3
+        },
+        {
+          "name": "Nos clients",
+          "href": "/cas-client",
+          "type": "page",
+          "order": 4,
+          "hasSubmenu": true,
+          "megaMenu": {
+            "type": "client-cases",
+            "title": "Découvrez tous nos cas d'usage",
+            "description": "Nous aidons nos clients dans différents secteurs et sur différentes problématiques",
+            "featuredCases": [
+              {
+                "id": "case-1759942156218",
+                "name": "Fitness park",
+                "slug": "fitness-park",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                "excerpt": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+              },
+              {
+                "id": "case-1759944672139",
+                "name": "Essem",
+                "slug": "essem",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                "excerpt": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+              }
+            ],
+            "ctaButton": {
+              "text": "Tous nos cas clients",
+              "href": "/cas-client"
+            }
+          }
+        },
+        {
+          "name": "Notre Agence",
+          "href": "#about",
+          "type": "section",
+          "order": 5
+        },
+        {
+          "name": "Témoignages",
+          "href": "#testimonials",
+          "type": "section",
+          "order": 6
+        },
+        {
+          "name": "Contact",
+          "href": "#contact",
+          "type": "section",
+          "order": 7
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "order": 1
+  },
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-06-16T16:32:17.935Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-15T10:00:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6864137ea43ac414cd377bf1"
+  },
+  "type": "hubspot-page",
+  "title": "HubSpot",
+  "hero": {
+    "headline": "Intégration HubSpot Pour Votre Entreprise",
+    "logo": "/hubspot.svg",
+    "subheadline": "En tant que Partenaire platinum HubSpot, nous concevons des implémentations sur mesure qui transforment vos opérations et accélèrent votre croissance.",
+    "ctaPrimary": {
+      "text": "Planifier une Consultation",
+      "icon": "Calendar"
+    },
+    "ctaSecondary": {
+      "text": "Voir Nos Cas d'Étude",
+      "icon": "Play"
+    }
+  },
+  "trustMetrics": [
+    {
+      "number": 500,
+      "suffix": "+",
+      "label": "Intégrations HubSpot"
+    },
+    {
+      "number": 98,
+      "suffix": "%",
+      "label": "Taux de Réussite"
+    },
+    {
+      "number": 5,
+      "suffix": " Ans",
+      "label": "Partenariat HubSpot"
+    },
+    {
+      "number": 24,
+      "suffix": "/7",
+      "label": "Support Expert"
+    }
+  ],
+  "hubspotCapabilities": [
+    {
+      "icon": "Target",
+      "title": "Marketing Hub - Implémentation",
+      "description": "Configuration complète de l'automatisation marketing avec scoring de leads avancé, campagnes email et optimisation des conversions."
+    },
+    {
+      "icon": "Users",
+      "title": "Sales Hub - Configuration",
+      "description": "Gestion de pipeline, suivi des opportunités et automatisation des ventes pour accélérer votre croissance commerciale."
+    },
+    {
+      "icon": "BarChart3",
+      "title": "Service Hub - Intégration",
+      "description": "Flux de travail service client, système de ticketing et base de connaissances pour un support exceptionnel."
+    },
+    {
+      "icon": "Zap",
+      "title": "Operations Hub - Configuration",
+      "description": "Synchronisation des données, automatisation des workflows et intégrations personnalisées dans votre écosystème tech."
+    }
+  ],
+  "hubCards": [
+    {
+      "icon": "/icones/MarketingHub_Icon_2023_Gradient_RGB_24px (1).svg",
+      "title": "Marketing Hub®",
+      "description": "AI-powered marketing software that helps you generate leads and automate marketing.",
+      "features": [
+        "Breeze social media agent",
+        "Marketing automation",
+        "Analytics"
+      ]
+    },
+    {
+      "icon": "/icones/SalesHub_Icon_Gradient_RGB_24px.svg",
+      "title": "Sales Hub®",
+      "description": "Easy-to-adopt sales software that leverages AI to build pipelines and close deals.",
+      "features": [
+        "Sales workspace",
+        "Deal management",
+        "Breeze prospecting agent"
+      ]
+    },
+    {
+      "icon": "/icones/ServiceHub_Icon_Gradient_RGB_24px.svg",
+      "title": "Service Hub®",
+      "description": "Customer service software powered by AI to scale support and drive retention.",
+      "features": [
+        "Omni-channel help desk",
+        "Breeze customer agent",
+        "Customer success workspace"
+      ]
+    },
+    {
+      "icon": "/icones/OperationsHub_Icon_Gradient_RGB_24px.svg",
+      "title": "Operations Hub®",
+      "description": "Operations software that connects your people, processes, and systems.",
+      "features": [
+        "Data sync",
+        "Workflow automation",
+        "Custom integrations"
+      ]
+    },
+    {
+      "icon": "/icones/Product Icon one-1.svg",
+      "title": "Commerce Hub®",
+      "description": "E-commerce software that helps you sell more and scale faster.",
+      "features": [
+        "Online store",
+        "Payment processing",
+        "Inventory management"
+      ]
+    },
+    {
+      "icon": "/icones/Product_Icon_Only_CommerceHub.svg",
+      "title": "CMS Hub®",
+      "description": "Content management software that helps you build a powerful website.",
+      "features": [
+        "Drag-and-drop editor",
+        "SEO optimization",
+        "Multi-language support"
+      ]
+    }
+  ],
+  "partnership": {
+    "headline": "Partenaire HubSpot platinum",
+    "description": "Notre certification platinum représente le plus haut niveau d'expertise HubSpot, avec un succès prouvé dans les implémentations d'entreprise.",
+    "hubs": [
+      "Marketing Hub",
+      "Sales Hub",
+      "Service Hub",
+      "Operations Hub"
+    ]
+  },
+  "testimonials": [
+    "6865473ca43ac414cd377c07",
+    "6865473ca43ac414cd377c08"
+  ],
+  "finalCta": {
+    "headline": "Prêt à Transformer Votre Business ?",
+    "description": "Laissez nos experts HubSpot concevoir et implémenter une solution qui génère de vrais résultats pour votre entreprise."
+  },
+  "description": "Page HubSpot - Configuration complète",
+  "isActive": true,
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Solutions",
+          "href": "#services",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Tarifs",
+          "href": "#pricing",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Blog",
+          "href": "/blog",
+          "type": "page",
+          "order": 3
+        },
+        {
+          "name": "Nos clients",
+          "href": "/cas-client",
+          "type": "page",
+          "order": 4,
+          "hasSubmenu": true,
+          "megaMenu": {
+            "type": "client-cases",
+            "title": "Découvrez tous nos cas d'usage",
+            "description": "Nous aidons nos clients dans différents secteurs et sur différentes problématiques",
+            "featuredCases": [
+              {
+                "id": "case-1759942156218",
+                "name": "Fitness park",
+                "slug": "fitness-park",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                "excerpt": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+              },
+              {
+                "id": "case-1759944672139",
+                "name": "Essem",
+                "slug": "essem",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                "excerpt": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+              }
+            ],
+            "ctaButton": {
+              "text": "Tous nos cas clients",
+              "href": "/cas-client"
+            }
+          }
+        },
+        {
+          "name": "Notre Agence",
+          "href": "#about",
+          "type": "section",
+          "order": 5
+        },
+        {
+          "name": "Témoignages",
+          "href": "#testimonials",
+          "type": "section",
+          "order": 6
+        },
+        {
+          "name": "Contact",
+          "href": "#contact",
+          "type": "section",
+          "order": 7
+        }
+      ]
+    }
+  },
+  "updatedAt": {
+    "$date": "2025-01-15T10:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68656200a43ac414cd377c0a"
+  },
+  "type": "about",
+  "title": "À Propos",
+  "description": "Page À Propos - Notre histoire, équipe et valeurs",
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Solutions",
+          "href": "#services",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Tarifs",
+          "href": "#pricing",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Blog",
+          "href": "/blog",
+          "type": "page",
+          "order": 3
+        },
+        {
+          "name": "Nos clients",
+          "href": "/cas-client",
+          "type": "page",
+          "order": 4,
+          "hasSubmenu": true,
+          "megaMenu": {
+            "type": "client-cases",
+            "title": "Découvrez tous nos cas d'usage",
+            "description": "Nous aidons nos clients dans différents secteurs et sur différentes problématiques",
+            "featuredCases": [
+              {
+                "id": "case-1759942156218",
+                "name": "Fitness park",
+                "slug": "fitness-park",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                "excerpt": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+              },
+              {
+                "id": "case-1759944672139",
+                "name": "Essem",
+                "slug": "essem",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                "excerpt": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+              }
+            ],
+            "ctaButton": {
+              "text": "Tous nos cas clients",
+              "href": "/cas-client"
+            }
+          }
+        },
+        {
+          "name": "Notre Agence",
+          "href": "#about",
+          "type": "section",
+          "order": 5
+        },
+        {
+          "name": "Témoignages",
+          "href": "#testimonials",
+          "type": "section",
+          "order": 6
+        },
+        {
+          "name": "Contact",
+          "href": "#contact",
+          "type": "section",
+          "order": 7
+        }
+      ]
+    }
+  },
+  "isActive": true,
+  "createdAt": "2025-01-02T00:00:00.000Z",
+  "updatedAt": {
+    "$date": "2025-01-15T10:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "686bd2ce95fa7c6fbb64276d"
+  },
+  "type": "settings",
+  "title": "Site Settings",
+  "description": "Paramètres globaux du site",
+  "content": {
+    "favicon": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20favicone.svg",
+      "alt": "blackswan"
+    },
+    "siteTitle": "Blackswan Technology",
+    "siteDescription": "Partenaire officiel Odoo",
+    "contactEmail": "",
+    "contactPhone": "",
+    "address": "",
+    "regionalContact": {
+      "france": {
+        "phone": "+33 7 56 80 60 62",
+        "email": "contact@blackswantechnology.fr",
+        "address": "38 Avenue Wagram, 75008 Paris",
+        "whatsapp": "+33 7 56 80 60 62",
+        "meetingLink": "https://meetings-eu1.hubspot.com/meetings/warrenblackswan/planifweb"
+      },
+      "morocco": {
+        "phone": "+212 7 83 69 96 03",
+        "email": "contact@blackswantechnology.fr",
+        "address": "202 Boulevard Brahim Roudani, Casablanca, Maroc 20000",
+        "whatsapp": "+212 7 83 69 96 03",
+        "meetingLink": "https://meetings-eu1.hubspot.com/meetings/warrenblackswan/planifweb"
+      },
+      "other": {
+        "phone": "+33 7 56 80 60 62",
+        "email": "contact@blackswantechnology.fr",
+        "address": "38 Avenue Wagram, 75008 Paris",
+        "whatsapp": "+33 7 56 80 60 62",
+        "meetingLink": "https://meetings-eu1.hubspot.com/meetings/warrenblackswan/planifweb"
+      }
+    },
+    "pageVisibility": {
+      "home": true,
+      "blog": true,
+      "hubspot": false,
+      "about": false,
+      "casClient": true,
+      "contact": false
+    },
+    "visualEffects": {
+      "showCurvedLines": true
+    }
+  },
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-07-07T13:59:42.500Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-15T18:04:26.574Z"
+  },
+  "__v": 0,
+  "metadata": {
+    "order": 1
+  }
+},
+{
+  "_id": {
+    "$oid": "686e898f66bab2d583e8d937"
+  },
+  "type": "contact-page",
+  "title": "Contact",
+  "description": "Page de contact dynamique avec étapes et cartes de contact",
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-07-10T11:45:03.425Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-15T10:00:00.000Z"
+  },
+  "cards": [
+    {
+      "icon": "Phone",
+      "title": "Appelez-nous",
+      "description": "Parlons directement de votre projet",
+      "contact": "+212 6 00 00 00 00",
+      "subDescription": "Lun-Ven: 9h-18h"
+    },
+    {
+      "icon": "Mail",
+      "title": "Écrivez-nous",
+      "description": "Réponse sous 2h en moyenne",
+      "contact": "contact@blackswantechnology.ma",
+      "subDescription": "Support 24/7"
+    },
+    {
+      "icon": "MapPin",
+      "title": "Visitez-nous",
+      "description": "Rencontrons-nous en personne",
+      "contact": "Casablanca, Maroc",
+      "subDescription": "Twin Center"
+    }
+  ],
+  "hero": {
+    "headline": "Parlons de Votre Projet",
+    "highlight": "Projet",
+    "description": "Chaque transformation commence par une conversation. Partagez-nous vos défis et objectifs pour que nous puissions vous proposer la solution parfaite."
+  },
+  "steps": [
+    {
+      "label": "Informations de Contact",
+      "description": "Commençons par faire connaissance. Veuillez renseigner vos informations de base pour que nous puissions vous contacter.",
+      "fields": [
+        {
+          "type": "text",
+          "name": "firstName",
+          "label": "Prénom",
+          "required": true
+        },
+        {
+          "type": "text",
+          "name": "lastName",
+          "label": "Nom",
+          "required": true
+        },
+        {
+          "type": "email",
+          "name": "email",
+          "label": "Email professionnel",
+          "required": true
+        },
+        {
+          "type": "tel",
+          "name": "phone",
+          "label": "Téléphone",
+          "required": true
+        },
+        {
+          "type": "text",
+          "name": "company",
+          "label": "Entreprise",
+          "required": true
+        },
+        {
+          "type": "text",
+          "name": "position",
+          "label": "Poste",
+          "required": true
+        },
+        {
+          "type": "url",
+          "name": "website",
+          "label": "Site web de l'entreprise",
+          "required": false
+        }
+      ]
+    },
+    {
+      "label": "Votre Entreprise",
+      "description": "Aidez-nous à mieux comprendre votre contexte d'entreprise.",
+      "fields": [
+        {
+          "type": "select",
+          "name": "companySize",
+          "label": "Taille de l'entreprise",
+          "options": [
+            "1-10",
+            "11-50",
+            "51-200",
+            "201-500",
+            "500+"
+          ],
+          "required": true
+        },
+        {
+          "type": "select",
+          "name": "industry",
+          "label": "Secteur d'activité",
+          "options": [
+            "Technologie",
+            "Industrie/Manufacturing",
+            "Commerce/Retail",
+            "Services",
+            "Autre"
+          ],
+          "required": true
+        },
+        {
+          "type": "checkbox-group",
+          "name": "currentChallenges",
+          "label": "Défis actuels",
+          "options": [
+            "Comptabilité et finance",
+            "Gestion des ressources humaines",
+            "Service client",
+            "Reporting et analytics",
+            "Intégration des systèmes",
+            "Formation des équipes"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Vos Besoins",
+      "description": "Précisez vos intérêts pour nos solutions et modules.",
+      "fields": [
+        {
+          "type": "radio",
+          "name": "primaryInterest",
+          "label": "Quel est votre intérêt principal ?",
+          "options": [
+            "hubspot",
+            "odoo",
+            "both"
+          ],
+          "required": true
+        },
+        {
+          "type": "checkbox-group",
+          "name": "hubspotServices",
+          "label": "Services HubSpot qui vous intéressent",
+          "options": [
+            "Sales Hub",
+            "Marketing Hub",
+            "Service Hub",
+            "CMS Hub",
+            "Operations Hub",
+            "Formation HubSpot"
+          ]
+        },
+        {
+          "type": "checkbox-group",
+          "name": "odooServices",
+          "label": "Modules Odoo qui vous intéressent",
+          "options": [
+            "Ventes & CRM",
+            "Comptabilité",
+            "Inventaire",
+            "Manufacturing",
+            "RH",
+            "Projet",
+            "E-commerce",
+            "Formation Odoo"
+          ]
+        },
+        {
+          "type": "select",
+          "name": "budget",
+          "label": "Budget approximatif",
+          "options": [
+            "under-10k",
+            "10k-50k",
+            "50k-100k",
+            "100k-500k",
+            "over-500k",
+            "to-discuss"
+          ]
+        },
+        {
+          "type": "select",
+          "name": "timeline",
+          "label": "Timeline souhaité",
+          "options": [
+            "asap",
+            "1-month",
+            "1-3-months",
+            "3-6-months",
+            "6-months-plus",
+            "exploring"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Détails du Projet",
+      "description": "Donnez-nous plus de détails pour personnaliser notre approche.",
+      "fields": [
+        {
+          "type": "select",
+          "name": "currentCRM",
+          "label": "CRM/Système actuel",
+          "options": [
+            "HubSpot",
+            "Salesforce",
+            "Zoho",
+            "Autre",
+            "Aucun"
+          ]
+        },
+        {
+          "type": "select",
+          "name": "currentERP",
+          "label": "ERP/Système de gestion actuel",
+          "options": [
+            "Odoo",
+            "SAP",
+            "Sage",
+            "Autre",
+            "Aucun"
+          ]
+        },
+        {
+          "type": "textarea",
+          "name": "projectDescription",
+          "label": "Décrivez votre projet et vos objectifs"
+        },
+        {
+          "type": "checkbox-group",
+          "name": "specificGoals",
+          "label": "Objectifs prioritaires",
+          "options": [
+            "Augmenter les ventes",
+            "Automatiser les processus",
+            "Centraliser les données",
+            "Améliorer le reporting",
+            "Améliorer l'efficacité opérationnelle",
+            "Améliorer le service client",
+            "Réduire les coûts",
+            "Former les équipes"
+          ]
+        },
+        {
+          "type": "radio",
+          "name": "meetingType",
+          "label": "Préférence pour le premier contact",
+          "options": [
+            "Appel vidéo (Teams/Zoom)",
+            "Appel téléphonique"
+          ]
+        }
+      ]
+    }
+  ],
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Solutions",
+          "href": "#services",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Tarifs",
+          "href": "#pricing",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Blog",
+          "href": "/blog",
+          "type": "page",
+          "order": 3
+        },
+        {
+          "name": "Nos clients",
+          "href": "/cas-client",
+          "type": "page",
+          "order": 4,
+          "hasSubmenu": true,
+          "megaMenu": {
+            "type": "client-cases",
+            "title": "Découvrez tous nos cas d'usage",
+            "description": "Nous aidons nos clients dans différents secteurs et sur différentes problématiques",
+            "featuredCases": [
+              {
+                "id": "case-1759942156218",
+                "name": "Fitness park",
+                "slug": "fitness-park",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                "excerpt": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+              },
+              {
+                "id": "case-1759944672139",
+                "name": "Essem",
+                "slug": "essem",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                "excerpt": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+              }
+            ],
+            "ctaButton": {
+              "text": "Tous nos cas clients",
+              "href": "/cas-client"
+            }
+          }
+        },
+        {
+          "name": "Notre Agence",
+          "href": "#about",
+          "type": "section",
+          "order": 5
+        },
+        {
+          "name": "Témoignages",
+          "href": "#testimonials",
+          "type": "section",
+          "order": 6
+        },
+        {
+          "name": "Contact",
+          "href": "#contact",
+          "type": "section",
+          "order": 7
+        }
+      ]
+    }
+  }
+},
+{
+  "_id": {
+    "$oid": "685186909bcec711feef9421"
+  },
+  "type": "blog-page",
+  "title": "Blog",
+  "description": "Découvrez nos derniers articles, guides pratiques et études de cas sur Odoo ERP, HubSpot CRM et la transformation digitale.",
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Solutions",
+          "href": "#services",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Tarifs",
+          "href": "#pricing",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Blog",
+          "href": "/blog",
+          "type": "page",
+          "order": 3
+        },
+        {
+          "name": "Nos clients",
+          "href": "/cas-client",
+          "type": "page",
+          "order": 4,
+          "hasSubmenu": true,
+          "megaMenu": {
+            "type": "client-cases",
+            "title": "Découvrez tous nos cas d'usage",
+            "description": "Nous aidons nos clients dans différents secteurs et sur différentes problématiques",
+            "featuredCases": [
+              {
+                "id": "case-1759942156218",
+                "name": "Fitness park",
+                "slug": "fitness-park",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/fitness%20park/main.webp",
+                "excerpt": "Fitness Park, acteur majeur du secteur du fitness, souhaitait mieux piloter ses performances marketing et améliorer le traitement de ses leads."
+              },
+              {
+                "id": "case-1759944672139",
+                "name": "Essem",
+                "slug": "essem",
+                "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/essem/main.webp",
+                "excerpt": "ESSEM, école supérieure reconnue, cherchait à optimiser sa prospection et le suivi de ses inscriptions. Sous l'impulsion de Salim Gueddari, l'objectif était de centraliser les échanges commerciaux, notamment via WhatsApp, tout en disposant de statistiques précises et de KPI en temps réel pour piloter les performances."
+              }
+            ],
+            "ctaButton": {
+              "text": "Tous nos cas clients",
+              "href": "/cas-client"
+            }
+          }
+        },
+        {
+          "name": "Notre Agence",
+          "href": "#about",
+          "type": "section",
+          "order": 5
+        },
+        {
+          "name": "Témoignages",
+          "href": "#testimonials",
+          "type": "section",
+          "order": 6
+        },
+        {
+          "name": "Contact",
+          "href": "#contact",
+          "type": "section",
+          "order": 7
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "order": 1
+  },
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-06-17T15:15:28.854Z"
+  },
+  "updatedAt": {
+    "$date": "2025-01-15T10:00:00.000Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "689b01755efd7114e188262f"
+  },
+  "type": "snippets",
+  "title": "Snippets Configuration",
+  "description": "Meta tags, tracking codes, and custom scripts",
+  "content": {
+    "snippets": [
+      {
+        "title": "GTM",
+        "description": "",
+        "type": "analytics",
+        "location": "head",
+        "content": "<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\nnew Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\nj=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n})(window,document,'script','dataLayer','GTM-MQ5KNW4K');</script>\n<!-- End Google Tag Manager -->",
+        "isActive": true,
+        "pages": [],
+        "priority": 2,
+        "_id": "1760604449278"
+      }
+    ]
+  },
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-12T08:55:17.221Z"
+  },
+  "updatedAt": {
+    "$date": "2025-10-20T11:41:28.484Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6863de7aa43ac414cd377bef"
+  },
+  "type": "header",
+  "title": "Header Configuration",
+  "description": "Website header with logo and navigation",
+  "content": {
+    "logo": {
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png",
+      "alt": "Black Swan Technology",
+      "size": "12"
+    },
+    "navigation": {
+      "main": [
+        {
+          "name": "Projets",
+          "href": "/#video-testimonials",
+          "type": "section",
+          "order": 1
+        },
+        {
+          "name": "Certification",
+          "href": "/#certification",
+          "type": "section",
+          "order": 2
+        },
+        {
+          "name": "Clients",
+          "href": "/#testimonials",
+          "type": "section",
+          "order": 3
+        }
+      ],
+      "hubspot": {
+        "title": "HubSpot",
+        "subtitle": "Plateforme CRM complète pour la croissance de votre entreprise",
+        "badge": "POPULAIRE",
+        "isActive": true,
+        "sections": {
+          "crm": {
+            "title": "Logiciels CRM",
+            "icon": "Star",
+            "items": [
+              {
+                "icon": "TrendingUp",
+                "title": "CRM Marketing",
+                "description": "Automatisez vos campagnes marketing",
+                "url": "/hubspot/marketing"
+              },
+              {
+                "icon": "Target",
+                "title": "CRM Sales",
+                "description": "Optimisez votre processus de vente",
+                "url": "/hubspot/sales"
+              },
+              {
+                "icon": "Users",
+                "title": "CRM Service",
+                "description": "Améliorez l'expérience client",
+                "url": "/hubspot/service"
+              },
+              {
+                "icon": "Star",
+                "title": "Analytics",
+                "description": "Analysez vos performances",
+                "url": "/hubspot/analytics"
+              }
+            ]
+          },
+          "services": {
+            "title": "Nos Services",
+            "icon": "Briefcase",
+            "items": [
+              {
+                "icon": "Rocket",
+                "title": "Implémentation",
+                "description": "Configuration complète de HubSpot",
+                "url": "/services/hubspot-implementation"
+              },
+              {
+                "icon": "GraduationCap",
+                "title": "Formation",
+                "description": "Formation de vos équipes",
+                "url": "/services/hubspot-training"
+              },
+              {
+                "icon": "Zap",
+                "title": "Optimisation",
+                "description": "Optimisation de vos processus",
+                "url": "/services/hubspot-optimization"
+              },
+              {
+                "icon": "Users",
+                "title": "Support",
+                "description": "Support technique continu",
+                "url": "/services/hubspot-support"
+              }
+            ]
+          }
+        }
+      },
+      "odoo": {
+        "title": "Odoo",
+        "subtitle": "ERP modulaire pour tous les secteurs d'activité",
+        "badge": "ERP",
+        "isActive": true,
+        "sections": {
+          "modules": {
+            "title": "Modules ERP",
+            "icon": "Database",
+            "items": [
+              {
+                "icon": "Database",
+                "title": "CRM",
+                "description": "Gestion de la relation client",
+                "url": "/odoo/crm"
+              },
+              {
+                "icon": "ShoppingCart",
+                "title": "Ventes",
+                "description": "Gestion des ventes et devis",
+                "url": "/odoo/sales"
+              },
+              {
+                "icon": "Building",
+                "title": "Achats",
+                "description": "Gestion des achats et fournisseurs",
+                "url": "/odoo/purchases"
+              },
+              {
+                "icon": "BarChart3",
+                "title": "Comptabilité",
+                "description": "Gestion comptable complète",
+                "url": "/odoo/accounting"
+              },
+              {
+                "icon": "Users",
+                "title": "RH",
+                "description": "Gestion des ressources humaines",
+                "url": "/odoo/hr"
+              },
+              {
+                "icon": "Database",
+                "title": "Stock",
+                "description": "Gestion des stocks et inventaires",
+                "url": "/odoo/inventory"
+              },
+              {
+                "icon": "Target",
+                "title": "Projets",
+                "description": "Gestion de projets et tâches",
+                "url": "/odoo/projects"
+              },
+              {
+                "icon": "HeadphonesIcon",
+                "title": "Support",
+                "description": "Gestion du support client",
+                "url": "/odoo/helpdesk"
+              }
+            ]
+          },
+          "services": {
+            "title": "Nos Expertises",
+            "icon": "Zap",
+            "items": [
+              {
+                "icon": "Rocket",
+                "title": "Développement",
+                "description": "Développement de modules sur mesure",
+                "url": "/services/odoo-development"
+              },
+              {
+                "icon": "GraduationCap",
+                "title": "Formation",
+                "description": "Formation Odoo pour vos équipes",
+                "url": "/services/odoo-training"
+              },
+              {
+                "icon": "Zap",
+                "title": "Migration",
+                "description": "Migration depuis votre système actuel",
+                "url": "/services/odoo-migration"
+              },
+              {
+                "icon": "Users",
+                "title": "Maintenance",
+                "description": "Maintenance et support technique",
+                "url": "/services/odoo-maintenance"
+              },
+              {
+                "icon": "Globe",
+                "title": "Intégration",
+                "description": "Intégration avec vos outils existants",
+                "url": "/services/odoo-integration"
+              },
+              {
+                "icon": "Star",
+                "title": "Optimisation",
+                "description": "Optimisation des performances",
+                "url": "/services/odoo-optimization"
+              }
+            ]
+          }
+        }
+      },
+      "about": {
+        "title": "À Propos de Blackswantechnologys",
+        "subtitle": "Votre Partenaire de Transformation Digitale",
+        "isActive": true,
+        "stats": [
+          {
+            "icon": "Star",
+            "title": "5+ Années",
+            "description": "D'expérience au Maroc"
+          },
+          {
+            "icon": "Users",
+            "title": "200+ Clients",
+            "description": "Entreprises accompagnées"
+          },
+          {
+            "icon": "CheckCircle",
+            "title": "100% Réussite",
+            "description": "Taux de satisfaction"
+          },
+          {
+            "icon": "Globe",
+            "title": "Casablanca",
+            "description": "Expertise internationale"
+          }
+        ]
+      },
+      "casClient": {
+        "title": "Nos Références Clients",
+        "subtitle": "Découvrez nos succès clients",
+        "isActive": true,
+        "buttonText": "Voir Tous les Cas",
+        "selectedClients": [
+          {
+            "clientId": "worqbox",
+            "name": "Worqbox",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/WQ.svg",
+            "headline": "Migration Réussie vers Odoo 18",
+            "summary": "Comment nous avons migré Worqbox d'Odoo 15 vers Odoo 18, modernisant leur infrastructure ERP et générant un ROI de 180% en moins de 6 mois.",
+            "projectStats": [
+              {
+                "label": "Temps de migration",
+                "value": "3 mois"
+              },
+              {
+                "label": "Version cible",
+                "value": "Odoo 18"
+              },
+              {
+                "label": "Utilisateurs migrés",
+                "value": "45"
+              },
+              {
+                "label": "ROI atteint",
+                "value": "+180%"
+              }
+            ]
+          },
+          {
+            "clientId": "worqbox",
+            "name": "Worqbox",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/WQ.svg",
+            "headline": "Migration Réussie vers Odoo 18",
+            "summary": "Comment nous avons migré Worqbox d'Odoo 15 vers Odoo 18, modernisant leur infrastructure ERP et générant un ROI de 180% en moins de 6 mois.",
+            "projectStats": [
+              {
+                "label": "Temps de migration",
+                "value": "3 mois"
+              },
+              {
+                "label": "Version cible",
+                "value": "Odoo 18"
+              },
+              {
+                "label": "Utilisateurs migrés",
+                "value": "45"
+              },
+              {
+                "label": "ROI atteint",
+                "value": "+180%"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "contact": {
+      "phone": "+212 5 22 22 22 22",
+      "email": "contact@bst.ma",
+      "address": "123 Avenue Mohammed V"
+    },
+    "cta": {
+      "text": "Prendre Rendez-vous",
+      "url": "/rendez-vous",
+      "isActive": true
+    }
+  },
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-07-04T09:41:00.093Z"
+  },
+  "updatedAt": {
+    "$date": "2025-07-04T09:41:00.093Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68e8fe1b95c450f20f664fcf"
+  },
+  "type": "home-page",
+  "title": "Homepage Configuration - All Regions",
+  "description": "Main homepage content with regional variations",
+  "content": {
+    "hero": {
+      "badge": "Partenaire Silver Odoo",
+      "headline": "Nous intégrons Odoo pour piloter toute votre entreprise.",
+      "subheadline": "Nous aidons les entreprises à centraliser l'ensemble de leur activité sur une seule plateforme grâce à Odoo.<br/>\n<span class=\"text-[var(--color-secondary)] font-bold\"> Simple</span>, <span class=\"text-[var(--color-secondary)] font-bold\">efficace</span>, et <span class=\"text-[var(--color-secondary)] font-bold\">abordable</span>.",
+      "videoUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/video_homepage.webm",
+      "ctaPrimary": {
+        "text": "Contactez nous",
+        "link": "#contact",
+        "icon": "ArrowRight"
+      },
+      "ctaSecondary": {
+        "text": "Découvrir nos projets",
+        "link": "#services",
+        "icon": ""
+      },
+      "stats": {
+        "visible": false,
+        "years": "3 ans",
+        "label": "d'expertise"
+      },
+      "certificationBadge": {
+        "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/silver-badge-odoo.png",
+        "alt": "Expertise badge"
+      },
+      "carousel": {
+        "companies": [
+          {
+            "name": "deco clim",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/Design%20sans%20titre%20(26).svg",
+            "url": "",
+            "regions": [
+              "france",
+              "international"
+            ]
+          },
+          {
+            "name": "yamaha",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/yamaha_motors-horizontal-white-vector.svg",
+            "url": "",
+            "regions": [
+              "france",
+              "international"
+            ]
+          },
+          {
+            "name": "TRT",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/trt.svg",
+            "url": "",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "TF",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/titre-francais-vectorized-white.svg",
+            "url": "",
+            "regions": [
+              "france",
+              "international"
+            ]
+          },
+          {
+            "name": "SD",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/sd.svg",
+            "url": "",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "JRC",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/jrs%203%20.svg",
+            "url": "",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "JDK",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/jeannedarc-vectorized.svg",
+            "url": "",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "AI crafters",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/aicrafters-vectorized-white.svg",
+            "regions": [
+              "france",
+              "morocco",
+              "international"
+            ]
+          },
+          {
+            "name": "Allisone",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/allisone-vectorized-white.svg",
+            "regions": [
+              "france",
+              "international"
+            ]
+          },
+          {
+            "name": "avant scene",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/AS%201.svg",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "barthe",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/barthener-vectorized-white.svg",
+            "regions": [
+              "france",
+              "international"
+            ]
+          },
+          {
+            "name": "bella forme",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/bella%20(1).svg",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "BFG",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/BFG.svg",
+            "regions": [
+              "international"
+            ]
+          },
+          {
+            "name": "c metal",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/c-%20metal.svg",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "chabi chic",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/chabi-chic-vectorized-white.svg"
+          },
+          {
+            "name": "worqbox",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/Design%20sans%20titre%20(28).svg",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "essem",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/essem-1-2.svg",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "FPK",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/fitnespark-vectorized-white-3.svg",
+            "regions": [
+              "france",
+              "international",
+              "morocco"
+            ]
+          },
+          {
+            "name": "ICAT",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/icat-vectorized-white.svg",
+            "regions": [
+              "morocco"
+            ]
+          },
+          {
+            "name": "idc",
+            "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/idc_pharma-horizontal-white-vector.svg",
+            "regions": [
+              "france",
+              "international"
+            ]
+          }
+        ],
+        "regionalCompanies": {
+          "france": [],
+          "morocco": [],
+          "other": []
+        },
+        "speed": 20,
+        "text": "Ils ont choisi Blackswan Technology."
+      },
+      "expertiseBadgeUrl": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo-logo.png"
+    },
+    "companies": {
+      "headline": "Ils ont choisi l'excellence Blackswan Technology.",
+      "companies": [
+        {
+          "name": "AI crafters",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/aicrafters-vectorized-white.svg",
+          "regions": [
+            "france",
+            "morocco",
+            "international"
+          ]
+        },
+        {
+          "name": "Worqbox",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/Design%20sans%20titre%20(29).svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "Somadiag",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/sd-v2.png",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "TRT Broker",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/trt.svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "Bella Forme group",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/bella%20(1).svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "Avantscene",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/AS%202%20(1).svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "JRS Building",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/jrs-v2.png",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "Fitness park",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/fitnespark-vectorized-white-3.svg",
+          "regions": [
+            "france",
+            "morocco",
+            "international"
+          ]
+        },
+        {
+          "name": "ICAT",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/icat-vectorized-white.svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "ESSEM",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/essem-1-2.svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "JEANNE D'ARC INTERNATIONAL SCHOOL",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/jeannedarc-vectorized.svg",
+          "regions": [
+            "morocco"
+          ]
+        },
+        {
+          "name": "chabi chic",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/chabi-chic-vectorized-white.svg",
+          "regions": [
+            "france",
+            "morocco",
+            "international"
+          ]
+        },
+        {
+          "name": "Alisone",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/allisone-vectorized-white.svg",
+          "regions": [
+            "france",
+            "international"
+          ]
+        },
+        {
+          "name": "Decoclim",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/Design%20sans%20titre%20(27).svg",
+          "regions": [
+            "france",
+            "international"
+          ]
+        },
+        {
+          "name": "YAMAHA",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/yamaha_motors-horizontal-white-vector.svg",
+          "regions": [
+            "france",
+            "morocco",
+            "international"
+          ]
+        },
+        {
+          "name": "TF",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/titre-francais-vectorized-white.svg",
+          "regions": [
+            "france",
+            "international"
+          ]
+        },
+        {
+          "name": "BARTHE ENR",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/barthener-vectorized-white.svg",
+          "regions": [
+            "france",
+            "international"
+          ]
+        },
+        {
+          "name": "idc_pharma",
+          "logo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CompaniesLogo/idc_pharma-horizontal-white-vector.svg",
+          "regions": [
+            "france",
+            "international"
+          ]
+        }
+      ]
+    },
+    "trustMetrics": [],
+    "platformSection": {
+      "headline": "Solution",
+      "subheadline": "<span class=\"font-bold\">\nSimplifiez la gestion de votre entreprise <br/>\ngrâce aux applications Odoo, conçues pour<br/>\n<span class=\"text-[var(--color-secondary)]\">structurer</span>, <span class=\"text-[var(--color-secondary)]\">digitaliser</span> et faire <span class=\"text-[var(--color-secondary)]\">croître</span> votre activité.<br/>\n</span>",
+      "description": "Découvrez la puissance d'Odoo avec nos modules spécialisés pour chaque aspect de votre entreprise.",
+      "apps": [
+        {
+          "icon": "/icones/odoo/CRM.svg",
+          "title": "CRM",
+          "description": "Gérez vos prospects et clients avec un CRM intelligent qui s'adapte à vos processus de vente.",
+          "features": [
+            "Pipeline de vente personnalisable",
+            "Suivi des opportunités"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/sales.svg",
+          "title": "Ventes",
+          "description": "Optimisez vos processus de vente avec des outils de gestion commerciale avancés.",
+          "features": [
+            "Devis et factures automatisés",
+            "Gestion des commandes"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/accounting.svg",
+          "title": "Comptabilité",
+          "description": "Simplifiez votre comptabilité avec des outils intégrés et automatisés.",
+          "features": [
+            "Comptabilité multi-devises",
+            "Rapprochement bancaire"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/inventory.svg",
+          "title": "Inventaire",
+          "description": "Maîtrisez votre stock avec une gestion d'inventaire en temps réel.",
+          "features": [
+            "Suivi en temps réel",
+            "Gestion multi-entrepôts"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/HR.svg",
+          "title": "Ressources Humaines",
+          "description": "Gérez vos équipes efficacement avec des outils RH complets.",
+          "features": [
+            "Gestion des employés",
+            "Suivi des congés"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/project.svg",
+          "title": "Projets",
+          "description": "Planifiez et suivez vos projets avec des outils collaboratifs avancés.",
+          "features": [
+            "Planification des tâches",
+            "Suivi du temps"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/website.svg",
+          "title": "Site Web",
+          "description": "Créez et gérez votre site web avec un CMS intégré et puissant.",
+          "features": [
+            "Éditeur drag & drop",
+            "SEO intégré"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/email-marketing.svg",
+          "title": "Email Marketing",
+          "description": "Développez votre audience avec des campagnes email personnalisées.",
+          "features": [
+            "Templates personnalisables",
+            "Segmentation avancée"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/helpdesk.svg",
+          "title": "Support Client",
+          "description": "Offrez un support client exceptionnel avec un système de tickets intégré.",
+          "features": [
+            "Gestion des tickets",
+            "Base de connaissances"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/manufacturing.svg",
+          "title": "Production",
+          "description": "Optimisez votre production avec des outils de planification avancés.",
+          "features": [
+            "Planification de production",
+            "Gestion des BOM"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/purchase.svg",
+          "title": "Achats",
+          "description": "Gérez vos achats efficacement avec des processus automatisés.",
+          "features": [
+            "Demandes d'achat",
+            "Appels d'offres"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "/icones/odoo/point-of-sale.svg",
+          "title": "Point de Vente",
+          "description": "Vendez en magasin avec un système de caisse moderne et intégré.",
+          "features": [
+            "Interface tactile",
+            "Gestion des stocks"
+          ],
+          "showProminently": false
+        },
+        {
+          "icon": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/maintenance.svg",
+          "title": "Maintenance",
+          "description": "Planifiez, suivez et améliorez vos opérations de maintenance pour garantir la fiabilité de vos équipements.",
+          "features": [
+            "Maintenance préventive et corrective",
+            "Planification automatisée des interventions"
+          ],
+          "showProminently": false
+        }
+      ]
+    },
+    "videoTestimonials": {
+      "headline": "Nos derniers projets",
+      "subtitle": "+80 entreprises accompagnées",
+      "showStars": true,
+      "starCount": 5,
+      "ctaButton": {
+        "text": "Tous nos projets",
+        "url": "/cas-client"
+      }
+    },
+    "certification": {
+      "headline": "Certification officielle",
+      "title": "Certifications",
+      "description": "Notre expertise certifiée sur les dernières versions d'Odoo vous garantit des implémentations de qualité professionnelle.",
+      "partnerTitle": "Odoo Silver Partner",
+      "partnerDescription": "Certification officielle pour l'implémentation et la formation Odoo. Notre statut de partenaire Silver confirme notre expertise reconnue et notre engagement envers l'excellence.",
+      "partnerLogo": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/oodo-silver-partner-logo.svg",
+      "certificationImage": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/certification.png",
+      "features": [
+        {
+          "title": "Certification officielle",
+          "description": "Reconnue par Odoo SA",
+          "icon": "CircleCheckBig"
+        },
+        {
+          "title": "Équipe certifiée",
+          "description": "Consultants experts",
+          "icon": "Users"
+        },
+        {
+          "title": "Support premium",
+          "description": "Accès prioritaire",
+          "icon": "Shield"
+        },
+        {
+          "title": "Garantie qualité",
+          "description": "Standards Odoo",
+          "icon": "Award"
+        }
+      ],
+      "certificationImages": [
+        {
+          "src": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/CERTIFICATE.png",
+          "alt": "Odoo Certification Certificate"
+        },
+        {
+          "src": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Blog%205/blog%205%20(1).png",
+          "alt": "Odoo Silver Partner Badge"
+        },
+        {
+          "src": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/odoo.png",
+          "alt": "Odoo Official Partner"
+        }
+      ],
+      "subheadline": "Nous sommes reconnus pour ce que nous faisons"
+    },
+    "services": {
+      "headline": "Nos services",
+      "subheadline": "On analyse vos <span class=\"text-[var(--color-secondary)] font-bold\">besoins</span>, on configure <span class=\"text-[var(--color-secondary)] font-bold\">Odoo</span>, <br/>\net on vous accompagne pour <span class=\"text-[var(--color-secondary)] font-bold\">vous faire gagner du temps.</span>",
+      "description": "De l'audit stratégique à la maintenance continue, notre expertise couvre tous les aspects de votre transformation digitale pour un succès garanti.",
+      "defaultButtonText": "Discutons-en",
+      "services": [
+        {
+          "icon": "SearchCheck",
+          "title": "Audit & Optimisation",
+          "description": "Analysez et optimisez votre installation Odoo pour des performances maximales.",
+          "image": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80&fit=crop",
+          "buttonText": "Commencer l'audit"
+        },
+        {
+          "icon": "Lightbulb",
+          "title": "Conseil Stratégique",
+          "description": "Élaborez une stratégie digitale alignée avec vos objectifs business.",
+          "image": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&q=80&fit=crop",
+          "buttonText": "Planifier un échange"
+        },
+        {
+          "icon": "Settings",
+          "title": "Implémentation",
+          "description": "Nous déployons Odoo sur mesure en l'adaptant à vos processus. Migration de données sécurisée et mise en production sans friction.",
+          "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Implémentation.jpg",
+          "buttonText": "Discutons-en"
+        },
+        {
+          "icon": "Link2",
+          "title": "Intégration",
+          "description": "Connectez Odoo avec vos outils existants pour une synchronisation parfaite de vos données.",
+          "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80&fit=crop",
+          "buttonText": "En savoir plus"
+        },
+        {
+          "icon": "GraduationCap",
+          "title": "Formation",
+          "description": "Formez vos équipes pour une adoption rapide et une utilisation optimale d'Odoo.",
+          "image": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80&fit=crop",
+          "buttonText": "Découvrir"
+        },
+        {
+          "icon": "Headphones",
+          "title": "Conseil stratégique",
+          "description": "Bénéficiez d'un support technique réactif et d'une maintenance proactive de votre système.",
+          "image": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=800&q=80&fit=crop",
+          "buttonText": "Contactez-nous"
+        }
+      ]
+    },
+    "testimonials": [
+      {
+        "id": "testimonial-france-1",
+        "name": "Ruben Sabbah",
+        "role": "Co-fondateur @Garett Immobilier",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1697969711806.jpeg",
+        "quote": "Blackswan a su transformer nos besoins métier en un outil réellement opérationnel. Odoo v19 nous permet de piloter toute notre activité en temps réel, sans friction, sans perte. Un vrai confort pour les équipes et un gain de temps pour la direction.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client/garett-immobilier",
+        "targetRegions": [
+          "france",
+          "international"
+        ]
+      },
+      {
+        "id": "testimonial-france-2",
+        "name": "Sacha Samama",
+        "role": "CTO & Co-Founder @Allisone.ai",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1718722863504.jpeg",
+        "quote": "On a adoré bosser avec Rubens. Sa compréhension technique et son adaptabilité ont permis une migration fluide et surtout un système parfaitement aligné avec nos besoins. Aujourd'hui, on pilote notre activité sans dépendre de personne.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client/allisone",
+        "targetRegions": [
+          "france",
+          "international"
+        ]
+      },
+      {
+        "id": "testimonial-france-3",
+        "name": "Cedric Demannez",
+        "role": "Co-founder @Qweekle",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/1600073305077.jpeg",
+        "quote": "L'équipe Blackswan a su comprendre notre logique produit et commerciale dès les premiers échanges. Le résultat est clair, rapide, sur mesure. On a maintenant une base solide pour structurer notre croissance.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client/qweekle",
+        "targetRegions": [
+          "france",
+          "international"
+        ]
+      },
+      {
+        "id": "testimonial-france-4",
+        "name": "Ilan Abitbol",
+        "role": "Directeur Général @idc-pharma",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/cas-client/IDC%20Pharma/tem.webp",
+        "quote": "Je connais Rubens depuis longtemps, et je savais qu'en confiant ce projet à son équipe, on aurait un vrai partenaire — pas juste un prestataire. Ils ont compris nos enjeux business, nos contraintes e‑commerce et notre organisation interne.\n\nLe résultat est à la hauteur : tout est fluide, robuste, intégré. On pilote aujourd'hui une activité e‑commerce à très fort volume avec sérénité.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client/idc-pharma",
+        "targetRegions": [
+          "france",
+          "international"
+        ]
+      },
+      {
+        "id": "testimonial-morocco-1",
+        "name": "Mehdi Ktiri",
+        "role": "Directeur général de Worqbox",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/MEHDI%20KTIRI.png",
+        "quote": "Nous avons fait appel à Warren pour la migration complète de notre ERP Odoo de la V15 à la V18 ainsi qu'une formation de nos équipes.L'accompagnement a été à la fois rigoureux, fluide et parfaitement adapté à nos besoins.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client",
+        "targetRegions": [
+          "morocco"
+        ]
+      },
+      {
+        "id": "testimonial-morocco-2",
+        "name": "Ahmed Guessous",
+        "role": "CEO & Fondateur de Jeanne d'arc International",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/ahmed%20guessous.jpg",
+        "quote": "Blackswan Technology a pris en main tout notre processus d'admission avec efficacité et professionnalisme. Saad a su proposer une solution sur-mesure, fiable et parfaitement adaptée à nos besoins. Un partenaire de confiance que je recommande sans hésiter.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client",
+        "targetRegions": [
+          "morocco"
+        ]
+      },
+      {
+        "id": "testimonial-morocco-3",
+        "name": "Khalid",
+        "role": "Responsable Commercial chez TRT Broker",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Khalid.png",
+        "quote": "Nous avons fait appel à Blackswan Technology pour l'intégration de l'ERP Odoo au sein de notre société. Leur intervention nous a permis d'optimiser la gestion de nos clients, de nos salariés, de nos contrats, tout en renforçant notre suivi commercial.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client",
+        "targetRegions": [
+          "morocco"
+        ]
+      },
+      {
+        "id": "testimonial-morocco-4",
+        "name": "Salah Eddine Belkadi",
+        "role": "CEO de Unique Packing",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/unique.jpg",
+        "quote": "Nous avons fait appel à Blackswan Technology pour la mise en place d'un ERP adapté à nos activités d'export. L'équipe a su comprendre nos enjeux logistiques et commerciaux, et a livré une solution parfaitement opérationnelle. Un accompagnement rigoureux et une grande réactivité. Je recommande vivement.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client",
+        "targetRegions": [
+          "morocco"
+        ]
+      },
+      {
+        "id": "testimonial-morocco-5",
+        "name": "Taha Mzali",
+        "role": "Responsable Marketing chez Fitness Park",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/taha%20mzali.jpg",
+        "quote": "Grâce à Blackswan Technology, nous avons déployé un ERP qui nous permet aujourd'hui de mieux gérer nos adhérents, nos abonnements et nos opérations marketing. L'équipe a été rapide, claire et toujours disponible. Une collaboration très professionnelle que je recommande à 100 %.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client",
+        "targetRegions": [
+          "morocco"
+        ]
+      },
+      {
+        "id": "testimonial-morocco-6",
+        "name": "Hasnaa Eddal",
+        "role": "Dirigeante de Turkish Hair Clinique",
+        "avatar": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/hassnaa.jpg",
+        "quote": "Blackswan Technology nous a accompagnés dans la mise en place d'un ERP pour gérer efficacement nos flux patients, nos plannings et nos équipes. Leur solution a grandement amélioré notre organisation au quotidien. Une équipe à l'écoute, professionnelle et très compétente. Un vrai plus pour notre clinique.",
+        "rating": 5,
+        "caseStudyLink": "/cas-client",
+        "targetRegions": [
+          "morocco"
+        ]
+      }
+    ],
+    "testimonialsSection": {
+      "headline": "et voici leurs témoignages...",
+      "description": "Nos clients nous recommandent",
+      "subdescription": "Découvrez pourquoi nos clients nous recommandent"
+    },
+    "pricing": {
+      "headline": "Tarifs & accompagnement",
+      "description": "Un partenariat, pas seulement une prestation",
+      "subdescription": "Nos packs d'accompagnement sont conçus pour s'adapter à votre taille et vos ambitions.",
+      "plans": [
+        {
+          "name": "Pack Quickstart",
+          "description": "Idéal pour débuter avec Odoo rapidement et efficacement.",
+          "price": "3 600 €",
+          "estimation": "~25 heures d'accompagnement",
+          "targetRegions": [
+            "france",
+            "international"
+          ],
+          "features": [
+            "Audit détaillé de vos besoins",
+            "Configuration de base Odoo",
+            "Formation initiale équipe",
+            "Support au démarrage (15j)"
+          ],
+          "cta": "Obtenir un devis"
+        },
+        {
+          "name": "Pack Croissance",
+          "description": "Solution complète pour les entreprises en développement.",
+          "price": "9 000 €",
+          "estimation": "~75 heures d'accompagnement",
+          "targetRegions": [
+            "france",
+            "international"
+          ],
+          "featured": true,
+          "features": [
+            "Tous les avantages du pack Quickstart",
+            "Développements spécifiques",
+            "Intégration modules avancés",
+            "Formation approfondie des équipes",
+            "Documentation personnalisée"
+          ],
+          "cta": "Planifier un échange"
+        },
+        {
+          "name": "Pack Sur Mesure",
+          "description": "Accompagnement personnalisé selon vos besoins spécifiques.",
+          "price": "Devis personnalisé",
+          "estimation": "Volume d'heures adapté",
+          "targetRegions": [
+            "france",
+            "international"
+          ],
+          "features": [
+            "Analyse approfondie de vos processus",
+            "Solution 100% personnalisée",
+            "Support prioritaire dédié",
+            "Consultant attitré à votre projet",
+            "Suivi stratégique long terme"
+          ],
+          "cta": "Discutons ensemble"
+        },
+        {
+          "name": "Pack Quickstart",
+          "description": "Idéal pour débuter avec Odoo rapidement et efficacement.",
+          "price": "48 000 Dhs",
+          "estimation": "~70 heures d'accompagnement",
+          "targetRegions": [
+            "morocco"
+          ],
+          "features": [
+            "Audit détaillé de vos besoins",
+            "Configuration de base Odoo",
+            "Formation initiale équipe",
+            "Support au démarrage (30j)"
+          ],
+          "cta": "Obtenir un devis"
+        },
+        {
+          "name": "Pack Croissance",
+          "description": "Solution complète pour les entreprises en développement.",
+          "price": "90 000 Dhs",
+          "estimation": "~150 heures d'accompagnement",
+          "targetRegions": [
+            "morocco"
+          ],
+          "featured": true,
+          "features": [
+            "Tous les avantages du pack Quickstart",
+            "Développements spécifiques",
+            "Intégration modules avancés",
+            "Formation approfondie des équipes",
+            "Documentation personnalisée"
+          ],
+          "cta": "Planifier un échange"
+        },
+        {
+          "name": "Pack Sur Mesure",
+          "description": "Accompagnement personnalisé selon vos besoins spécifiques.",
+          "price": "Devis personnalisé",
+          "estimation": "Volume d'heures adapté",
+          "targetRegions": [
+            "morocco"
+          ],
+          "features": [
+            "Analyse approfondie de vos processus",
+            "Solution 100% personnalisée",
+            "Support prioritaire dédié",
+            "Consultant attitré à votre projet",
+            "Suivi stratégique long terme"
+          ],
+          "cta": "Discutons ensemble"
+        }
+      ]
+    },
+    "partnership": {
+      "headline": "Notre agence",
+      "description": "Blackswan technology",
+      "subdescription": "Une équipe de consultants certifiés, passionnés par l'accompagnement de nos clients dans leur transformation digitale.",
+      "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/team.jpeg",
+      "imageOtherCountries": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST%20logo.png",
+      "features": [
+        {
+          "title": "Partenaire Silver Odoo",
+          "description": "Certification officielle reconnaissant notre expertise",
+          "icon": "BadgeCheck"
+        },
+        {
+          "title": "Équipe certifiée",
+          "description": "100% de nos consultants sont certifiés Odoo",
+          "icon": "Users"
+        },
+        {
+          "title": "Support réactif",
+          "description": "Réponse garantie sous 4h en journée",
+          "icon": "Clock"
+        },
+        {
+          "title": "Excellence reconnue",
+          "description": "99% de satisfaction client sur tous nos projets",
+          "icon": "Star"
+        }
+      ],
+      "expertiseText": ""
+    },
+    "contact": {
+      "headline": "Des défis à relever dans la gestion de vos clients ?",
+      "description": "N'attendez pas pour nous contacter, nous sommes là pour vous accompagner !\n",
+      "subdescription": "",
+      "formTitle": "Bénéficier d'une démonstration gratuite",
+      "formDescription": "",
+      "benefits": [
+        {
+          "title": "Partenaire Silver Officiel",
+          "description": "Certification garantissant notre expertise technique reconnue par Odoo",
+          "icon": "Award"
+        },
+        {
+          "title": "Transformation Express",
+          "description": "Digitalisez vos processus en quelques semaines, pas en mois",
+          "icon": "Zap"
+        },
+        {
+          "title": "Accompagnement Sécurisé",
+          "description": "De l'audit stratégique à la mise en production, nous restons à vos côtés",
+          "icon": "Shield"
+        }
+      ],
+      "consultation": {
+        "title": "Consultation Stratégique Offerte",
+        "description": "Recevez une analyse de vos besoins et une feuille de route claire pour votre transformation digitale, sans aucun engagement."
+      },
+      "contactInfo": {
+        "phone": "+212 7 83 69 96 03",
+        "email": "contact-ma@blackswantechnology.fr"
+      },
+      "guarantee": "Réponse garantie sous 4h en journée • Échange sans engagement"
+    },
+    "faq": {
+      "headline": "Question fréquentes",
+      "description": "Tout savoir sur Odoo",
+      "subdescription": "Découvrez les réponses aux questions les plus courantes sur l'accompagnement Blackswan Technology",
+      "items": [
+        {
+          "question": "Odoo est-il adapté à mon secteur d'activité ?",
+          "answer": "Odoo est une solution modulaire qui s'adapte à tous les secteurs d'activité : e-commerce, manufacturing, services, retail, etc. Nos consultants analysent vos besoins spécifiques pour configurer la solution parfaitement adaptée à votre métier."
+        },
+        {
+          "question": "Comment se déroule un projet d'intégration Odoo avec BlackswanTechnology ?",
+          "answer": "Notre méthodologie comprend 5 étapes : 1) Audit de vos besoins, 2) Configuration et personnalisation, 3) Migration des données, 4) Formation des équipes, 5) Mise en production et support. Chaque projet est géré par un chef de projet dédié."
+        },
+        {
+          "question": "Quels sont les délais moyens d'un projet d'intégration ?",
+          "answer": "Les délais varient selon la complexité : de 4 à 8 semaines pour une configuration standard, jusqu'à 3-6 mois pour des projets complexes avec développements spécifiques. Nous établissons un planning détaillé lors de l'audit initial."
+        },
+        {
+          "question": "Puis-je héberger Odoo sur le cloud ?",
+          "answer": "Oui, Odoo peut être hébergé sur le cloud Odoo.com (SaaS) ou sur votre propre infrastructure (on-premise). Nous vous conseillons sur la meilleure option selon vos contraintes de sécurité, performance et budget."
+        },
+        {
+          "question": "Proposez-vous une formation à l'utilisation d'Odoo ?",
+          "answer": "Absolument ! La formation fait partie intégrante de notre accompagnement. Nous proposons des formations sur mesure pour tous les niveaux (utilisateurs, administrateurs, développeurs) en présentiel ou à distance."
+        },
+        {
+          "question": "Comment se passe le support après la mise en production ?",
+          "answer": "Nous proposons plusieurs formules de support : assistance ponctuelle, forfait d'heures mensuel, ou contrat de maintenance avec SLA. Réponse garantie sous 4h en journée pour tous nos clients sous contrat."
+        }
+      ]
+    },
+    "finalCta": {
+      "headline": "Restez informé",
+      "description": "Recevez nos dernières actualités",
+      "ctaPrimary": {
+        "text": "S'abonner",
+        "icon": ""
+      },
+      "ctaSecondary": {
+        "text": "",
+        "icon": ""
+      }
+    },
+    "selectedClients": [
+      {
+        "id": "68dff775b1bf72745ecf9048",
+        "order": 0
+      },
+      {
+        "id": "68e3d86d6fdbe1ea4a7b84ec",
+        "order": 1
+      },
+      {
+        "id": "68e387cac4a1ab0b3c2d3d0e",
+        "order": 2
+      },
+      {
+        "id": "68e675c92b859197ed3c456e",
+        "order": 3
+      },
+      {
+        "id": "69087d2b028655733bdca6ce",
+        "order": 4
+      },
+      {
+        "id": "690880e2028655733bdca7c5",
+        "order": 5
+      },
+      {
+        "id": "69088401028655733bdca80b",
+        "order": 6
+      }
+    ]
+  }
+},
+{
+  "_id": {
+    "$oid": "68e9283b1b809c6876530bde"
+  },
+  "type": "footer",
+  "__v": 0,
+  "content": {
+    "newsletter": {
+      "title": "Restez informé",
+      "description": "Recevez nos dernières actualités et conseils en transformation digitale",
+      "placeholder": "Votre adresse email",
+      "buttonText": "S'abonner"
+    },
+    "companyInfo": {
+      "logo": {
+        "image": "https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst%20white.png",
+        "alt": "Black Swan Technology"
+      },
+      "description": "Nous transformons votre entreprise grâce à des solutions digitales innovantes et sur mesure.",
+      "contact": {
+        "address": {
+          "icon": "MapPin",
+          "text": ""
+        },
+        "phone": {
+          "icon": "Phone",
+          "text": ""
+        },
+        "email": {
+          "icon": "Mail",
+          "text": ""
+        }
+      }
+    },
+    "quickLinks": {
+      "title": "Liens rapides",
+      "links": [
+        {
+          "text": "Solutions",
+          "url": "#expertise"
+        },
+        {
+          "text": "Notre Agence",
+          "url": "#team"
+        },
+        {
+          "text": "Témoignages",
+          "url": "#testimonials"
+        },
+        {
+          "text": "Blog",
+          "url": "/blog"
+        }
+      ]
+    },
+    "services": {
+      "title": "",
+      "links": []
+    },
+    "social": {
+      "whatsapp": {
+        "icon": "WhatsApp",
+        "color": "#25d366",
+        "url": "https://api.whatsapp.com/send/?phone=212783699603"
+      },
+      "linkedin": {
+        "icon": "Linkedin",
+        "color": "#0077b5",
+        "url": "https://www.linkedin.com/company/blackswan-technology/"
+      }
+    },
+    "certifications": {
+      "title": "Nos certifications",
+      "badges": [
+        "Hubspot platinum",
+        "Odoo silver"
+      ]
+    },
+    "legal": {
+      "copyright": "© 2025 Black Swan Technology. Tous droits réservés.",
+      "links": []
+    }
+  },
+  "createdAt": {
+    "$date": "2025-10-10T15:37:31.877Z"
+  },
+  "description": "Pied de page du site",
+  "isActive": true,
+  "metadata": {
+    "order": 99
+  },
+  "title": "Footer",
+  "updatedAt": {
+    "$date": "2025-10-10T15:54:38.006Z"
+  }
+}]

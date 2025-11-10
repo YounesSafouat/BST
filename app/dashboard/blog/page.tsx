@@ -13,6 +13,7 @@ import * as LucideIcons from "lucide-react";
 import Loader from '@/components/home/Loader';
 import { BlogPost } from "@/components/BlogPost";
 import YoastSEO from "@/components/YoastSEO";
+import ImageUpload from '@/components/dashboard/ImageUpload';
 
 // Rich Text Editor Component
 const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), { ssr: false });
@@ -696,12 +697,20 @@ export default function BlogAdminPage() {
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Image Principale</Label>
-                        <Input name="image" value={form.image} onChange={handleChange} placeholder="https://..." />
+                        <ImageUpload
+                          value={form.image}
+                          onChange={(url) => handleChange({ target: { name: 'image', value: url } } as any)}
+                          label="Image Principale"
+                          placeholder="https://... ou télécharger"
+                        />
                       </div>
                       <div>
-                        <Label>Image de Couverture</Label>
-                        <Input name="cover" value={form.cover} onChange={handleChange} placeholder="https://..." />
+                        <ImageUpload
+                          value={form.cover}
+                          onChange={(url) => handleChange({ target: { name: 'cover', value: url } } as any)}
+                          label="Image de Couverture"
+                          placeholder="https://... ou télécharger"
+                        />
                       </div>
                     </div>
                   </CardContent>

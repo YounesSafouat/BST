@@ -388,7 +388,7 @@ export default function CasClientV1() {
                                                                  {client.logo ? (
                                                                       <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-50/50 border border-gray-200/50">
                                                                            <Image
-                                                                                src={client.logo.startsWith('http') ? client.logo : `https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg`}
+                                                                                src={client.logo.startsWith('http') ? client.logo : `https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80`}
                                                                                 alt={client.name}
                                                                                 width={40}
                                                                                 height={40}
@@ -461,7 +461,7 @@ export default function CasClientV1() {
                                                                  {client.logo ? (
                                                                       <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gray-50/50 border border-gray-200/50">
                                                                            <Image
-                                                                                src={client.logo.startsWith('http') ? client.logo : `https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/placeholder.svg`}
+                                                                                src={client.logo.startsWith('http') ? client.logo : `https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80`}
                                                                                 alt={client.name}
                                                                                 width={40}
                                                                                 height={40}

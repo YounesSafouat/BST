@@ -69,7 +69,7 @@ export default function NotFound() {
               {/* Vector Illustration - Much Larger */}
               <div className="relative w-full h-96 sm:h-[28rem] lg:h-[36rem] xl:h-[40rem]">
                 <Image
-                  src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/404.svg"
+                  src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787690/bst-migration/yat6d4edc55mlvmym8v6.svg"
                   alt="404 Error Illustration"
                   fill
                   className="object-contain"
@@ -96,7 +96,7 @@ export default function NotFound() {
         <div className="mt-8 lg:mt-16 text-center">
           <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
             <Image
-              src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST_favIcone_big-removebg-preview.png"
+              src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787674/bst-migration/cpaezmhlolmxstzeamjp.png"
               alt="BlackSwan Technology"
               width={20}
               height={20}

@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Save } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import Loader from '@/components/home/Loader';
+import ImageUpload from '@/components/dashboard/ImageUpload';
 
 interface SiteSettings {
   favicon?: {
@@ -233,13 +234,12 @@ export default function SettingsDashboard() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="favicon-image">URL de l'image du favicon</Label>
-                  <Input
-                    id="favicon-image"
-                    type="text"
-                    placeholder="/favicon.ico"
+                  <ImageUpload
                     value={settings.favicon?.image || ""}
-                    onChange={(e) => updateField('favicon.image', e.target.value)}
+                    onChange={(url) => updateField('favicon.image', url)}
+                    label="URL de l'image du favicon"
+                    placeholder="/favicon.ico ou télécharger"
+                    showPreview={false}
                   />
                   <p className="text-sm text-gray-500 mt-1">
                     Ex: /favicon.ico, /favicon.png, ou URL complète

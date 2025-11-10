@@ -178,7 +178,7 @@ export default function HeroSection() {
             <span className="font-semibold ml-2 flex items-center" style={{ color: 'var(--brand)' }}>Odoo
               <span className="inline-flex items-center align-baseline ml-1">
                 <span className="rounded-full p-[4px] flex items-center justify-center w-10 h-10 animate-float bg-white dark:bg-white/10" style={{ border: `1px solid var(--orange-border)`, animation: "float 6s ease-in-out infinite", boxShadow: `0 0 0 6px rgba(255,255,255,0.65), 0 0 30px var(--glow-soft)` }}>
-                  <img src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/Odoo.ico" alt="Odoo Icon" className="w-7 h-7 align-bottom" />
+                  <img src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787698/bst-migration/dctpq90kdbbkksmtjvj5.ico" alt="Odoo Icon" className="w-7 h-7 align-bottom" />
                 </span>
               </span>
             </span>

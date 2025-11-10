@@ -112,7 +112,7 @@ export default function AboutUs() {
               className="mb-6"
             >
               <Image
-                src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST_favIcone_big-removebg-preview.png"
+                src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787738/bst-migration/zjstq4f1gykvmytmeakg.png"
                 alt="BlackSwan Technology"
                 width={200}
                 height={200}
@@ -338,7 +338,7 @@ export default function AboutUs() {
                   className="text-center mb-16"
                 >
                   <Image
-                    src="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png"
+                    src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787739/bst-migration/kouuvqweedgwhmkjb9xw.png"
                     alt="BlackSwan Technology"
                     width={80}
                     height={80}

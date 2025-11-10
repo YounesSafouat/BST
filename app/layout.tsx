@@ -40,6 +40,7 @@ import LayoutWrapper from '@/components/layout-wrapper'
 import { LoaderProvider, LoaderRouteListener } from '@/components/LoaderProvider'
 import EnhancedStructuredData from '@/components/enhanced-structured-data'
 import GoogleBusinessProfile from '@/components/GoogleBusinessProfile'
+import WebsiteStructuredData from '@/components/WebsiteStructuredData'
 import { ThemeProvider } from '@/components/theme-provider'
 import FaviconProvider from '@/components/FaviconProvider'
 import SnippetsInjector from '@/components/SnippetsInjector'
@@ -95,7 +96,7 @@ export const metadata: Metadata = {
     siteName: 'Blackswan Technology',
     images: [
       {
-        url: 'https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png',
+        url: 'https://res.cloudinary.com/dwob2hfin/image/upload/v1762787685/bst-migration/xva0mqzvix7daej3dsvq.png',
         width: 1200,
         height: 630,
         alt: 'Blackswan Technology - Expert Odoo & HubSpot',
@@ -106,7 +107,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Blackswan Technology - Expert Odoo ERP & HubSpot CRM',
     description: 'Partenaire Officiel Odoo et Platinum HubSpot au Maroc. Solutions sur mesure pour votre transformation digitale.',
-    images: ['https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/bst.png'],
+    images: ['https://res.cloudinary.com/dwob2hfin/image/upload/v1762787685/bst-migration/xva0mqzvix7daej3dsvq.png'],
   },
   robots: {
     index: true,
@@ -163,12 +164,13 @@ export default function RootLayout({
         }} />
         <EnhancedStructuredData />
         <GoogleBusinessProfile />
+        <WebsiteStructuredData />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2563eb" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="BlackSwan Tech" />
-        <link rel="icon" href="https://144151551.fs1.hubspotusercontent-eu1.net/hubfs/144151551/WEBSITE%20-%20logo/BST-Favicon.webp" type="image/webp" />
+        <link rel="icon" href="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787687/bst-migration/ghfhnwjwwpzlbazkjxgk.webp" type="image/webp" />
         <meta name="msapplication-TileColor" content="#2563eb" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="geo.region" content="MA" />
