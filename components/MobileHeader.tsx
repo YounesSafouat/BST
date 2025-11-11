@@ -254,7 +254,7 @@ export default function MobileHeader() {
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
             <img
-              src="https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787733/bst-migration/hf8gdtdlr9dejfulsrql"
+              src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762788652/blackswantechnology_20white-3_kohnph.svg"
               alt={headerData?.logo?.alt || "BlackSwan"}
               className={getLogoSizeClass(headerData?.logo?.size || '6')}
             />
