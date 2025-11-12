@@ -35,7 +35,8 @@ import { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
 import HomePage from '../components/home/HomePage';
 
-export const dynamic = "force-dynamic";
+export const dynamic = "auto";
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const seoData = await getSEOData('home');

@@ -253,7 +253,6 @@ export default function HomePage() {
      const clientsPerPage = 3;
 
 
-     const [mounted, setMounted] = useState(false);
      const { settings: visualEffectsSettings } = useVisualEffects();
 
      // Use singleton geolocation service
@@ -263,48 +262,35 @@ export default function HomePage() {
 
 
      useEffect(() => {
-          setMounted(true);
-     }, []);
-
-
-
-
-     useEffect(() => {
-          if (!mounted) return;
-
           setStatsVisible(true);
           setIsLoaded(true);
 
+          const cachedData = sessionStorage.getItem('homePageData');
+          if (cachedData) {
+               try {
+                    const parsed = JSON.parse(cachedData);
+                    const hasRegions = parsed.data?.hero?.carousel?.companies?.some((company: any) => company.regions);
+                    if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) {
+                         setHomePageData(parsed.data);
+                         setIsDataLoading(false);
+                    }
+               } catch (e) {
+                    // Continue to fetch
+               }
+          }
+
           fetchHomePageData();
           fetchClientCases();
-     }, [mounted]);
+     }, []);
 
 
      const fetchHomePageData = async () => {
+          if (homePageData) return;
+
           try {
-               const cachedData = sessionStorage.getItem('homePageData');
-               if (cachedData) {
-                    try {
-                         const parsed = JSON.parse(cachedData);
-                         const hasRegions = parsed.data?.hero?.carousel?.companies?.some((company: any) => company.regions);
-
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) {
-                              setHomePageData(parsed.data);
-                              setIsDataLoading(false);
-                              return;
-                         } else if (!hasRegions) {
-                              sessionStorage.removeItem('homePageData');
-                         }
-                    } catch (e) {
-                         // Cache parse error, fetch fresh data
-                    }
-               }
-
-               setIsDataLoading(true);
-
                const url = `/api/content?type=home-page`;
                const response = await fetch(url, {
-                    cache: 'force-cache',
+                    cache: 'no-store',
                     headers: {
                          'Accept': 'application/json'
                     }
@@ -318,6 +304,7 @@ export default function HomePage() {
 
                          if (homePageContent && homePageContent.content) {
                               setHomePageData(homePageContent.content);
+                              setIsDataLoading(false);
 
                               sessionStorage.setItem('homePageData', JSON.stringify({
                                    data: homePageContent.content,
@@ -328,7 +315,6 @@ export default function HomePage() {
                }
           } catch (error) {
                console.error('Error fetching home page data:', error);
-          } finally {
                setIsDataLoading(false);
           }
      };
@@ -447,10 +433,14 @@ export default function HomePage() {
           return () => {
                window.removeEventListener('hashchange', handleHashChange);
           };
-     }, [mounted, homePageData]);
+     }, [homePageData]);
 
 
      if (!homePageData && isDataLoading) {
+          return <Loader />;
+     }
+
+     if (!homePageData) {
           return <Loader />;
      }
 
