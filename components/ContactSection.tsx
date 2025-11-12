@@ -2065,7 +2065,8 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                     <div className="w-full sm:max-w-6xl sm:mx-auto">
                          <Card className="border-0 sm:border border-gray-200 hover:border-[var(--color-secondary)] shadow-none sm:shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 bg-white rounded-none sm:rounded-2xl p-0 sm:p-8">                           
-                         <div className="iclosed-widget" data-url="https://app.iclosed.io/e/warrenblackswan/discutons-de-votre-projet" title="Discutons de votre projet" style={{ width: '100%', height: '620px' }}></div>
+                             <div className="iclosed-widget block sm:hidden" data-url="https://app.iclosed.io/e/warrenblackswan/discutons-de-votre-projet" title="Discutons de votre projet" style={{ width: '100%', height: '620px' }}></div>
+                             <div className="iclosed-widget hidden sm:block" data-url="https://app.iclosed.io/e/warrenblackswan/rendez-vous-avec-warren-blackswan" title="Rendez-vous avec Warren"></div>
                          </Card>
                    </div>
                </div>
