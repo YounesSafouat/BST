@@ -96,8 +96,7 @@ function HeroSectionV1({ heroData, userRegion, isPreview = false }: HeroSectionP
   };
 
   useEffect(() => {
-    const loadTimer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(loadTimer);
+    setIsLoaded(true);
   }, []);
 
   // Auto-detect country based on IP geolocation

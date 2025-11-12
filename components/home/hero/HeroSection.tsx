@@ -70,8 +70,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
   };
 
   useEffect(() => {
-    const loadTimer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(loadTimer);
+    setIsLoaded(true);
   }, []);
 
   const handleAsyncAction = async (action: () => Promise<void>, type: string) => {
@@ -89,14 +88,12 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
 
   const handleConsultationClick = async () => {
     await handleAsyncAction(async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
       router.push('/#contact');
     }, 'appointment');
   };
 
   const handleCaseStudyClick = async () => {
     await handleAsyncAction(async () => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
       router.push('/#contact');
     }, 'projects');
   };

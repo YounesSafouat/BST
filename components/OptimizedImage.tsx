@@ -62,24 +62,40 @@ export default function OptimizedImage({
      style,
      onClick,
 }: OptimizedImageProps) {
-     const [isLoaded, setIsLoaded] = useState(false)
+     const [isLoaded, setIsLoaded] = useState(priority)
      const [hasError, setHasError] = useState(false)
      const imgRef = useRef<HTMLDivElement>(null)
+     const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-     // Generate blur placeholder if not provided
      const defaultBlurDataURL = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=='
 
      useEffect(() => {
           if (priority) {
                setIsLoaded(true)
+          } else {
+               timeoutRef.current = setTimeout(() => {
+                    setIsLoaded(true)
+               }, 100)
+          }
+
+          return () => {
+               if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current)
+               }
           }
      }, [priority])
 
      const handleLoad = () => {
+          if (timeoutRef.current) {
+               clearTimeout(timeoutRef.current)
+          }
           setIsLoaded(true)
      }
 
      const handleError = () => {
+          if (timeoutRef.current) {
+               clearTimeout(timeoutRef.current)
+          }
           setHasError(true)
           setIsLoaded(true)
      }
@@ -115,11 +131,11 @@ export default function OptimizedImage({
                     blurDataURL={blurDataURL || defaultBlurDataURL}
                     onLoad={handleLoad}
                     onError={handleError}
-                    className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'
-                         }`}
+                    className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
                     style={{
                          objectFit: 'cover',
                     }}
+                    unoptimized={src?.startsWith('data:') || src?.startsWith('blob:')}
                />
 
                {!isLoaded && (

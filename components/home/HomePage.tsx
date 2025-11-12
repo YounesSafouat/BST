@@ -40,7 +40,7 @@ import $ from 'jquery';
 
 
 
-import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import HomeHeroSplit from '@/components/home/hero/HeroSection';
 import HeroSectionMobile from '@/components/home/hero/HeroSectionMobile';
@@ -66,9 +66,6 @@ import CurvedLinesBackground from '@/components/ui/CurvedLinesBackground';
 import PerformanceMonitor from '../PerformanceMonitor';
 import { useVisualEffects } from '@/hooks/use-visual-effects';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
-
-const LazyFAQSection = lazy(() => import('../FAQSection'));
-const LazyOdooCertificationSection = lazy(() => import('../OdooCertificationSection'));
 
 
 interface HomePageData {
@@ -275,40 +272,27 @@ export default function HomePage() {
      useEffect(() => {
           if (!mounted) return;
 
-          const timer = setTimeout(() => setStatsVisible(true), 800);
-          const loadTimer = setTimeout(() => setIsLoaded(true), 100);
+          setStatsVisible(true);
+          setIsLoaded(true);
 
-          setTimeout(() => {
-               fetchHomePageData();
-               fetchClientCases();
-          }, 100);
-
-          return () => {
-               clearTimeout(timer);
-               clearTimeout(loadTimer);
-          };
+          fetchHomePageData();
+          fetchClientCases();
      }, [mounted]);
 
 
      const fetchHomePageData = async () => {
           try {
-               setIsDataLoading(true);
-
-               // Use cached data if available and fresh
                const cachedData = sessionStorage.getItem('homePageData');
                if (cachedData) {
                     try {
                          const parsed = JSON.parse(cachedData);
-                         // Check if cached data has regions field (for backward compatibility)
                          const hasRegions = parsed.data?.hero?.carousel?.companies?.some((company: any) => company.regions);
 
-                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) { // 5 minutes cache + regions check
-
+                         if (parsed.timestamp && (Date.now() - parsed.timestamp) < 5 * 60 * 1000 && hasRegions) {
                               setHomePageData(parsed.data);
+                              setIsDataLoading(false);
                               return;
                          } else if (!hasRegions) {
-                              console.log('🏠 HomePage - Cached data missing regions field, fetching fresh data');
-                              // Clear the cache to force fresh fetch
                               sessionStorage.removeItem('homePageData');
                          }
                     } catch (e) {
@@ -316,8 +300,9 @@ export default function HomePage() {
                     }
                }
 
-               const url = `/api/content?type=home-page`;
+               setIsDataLoading(true);
 
+               const url = `/api/content?type=home-page`;
                const response = await fetch(url, {
                     cache: 'force-cache',
                     headers: {
@@ -332,7 +317,6 @@ export default function HomePage() {
                          const homePageContent = data.find(item => item.type === 'home-page');
 
                          if (homePageContent && homePageContent.content) {
-
                               setHomePageData(homePageContent.content);
 
                               sessionStorage.setItem('homePageData', JSON.stringify({
@@ -447,14 +431,13 @@ export default function HomePage() {
           }
      };
 
-     // Handle URL hash navigation for smooth scrolling
      useEffect(() => {
           const handleHashChange = () => {
                const hash = window.location.hash.substring(1);
                if (hash) {
-                    setTimeout(() => {
+                    requestAnimationFrame(() => {
                          scrollToSection(hash);
-                    }, 500);
+                    });
                }
           };
 
@@ -467,19 +450,8 @@ export default function HomePage() {
      }, [mounted, homePageData]);
 
 
-     if (isDataLoading) {
+     if (!homePageData && isDataLoading) {
           return <Loader />;
-     }
-
-     if (!homePageData) {
-          return (
-               <div className="min-h-screen bg-white flex items-center justify-center">
-                    <div className="text-center">
-                         <div className="animate-pulse text-[var(--color-secondary)] text-lg mb-4">Chargement des données...</div>
-                         <div className="text-gray-600">Veuillez patienter pendant que nous chargeons le contenu.</div>
-                    </div>
-               </div>
-          );
      }
 
 
@@ -488,12 +460,14 @@ export default function HomePage() {
           <div className="min-h-screen overflow-hidden relative">
 
                {/* SECTION 1: Hero Section - mobile only*/}
-
-               <HeroSectionMobile heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+               {homePageData?.hero && (
+                    <HeroSectionMobile heroData={homePageData.hero} userRegion={userRegion} isPreview={false} />
+               )}
 
                {/* SECTION 1: Hero Section - Desktop only */}
-
-               <HomeHeroSplit heroData={homePageData?.hero} userRegion={userRegion} isPreview={false} />
+               {homePageData?.hero && (
+                    <HomeHeroSplit heroData={homePageData.hero} userRegion={userRegion} isPreview={false} />
+               )}
 
 
                {/* SECTION 2: Video Testimonials - HomePage */}
@@ -505,9 +479,7 @@ export default function HomePage() {
                </div>
                {/* SECTION 3: Odoo Certification - HomePage */}
                <div id="certification" className="relative z-10">
-                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                         <LazyOdooCertificationSection certificationData={homePageData?.certification} />
-                    </Suspense>
+                    <OdooCertificationSection certificationData={homePageData?.certification} />
                </div>
                {/* SECTION 4: Video Background Section */}
                <VideoBackgroundSection
@@ -518,12 +490,14 @@ export default function HomePage() {
                />
 
                {/* SECTION 5: Platform Modules Timeline */}
-               <PlatformModulesSection
-                    homePageData={homePageData}
-                    timeline1={timeline1}
-                    timeline2={timeline2}
-                    timeline3={timeline3}
-               />
+               {homePageData && (
+                    <PlatformModulesSection
+                         homePageData={homePageData}
+                         timeline1={timeline1}
+                         timeline2={timeline2}
+                         timeline3={timeline3}
+                    />
+               )}
                {/* SECTION 5: Services Section - HomePage */}
                <div className="relative z-10" id="services">
                     <ServicesSection servicesData={homePageData?.services} />
@@ -557,9 +531,7 @@ export default function HomePage() {
                </div>
                {/* SECTION 10: FAQ Section - HomePage */}
                <div id="faq">
-                    <Suspense fallback={<div className="py-20 bg-white"><div className="max-w-7xl mx-auto px-4 text-center"><div className="animate-pulse h-8 bg-gray-200 rounded w-64 mx-auto mb-4"></div></div></div>}>
-                         <LazyFAQSection faqData={homePageData?.faq} />
-                    </Suspense>
+                    <FAQSection faqData={homePageData?.faq} />
                </div>
 
 

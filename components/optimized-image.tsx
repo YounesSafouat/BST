@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface OptimizedImageProps {
      src: string;
@@ -24,14 +24,36 @@ export default function OptimizedImage({
      sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
      quality = 85
 }: OptimizedImageProps) {
-     const [isLoading, setIsLoading] = useState(true);
+     const [isLoading, setIsLoading] = useState(!priority);
      const [error, setError] = useState(false);
+     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+     useEffect(() => {
+          if (priority) {
+               setIsLoading(false);
+          } else {
+               timeoutRef.current = setTimeout(() => {
+                    setIsLoading(false);
+               }, 100);
+               return () => {
+                    if (timeoutRef.current) {
+                         clearTimeout(timeoutRef.current);
+                    }
+               };
+          }
+     }, [priority]);
 
      const handleLoad = () => {
+          if (timeoutRef.current) {
+               clearTimeout(timeoutRef.current);
+          }
           setIsLoading(false);
      };
 
      const handleError = () => {
+          if (timeoutRef.current) {
+               clearTimeout(timeoutRef.current);
+          }
           setError(true);
           setIsLoading(false);
      };
@@ -60,8 +82,7 @@ export default function OptimizedImage({
                     alt={alt}
                     width={width}
                     height={height}
-                    className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'
-                         }`}
+                    className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                     priority={priority}
                     sizes={sizes}
                     quality={quality}
@@ -70,6 +91,7 @@ export default function OptimizedImage({
                     loading={priority ? 'eager' : 'lazy'}
                     placeholder="blur"
                     blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+                    unoptimized={src?.startsWith('data:') || src?.startsWith('blob:')}
                />
           </div>
      );

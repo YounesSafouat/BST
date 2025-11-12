@@ -60,8 +60,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
   };
 
   useEffect(() => {
-    const loadTimer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(loadTimer);
+    setIsLoaded(true);
   }, []);
 
   const getIconComponent = (iconName: string) => {

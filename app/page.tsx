@@ -33,7 +33,6 @@
 
 import { Metadata } from 'next';
 import { getSEOData, generateMetadata as generateSEOMetadata } from '@/lib/seo';
-import dynamicImport from "next/dynamic";
 import HomePage from '../components/home/HomePage';
 
 export const dynamic = "force-dynamic";

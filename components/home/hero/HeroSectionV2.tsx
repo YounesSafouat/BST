@@ -70,8 +70,7 @@ function HeroSectionV2({ heroData, userRegion, isPreview = false }: HeroSectionP
   };
 
   useEffect(() => {
-    const loadTimer = setTimeout(() => setIsLoaded(true), 100);
-    return () => clearTimeout(loadTimer);
+    setIsLoaded(true);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -89,7 +88,6 @@ function HeroSectionV2({ heroData, userRegion, isPreview = false }: HeroSectionP
     try {
       console.log('Form submitted:', formData);
       
-      await new Promise(resolve => setTimeout(resolve, 1000));
       
       setFormData({
         fullName: '',

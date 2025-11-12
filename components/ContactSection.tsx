@@ -55,6 +55,123 @@ interface Country {
      flag: string;
 }
 
+const COUNTRY_MAP: Record<string, Country> = {
+     'FR': { code: 'FR', name: 'France', dialCode: '+33', flag: '🇫🇷' },
+     'MA': { code: 'MA', name: 'Maroc', dialCode: '+212', flag: '🇲🇦' },
+     'US': { code: 'US', name: 'États-Unis', dialCode: '+1', flag: '🇺🇸' },
+     'CA': { code: 'CA', name: 'Canada', dialCode: '+1', flag: '🇨🇦' },
+     'BE': { code: 'BE', name: 'Belgique', dialCode: '+32', flag: '🇧🇪' },
+     'CH': { code: 'CH', name: 'Suisse', dialCode: '+41', flag: '🇨🇭' },
+     'LU': { code: 'LU', name: 'Luxembourg', dialCode: '+352', flag: '🇱🇺' },
+     'TN': { code: 'TN', name: 'Tunisie', dialCode: '+216', flag: '🇹🇳' },
+     'DZ': { code: 'DZ', name: 'Algérie', dialCode: '+213', flag: '🇩🇿' },
+     'SN': { code: 'SN', name: 'Sénégal', dialCode: '+221', flag: '🇸🇳' },
+     'CI': { code: 'CI', name: 'Côte d\'Ivoire', dialCode: '+225', flag: '🇨🇮' },
+     'ML': { code: 'ML', name: 'Mali', dialCode: '+223', flag: '🇲🇱' },
+     'BF': { code: 'BF', name: 'Burkina Faso', dialCode: '+226', flag: '🇧🇫' },
+     'NE': { code: 'NE', name: 'Niger', dialCode: '+227', flag: '🇳🇪' },
+     'TD': { code: 'TD', name: 'Tchad', dialCode: '+235', flag: '🇹🇩' },
+     'CM': { code: 'CM', name: 'Cameroun', dialCode: '+237', flag: '🇨🇲' },
+     'CF': { code: 'CF', name: 'République centrafricaine', dialCode: '+236', flag: '🇨🇫' },
+     'CG': { code: 'CG', name: 'Congo', dialCode: '+242', flag: '🇨🇬' },
+     'CD': { code: 'CD', name: 'République démocratique du Congo', dialCode: '+243', flag: '🇨🇩' },
+     'GA': { code: 'GA', name: 'Gabon', dialCode: '+241', flag: '🇬🇦' },
+     'GQ': { code: 'GQ', name: 'Guinée équatoriale', dialCode: '+240', flag: '🇬🇶' },
+     'ST': { code: 'ST', name: 'Sao Tomé-et-Principe', dialCode: '+239', flag: '🇸🇹' },
+     'AO': { code: 'AO', name: 'Angola', dialCode: '+244', flag: '🇦🇴' },
+     'NA': { code: 'NA', name: 'Namibie', dialCode: '+264', flag: '🇳🇦' },
+     'BW': { code: 'BW', name: 'Botswana', dialCode: '+267', flag: '🇧🇼' },
+     'ZW': { code: 'ZW', name: 'Zimbabwe', dialCode: '+263', flag: '🇿🇼' },
+     'ZM': { code: 'ZM', name: 'Zambie', dialCode: '+260', flag: '🇿🇲' },
+     'MW': { code: 'MW', name: 'Malawi', dialCode: '+265', flag: '🇲🇼' },
+     'MZ': { code: 'MZ', name: 'Mozambique', dialCode: '+258', flag: '🇲🇿' },
+     'LS': { code: 'LS', name: 'Lesotho', dialCode: '+266', flag: '🇱🇸' },
+     'SZ': { code: 'SZ', name: 'Eswatini', dialCode: '+268', flag: '🇸🇿' },
+     'MG': { code: 'MG', name: 'Madagascar', dialCode: '+261', flag: '🇲🇬' },
+     'MU': { code: 'MU', name: 'Maurice', dialCode: '+230', flag: '🇲🇺' },
+     'SC': { code: 'SC', name: 'Seychelles', dialCode: '+248', flag: '🇸🇨' },
+     'KM': { code: 'KM', name: 'Comores', dialCode: '+269', flag: '🇰🇲' },
+     'DJ': { code: 'DJ', name: 'Djibouti', dialCode: '+253', flag: '🇩🇯' },
+     'SO': { code: 'SO', name: 'Somalie', dialCode: '+252', flag: '🇸🇴' },
+     'ET': { code: 'ET', name: 'Éthiopie', dialCode: '+251', flag: '🇪🇹' },
+     'ER': { code: 'ER', name: 'Érythrée', dialCode: '+291', flag: '🇪🇷' },
+     'SD': { code: 'SD', name: 'Soudan', dialCode: '+249', flag: '🇸🇩' },
+     'SS': { code: 'SS', name: 'Soudan du Sud', dialCode: '+211', flag: '🇸🇸' },
+     'EG': { code: 'EG', name: 'Égypte', dialCode: '+20', flag: '🇪🇬' },
+     'LY': { code: 'LY', name: 'Libye', dialCode: '+218', flag: '🇱🇾' },
+     'GB': { code: 'GB', name: 'Royaume-Uni', dialCode: '+44', flag: '🇬🇧' },
+     'DE': { code: 'DE', name: 'Allemagne', dialCode: '+49', flag: '🇩🇪' },
+     'IT': { code: 'IT', name: 'Italie', dialCode: '+39', flag: '🇮🇹' },
+     'ES': { code: 'ES', name: 'Espagne', dialCode: '+34', flag: '🇪🇸' },
+     'PT': { code: 'PT', name: 'Portugal', dialCode: '+351', flag: '🇵🇹' },
+     'NL': { code: 'NL', name: 'Pays-Bas', dialCode: '+31', flag: '🇳🇱' },
+     'AT': { code: 'AT', name: 'Autriche', dialCode: '+43', flag: '🇦🇹' },
+     'SE': { code: 'SE', name: 'Suède', dialCode: '+46', flag: '🇸🇪' },
+     'NO': { code: 'NO', name: 'Norvège', dialCode: '+47', flag: '🇳🇴' },
+     'DK': { code: 'DK', name: 'Danemark', dialCode: '+45', flag: '🇩🇰' },
+     'FI': { code: 'FI', name: 'Finlande', dialCode: '+358', flag: '🇫🇮' },
+     'PL': { code: 'PL', name: 'Pologne', dialCode: '+48', flag: '🇵🇱' },
+     'CZ': { code: 'CZ', name: 'République tchèque', dialCode: '+420', flag: '🇨🇿' },
+     'SK': { code: 'SK', name: 'Slovaquie', dialCode: '+421', flag: '🇸🇰' },
+     'HU': { code: 'HU', name: 'Hongrie', dialCode: '+36', flag: '🇭🇺' },
+     'RO': { code: 'RO', name: 'Roumanie', dialCode: '+40', flag: '🇷🇴' },
+     'BG': { code: 'BG', name: 'Bulgarie', dialCode: '+359', flag: '🇧🇬' },
+     'HR': { code: 'HR', name: 'Croatie', dialCode: '+385', flag: '🇭🇷' },
+     'SI': { code: 'SI', name: 'Slovénie', dialCode: '+386', flag: '🇸🇮' },
+     'EE': { code: 'EE', name: 'Estonie', dialCode: '+372', flag: '🇪🇪' },
+     'LV': { code: 'LV', name: 'Lettonie', dialCode: '+371', flag: '🇱🇻' },
+     'LT': { code: 'LT', name: 'Lituanie', dialCode: '+370', flag: '🇱🇹' },
+     'GR': { code: 'GR', name: 'Grèce', dialCode: '+30', flag: '🇬🇷' },
+     'CY': { code: 'CY', name: 'Chypre', dialCode: '+357', flag: '🇨🇾' },
+     'MT': { code: 'MT', name: 'Malte', dialCode: '+356', flag: '🇲🇹' },
+     'IE': { code: 'IE', name: 'Irlande', dialCode: '+353', flag: '🇮🇪' },
+     'IS': { code: 'IS', name: 'Islande', dialCode: '+354', flag: '🇮🇸' },
+     'RU': { code: 'RU', name: 'Russie', dialCode: '+7', flag: '🇷🇺' },
+     'UA': { code: 'UA', name: 'Ukraine', dialCode: '+380', flag: '🇺🇦' },
+     'BY': { code: 'BY', name: 'Biélorussie', dialCode: '+375', flag: '🇧🇾' },
+     'MD': { code: 'MD', name: 'Moldavie', dialCode: '+373', flag: '🇲🇩' },
+     'GE': { code: 'GE', name: 'Géorgie', dialCode: '+995', flag: '🇬🇪' },
+     'AM': { code: 'AM', name: 'Arménie', dialCode: '+374', flag: '🇦🇲' },
+     'AZ': { code: 'AZ', name: 'Azerbaïdjan', dialCode: '+994', flag: '🇦🇿' },
+     'TR': { code: 'TR', name: 'Turquie', dialCode: '+90', flag: '🇹🇷' },
+     'IL': { code: 'IL', name: 'Israël', dialCode: '+972', flag: '🇮🇱' },
+     'LB': { code: 'LB', name: 'Liban', dialCode: '+961', flag: '🇱🇧' },
+     'SY': { code: 'SY', name: 'Syrie', dialCode: '+963', flag: '🇸🇾' },
+     'IQ': { code: 'IQ', name: 'Irak', dialCode: '+964', flag: '🇮🇶' },
+     'IR': { code: 'IR', name: 'Iran', dialCode: '+98', flag: '🇮🇷' },
+     'AF': { code: 'AF', name: 'Afghanistan', dialCode: '+93', flag: '🇦🇫' },
+     'PK': { code: 'PK', name: 'Pakistan', dialCode: '+92', flag: '🇵🇰' },
+     'IN': { code: 'IN', name: 'Inde', dialCode: '+91', flag: '🇮🇳' },
+     'BD': { code: 'BD', name: 'Bangladesh', dialCode: '+880', flag: '🇧🇩' },
+     'LK': { code: 'LK', name: 'Sri Lanka', dialCode: '+94', flag: '🇱🇰' },
+     'NZ': { code: 'NZ', name: 'Nouvelle-Zélande', dialCode: '+64', flag: '🇳🇿' },
+     'BR': { code: 'BR', name: 'Brésil', dialCode: '+55', flag: '🇧🇷' },
+     'AR': { code: 'AR', name: 'Argentine', dialCode: '+54', flag: '🇦🇷' },
+     'CL': { code: 'CL', name: 'Chili', dialCode: '+56', flag: '🇨🇱' },
+     'PE': { code: 'PE', name: 'Pérou', dialCode: '+51', flag: '🇵🇪' },
+     'CO': { code: 'CO', name: 'Colombie', dialCode: '+57', flag: '🇨🇴' },
+     'VE': { code: 'VE', name: 'Venezuela', dialCode: '+58', flag: '🇻🇪' },
+     'EC': { code: 'EC', name: 'Équateur', dialCode: '+593', flag: '🇪🇨' },
+     'BO': { code: 'BO', name: 'Bolivie', dialCode: '+591', flag: '🇧🇴' },
+     'PY': { code: 'PY', name: 'Paraguay', dialCode: '+595', flag: '🇵🇾' },
+     'UY': { code: 'UY', name: 'Uruguay', dialCode: '+598', flag: '🇺🇾' },
+     'GY': { code: 'GY', name: 'Guyana', dialCode: '+592', flag: '🇬🇾' },
+     'SR': { code: 'SR', name: 'Suriname', dialCode: '+597', flag: '🇸🇷' },
+     'FK': { code: 'FK', name: 'Îles Malouines', dialCode: '+500', flag: '🇫🇰' },
+};
+
+const DEFAULT_COUNTRY: Country = { code: 'MA', name: 'Maroc', dialCode: '+212', flag: '🇲🇦' };
+
+const getCountryFromCode = (code: string): Country => {
+     return COUNTRY_MAP[code] || DEFAULT_COUNTRY;
+};
+
+const getCountryFromRegion = (region: string): Country => {
+     if (region === 'france') return COUNTRY_MAP['FR'];
+     if (region === 'morocco') return COUNTRY_MAP['MA'];
+     return DEFAULT_COUNTRY;
+};
+
 interface ContactData {
      headline: string;
      description: string;
@@ -99,12 +216,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           countryCode: 'MA'
      });
 
-     const [selectedCountry, setSelectedCountry] = useState<Country>({
-          code: 'MA',
-          name: 'Maroc',
-          dialCode: '+212',
-          flag: '🇲🇦'
-     });
+     const [selectedCountry, setSelectedCountry] = useState<Country>(DEFAULT_COUNTRY);
      const [errors, setErrors] = useState<{ [key: string]: string }>({});
      const [isSubmitted, setIsSubmitted] = useState(false);
      const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,6 +225,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
      const partialLeadTimer = useRef<NodeJS.Timeout | null>(null);
      const localStorageKey = 'contact_progress';
+     const localStorageDebounceTimer = useRef<NodeJS.Timeout | null>(null);
 
      const [userBehavior, setUserBehavior] = useState({
           pagesVisited: [] as string[],
@@ -131,21 +244,18 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      const countryCode = locationData?.countryCode || '';
      const city = locationData?.city || '';
 
-;
-
      useEffect(() => {
           return () => {
                if (partialLeadTimer.current) {
                     clearTimeout(partialLeadTimer.current);
                     partialLeadTimer.current = null;
                }
+               if (localStorageDebounceTimer.current) {
+                    clearTimeout(localStorageDebounceTimer.current);
+                    localStorageDebounceTimer.current = null;
+               }
           };
      }, []);
-
-    
-
-     const [, forceUpdate] = useState({});
-     const triggerReRender = () => forceUpdate({});
 
      useEffect(() => {
           // Track current page
@@ -155,14 +265,13 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                pagesVisited: [...new Set([...prev.pagesVisited, currentPage])]
           }));
 
-          // Track time on page
           const startTime = Date.now();
           const interval = setInterval(() => {
                setUserBehavior(prev => ({
                     ...prev,
                     timeOnPage: Date.now() - startTime
                }));
-          }, 1000);
+          }, 5000);
 
           // Track form interactions
           const trackFormInteraction = () => {
@@ -180,62 +289,59 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                form.addEventListener('focus', trackFormInteraction);
           }
 
-          try {
-               const existingProgress = localStorage.getItem(localStorageKey);
-               if (existingProgress) {
-                    const progress = JSON.parse(existingProgress);
-                    console.log('Found existing progress in LocalStorage:', progress);
+          const loadLocalStorageProgress = () => {
+               try {
+                    const existingProgress = localStorage.getItem(localStorageKey);
+                    if (existingProgress) {
+                         const progress = JSON.parse(existingProgress);
 
-                    if (progress.formCompleted) {
-                         console.log('Form was previously completed, clearing progress and resetting form');
-                         clearProgressFromLocalStorage();
-                         setIsSubmitted(false);
-                         setFormData({
-                              name: '',
-                              firstname: '',
-                              lastname: '',
-                              email: '',
-                              company: '',
-                              phone: '',
-                              message: '',
-                              countryCode: 'MA'
-                         });
-                    } else {
-                         console.log('Restoring partial progress, keeping inputs editable');
+                         if (progress.formCompleted) {
+                              clearProgressFromLocalStorage();
+                              setIsSubmitted(false);
+                              setFormData({
+                                   name: '',
+                                   firstname: '',
+                                   lastname: '',
+                                   email: '',
+                                   company: '',
+                                   phone: '',
+                                   message: '',
+                                   countryCode: 'MA'
+                              });
+                         } else {
+                              const restoredFormData = {
+                                   name: progress.name || '',
+                                   firstname: progress.firstname || (progress.name ? progress.name.split(' ')[0] : '') || '',
+                                   lastname: progress.lastname || (progress.name ? progress.name.split(' ').slice(1).join(' ') : '') || '',
+                                   email: progress.email || '',
+                                   phone: progress.phone || '',
+                                   company: progress.company || '',
+                                   message: progress.message || '',
+                                   countryCode: progress.countryCode || 'MA'
+                              };
 
-                         const restoredFormData = {
-                              name: progress.name || '',
-                              firstname: progress.firstname || (progress.name ? progress.name.split(' ')[0] : '') || '',
-                              lastname: progress.lastname || (progress.name ? progress.name.split(' ').slice(1).join(' ') : '') || '',
-                              email: progress.email || '',
-                              phone: progress.phone || '',
-                              company: progress.company || '',
-                              message: progress.message || '',
-                              countryCode: progress.countryCode || 'MA'
-                         };
+                              setFormData(restoredFormData);
 
-                         console.log('Restoring form data:', restoredFormData);
-                         setFormData(restoredFormData);
+                              if (progress.phone && !progress.phone.startsWith(selectedCountry.dialCode)) {
+                                   const phoneWithoutCountry = progress.phone.replace(/^\+?\d+\s*/, '');
+                                   const correctedPhone = selectedCountry.dialCode + ' ' + phoneWithoutCountry;
+                                   setFormData(prev => ({ ...prev, phone: correctedPhone }));
+                              }
 
-                         if (progress.phone && !progress.phone.startsWith(selectedCountry.dialCode)) {
-                              console.log('Fixing phone number country code');
-                              const phoneWithoutCountry = progress.phone.replace(/^\+?\d+\s*/, '');
-                              const correctedPhone = selectedCountry.dialCode + ' ' + phoneWithoutCountry;
-                              setFormData(prev => ({ ...prev, phone: correctedPhone }));
+                              const updatedProgress = {
+                                   ...progress,
+                                   timestamp: Date.now()
+                              };
+                              localStorage.setItem(localStorageKey, JSON.stringify(updatedProgress));
                          }
-
-                         const updatedProgress = {
-                              ...progress,
-                              timestamp: Date.now()
-                         };
-                         localStorage.setItem(localStorageKey, JSON.stringify(updatedProgress));
                     }
+               } catch (error) {
+                    clearProgressFromLocalStorage();
+                    setIsSubmitted(false);
                }
-          } catch (error) {
-               console.log('Error loading LocalStorage progress:', error);
-               clearProgressFromLocalStorage();
-               setIsSubmitted(false);
-          }
+          };
+
+          setTimeout(loadLocalStorageProgress, 0);
 
           const trackButtonClick = (event: MouseEvent) => {
                const target = event.target as HTMLElement;
@@ -287,9 +393,12 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
           };
 
           let mouseMoveCount = 0;
+          let mouseMoveThrottle = 0;
           const trackMouseMove = () => {
                mouseMoveCount++;
-               if (mouseMoveCount % 10 === 0) {
+               mouseMoveThrottle++;
+               if (mouseMoveThrottle >= 20) {
+                    mouseMoveThrottle = 0;
                     setUserBehavior(prev => ({
                          ...prev,
                          mouseMovements: mouseMoveCount,
@@ -320,875 +429,14 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
      }, [selectedCountry.code]);
 
      useEffect(() => {
-         
-
           if (!geolocationLoading && countryCode) {
-               
-               let detectedCountry: Country;
-               switch (countryCode) {
-                    case 'FR':
-                         detectedCountry = {
-                              code: 'FR',
-                              name: 'France',
-                              dialCode: '+33',
-                              flag: '🇫🇷'
-                         };
-                         break;
-                    case 'MA':
-                         detectedCountry = {
-                              code: 'MA',
-                              name: 'Maroc',
-                              dialCode: '+212',
-                              flag: '🇲🇦'
-                         };
-                         break;
-                    case 'US':
-                         detectedCountry = {
-                              code: 'US',
-                              name: 'États-Unis',
-                              dialCode: '+1',
-                              flag: '🇺🇸'
-                         };
-                         break;
-                    case 'CA':
-                         detectedCountry = {
-                              code: 'CA',
-                              name: 'Canada',
-                              dialCode: '+1',
-                              flag: '🇨🇦'
-                         };
-                         break;
-                    case 'BE':
-                         detectedCountry = {
-                              code: 'BE',
-                              name: 'Belgique',
-                              dialCode: '+32',
-                              flag: '🇧🇪'
-                         };
-                         break;
-                    case 'CH':
-                         detectedCountry = {
-                              code: 'CH',
-                              name: 'Suisse',
-                              dialCode: '+41',
-                              flag: '🇨🇭'
-                         };
-                         break;
-                    case 'LU':
-                         detectedCountry = {
-                              code: 'LU',
-                              name: 'Luxembourg',
-                              dialCode: '+352',
-                              flag: '🇱🇺'
-                         };
-                         break;
-                    case 'TN':
-                         detectedCountry = {
-                              code: 'TN',
-                              name: 'Tunisie',
-                              dialCode: '+216',
-                              flag: '🇹🇳'
-                         };
-                         break;
-                    case 'DZ':
-                         detectedCountry = {
-                              code: 'DZ',
-                              name: 'Algérie',
-                              dialCode: '+213',
-                              flag: '🇩🇿'
-                         };
-                         break;
-                    case 'SN':
-                         detectedCountry = {
-                              code: 'SN',
-                              name: 'Sénégal',
-                              dialCode: '+221',
-                              flag: '🇸🇳'
-                         };
-                         break;
-                    case 'CI':
-                         detectedCountry = {
-                              code: 'CI',
-                              name: 'Côte d\'Ivoire',
-                              dialCode: '+225',
-                              flag: '🇨🇮'
-                         };
-                         break;
-                    case 'ML':
-                         detectedCountry = {
-                              code: 'ML',
-                              name: 'Mali',
-                              dialCode: '+223',
-                              flag: '🇲🇱'
-                         };
-                         break;
-                    case 'BF':
-                         detectedCountry = {
-                              code: 'BF',
-                              name: 'Burkina Faso',
-                              dialCode: '+226',
-                              flag: '🇧🇫'
-                         };
-                         break;
-                    case 'NE':
-                         detectedCountry = {
-                              code: 'NE',
-                              name: 'Niger',
-                              dialCode: '+227',
-                              flag: '🇳🇪'
-                         };
-                         break;
-                    case 'TD':
-                         detectedCountry = {
-                              code: 'TD',
-                              name: 'Tchad',
-                              dialCode: '+235',
-                              flag: '🇹🇩'
-                         };
-                         break;
-                    case 'CM':
-                         detectedCountry = {
-                              code: 'CM',
-                              name: 'Cameroun',
-                              dialCode: '+237',
-                              flag: '🇨🇲'
-                         };
-                         break;
-                    case 'CF':
-                         detectedCountry = {
-                              code: 'CF',
-                              name: 'République centrafricaine',
-                              dialCode: '+236',
-                              flag: '🇨🇫'
-                         };
-                         break;
-                    case 'CG':
-                         detectedCountry = {
-                              code: 'CG',
-                              name: 'Congo',
-                              dialCode: '+242',
-                              flag: '🇨🇬'
-                         };
-                         break;
-                    case 'CD':
-                         detectedCountry = {
-                              code: 'CD',
-                              name: 'République démocratique du Congo',
-                              dialCode: '+243',
-                              flag: '🇨🇩'
-                         };
-                         break;
-                    case 'GA':
-                         detectedCountry = {
-                              code: 'GA',
-                              name: 'Gabon',
-                              dialCode: '+241',
-                              flag: '🇬🇦'
-                         };
-                         break;
-                    case 'GQ':
-                         detectedCountry = {
-                              code: 'GQ',
-                              name: 'Guinée équatoriale',
-                              dialCode: '+240',
-                              flag: '🇬🇶'
-                         };
-                         break;
-                    case 'ST':
-                         detectedCountry = {
-                              code: 'ST',
-                              name: 'Sao Tomé-et-Principe',
-                              dialCode: '+239',
-                              flag: '🇸🇹'
-                         };
-                         break;
-                    case 'AO':
-                         detectedCountry = {
-                              code: 'AO',
-                              name: 'Angola',
-                              dialCode: '+244',
-                              flag: '🇦🇴'
-                         };
-                         break;
-                    case 'NA':
-                         detectedCountry = {
-                              code: 'NA',
-                              name: 'Namibie',
-                              dialCode: '+264',
-                              flag: '🇳🇦'
-                         };
-                         break;
-                    case 'BW':
-                         detectedCountry = {
-                              code: 'BW',
-                              name: 'Botswana',
-                              dialCode: '+267',
-                              flag: '🇧🇼'
-                         };
-                         break;
-                    case 'ZW':
-                         detectedCountry = {
-                              code: 'ZW',
-                              name: 'Zimbabwe',
-                              dialCode: '+263',
-                              flag: '🇿🇼'
-                         };
-                         break;
-                    case 'ZM':
-                         detectedCountry = {
-                              code: 'ZM',
-                              name: 'Zambie',
-                              dialCode: '+260',
-                              flag: '🇿🇲'
-                         };
-                         break;
-                    case 'MW':
-                         detectedCountry = {
-                              code: 'MW',
-                              name: 'Malawi',
-                              dialCode: '+265',
-                              flag: '🇲🇼'
-                         };
-                         break;
-                    case 'MZ':
-                         detectedCountry = {
-                              code: 'MZ',
-                              name: 'Mozambique',
-                              dialCode: '+258',
-                              flag: '🇲🇿'
-                         };
-                         break;
-                    case 'LS':
-                         detectedCountry = {
-                              code: 'LS',
-                              name: 'Lesotho',
-                              dialCode: '+266',
-                              flag: '🇱🇸'
-                         };
-                         break;
-                    case 'SZ':
-                         detectedCountry = {
-                              code: 'SZ',
-                              name: 'Eswatini',
-                              dialCode: '+268',
-                              flag: '🇸🇿'
-                         };
-                         break;
-                    case 'MG':
-                         detectedCountry = {
-                              code: 'MG',
-                              name: 'Madagascar',
-                              dialCode: '+261',
-                              flag: '🇲🇬'
-                         };
-                         break;
-                    case 'MU':
-                         detectedCountry = {
-                              code: 'MU',
-                              name: 'Maurice',
-                              dialCode: '+230',
-                              flag: '🇲🇺'
-                         };
-                         break;
-                    case 'SC':
-                         detectedCountry = {
-                              code: 'SC',
-                              name: 'Seychelles',
-                              dialCode: '+248',
-                              flag: '🇸🇨'
-                         };
-                         break;
-                    case 'KM':
-                         detectedCountry = {
-                              code: 'KM',
-                              name: 'Comores',
-                              dialCode: '+269',
-                              flag: '🇰🇲'
-                         };
-                         break;
-                    case 'DJ':
-                         detectedCountry = {
-                              code: 'DJ',
-                              name: 'Djibouti',
-                              dialCode: '+253',
-                              flag: '🇩🇯'
-                         };
-                         break;
-                    case 'SO':
-                         detectedCountry = {
-                              code: 'SO',
-                              name: 'Somalie',
-                              dialCode: '+252',
-                              flag: '🇸🇴'
-                         };
-                         break;
-                    case 'ET':
-                         detectedCountry = {
-                              code: 'ET',
-                              name: 'Éthiopie',
-                              dialCode: '+251',
-                              flag: '🇪🇹'
-                         };
-                         break;
-                    case 'ER':
-                         detectedCountry = {
-                              code: 'ER',
-                              name: 'Érythrée',
-                              dialCode: '+291',
-                              flag: '🇪🇷'
-                         };
-                         break;
-                    case 'SD':
-                         detectedCountry = {
-                              code: 'SD',
-                              name: 'Soudan',
-                              dialCode: '+249',
-                              flag: '🇸🇩'
-                         };
-                         break;
-                    case 'SS':
-                         detectedCountry = {
-                              code: 'SS',
-                              name: 'Soudan du Sud',
-                              dialCode: '+211',
-                              flag: '🇸🇸'
-                         };
-                         break;
-                    case 'EG':
-                         detectedCountry = {
-                              code: 'EG',
-                              name: 'Égypte',
-                              dialCode: '+20',
-                              flag: '🇪🇬'
-                         };
-                         break;
-                    case 'LY':
-                         detectedCountry = {
-                              code: 'LY',
-                              name: 'Libye',
-                              dialCode: '+218',
-                              flag: '🇱🇾'
-                         };
-                         break;
-                    case 'GB':
-                         detectedCountry = {
-                              code: 'GB',
-                              name: 'Royaume-Uni',
-                              dialCode: '+44',
-                              flag: '🇬🇧'
-                         };
-                         break;
-                    case 'DE':
-                         detectedCountry = {
-                              code: 'DE',
-                              name: 'Allemagne',
-                              dialCode: '+49',
-                              flag: '🇩🇪'
-                         };
-                         break;
-                    case 'IT':
-                         detectedCountry = {
-                              code: 'IT',
-                              name: 'Italie',
-                              dialCode: '+39',
-                              flag: '🇮🇹'
-                         };
-                         break;
-                    case 'ES':
-                         detectedCountry = {
-                              code: 'ES',
-                              name: 'Espagne',
-                              dialCode: '+34',
-                              flag: '🇪🇸'
-                         };
-                         break;
-                    case 'PT':
-                         detectedCountry = {
-                              code: 'PT',
-                              name: 'Portugal',
-                              dialCode: '+351',
-                              flag: '🇵🇹'
-                         };
-                         break;
-                    case 'NL':
-                         detectedCountry = {
-                              code: 'NL',
-                              name: 'Pays-Bas',
-                              dialCode: '+31',
-                              flag: '🇳🇱'
-                         };
-                         break;
-                    case 'AT':
-                         detectedCountry = {
-                              code: 'AT',
-                              name: 'Autriche',
-                              dialCode: '+43',
-                              flag: '🇦🇹'
-                         };
-                         break;
-                    case 'SE':
-                         detectedCountry = {
-                              code: 'SE',
-                              name: 'Suède',
-                              dialCode: '+46',
-                              flag: '🇸🇪'
-                         };
-                         break;
-                    case 'NO':
-                         detectedCountry = {
-                              code: 'NO',
-                              name: 'Norvège',
-                              dialCode: '+47',
-                              flag: '🇳🇴'
-                         };
-                         break;
-                    case 'DK':
-                         detectedCountry = {
-                              code: 'DK',
-                              name: 'Danemark',
-                              dialCode: '+45',
-                              flag: '🇩🇰'
-                         };
-                         break;
-                    case 'FI':
-                         detectedCountry = {
-                              code: 'FI',
-                              name: 'Finlande',
-                              dialCode: '+358',
-                              flag: '🇫🇮'
-                         };
-                         break;
-                    case 'PL':
-                         detectedCountry = {
-                              code: 'PL',
-                              name: 'Pologne',
-                              dialCode: '+48',
-                              flag: '🇵🇱'
-                         };
-                         break;
-                    case 'CZ':
-                         detectedCountry = {
-                              code: 'CZ',
-                              name: 'République tchèque',
-                              dialCode: '+420',
-                              flag: '🇨🇿'
-                         };
-                         break;
-                    case 'SK':
-                         detectedCountry = {
-                              code: 'SK',
-                              name: 'Slovaquie',
-                              dialCode: '+421',
-                              flag: '🇸🇰'
-                         };
-                         break;
-                    case 'HU':
-                         detectedCountry = {
-                              code: 'HU',
-                              name: 'Hongrie',
-                              dialCode: '+36',
-                              flag: '🇭🇺'
-                         };
-                         break;
-                    case 'RO':
-                         detectedCountry = {
-                              code: 'RO',
-                              name: 'Roumanie',
-                              dialCode: '+40',
-                              flag: '🇷🇴'
-                         };
-                         break;
-                    case 'BG':
-                         detectedCountry = {
-                              code: 'BG',
-                              name: 'Bulgarie',
-                              dialCode: '+359',
-                              flag: '🇧🇬'
-                         };
-                         break;
-                    case 'HR':
-                         detectedCountry = {
-                              code: 'HR',
-                              name: 'Croatie',
-                              dialCode: '+385',
-                              flag: '🇭🇷'
-                         };
-                         break;
-                    case 'SI':
-                         detectedCountry = {
-                              code: 'SI',
-                              name: 'Slovénie',
-                              dialCode: '+386',
-                              flag: '🇸🇮'
-                         };
-                         break;
-                    case 'EE':
-                         detectedCountry = {
-                              code: 'EE',
-                              name: 'Estonie',
-                              dialCode: '+372',
-                              flag: '🇪🇪'
-                         };
-                         break;
-                    case 'LV':
-                         detectedCountry = {
-                              code: 'LV',
-                              name: 'Lettonie',
-                              dialCode: '+371',
-                              flag: '🇱🇻'
-                         };
-                         break;
-                    case 'LT':
-                         detectedCountry = {
-                              code: 'LT',
-                              name: 'Lituanie',
-                              dialCode: '+370',
-                              flag: '🇱🇹'
-                         };
-                         break;
-                    case 'GR':
-                         detectedCountry = {
-                              code: 'GR',
-                              name: 'Grèce',
-                              dialCode: '+30',
-                              flag: '🇬🇷'
-                         };
-                         break;
-                    case 'CY':
-                         detectedCountry = {
-                              code: 'CY',
-                              name: 'Chypre',
-                              dialCode: '+357',
-                              flag: '🇨🇾'
-                         };
-                         break;
-                    case 'MT':
-                         detectedCountry = {
-                              code: 'MT',
-                              name: 'Malte',
-                              dialCode: '+356',
-                              flag: '🇲🇹'
-                         };
-                         break;
-                    case 'IE':
-                         detectedCountry = {
-                              code: 'IE',
-                              name: 'Irlande',
-                              dialCode: '+353',
-                              flag: '🇮🇪'
-                         };
-                         break;
-                    case 'IS':
-                         detectedCountry = {
-                              code: 'IS',
-                              name: 'Islande',
-                              dialCode: '+354',
-                              flag: '🇮🇸'
-                         };
-                         break;
-                    case 'RU':
-                         detectedCountry = {
-                              code: 'RU',
-                              name: 'Russie',
-                              dialCode: '+7',
-                              flag: '🇷🇺'
-                         };
-                         break;
-                    case 'UA':
-                         detectedCountry = {
-                              code: 'UA',
-                              name: 'Ukraine',
-                              dialCode: '+380',
-                              flag: '🇺🇦'
-                         };
-                         break;
-                    case 'BY':
-                         detectedCountry = {
-                              code: 'BY',
-                              name: 'Biélorussie',
-                              dialCode: '+375',
-                              flag: '🇧🇾'
-                         };
-                         break;
-                    case 'MD':
-                         detectedCountry = {
-                              code: 'MD',
-                              name: 'Moldavie',
-                              dialCode: '+373',
-                              flag: '🇲🇩'
-                         };
-                         break;
-                    case 'GE':
-                         detectedCountry = {
-                              code: 'GE',
-                              name: 'Géorgie',
-                              dialCode: '+995',
-                              flag: '🇬🇪'
-                         };
-                         break;
-                    case 'AM':
-                         detectedCountry = {
-                              code: 'AM',
-                              name: 'Arménie',
-                              dialCode: '+374',
-                              flag: '🇦🇲'
-                         };
-                         break;
-                    case 'AZ':
-                         detectedCountry = {
-                              code: 'AZ',
-                              name: 'Azerbaïdjan',
-                              dialCode: '+994',
-                              flag: '🇦🇿'
-                         };
-                         break;
-                    case 'TR':
-                         detectedCountry = {
-                              code: 'TR',
-                              name: 'Turquie',
-                              dialCode: '+90',
-                              flag: '🇹🇷'
-                         };
-                         break;
-                    case 'IL':
-                         detectedCountry = {
-                              code: 'IL',
-                              name: 'Israël',
-                              dialCode: '+972',
-                              flag: '🇮🇱'
-                         };
-                         break;
-                    case 'LB':
-                         detectedCountry = {
-                              code: 'LB',
-                              name: 'Liban',
-                              dialCode: '+961',
-                              flag: '🇱🇧'
-                         };
-                         break;
-                    case 'SY':
-                         detectedCountry = {
-                              code: 'SY',
-                              name: 'Syrie',
-                              dialCode: '+963',
-                              flag: '🇸🇾'
-                         };
-                         break;
-                    case 'IQ':
-                         detectedCountry = {
-                              code: 'IQ',
-                              name: 'Irak',
-                              dialCode: '+964',
-                              flag: '🇮🇶'
-                         };
-                         break;
-                    case 'IR':
-                         detectedCountry = {
-                              code: 'IR',
-                              name: 'Iran',
-                              dialCode: '+98',
-                              flag: '🇮🇷'
-                         };
-                         break;
-                    case 'AF':
-                         detectedCountry = {
-                              code: 'AF',
-                              name: 'Afghanistan',
-                              dialCode: '+93',
-                              flag: '🇦🇫'
-                         };
-                         break;
-                    case 'PK':
-                         detectedCountry = {
-                              code: 'PK',
-                              name: 'Pakistan',
-                              dialCode: '+92',
-                              flag: '🇵🇰'
-                         };
-                         break;
-                    case 'IN':
-                         detectedCountry = {
-                              code: 'IN',
-                              name: 'Inde',
-                              dialCode: '+91',
-                              flag: '🇮🇳'
-                         };
-                         break;
-                    case 'BD':
-                         detectedCountry = {
-                              code: 'BD',
-                              name: 'Bangladesh',
-                              dialCode: '+880',
-                              flag: '🇧🇩'
-                         };
-                         break;
-                    case 'LK':
-                         detectedCountry = {
-                              code: 'LK',
-                              name: 'Sri Lanka',
-                              dialCode: '+94',
-                              flag: '🇱🇰'
-                         };
-                         break;
-                    case 'NZ':
-                         detectedCountry = {
-                              code: 'NZ',
-                              name: 'Nouvelle-Zélande',
-                              dialCode: '+64',
-                              flag: '🇳🇿'
-                         };
-                         break;
-                    case 'BR':
-                         detectedCountry = {
-                              code: 'BR',
-                              name: 'Brésil',
-                              dialCode: '+55',
-                              flag: '🇧🇷'
-                         };
-                         break;
-                    case 'AR':
-                         detectedCountry = {
-                              code: 'AR',
-                              name: 'Argentine',
-                              dialCode: '+54',
-                              flag: '🇦🇷'
-                         };
-                         break;
-                    case 'CL':
-                         detectedCountry = {
-                              code: 'CL',
-                              name: 'Chili',
-                              dialCode: '+56',
-                              flag: '🇨🇱'
-                         };
-                         break;
-                    case 'PE':
-                         detectedCountry = {
-                              code: 'PE',
-                              name: 'Pérou',
-                              dialCode: '+51',
-                              flag: '🇵🇪'
-                         };
-                         break;
-                    case 'CO':
-                         detectedCountry = {
-                              code: 'CO',
-                              name: 'Colombie',
-                              dialCode: '+57',
-                              flag: '🇨🇴'
-                         };
-                         break;
-                    case 'VE':
-                         detectedCountry = {
-                              code: 'VE',
-                              name: 'Venezuela',
-                              dialCode: '+58',
-                              flag: '🇻🇪'
-                         };
-                         break;
-                    case 'EC':
-                         detectedCountry = {
-                              code: 'EC',
-                              name: 'Équateur',
-                              dialCode: '+593',
-                              flag: '🇪🇨'
-                         };
-                         break;
-                    case 'BO':
-                         detectedCountry = {
-                              code: 'BO',
-                              name: 'Bolivie',
-                              dialCode: '+591',
-                              flag: '🇧🇴'
-                         };
-                         break;
-                    case 'PY':
-                         detectedCountry = {
-                              code: 'PY',
-                              name: 'Paraguay',
-                              dialCode: '+595',
-                              flag: '🇵🇾'
-                         };
-                         break;
-                    case 'UY':
-                         detectedCountry = {
-                              code: 'UY',
-                              name: 'Uruguay',
-                              dialCode: '+598',
-                              flag: '🇺🇾'
-                         };
-                         break;
-                    case 'GY':
-                         detectedCountry = {
-                              code: 'GY',
-                              name: 'Guyana',
-                              dialCode: '+592',
-                              flag: '🇬🇾'
-                         };
-                         break;
-                    case 'SR':
-                         detectedCountry = {
-                              code: 'SR',
-                              name: 'Suriname',
-                              dialCode: '+597',
-                              flag: '🇸🇷'
-                         };
-                         break;
-                    case 'FK':
-                         detectedCountry = {
-                              code: 'FK',
-                              name: 'Îles Malouines',
-                              dialCode: '+500',
-                              flag: '🇫🇰'
-                         };
-                         break;
-                    default:
-                         detectedCountry = {
-                              code: 'MA',
-                              name: 'Maroc',
-                              dialCode: '+212',
-                              flag: '🇲🇦'
-                         };
-               }
+               const detectedCountry = getCountryFromCode(countryCode);
                setSelectedCountry(detectedCountry);
-              
-               
-          } else {
-               console.log('Country detection skipped:', { geolocationLoading, countryCode });
-               // Fallback: if geolocation is not working, try to detect from region
-               if (!geolocationLoading && region && region !== 'international') {
-                    console.log('Falling back to region-based detection:', region);
-                    let fallbackCountry: Country;
-                    switch (region) {
-                         case 'france':
-                              fallbackCountry = {
-                                   code: 'FR',
-                                   name: 'France',
-                                   dialCode: '+33',
-                                   flag: '🇫🇷'
-                              };
-                              break;
-                         case 'morocco':
-                              fallbackCountry = {
-                                   code: 'MA',
-                                   name: 'Maroc',
-                                   dialCode: '+212',
-                                   flag: '🇲🇦'
-                              };
-                              break;
-                         default:
-                              fallbackCountry = {
-                                   code: 'MA',
-                                   name: 'Maroc',
-                                   dialCode: '+212',
-                                   flag: '🇲🇦'
-                              };
-                    }
-                    setSelectedCountry(fallbackCountry);
-                    console.log('Fallback country set to:', fallbackCountry.name);
-               }
+          } else if (!geolocationLoading && region && region !== 'international') {
+               const fallbackCountry = getCountryFromRegion(region);
+               setSelectedCountry(fallbackCountry);
           }
-     }, [countryCode, geolocationLoading, region, city]);
+     }, [countryCode, geolocationLoading, region]);
 
      /**
       * Saves form progress to localStorage
@@ -1197,14 +445,11 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
       */
      const saveProgressToLocalStorage = (field: string, value: string) => {
           try {
-               console.log(`saveProgressToLocalStorage called for ${field}:`, value);
                const existing = localStorage.getItem(localStorageKey);
                const progress = existing ? JSON.parse(existing) : {};
 
-               // Save the specific field
                progress[field] = value;
 
-               // If saving firstname or lastname, also update the combined name
                if (field === 'firstname' || field === 'lastname') {
                     const currentFirstname = field === 'firstname' ? value : (progress.firstname || formData.firstname || '');
                     const currentLastname = field === 'lastname' ? value : (progress.lastname || formData.lastname || '');
@@ -1213,7 +458,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
 
                progress.timestamp = Date.now();
                localStorage.setItem(localStorageKey, JSON.stringify(progress));
-               console.log('Progress saved to LocalStorage:', progress);
           } catch (error) {
                console.error('Error saving progress to LocalStorage:', error);
           }
@@ -1584,7 +828,6 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
       * @returns true if form can be submitted, false otherwise
       */
      const isFormValid = () => {
-          // Only require essential fields: name and email for basic submission
           const hasValidName = formData.name.trim().length >= 2;
           const hasValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
                formData.email.length <= 254 &&
@@ -1596,21 +839,7 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
                !formData.email.split('@')[1]?.includes('fake.') &&
                !formData.email.split('@')[1]?.includes('invalid.');
 
-          // Phone is recommended but not required for basic submission
-          const hasValidPhone = isPhoneValid(formData.phone);
-
-          // Basic validation: name and email are required
-          const basicValid = hasValidName && hasValidEmail;
-
-          // Full validation: name, email, and phone are all valid
-          const fullValid = basicValid && hasValidPhone;
-
-          // Check if geolocation is loaded (city should be available)
-          const geolocationReady = !geolocationLoading && city;
-
-         
-
-          return basicValid && geolocationReady; // Require geolocation to be ready
+          return hasValidName && hasValidEmail;
      };
 
      /**
@@ -1978,48 +1207,38 @@ export default function ContactSection({ contactData }: ContactSectionProps) {
       * @param value - New field value
       */
      const handleInputChange = (field: string, value: string) => {
-          console.log(`=== INPUT CHANGE DEBUG ===`);
-          console.log(`Field: ${field}`);
-          console.log(`Value: ${value}`);
-          console.log(`Previous form data:`, formData);
-
-          // Update form state directly
-          const newFormData = { ...formData, [field]: value };
-          console.log(`New form data:`, newFormData);
-
-          setFormData(newFormData);
+          setFormData(prev => ({ ...prev, [field]: value }));
 
           if (errors[field]) {
                setErrors(prev => ({ ...prev, [field]: '' }));
           }
 
-          try {
-               const existing = localStorage.getItem(localStorageKey);
-               const progress = existing ? JSON.parse(existing) : {};
-
-               progress[field] = value;
-               progress.timestamp = Date.now();
-               progress.fieldsFilled = progress.fieldsFilled || [];
-
-               if (!progress.fieldsFilled.includes(field)) {
-                    progress.fieldsFilled.push(field);
-               }
-
-               console.log(`Saving to LocalStorage:`, progress);
-               localStorage.setItem(localStorageKey, JSON.stringify(progress));
-
-               const saved = localStorage.getItem(localStorageKey);
-               console.log(`Verification - saved:`, saved);
-
-          } catch (error) {
-               console.error('LocalStorage error:', error);
+          if (localStorageDebounceTimer.current) {
+               clearTimeout(localStorageDebounceTimer.current);
           }
+
+          localStorageDebounceTimer.current = setTimeout(() => {
+               try {
+                    const existing = localStorage.getItem(localStorageKey);
+                    const progress = existing ? JSON.parse(existing) : {};
+
+                    progress[field] = value;
+                    progress.timestamp = Date.now();
+                    progress.fieldsFilled = progress.fieldsFilled || [];
+
+                    if (!progress.fieldsFilled.includes(field)) {
+                         progress.fieldsFilled.push(field);
+                    }
+
+                    localStorage.setItem(localStorageKey, JSON.stringify(progress));
+               } catch (error) {
+                    console.error('LocalStorage error:', error);
+               }
+          }, 300);
 
           if (value.trim() && (field === 'name' || field === 'email' || field === 'phone' || field === 'company' || field === 'message')) {
                storePartialContact(field, value);
           }
-
-          console.log(`=== END INPUT CHANGE DEBUG ===`);
      };
 
      const benefits = [
