@@ -67,9 +67,9 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
           const isMorocco = cachedData ? JSON.parse(cachedData).data?.countryCode === 'MA' : false;
           
           if (isMorocco) {
-               return partnershipData?.image || "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80";
+               return partnershipData?.image || "/images/team.jpeg";
           } else {
-               return partnershipData?.imageOtherCountries || partnershipData?.image || "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80";
+               return partnershipData?.imageOtherCountries || partnershipData?.image || "/images/team.jpeg";
           }
      };
 
@@ -103,10 +103,10 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                
                if (isMoroccoCountry) {
                     // Morocco: show team photo
-                    setImageUrl(partnershipData?.image || "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80");
+                    setImageUrl(partnershipData?.image || "/images/team.jpeg");
                } else {
                     // Other countries: show BST logo
-                    setImageUrl(partnershipData?.imageOtherCountries || "https://res.cloudinary.com/dwob2hfin/image/upload/v1762787740/bst-migration/rpfvrsxhzapcwyopzfrt.png");
+                    setImageUrl(partnershipData?.imageOtherCountries || partnershipData?.image || "/images/team.jpeg");
                }
                
               
@@ -158,13 +158,9 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
           <section className="py-20 bg-white relative z-10" id="team">
                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
-                         <div 
-                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
-                              dangerouslySetInnerHTML={{ __html: partnershipData?.headline || 'Plus qu\'un intégrateur, un partenaire de confiance.' }}
-                         />
                          <h2 
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                              dangerouslySetInnerHTML={{ __html: partnershipData?.description || 'Plus qu\'un intégrateur, un partenaire de confiance.' }}
+                              dangerouslySetInnerHTML={{ __html: 'BlackSwan Technology (Présentation entreprise)' }}
                          />
                          <p 
                               className="text-lg text-gray-600 max-w-3xl mx-auto"
@@ -186,7 +182,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              alt="Notre équipe"
                                              className="object-cover w-full h-72 md:h-80 transition-transform duration-700 group-hover:scale-110"
                                              onError={(e) => {
-                                                  e.currentTarget.src = "https://res.cloudinary.com/dwob2hfin/raw/upload/v1762787732/bst-migration/o8lhhzmztbeazzaosy80";
+                                                  e.currentTarget.src = "/images/team.jpeg";
                                              }}
                                         />
                                         {/* Subtle border glow */}
@@ -198,24 +194,35 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                          {/* Right Side - Features */}
                          <div className="w-full md:w-1/2 flex flex-col gap-6">
                               {partnershipData?.features ? (
-                                   partnershipData.features.map((feature, index) => (
-                                        <div key={index} className={`bg-white p-6 flex items-start gap-4 ${isMorocco
-                                             ? 'rounded-xl shadow'
-                                             : 'rounded-none shadow-none'
-                                             }`}>
-                                             {renderIcon(feature.icon)}
-                                             <div>
-                                                  <div 
-                                                       className="font-bold text-lg text-gray-900"
-                                                       dangerouslySetInnerHTML={{ __html: feature.title }}
-                                                  />
-                                                  <div 
-                                                       className="text-gray-500 text-sm"
-                                                       dangerouslySetInnerHTML={{ __html: feature.description }}
-                                                  />
+                                   partnershipData.features.map((feature, index) => {
+                                        // Map feature titles to H3 headings based on PDF structure
+                                        const h3Mapping: { [key: string]: string } = {
+                                             'Notre mission': 'Notre mission',
+                                             'Pourquoi nous choisir ?': 'Pourquoi nous choisir ?',
+                                             'Notre méthode': 'Notre méthode',
+                                             'Notre équipe Odoo': 'Notre équipe Odoo',
+                                             'Nous recrutons': 'Nous recrutons'
+                                        };
+                                        const h3Title = h3Mapping[feature.title] || feature.title;
+                                        return (
+                                             <div key={index} className={`bg-white p-6 flex items-start gap-4 ${isMorocco
+                                                  ? 'rounded-xl shadow'
+                                                  : 'rounded-none shadow-none'
+                                                  }`}>
+                                                  {renderIcon(feature.icon)}
+                                                  <div>
+                                                       <h3 
+                                                            className="font-bold text-lg text-gray-900"
+                                                            dangerouslySetInnerHTML={{ __html: h3Title }}
+                                                       />
+                                                       <div 
+                                                            className="text-gray-500 text-sm"
+                                                            dangerouslySetInnerHTML={{ __html: feature.description }}
+                                                       />
+                                                  </div>
                                              </div>
-                                        </div>
-                                   ))
+                                        );
+                                   })
                               ) : (
                                    <>
                                         <div className={`bg-white p-6 flex items-start gap-4 ${isMorocco
@@ -224,7 +231,8 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              }`}>
                                              <BadgeCheck className="w-8 h-8 text-[var(--color-secondary)]" />
                                              <div>
-                                                  <div className="font-bold text-lg text-gray-900">Partenaire Silver Odoo</div>
+                                                  <h3 className="font-bold text-lg text-gray-900">Notre mission</h3>
+                                                  <div className="text-gray-500 text-sm">Partenaire Silver Odoo</div>
                                              </div>
                                         </div>
                                         <div className={`bg-white p-6 flex items-start gap-4 ${isMorocco
@@ -233,7 +241,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              }`}>
                                              <Users className="w-8 h-8 text-[var(--color-secondary)]" />
                                              <div>
-                                                  <div className="font-bold text-lg text-gray-900">Équipe certifiée</div>
+                                                  <h3 className="font-bold text-lg text-gray-900">Pourquoi nous choisir ?</h3>
                                                   <div className="text-gray-500 text-sm">100% de nos consultants sont certifiés Odoo</div>
                                              </div>
                                         </div>
@@ -243,7 +251,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              }`}>
                                              <Clock className="w-8 h-8 text-[var(--color-secondary)]" />
                                              <div>
-                                                  <div className="font-bold text-lg text-gray-900">Support réactif</div>
+                                                  <h3 className="font-bold text-lg text-gray-900">Notre méthode</h3>
                                                   <div className="text-gray-500 text-sm">Réponse garantie sous 4h en journée</div>
                                              </div>
                                         </div>
@@ -253,8 +261,18 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                                              }`}>
                                              <Star className="w-8 h-8 text-[var(--color-secondary)]" />
                                              <div>
-                                                  <div className="font-bold text-lg text-gray-900">Excellence reconnue</div>
+                                                  <h3 className="font-bold text-lg text-gray-900">Notre équipe Odoo</h3>
                                                   <div className="text-gray-500 text-sm">99% de satisfaction client sur tous nos projets</div>
+                                             </div>
+                                        </div>
+                                        <div className={`bg-white p-6 flex items-start gap-4 ${isMorocco
+                                             ? 'rounded-xl shadow'
+                                             : 'rounded-none shadow-none'
+                                             }`}>
+                                             <Users className="w-8 h-8 text-[var(--color-secondary)]" />
+                                             <div>
+                                                  <h3 className="font-bold text-lg text-gray-900">Nous recrutons</h3>
+                                                  <div className="text-gray-500 text-sm">Rejoignez notre équipe de consultants certifiés</div>
                                              </div>
                                         </div>
                                    </>

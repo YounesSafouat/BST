@@ -48,7 +48,6 @@ import Image from 'next/image';
 import Loader from '@/components/home/Loader';
 import Link from 'next/link';
 import PricingSection from '../PricingSection';
-import ContactSection from '../ContactSection';
 import StatsSection from '../StatsSection';
 import CompaniesCarousel from '../CompaniesCarousel';
 import CompaniesCarouselV2 from '../CompaniesCarouselV2';
@@ -509,17 +508,7 @@ export default function HomePage() {
                          userRegion={userRegion}
                     />
                </div>
-               {/*
-                SECTION 8: Pricing Section - HomePage 
-               <section id="pricing" className="relative z-10">
-                    <PricingSection pricingData={homePageData?.pricing} />
-               </section>
-              */}
-               {/* SECTION 9: Contact Section - HomePage */}
-               <div id="contact">
-                    <ContactSection contactData={homePageData?.contact} />
-               </div>
-               {/* SECTION 10: FAQ Section - HomePage */}
+               {/* SECTION 8: FAQ Section - HomePage */}
                <div id="faq">
                     <FAQSection faqData={homePageData?.faq} />
                </div>

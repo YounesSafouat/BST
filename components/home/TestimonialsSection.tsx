@@ -243,11 +243,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
                >
                     <h2 
                          className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
-                         dangerouslySetInnerHTML={{ __html: testimonialsSectionData.description }}
-                    />
-                    <div 
-                         className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
-                         dangerouslySetInnerHTML={{ __html: testimonialsSectionData.headline }}
+                         dangerouslySetInnerHTML={{ __html: 'Nos clients nous recommandent' }}
                     />
                    
                </motion.div>
@@ -300,7 +296,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
 
                                                                  <div className="author-info flex-1">
                                                                       <h3 className="font-semibold text-sm text-[#111928]">
-                                                                           {testimonial.author || 'Anonymous'}
+                                                                           Avis client – {testimonial.author || 'Anonymous'}
                                                                       </h3>
                                                                       <p className="text-xs text-[#8899a8]">
                                                                            {testimonial.role || 'Client'}
@@ -366,7 +362,7 @@ export default function TestimonialsSection({ testimonialsSectionData, testimoni
 
                                                                       <div className="author-info flex-1">
                                                                            <h3 className="font-semibold text-sm text-[#111928]">
-                                                                                {testimonial.author || 'Anonymous'}
+                                                                                Avis client – {testimonial.author || 'Anonymous'}
                                                                            </h3>
                                                                            <p className="text-xs text-[#8899a8]">
                                                                                 {testimonial.role || 'Client'}

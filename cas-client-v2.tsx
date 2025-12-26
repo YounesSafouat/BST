@@ -51,6 +51,76 @@ import Image from "next/image"
 import Link from "next/link"
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton'
 import { shouldShowContent } from '@/lib/geolocation'
+import { Input } from "@/components/ui/input"
+
+// Newsletter Form Component
+function NewsletterForm() {
+     const [email, setEmail] = useState("")
+     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+     const [message, setMessage] = useState("")
+
+     const handleSubmit = async (e: React.FormEvent) => {
+          e.preventDefault()
+          setStatus('loading')
+          setMessage("")
+
+          try {
+               const response = await fetch('/api/newsletter', {
+                    method: 'POST',
+                    headers: {
+                         'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+               })
+
+               const data = await response.json()
+
+               if (data.success) {
+                    setStatus('success')
+                    setMessage(data.message || 'Merci pour votre abonnement !')
+                    setEmail("")
+               } else {
+                    setStatus('error')
+                    setMessage(data.error || 'Une erreur est survenue')
+               }
+          } catch (error) {
+               setStatus('error')
+               setMessage('Une erreur est survenue. Veuillez réessayer.')
+          }
+     }
+
+     return (
+          <div className="bg-white rounded-2xl border border-gray-200 p-8">
+               <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
+                    <Input
+                         type="email"
+                         value={email}
+                         onChange={(e) => setEmail(e.target.value)}
+                         placeholder="Votre adresse email"
+                         className="flex-1"
+                         required
+                         disabled={status === 'loading'}
+                    />
+                    <Button
+                         type="submit"
+                         disabled={status === 'loading' || !email}
+                         className="bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white"
+                    >
+                         {status === 'loading' ? 'Abonnement...' : "S'abonner"}
+                    </Button>
+               </form>
+               {message && (
+                    <div className={`mt-4 text-sm text-center p-3 rounded-lg ${
+                         status === 'success' 
+                              ? 'bg-green-50 text-green-700 border border-green-200' 
+                              : 'bg-red-50 text-red-700 border border-red-200'
+                    }`}>
+                         {message}
+                    </div>
+               )}
+          </div>
+     )
+}
 
 const sectorIcons = {
      "Tous": Building,
@@ -190,7 +260,7 @@ export default function CasClientV2() {
                               <div className="max-w-7xl mx-auto">
                                    <div className="text-center mb-16">
                                         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-8 leading-tight ">
-                                        Ils ont transformé leur entreprise avec l'accompagnement de Blackswan. 
+                                        Ils ont transformé leur entreprise avec l'accompagnement de Blackswan.
                                         </h1>
                                    </div>
 
@@ -266,6 +336,11 @@ export default function CasClientV2() {
                                              >
                                                   <X className="w-4 h-4" />
                                              </Button>
+                                        </div>
+
+                                        {/* H2: Filtres et recherche clients */}
+                                        <div className="mb-4">
+                                             <h2 className="text-2xl font-bold text-gray-900">Filtres et recherche clients</h2>
                                         </div>
 
                                         {/* View Mode Toggle */}
@@ -351,7 +426,7 @@ export default function CasClientV2() {
                                         <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                                              <div>
                                                   <h2 className="text-3xl font-bold text-gray-900">
-                                                       Études de Cas
+                                                       Études de cas par secteur
                                                   </h2>
                                                   <p className="text-gray-600 mt-1">
                                                        {selectedSector !== "Tous" && `Secteur: ${selectedSector}`}
@@ -392,6 +467,19 @@ export default function CasClientV2() {
                                              </div>
                                         )}
                                    </div>
+                              </div>
+                         </section>
+
+                         {/* H2: Newsletter / inscription */}
+                         <section className="py-16 px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-white">
+                              <div className="max-w-4xl mx-auto text-center">
+                                   <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                                        Newsletter / inscription
+                                   </h2>
+                                   <p className="text-gray-600 mb-8">
+                                        Restez informé de nos dernières actualités et études de cas
+                                   </p>
+                                   <NewsletterForm />
                               </div>
                          </section>
           </div>

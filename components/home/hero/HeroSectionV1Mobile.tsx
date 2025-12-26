@@ -894,7 +894,7 @@ function HeroSectionV1Mobile({ heroData, userRegion, isPreview = false }: HeroSe
             >
               <div className="p-2 flex items-center justify-center">
                 <img 
-                  src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787746/bst-migration/xz4i6pkggcududsqraaf.png" 
+                  src="/images/odooSilverBadge-2.png" 
                   alt="Odoo Silver Partner Badge" 
                   className='w-[240px] h-[240px]' 
                 />

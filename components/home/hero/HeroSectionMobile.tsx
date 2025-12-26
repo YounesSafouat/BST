@@ -107,7 +107,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
           >
             <div className="flex items-center justify-center">
               <img
-                src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787746/bst-migration/xz4i6pkggcududsqraaf.png"
+                src="/images/odooSilverBadge-2.png"
                 alt="Odoo Silver Partner Badge"
                 className='w-[180px] h-[180px]'
               />
@@ -199,7 +199,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
               <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden">
                 <video
                   ref={videoRef}
-                  src={heroData?.videoUrl || ''}
+                  src={'/videos/Présentation Odoo.mp4'}
                   muted
                   autoPlay
                   loop

@@ -40,7 +40,7 @@ const VideoBackgroundSection: React.FC<VideoBackgroundSectionProps> = ({
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                         {/* Left Side - Text Content */}
                         <div className="text-white space-y-6">
-                            <h1 
+                            <h2 
                                 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight"
                                 dangerouslySetInnerHTML={{ __html: headline }}
                             />
@@ -51,7 +51,8 @@ const VideoBackgroundSection: React.FC<VideoBackgroundSectionProps> = ({
                         </div>
 
                         {/* Right Side - CTA Button */}
-                        <div className="flex justify-center lg:justify-end">
+                        <div className="flex flex-col items-center lg:items-end gap-2">
+                            <h3 className="text-xl font-semibold text-white mb-2">Prendre un rendez-vous avec un expert</h3>
                             <Link
                                 href="#contact"
                                 className="inline-flex items-center px-8 py-4 bg-white text-gray-900 font-semibold rounded-full hover:bg-gray-100 transition-colors duration-300 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"

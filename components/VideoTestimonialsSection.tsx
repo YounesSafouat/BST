@@ -260,7 +260,7 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                     <div className="text-center mb-16">
                          <h2 
                               className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--color-main)] mb-4"
-                              dangerouslySetInnerHTML={{ __html: sectionData?.headline || 'Nos derniers projets' }}
+                              dangerouslySetInnerHTML={{ __html: 'Nos derniers projets' }}
                          />
                          <div className="flex items-center justify-center gap-2 mb-4">
                               <span 
@@ -280,14 +280,20 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                     {/* Mobile: Stacked Cards */}
                     <div className="md:hidden space-y-6">
                          {filteredClients.map((client) => (
-                              <ProjectCard key={client._id} client={client} />
+                              <div key={client._id}>
+                                   <h3 className="text-xl font-bold text-gray-900 mb-2">{client.name}</h3>
+                                   <ProjectCard client={client} />
+                              </div>
                          ))}
                     </div>
 
                     {/* Desktop: 2x2 Grid Layout */}
                     <div className="hidden md:grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
                          {filteredClients.slice(0, 4).map((client) => (
-                              <ProjectCard key={client._id} client={client} />
+                              <div key={client._id}>
+                                   <h3 className="text-xl font-bold text-gray-900 mb-2">{client.name}</h3>
+                                   <ProjectCard client={client} />
+                              </div>
                          ))}
                     </div>
 

@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 interface PlatformApp {
     title: string;
     description: string;
     icon: string;
     features: string[];
+    slug?: string;
 }
 
 interface PlatformModulesSectionProps {
@@ -34,16 +37,28 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
         setHiddenTimelineCards(prev => new Set(prev).add(cardKey));
     };
 
+    const generateSlug = (title: string): string => {
+        return title
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+    };
+
+    const getModuleUrl = (app: PlatformApp): string => {
+        const slug = app.slug || generateSlug(app.title);
+        return `/modules/${slug}`;
+    };
+
     return (
         <section className="py-12 lg:py-6 xl:py-16 2xl:py-20 bg-white overflow-hidden pt-20 lg:pt-8 xl:pt-20 2xl:pt-24 relative z-30" id="modules">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center mb-12">
-                    
                     <h2 
                         className="text-3xl md:text-4xl font-semibold text-gray-900 mb-4"
-                        dangerouslySetInnerHTML={{ __html: homePageData?.platformSection?.subheadline || 'Plateforme Odoo' }}
+                        dangerouslySetInnerHTML={{ __html: 'Simplifiez la gestion de votre entreprise grâce aux applications Odoo' }}
                     />
-                   
                 </div>
 
                 {/* Timeline 1 - Scrolling Up */}
@@ -76,14 +91,12 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                             className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
                                             dangerouslySetInnerHTML={{ __html: app.description }}
                                         />
-                                        <div className="space-y-2">
-                                            {app.features.slice(0, 2).map((feature, i) => (
-                                                <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
-                                                    <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                    <span dangerouslySetInnerHTML={{ __html: feature }} />
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <Link href={getModuleUrl(app)} className="mt-auto">
+                                            <button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group text-sm">
+                                                En savoir plus
+                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </button>
+                                        </Link>
                                     </div>
                                 );
                             })}
@@ -117,14 +130,12 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                             className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
                                             dangerouslySetInnerHTML={{ __html: app.description }}
                                         />
-                                        <div className="space-y-2">
-                                            {app.features.slice(0, 2).map((feature, i) => (
-                                                <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
-                                                    <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                    <span dangerouslySetInnerHTML={{ __html: feature }} />
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <Link href={getModuleUrl(app)} className="mt-auto">
+                                            <button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group text-sm">
+                                                En savoir plus
+                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </button>
+                                        </Link>
                                     </div>
                                 );
                             })}
@@ -158,14 +169,12 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                             className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
                                             dangerouslySetInnerHTML={{ __html: app.description }}
                                         />
-                                        <div className="space-y-2">
-                                            {app.features.slice(0, 2).map((feature, i) => (
-                                                <div key={i} className="flex items-center text-xs text-[var(--color-secondary)]">
-                                                    <div className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full mr-2"></div>
-                                                    <span dangerouslySetInnerHTML={{ __html: feature }} />
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <Link href={getModuleUrl(app)} className="mt-auto">
+                                            <button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group text-sm">
+                                                En savoir plus
+                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </button>
+                                        </Link>
                                     </div>
                                 );
                             })}

@@ -103,13 +103,9 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
           <section className="py-12 sm:py-16 md:py-20 bg-white">
                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-8 sm:mb-12">
-                         <div 
-                              className="uppercase tracking-widest text-sm text-[var(--color-secondary)] font-semibold mb-2"
-                              dangerouslySetInnerHTML={{ __html: headline }}
-                         />
                          <h2 
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                              dangerouslySetInnerHTML={{ __html: description }}
+                              dangerouslySetInnerHTML={{ __html: 'Tout savoir sur Odoo (FAQ SEO)' }}
                          />
                          <p 
                               className="text-lg text-gray-600 max-w-3xl mx-auto"
@@ -127,7 +123,7 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                                         onClick={() => toggleItem(index)}
                                         className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left bg-white hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
                                    >
-                                        <span 
+                                        <h3 
                                              className="font-semibold text-gray-900 pr-2 sm:pr-4 text-sm sm:text-base"
                                              dangerouslySetInnerHTML={{ __html: faq.question }}
                                         />

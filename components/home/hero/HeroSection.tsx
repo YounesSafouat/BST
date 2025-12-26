@@ -162,7 +162,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                     >
                       <div className="w-[250px] h-[100px] flex items-center justify-center">
                         <img
-                          src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787746/bst-migration/xz4i6pkggcududsqraaf.png"
+                          src="/images/odooSilverBadge-2.png"
                           alt="Odoo Silver Partner Badge"
                         />
                       </div>
@@ -233,7 +233,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                         {/* Video element */}
                         <video
                           ref={videoRef}
-                          src={heroData?.videoUrl || ''}
+                          src={'/videos/Présentation Odoo.mp4'}
                           muted
                           autoPlay
                           loop

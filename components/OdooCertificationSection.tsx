@@ -113,14 +113,7 @@ export default function OdooCertificationSection({
                               whileInView={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6, delay: 0.1 }}
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                              dangerouslySetInnerHTML={{ __html: data.subheadline }}
-                         />
-                         <motion.div
-                              initial={{ opacity: 0, y: 20 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              transition={{ duration: 0.6 }}
-                              className="tracking-widest text-xl text-[var(--color-secondary)] font-bold mb-2"
-                              dangerouslySetInnerHTML={{ __html: data.headline }}
+                              dangerouslySetInnerHTML={{ __html: 'Nous sommes reconnus pour ce que nous faisons (Certifications & labels)' }}
                          />
                          
                     </div>
@@ -143,7 +136,7 @@ export default function OdooCertificationSection({
                                                   {/* Odoo Silver Partner Logo SVG */}
                                                   <div className="w-48 h-24 flex items-center justify-center">
                                                        <Image
-                                                            src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762788310/oodo-silver-partner-logo_zroa4t.svg"
+                                                            src="/images/odoo-logo.png"
                                                             alt="Odoo Silver Partner Logo"
                                                             width={192}
                                                             height={96}
@@ -154,7 +147,7 @@ export default function OdooCertificationSection({
                                                   {/* Certification PNG */}
                                                   <div className="w-48 h-48 flex items-center justify-center">
                                                        <Image
-                                                            src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787736/bst-migration/pbqs0irmfbeobrl8fj97.png"
+                                                            src="/images/certification.png"
                                                             alt="Odoo Certification"
                                                             width={192}
                                                             height={192}
@@ -169,7 +162,7 @@ export default function OdooCertificationSection({
                                    <div className="space-y-6 flex flex-col justify-center h-full">
                                         <div>
                                              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                                                  {data.partnerTitle}
+                                                  Odoo Silver Partner
                                              </h3>
                                              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                                                   {data.partnerDescription}
@@ -220,7 +213,7 @@ export default function OdooCertificationSection({
                                                   {/* HubSpot Partner Logo - Placeholder */}
                                                   <div className="w-48 h-24 flex items-center justify-center">
                                                        <Image
-                                                            src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762787737/bst-migration/gmb3lygufjfh2qxzcp49.png"
+                                                            src="/images/HubSpot-Platinum-Partner-Badge.png"
                                                             alt="HubSpot Partner Logo"
                                                             width={192}
                                                             height={96}
@@ -231,7 +224,7 @@ export default function OdooCertificationSection({
                                                   {/* HubSpot Certification - Placeholder */}
                                                   <div className="w-48 h-48 flex items-center justify-center">
                                                        <Image
-                                                            src="https://res.cloudinary.com/dwob2hfin/image/upload/v1762788162/hubspot_certification_700_x_500_px_1500_x_500_px_j8w4wq.svg"
+                                                            src="/images/hubspot certification.svg"
                                                             alt="HubSpot Certification"
                                                             width={192}
                                                             height={192}
@@ -246,7 +239,7 @@ export default function OdooCertificationSection({
                                    <div className="space-y-6 flex flex-col justify-center h-full">
                                         <div>
                                              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                                                  {data.hubspotTitle || "HubSpot Partner"}
+                                                  Hubspot Partner
                                              </h3>
                                              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                                                   {data.hubspotDescription || "Certification HubSpot pour l'intégration et l'optimisation de votre marketing automation. Notre expertise HubSpot garantit des résultats mesurables pour votre croissance."}
