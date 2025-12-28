@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 let maintenanceModeCache = {
   value: false,
   lastCheck: 0,
-  cacheDuration: 30000 // 30 seconds cache
+  cacheDuration: 5000 // 5 seconds cache (reduced for faster updates)
 };
 
 export async function middleware(request: NextRequest) {
@@ -32,23 +32,36 @@ export async function middleware(request: NextRequest) {
   const now = Date.now();
   let maintenanceMode = maintenanceModeCache.value;
   
-  if (now - maintenanceModeCache.lastCheck > maintenanceModeCache.cacheDuration) {
+  // Always try to fetch fresh data if:
+  // 1. Cache is uninitialized (first request after server start)
+  // 2. Cache expired
+  // 3. In production, check more frequently (every 2 seconds)
+  const isUninitialized = maintenanceModeCache.lastCheck === 0;
+  const isExpired = now - maintenanceModeCache.lastCheck > maintenanceModeCache.cacheDuration;
+  const shouldCheckInProd = process.env.NODE_ENV === 'production' && now - maintenanceModeCache.lastCheck > 2000;
+  const shouldFetch = isUninitialized || isExpired || shouldCheckInProd;
+  
+  if (shouldFetch) {
     // Cache expired, fetch fresh data
     try {
       // Use absolute URL to ensure it works on server
-      const baseUrl = request.nextUrl.origin;
+      // In production, use the public URL from env or fallback to origin
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                     process.env.NEXT_PUBLIC_SITE_URL || 
+                     request.nextUrl.origin;
       const maintenanceUrl = `${baseUrl}/api/maintenance`;
       
-      console.log(`[Maintenance Middleware] Fetching from: ${maintenanceUrl}`);
+      console.log(`[Maintenance Middleware] Fetching from: ${maintenanceUrl} (origin: ${request.nextUrl.origin})`);
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout for production
       
       const response = await fetch(maintenanceUrl, {
         method: 'GET',
         headers: {
           'Cache-Control': 'no-cache',
           'User-Agent': 'Maintenance-Middleware/1.0',
+          'Accept': 'application/json',
         },
         signal: controller.signal,
       });
@@ -57,34 +70,41 @@ export async function middleware(request: NextRequest) {
       
       if (response.ok) {
         const data = await response.json();
-        maintenanceMode = data.maintenanceMode || false;
+        maintenanceMode = data.maintenanceMode === true; // Explicit boolean check
         
         // Update cache
         maintenanceModeCache = {
           value: maintenanceMode,
           lastCheck: now,
-          cacheDuration: 30000
+          cacheDuration: 5000
         };
         
         // Log maintenance status changes for debugging (both dev and prod)
         console.log(`[Maintenance Middleware] Mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'} | Path: ${request.nextUrl.pathname} | Source: ${data.source}`);
       } else {
-        console.warn(`[Maintenance Middleware] API returned status: ${response.status}`);
-        // Don't update cache on error, keep previous value
+        console.warn(`[Maintenance Middleware] API returned status: ${response.status} for ${maintenanceUrl}`);
+        // Don't update cache on error, keep previous value but log it
+        console.warn(`[Maintenance Middleware] Keeping cached value: ${maintenanceMode}`);
       }
     } catch (error) {
-      // Fallback to cached value or environment variable if API call fails
-      console.log(`[Maintenance Middleware] API call failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // In production, prefer cached value over env variable if cache exists
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.error(`[Maintenance Middleware] API call failed: ${errorMsg}`);
       console.log('[Maintenance Middleware] Using cached value or environment variable fallback');
-      // Use cached value if available, otherwise fallback to env
-      if (maintenanceModeCache.value !== undefined) {
+      
+      // Use cached value if available and recent (within last 60 seconds), otherwise fallback to env
+      if (maintenanceModeCache.value !== undefined && (now - maintenanceModeCache.lastCheck < 60000)) {
         maintenanceMode = maintenanceModeCache.value;
+        console.log(`[Maintenance Middleware] Using cached value: ${maintenanceMode}`);
       } else {
-        maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+        // Only use env variable as last resort
+        const envValue = process.env.MAINTENANCE_MODE === 'true';
+        console.log(`[Maintenance Middleware] Using environment variable: ${envValue}`);
+        maintenanceMode = envValue;
         maintenanceModeCache = {
           value: maintenanceMode,
           lastCheck: now,
-          cacheDuration: 30000
+          cacheDuration: 5000
         };
       }
     }

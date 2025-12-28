@@ -67,6 +67,9 @@ export default function MaintenancePage() {
             {/* What's happening */}
          
             {/* Contact Form - iClosed Widget */}
+            <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script>
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
                          <div className="mt-6">
                 <div className="iclosed-widget" data-url="https://app.iclosed.io/e/warrenblackswan/rendez-vous-avec-warren-blackswan" title="Rendez-vous avec Warren" style={{ width: '100%', minHeight: '500px' }}></div>
               </div>
