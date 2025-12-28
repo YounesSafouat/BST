@@ -287,7 +287,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center space-x-3 mb-4 sm:mb-6">
               <div className="relative">
-                <img src={companyInfo?.logo?.image || "/bst.png"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="h-12 sm:h-16 w-auto" />
+                <img src={"/images/logo-white.svg"} alt={companyInfo?.logo?.alt || "Black Swan Technology"} className="h-12 sm:h-16 w-auto" />
               </div>
             </div>
             <p className="text-gray-400 mb-4 sm:mb-6 text-xs sm:text-sm">{companyInfo?.description || "Votre partenaire digital de confiance"}</p>
