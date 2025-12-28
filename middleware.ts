@@ -16,13 +16,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // Skip middleware for API routes, dashboard, and auth
+  // Skip middleware for API routes, dashboard, auth, and maintenance page
   if (
     request.nextUrl.pathname.startsWith('/api/') ||
     request.nextUrl.pathname.startsWith('/dashboard') ||
     request.nextUrl.pathname.startsWith('/auth') ||
     request.nextUrl.pathname.startsWith('/_next/') ||
-    request.nextUrl.pathname.startsWith('/favicon.ico')
+    request.nextUrl.pathname.startsWith('/favicon.ico') ||
+    request.nextUrl.pathname === '/maintenance'
   ) {
     return NextResponse.next();
   }
@@ -41,7 +42,7 @@ export async function middleware(request: NextRequest) {
       console.log(`[Maintenance Middleware] Fetching from: ${maintenanceUrl}`);
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2 second timeout
       
       const response = await fetch(maintenanceUrl, {
         method: 'GET',
@@ -49,7 +50,6 @@ export async function middleware(request: NextRequest) {
           'Cache-Control': 'no-cache',
           'User-Agent': 'Maintenance-Middleware/1.0',
         },
-        // Add timeout for server environments
         signal: controller.signal,
       });
       
@@ -73,52 +73,31 @@ export async function middleware(request: NextRequest) {
         // Don't update cache on error, keep previous value
       }
     } catch (error) {
-      // Fallback to environment variable if API call fails
+      // Fallback to cached value or environment variable if API call fails
       console.log(`[Maintenance Middleware] API call failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      console.log('[Maintenance Middleware] Using environment variable fallback');
-      maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
-      
-      // Update cache with fallback value
-      maintenanceModeCache = {
-        value: maintenanceMode,
-        lastCheck: now,
-        cacheDuration: 30000
-      };
+      console.log('[Maintenance Middleware] Using cached value or environment variable fallback');
+      // Use cached value if available, otherwise fallback to env
+      if (maintenanceModeCache.value !== undefined) {
+        maintenanceMode = maintenanceModeCache.value;
+      } else {
+        maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
+        maintenanceModeCache = {
+          value: maintenanceMode,
+          lastCheck: now,
+          cacheDuration: 30000
+        };
+      }
     }
   }
 
-  // Force cache refresh for maintenance page access (for immediate response)
-  if (request.nextUrl.pathname === '/maintenance' && maintenanceMode === false) {
-    try {
-      const baseUrl = request.nextUrl.origin;
-      const maintenanceUrl = `${baseUrl}/api/maintenance`;
-      
-      const response = await fetch(maintenanceUrl, {
-        method: 'GET',
-        headers: {
-          'Cache-Control': 'no-cache',
-          'User-Agent': 'Maintenance-Middleware/1.0',
-        },
-        signal: AbortSignal.timeout(3000), // 3 second timeout for refresh
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const freshMaintenanceMode = data.maintenanceMode || false;
-        
-        if (freshMaintenanceMode !== maintenanceMode) {
-          maintenanceMode = freshMaintenanceMode;
-          maintenanceModeCache = {
-            value: maintenanceMode,
-            lastCheck: now,
-            cacheDuration: 30000
-          };
-          console.log(`[Maintenance Middleware] Cache refreshed - Mode: ${maintenanceMode ? 'ACTIVE' : 'INACTIVE'}`);
-        }
-      }
-    } catch (error) {
-      console.log('[Maintenance Middleware] Cache refresh failed, using cached value');
-    }
+  // Skip static assets from maintenance redirect
+  if (
+    request.nextUrl.pathname.startsWith('/images/') ||
+    request.nextUrl.pathname.startsWith('/videos/') ||
+    request.nextUrl.pathname.startsWith('/_next/') ||
+    request.nextUrl.pathname.match(/\.(ico|png|jpg|jpeg|svg|gif|webp|mp4|webm|css|js|woff|woff2|ttf|eot)$/i)
+  ) {
+    return NextResponse.next();
   }
 
   if (maintenanceMode) {

@@ -19,8 +19,10 @@
     "seed:content": "node scripts/seedContent.js",
     "migrate:cloudinary": "node database_2025_11_10/migrate-images-to-cloudinary.js",
     "migrate:hardcoded": "node database_2025_11_10/migrate-hardcoded-images.js",
-    "db:list-urls": "ts-node scripts/list-cloudinary-urls.ts",
-    "db:update-images": "ts-node scripts/update-image-paths.ts"
+    "maintenance:check": "node scripts/check-maintenance.js",
+    "maintenance:enable": "node scripts/toggle-maintenance.js enable",
+    "maintenance:disable": "node scripts/toggle-maintenance.js disable",
+    "maintenance:status": "node scripts/toggle-maintenance.js status"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
