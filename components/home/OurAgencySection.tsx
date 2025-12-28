@@ -160,7 +160,7 @@ const OurAgencySection: React.FC<OurAgencySectionProps> = ({
                     <div className="text-center mb-12">
                          <h2 
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                              dangerouslySetInnerHTML={{ __html: 'BlackSwan Technology (Présentation entreprise)' }}
+                              dangerouslySetInnerHTML={{ __html: 'BlackSwan Technology ' }}
                          />
                          <p 
                               className="text-lg text-gray-600 max-w-3xl mx-auto"

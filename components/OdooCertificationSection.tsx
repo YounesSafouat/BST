@@ -113,7 +113,7 @@ export default function OdooCertificationSection({
                               whileInView={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.6, delay: 0.1 }}
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                              dangerouslySetInnerHTML={{ __html: 'Nous sommes reconnus pour ce que nous faisons (Certifications & labels)' }}
+                              dangerouslySetInnerHTML={{ __html: 'Nous sommes reconnus pour ce que nous faisons ' }}
                          />
                          
                     </div>

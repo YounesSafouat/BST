@@ -105,7 +105,7 @@ const FAQSection = ({ faqData }: FAQSectionProps) => {
                     <div className="text-center mb-8 sm:mb-12">
                          <h2 
                               className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-                              dangerouslySetInnerHTML={{ __html: 'Tout savoir sur Odoo (FAQ SEO)' }}
+                              dangerouslySetInnerHTML={{ __html: 'Tout savoir sur Odoo' }}
                          />
                          <p 
                               className="text-lg text-gray-600 max-w-3xl mx-auto"

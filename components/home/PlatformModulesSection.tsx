@@ -91,12 +91,7 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                             className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
                                             dangerouslySetInnerHTML={{ __html: app.description }}
                                         />
-                                        <Link href={getModuleUrl(app)} className="mt-auto">
-                                            <button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group text-sm">
-                                                En savoir plus
-                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                            </button>
-                                        </Link>
+                                        
                                     </div>
                                 );
                             })}
@@ -130,12 +125,7 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                             className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
                                             dangerouslySetInnerHTML={{ __html: app.description }}
                                         />
-                                        <Link href={getModuleUrl(app)} className="mt-auto">
-                                            <button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group text-sm">
-                                                En savoir plus
-                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                            </button>
-                                        </Link>
+                                       
                                     </div>
                                 );
                             })}
@@ -169,12 +159,7 @@ const PlatformModulesSection: React.FC<PlatformModulesSectionProps> = ({
                                             className="text-gray-600 text-sm leading-relaxed mb-4 flex-grow"
                                             dangerouslySetInnerHTML={{ __html: app.description }}
                                         />
-                                        <Link href={getModuleUrl(app)} className="mt-auto">
-                                            <button className="w-full bg-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/90 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group text-sm">
-                                                En savoir plus
-                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                            </button>
-                                        </Link>
+                                      
                                     </div>
                                 );
                             })}
