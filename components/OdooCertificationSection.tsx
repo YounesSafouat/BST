@@ -248,7 +248,7 @@ export default function OdooCertificationSection({
 
                                         {/* Features Grid */}
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                             {(data.hubspotFeatures || data.features).map((feature, index) => {
+                                             {(data.hubspotFeatures || fallbackData.hubspotFeatures || []).map((feature, index) => {
                                                   const IconComponent = iconMap[feature.icon] || CheckCircle;
                                                   return (
                                                        <div key={index} className="flex items-start gap-3 p-4 bg-white/50 backdrop-blur-sm rounded-2xl border border-white/20">
