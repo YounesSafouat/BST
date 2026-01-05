@@ -60,6 +60,7 @@ import OdooCertificationSection from '../OdooCertificationSection';
 import OurAgencySection from './OurAgencySection';
 import PlatformModulesSection from './PlatformModulesSection';
 import VideoBackgroundSection from './VideoBackgroundSection';
+import ContactSection from '../ContactSection';
 import { Button } from '@/components/ui/button';
 import CurvedLinesBackground from '@/components/ui/CurvedLinesBackground';
 import PerformanceMonitor from '../PerformanceMonitor';
@@ -508,10 +509,15 @@ export default function HomePage() {
                          userRegion={userRegion}
                     />
                </div>
-               {/* SECTION 8: FAQ Section - HomePage */}
+               {/* SECTION 8: Contact Form - HomePage */}
+               <div id="contact">
+                    <ContactSection contactData={homePageData?.contact} />
+               </div>
+               {/* SECTION 9: FAQ Section - HomePage */}
                <div id="faq">
                     <FAQSection faqData={homePageData?.faq} />
                </div>
+               
 
 
                <style jsx>{`
