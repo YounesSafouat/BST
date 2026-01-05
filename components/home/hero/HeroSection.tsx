@@ -233,7 +233,7 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                         {/* Video element */}
                         <video
                           ref={videoRef}
-                          src={'/videos/Présentation Odoo.mp4'}
+                          src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'}
                           muted
                           autoPlay
                           loop

@@ -199,7 +199,7 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
               <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden">
                 <video
                   ref={videoRef}
-                  src={'/videos/Présentation Odoo.mp4'}
+                  src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'}
                   muted
                   autoPlay
                   loop
