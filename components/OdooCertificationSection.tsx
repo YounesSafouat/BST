@@ -136,7 +136,7 @@ export default function OdooCertificationSection({
                                                   {/* Odoo Silver Partner Logo SVG */}
                                                   <div className="w-48 h-24 flex items-center justify-center">
                                                        <Image
-                                                            src="/images/odoo-logo.png"
+                                                            src="/silver-badge-odoo.png"
                                                             alt="Odoo Silver Partner Logo"
                                                             width={192}
                                                             height={96}
@@ -224,7 +224,7 @@ export default function OdooCertificationSection({
                                                   {/* HubSpot Certification - Placeholder */}
                                                   <div className="w-48 h-48 flex items-center justify-center">
                                                        <Image
-                                                            src="/images/hubspot certification.svg"
+                                                            src="/images/hubspot_certification.svg"
                                                             alt="HubSpot Certification"
                                                             width={192}
                                                             height={192}

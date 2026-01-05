@@ -281,7 +281,6 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                     <div className="md:hidden space-y-6">
                          {filteredClients.map((client) => (
                               <div key={client._id}>
-                                   <h3 className="text-xl font-bold text-gray-900 mb-2">{client.name}</h3>
                                    <ProjectCard client={client} />
                               </div>
                          ))}
@@ -291,7 +290,6 @@ const VideoTestimonialsSection = ({ selectedClients, sectionData }: VideoTestimo
                     <div className="hidden md:grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
                          {filteredClients.slice(0, 4).map((client) => (
                               <div key={client._id}>
-                                   <h3 className="text-xl font-bold text-gray-900 mb-2">{client.name}</h3>
                                    <ProjectCard client={client} />
                               </div>
                          ))}
