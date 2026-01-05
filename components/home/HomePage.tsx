@@ -36,36 +36,25 @@
 
 "use client"
 
-import $ from 'jquery';
-
-
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 
 import HomeHeroSplit from '@/components/home/hero/HeroSection';
 import HeroSectionMobile from '@/components/home/hero/HeroSectionMobile';
-import Image from 'next/image';
 import Loader from '@/components/home/Loader';
-import Link from 'next/link';
-import PricingSection from '../PricingSection';
-import StatsSection from '../StatsSection';
-import CompaniesCarousel from '../CompaniesCarousel';
-import CompaniesCarouselV2 from '../CompaniesCarouselV2';
-import CompaniesCarouselV3 from '../CompaniesCarouselV3';
-import VideoTestimonialsSection from '../VideoTestimonialsSection';
-import TestimonialsSection from './TestimonialsSection';
-import ServicesSection from '../ServicesSection';
-import FAQSection from '../FAQSection';
-import OdooCertificationSection from '../OdooCertificationSection';
-import OurAgencySection from './OurAgencySection';
-import PlatformModulesSection from './PlatformModulesSection';
-import VideoBackgroundSection from './VideoBackgroundSection';
-import ContactSection from '../ContactSection';
-import { Button } from '@/components/ui/button';
 import CurvedLinesBackground from '@/components/ui/CurvedLinesBackground';
 import PerformanceMonitor from '../PerformanceMonitor';
 import { useVisualEffects } from '@/hooks/use-visual-effects';
 import { useGeolocationSingleton } from '@/hooks/useGeolocationSingleton';
+
+const VideoTestimonialsSection = lazy(() => import('../VideoTestimonialsSection'));
+const OdooCertificationSection = lazy(() => import('../OdooCertificationSection'));
+const VideoBackgroundSection = lazy(() => import('./VideoBackgroundSection'));
+const PlatformModulesSection = lazy(() => import('./PlatformModulesSection'));
+const ServicesSection = lazy(() => import('../ServicesSection'));
+const TestimonialsSection = lazy(() => import('./TestimonialsSection'));
+const OurAgencySection = lazy(() => import('./OurAgencySection'));
+const ContactSection = lazy(() => import('../ContactSection'));
+const FAQSection = lazy(() => import('../FAQSection'));
 
 
 interface HomePageData {
@@ -290,7 +279,8 @@ export default function HomePage() {
           try {
                const url = `/api/content?type=home-page`;
                const response = await fetch(url, {
-                    cache: 'no-store',
+                    cache: 'default',
+                    next: { revalidate: 300 },
                     headers: {
                          'Accept': 'application/json'
                     }
@@ -336,7 +326,8 @@ export default function HomePage() {
                }
 
                const response = await fetch(`/api/content?type=clients-page`, {
-                    cache: 'force-cache'
+                    cache: 'default',
+                    next: { revalidate: 900 }
                });
                if (response.ok) {
                     const data = await response.json();
@@ -462,60 +453,78 @@ export default function HomePage() {
 
                {/* SECTION 2: Video Testimonials - HomePage */}
                <div id="video-testimonials" className="relative z-10">
-                    <VideoTestimonialsSection
-                         selectedClients={homePageData?.selectedClients}
-                         sectionData={homePageData?.videoTestimonials}
-                    />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <VideoTestimonialsSection
+                              selectedClients={homePageData?.selectedClients}
+                              sectionData={homePageData?.videoTestimonials}
+                         />
+                    </Suspense>
                </div>
                {/* SECTION 3: Odoo Certification - HomePage */}
                <div id="certification" className="relative z-10">
-                    <OdooCertificationSection certificationData={homePageData?.certification} />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <OdooCertificationSection certificationData={homePageData?.certification} />
+                    </Suspense>
                </div>
                {/* SECTION 4: Video Background Section */}
-               <VideoBackgroundSection
-                    headline={homePageData?.videoBackgroundSection?.headline}
-                    description={homePageData?.videoBackgroundSection?.description}
-                    ctaText={homePageData?.videoBackgroundSection?.ctaText}
-                    ctaUrl={homePageData?.videoBackgroundSection?.ctaUrl}
-               />
+               <Suspense fallback={<div className="min-h-[400px]" />}>
+                    <VideoBackgroundSection
+                         headline={homePageData?.videoBackgroundSection?.headline}
+                         description={homePageData?.videoBackgroundSection?.description}
+                         ctaText={homePageData?.videoBackgroundSection?.ctaText}
+                         ctaUrl={homePageData?.videoBackgroundSection?.ctaUrl}
+                    />
+               </Suspense>
 
                {/* SECTION 5: Platform Modules Timeline */}
                {homePageData && (
-                    <PlatformModulesSection
-                         homePageData={homePageData}
-                         timeline1={timeline1}
-                         timeline2={timeline2}
-                         timeline3={timeline3}
-                    />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <PlatformModulesSection
+                              homePageData={homePageData}
+                              timeline1={timeline1}
+                              timeline2={timeline2}
+                              timeline3={timeline3}
+                         />
+                    </Suspense>
                )}
                {/* SECTION 5: Services Section - HomePage */}
                <div className="relative z-10" id="services">
-                    <ServicesSection servicesData={homePageData?.services} />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <ServicesSection servicesData={homePageData?.services} />
+                    </Suspense>
                </div>
                {/* SECTION 6: Testimonials - HomePage */}
                <div id="testimonials">
                     {homePageData?.testimonialsSection && (
-                         <TestimonialsSection
-                              testimonialsSectionData={homePageData.testimonialsSection}
-                              testimonials={homePageData?.testimonials}
-                         />
+                         <Suspense fallback={<div className="min-h-[400px]" />}>
+                              <TestimonialsSection
+                                   testimonialsSectionData={homePageData.testimonialsSection}
+                                   testimonials={homePageData?.testimonials}
+                              />
+                         </Suspense>
                     )}
                </div>
                {/* SECTION 7: Our Agency - HomePage */}
                <div id="about">
-                    <OurAgencySection
-                         key={userRegion} // Force re-render when region changes
-                         partnershipData={homePageData?.partnership}
-                         userRegion={userRegion}
-                    />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <OurAgencySection
+                              key={userRegion}
+                              partnershipData={homePageData?.partnership}
+                              userRegion={userRegion}
+                         />
+                    </Suspense>
                </div>
                {/* SECTION 8: Contact Form - HomePage */}
                <div id="contact">
-                    <ContactSection contactData={homePageData?.contact} />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <ContactSection contactData={homePageData?.contact} />
+                    </Suspense>
                </div>
                {/* SECTION 9: FAQ Section - HomePage */}
                <div id="faq">
-                    <FAQSection faqData={homePageData?.faq} />
+                    <Suspense fallback={<div className="min-h-[400px]" />}>
+                         <FAQSection faqData={homePageData?.faq} />
+                    </Suspense>
                </div>
                
 

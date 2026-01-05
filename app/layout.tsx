@@ -179,9 +179,7 @@ export default function RootLayout({
         <meta name="ICBM" content="33.5731, -7.5898" />
         <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
        
-        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script>
-        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
-        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" async></script> 
+        <script type="text/javascript" src="https://app.iclosed.io/assets/widget.js" data-cta-widget="jTns5HA-XDnN" async></script> 
 
 
       </head>
