@@ -61,8 +61,34 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
   const [isMuted, setIsMuted] = useState(true);
   const [videoError, setVideoError] = useState(false);
   const [videoRetryCount, setVideoRetryCount] = useState(0);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!videoContainerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !shouldLoadVideo) {
+          setShouldLoadVideo(true);
+        }
+      },
+      {
+        rootMargin: '50px',
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(videoContainerRef.current);
+
+    return () => {
+      if (videoContainerRef.current) {
+        observer.unobserve(videoContainerRef.current);
+      }
+    };
+  }, [shouldLoadVideo]);
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -231,7 +257,19 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                 >
                   <div className="relative mx-4 sm:mx-6 lg:mx-0">
                     <div className="bg-white p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl border-4 border-[var(--color-secondary)]">
-                      <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg lg:rounded-xl overflow-hidden">
+                      <div 
+                        ref={videoContainerRef}
+                        className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg lg:rounded-xl overflow-hidden"
+                      >
+                        {/* Loading placeholder */}
+                        {!shouldLoadVideo && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
+                            <div className="text-center">
+                              <div className="inline-block w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-2"></div>
+                              <p className="text-gray-500 text-sm">Chargement de la vidéo...</p>
+                            </div>
+                          </div>
+                        )}
                         {/* Error fallback */}
                         {videoError && videoRetryCount >= 1 && (
                           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white z-10">
@@ -241,15 +279,17 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                           </div>
                         )}
                         {/* Video element */}
-                        <video
-                          ref={videoRef}
-                          muted
-                          autoPlay
-                          loop
-                          preload="auto"
-                          className="w-full h-full object-cover"
-                          playsInline
-                          onError={(e) => {
+                        {shouldLoadVideo && (
+                          <video
+                            ref={videoRef}
+                            src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'}
+                            muted
+                            autoPlay
+                            loop
+                            preload="metadata"
+                            className="w-full h-full object-cover"
+                            playsInline
+                            onError={(e) => {
                             setVideoError(true);
                             // Use setTimeout to ensure video element is ready
                             setTimeout(() => {
@@ -310,10 +350,8 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                           onCanPlay={() => {
                             console.log('Video can play');
                           }}
-                        >
-                          <source src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'} type="video/mp4" />
-                          Your browser does not support the video tag.
-                        </video>
+                        />
+                        )}
 
                         {/* Sound toggle button - only on larger screens */}
                         <button

@@ -50,7 +50,9 @@ interface HeroSectionMobileProps {
 
 function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSectionMobileProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToSection = (href: string) => {
     const element = document.querySelector(href);
@@ -62,6 +64,30 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
   useEffect(() => {
     setIsLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (!videoContainerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !shouldLoadVideo) {
+          setShouldLoadVideo(true);
+        }
+      },
+      {
+        rootMargin: '50px',
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(videoContainerRef.current);
+
+    return () => {
+      if (videoContainerRef.current) {
+        observer.unobserve(videoContainerRef.current);
+      }
+    };
+  }, [shouldLoadVideo]);
 
   const getIconComponent = (iconName: string) => {
     const iconMap: { [key: string]: React.ReactNode } = {
@@ -196,15 +222,30 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
         >
           <div className="relative">
             <div className="bg-white p-2 rounded-2xl shadow-xl border-2 border-white/30">
-              <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden">
-                <video
-                  ref={videoRef}
-                  muted
-                  autoPlay
-                  loop
-                  preload="auto"
-                  className="w-full h-full object-cover"
-                  playsInline
+              <div 
+                ref={videoContainerRef}
+                className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden"
+              >
+                {/* Loading placeholder */}
+                {!shouldLoadVideo && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white">
+                    <div className="text-center">
+                      <div className="inline-block w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-2"></div>
+                      <p className="text-gray-500 text-sm">Chargement de la vidéo...</p>
+                    </div>
+                  </div>
+                )}
+                {/* Video element */}
+                {shouldLoadVideo && (
+                  <video
+                    ref={videoRef}
+                    src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'}
+                    muted
+                    autoPlay
+                    loop
+                    preload="metadata"
+                    className="w-full h-full object-cover"
+                    playsInline
                   onError={(e) => {
                     // Use setTimeout to ensure video element is ready
                     setTimeout(() => {
@@ -248,10 +289,8 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
                   onCanPlay={() => {
                     console.log('Video can play');
                   }}
-                >
-                  <source src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                />
+                )}
               </div>
             </div>
           </div>
