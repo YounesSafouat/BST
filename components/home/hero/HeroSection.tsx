@@ -237,8 +237,25 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                           muted
                           autoPlay
                           loop
+                          preload="auto"
                           className="w-full h-full object-cover"
                           playsInline
+                          onError={(e) => {
+                            console.error('Video loading error:', e);
+                            console.error('Video src:', heroData?.videoUrl || '/videos/presentation_odoo.mp4');
+                            const target = e.target as HTMLVideoElement;
+                            console.error('Video error details:', {
+                              error: target.error,
+                              networkState: target.networkState,
+                              readyState: target.readyState
+                            });
+                          }}
+                          onLoadStart={() => {
+                            console.log('Video loading started:', heroData?.videoUrl || '/videos/presentation_odoo.mp4');
+                          }}
+                          onCanPlay={() => {
+                            console.log('Video can play');
+                          }}
                         />
 
                         {/* Sound toggle button - only on larger screens */}
