@@ -199,7 +199,6 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
               <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-xl overflow-hidden">
                 <video
                   ref={videoRef}
-                  src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'}
                   muted
                   autoPlay
                   loop
@@ -207,13 +206,23 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
                   className="w-full h-full object-cover"
                   playsInline
                   onError={(e) => {
-                    console.error('Video loading error:', e);
-                    console.error('Video src:', heroData?.videoUrl || '/videos/presentation_odoo.mp4');
                     const target = e.target as HTMLVideoElement;
-                    console.error('Video error details:', {
-                      error: target.error,
+                    const error = target.error;
+                    console.error('Video loading error:', {
+                      src: heroData?.videoUrl || '/videos/presentation_odoo.mp4',
+                      errorCode: error?.code,
+                      errorMessage: error?.message,
                       networkState: target.networkState,
-                      readyState: target.readyState
+                      readyState: target.readyState,
+                      currentSrc: target.currentSrc,
+                      errorDetails: error ? {
+                        code: error.code,
+                        message: error.message,
+                        MEDIA_ERR_ABORTED: error.code === MediaError.MEDIA_ERR_ABORTED,
+                        MEDIA_ERR_NETWORK: error.code === MediaError.MEDIA_ERR_NETWORK,
+                        MEDIA_ERR_DECODE: error.code === MediaError.MEDIA_ERR_DECODE,
+                        MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
+                      } : null
                     });
                   }}
                   onLoadStart={() => {
@@ -222,7 +231,10 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
                   onCanPlay={() => {
                     console.log('Video can play');
                   }}
-                />
+                >
+                  <source src={heroData?.videoUrl || '/videos/presentation_odoo.mp4'} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
             </div>
           </div>
