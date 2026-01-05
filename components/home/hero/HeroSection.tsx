@@ -59,6 +59,8 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
   const [isLoading, setIsLoading] = useState(false);
   const [loadingType, setLoadingType] = useState<string>('');
   const [isMuted, setIsMuted] = useState(true);
+  const [videoError, setVideoError] = useState(false);
+  const [videoRetryCount, setVideoRetryCount] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
@@ -230,6 +232,14 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                   <div className="relative mx-4 sm:mx-6 lg:mx-0">
                     <div className="bg-white p-2 lg:p-3 rounded-xl lg:rounded-2xl shadow-lg lg:shadow-xl border-4 border-[var(--color-secondary)]">
                       <div className="relative aspect-[16/9] bg-gradient-to-br from-blue-50 to-white rounded-lg lg:rounded-xl overflow-hidden">
+                        {/* Error fallback */}
+                        {videoError && videoRetryCount >= 1 && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-50 to-white z-10">
+                            <div className="text-center p-4">
+                              <p className="text-gray-500 text-sm">Video unavailable</p>
+                            </div>
+                          </div>
+                        )}
                         {/* Video element */}
                         <video
                           ref={videoRef}
@@ -240,24 +250,59 @@ function HeroSection({ heroData, userRegion, isPreview = false }: HeroSectionPro
                           className="w-full h-full object-cover"
                           playsInline
                           onError={(e) => {
-                            const target = e.target as HTMLVideoElement;
-                            const error = target.error;
-                            console.error('Video loading error:', {
-                              src: heroData?.videoUrl || '/videos/presentation_odoo.mp4',
-                              errorCode: error?.code,
-                              errorMessage: error?.message,
-                              networkState: target.networkState,
-                              readyState: target.readyState,
-                              currentSrc: target.currentSrc,
-                              errorDetails: error ? {
-                                code: error.code,
-                                message: error.message,
-                                MEDIA_ERR_ABORTED: error.code === MediaError.MEDIA_ERR_ABORTED,
-                                MEDIA_ERR_NETWORK: error.code === MediaError.MEDIA_ERR_NETWORK,
-                                MEDIA_ERR_DECODE: error.code === MediaError.MEDIA_ERR_DECODE,
-                                MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
-                              } : null
-                            });
+                            setVideoError(true);
+                            // Use setTimeout to ensure video element is ready
+                            setTimeout(() => {
+                              const target = videoRef.current || (e.target as HTMLVideoElement);
+                              if (!target) {
+                                console.error('Video loading error: Video element not found');
+                                return;
+                              }
+                              
+                              const error = target.error;
+                              const errorInfo: any = {
+                                src: heroData?.videoUrl || '/videos/presentation_odoo.mp4',
+                                currentSrc: target.currentSrc || target.src,
+                                networkState: target.networkState,
+                                readyState: target.readyState,
+                                videoWidth: target.videoWidth,
+                                videoHeight: target.videoHeight,
+                                retryCount: videoRetryCount,
+                              };
+
+                              if (error) {
+                                errorInfo.errorCode = error.code;
+                                errorInfo.errorMessage = error.message;
+                                errorInfo.errorDetails = {
+                                  code: error.code,
+                                  message: error.message,
+                                  MEDIA_ERR_ABORTED: error.code === MediaError.MEDIA_ERR_ABORTED,
+                                  MEDIA_ERR_NETWORK: error.code === MediaError.MEDIA_ERR_NETWORK,
+                                  MEDIA_ERR_DECODE: error.code === MediaError.MEDIA_ERR_DECODE,
+                                  MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
+                                };
+                              } else {
+                                errorInfo.error = 'No error object available';
+                              }
+
+                              console.error('Video loading error:', errorInfo);
+                              
+                              // Retry once if network error
+                              if (error && error.code === MediaError.MEDIA_ERR_NETWORK && videoRetryCount < 1) {
+                                console.log('Retrying video load...');
+                                setVideoRetryCount(prev => prev + 1);
+                                setVideoError(false);
+                                setTimeout(() => {
+                                  if (target) {
+                                    target.load();
+                                  }
+                                }, 1000);
+                              }
+                            }, 100);
+                          }}
+                          onLoadedData={() => {
+                            setVideoError(false);
+                            console.log('Video data loaded successfully');
                           }}
                           onLoadStart={() => {
                             console.log('Video loading started:', heroData?.videoUrl || '/videos/presentation_odoo.mp4');

@@ -206,24 +206,41 @@ function HeroSectionMobile({ heroData, userRegion, isPreview = false }: HeroSect
                   className="w-full h-full object-cover"
                   playsInline
                   onError={(e) => {
-                    const target = e.target as HTMLVideoElement;
-                    const error = target.error;
-                    console.error('Video loading error:', {
-                      src: heroData?.videoUrl || '/videos/presentation_odoo.mp4',
-                      errorCode: error?.code,
-                      errorMessage: error?.message,
-                      networkState: target.networkState,
-                      readyState: target.readyState,
-                      currentSrc: target.currentSrc,
-                      errorDetails: error ? {
-                        code: error.code,
-                        message: error.message,
-                        MEDIA_ERR_ABORTED: error.code === MediaError.MEDIA_ERR_ABORTED,
-                        MEDIA_ERR_NETWORK: error.code === MediaError.MEDIA_ERR_NETWORK,
-                        MEDIA_ERR_DECODE: error.code === MediaError.MEDIA_ERR_DECODE,
-                        MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
-                      } : null
-                    });
+                    // Use setTimeout to ensure video element is ready
+                    setTimeout(() => {
+                      const target = videoRef.current || (e.target as HTMLVideoElement);
+                      if (!target) {
+                        console.error('Video loading error: Video element not found');
+                        return;
+                      }
+                      
+                      const error = target.error;
+                      const errorInfo: any = {
+                        src: heroData?.videoUrl || '/videos/presentation_odoo.mp4',
+                        currentSrc: target.currentSrc || target.src,
+                        networkState: target.networkState,
+                        readyState: target.readyState,
+                        videoWidth: target.videoWidth,
+                        videoHeight: target.videoHeight,
+                      };
+
+                      if (error) {
+                        errorInfo.errorCode = error.code;
+                        errorInfo.errorMessage = error.message;
+                        errorInfo.errorDetails = {
+                          code: error.code,
+                          message: error.message,
+                          MEDIA_ERR_ABORTED: error.code === MediaError.MEDIA_ERR_ABORTED,
+                          MEDIA_ERR_NETWORK: error.code === MediaError.MEDIA_ERR_NETWORK,
+                          MEDIA_ERR_DECODE: error.code === MediaError.MEDIA_ERR_DECODE,
+                          MEDIA_ERR_SRC_NOT_SUPPORTED: error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED,
+                        };
+                      } else {
+                        errorInfo.error = 'No error object available';
+                      }
+
+                      console.error('Video loading error:', errorInfo);
+                    }, 100);
                   }}
                   onLoadStart={() => {
                     console.log('Video loading started:', heroData?.videoUrl || '/videos/presentation_odoo.mp4');
