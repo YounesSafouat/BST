@@ -45,7 +45,7 @@ interface CasClientData {
      media: {
           cardBackgroundImage?: string;
           coverImage?: string;
-          hoverImage?: string; // Second image for hover effect
+          hoverImage?: string; 
      };
      metrics?: Array<{
           icon: string;
@@ -59,7 +59,7 @@ interface VideoTestimonialsSectionProps {
      selectedClients?: string[] | Array<{
           id: string;
           order: number;
-     }>; // Array of client IDs (old format) or with ordering (new format) to display
+     }>; 
      sectionData?: {
           headline?: string;
           subtitle?: string;
@@ -72,12 +72,11 @@ interface VideoTestimonialsSectionProps {
      };
 }
 
-// New Project Card Component
 const ProjectCard = ({ client }: { client: CasClientData }) => {
      const [isExpanded, setIsExpanded] = useState(false);
      
      const getSectorColor = (sector: string) => {
-          return 'bg-gray-600'; // All badges use the same gray color
+          return 'bg-gray-600'; 
      };
 
      const sector = client.company?.sector === 'Autre' ? client.company?.customSector : client.company?.sector;
